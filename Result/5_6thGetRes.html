@@ -1007,8 +1007,8 @@ const subjects = [
     { name: "Hindi", total: 50, type: "marks" },
     { name: "Marathi", total: 50, type: "marks" },
     { name: "Mathematics", total: 50, type: "marks" },
-    { name: "General Science", total: 50, type: "marks" },
-    { name: "Social Science", total: 50, type: "marks" },
+    { name: "General Science", total: 30, type: "marks" },
+    { name: "Social Science", total: 20, type: "marks" },
     { name: "Arts", total: null, type: "grade" },
     { name: "Work Experience", total: null, type: "grade" },
     { name: "Physical Education", total: null, type: "grade" }
@@ -1630,8 +1630,8 @@ function buildFSTable() {
         { name: "Hindi", marksField: "FS Hindi Actual Marks", type: "marks", total: 50 },
         { name: "Marathi", marksField: "FS Mar Actual Marks", type: "marks", total: 50 },
         { name: "Mathematics", marksField: "FS Maths Actual Marks", type: "marks", total: 50 },
-        { name: "General Science", marksField: "FS GSci Actual Marks", type: "marks", total: 50 },
-        { name: "Social Science", marksField: "FS SocialSci Actual Marks", type: "marks", total: 50 },
+        { name: "General Science", marksField: "FS GSci Actual Marks", type: "marks", total: 30 },
+        { name: "Social Science", marksField: "FS SocialSci Actual Marks", type: "marks", total: 20 },
         { name: "Arts", marksField: "FS Arts Actual Marks", type: "grade", total: null },
         { name: "Work Experience", marksField: "FS WE Actual Marks", type: "grade", total: null },
         { name: "Physical Education", marksField: "FS PE Actual Marks", type: "grade", total: null }
@@ -1747,8 +1747,8 @@ function buildSSTable() {
         { name: "Hindi", marksField: "SS Hindi Actual Marks", type: "marks", total: 50 },
         { name: "Marathi", marksField: "SS Mar Actual Marks", type: "marks", total: 50 },
         { name: "Mathematics", marksField: "SS Maths Actual Marks", type: "marks", total: 50 },
-        { name: "General Science", marksField: "SS GSci Actual Marks", type: "marks", total: 50 },
-        { name: "Social Science", marksField: "SS SocialSci Actual Marks", type: "marks", total: 50 },
+        { name: "General Science", marksField: "SS GSci Actual Marks", type: "marks", total: 30 },
+        { name: "Social Science", marksField: "SS SocialSci Actual Marks", type: "marks", total: 20 },
         { name: "Arts", marksField: "SS Arts Actual Marks", type: "grade", total: null },
         { name: "Work Experience", marksField: "SS WE Actual Marks", type: "grade", total: null },
         { name: "Physical Education", marksField: "SS PE Actual Marks", type: "grade", total: null }
@@ -1850,58 +1850,171 @@ function renderAttendanceEditForm() {
     content.style.maxHeight = content.scrollHeight + "px";
 }
 
+// =====================================================
+// 🔥 CORRECTED updateFSTotal() - USING ACTUAL SUBJECT TOTALS
+// =====================================================
+
 function updateFSTotal() {
-    let totalActual = 0, totalMax = 0;
+    let totalActual = 0;
+    let totalMax = 0;
     
+    // Define subjects with their actual totals
+    const fsSubjects = [
+        { name: "English", marksField: "FS Eng Actual Marks", type: "marks", total: 50 },
+        { name: "Hindi", marksField: "FS Hindi Actual Marks", type: "marks", total: 50 },
+        { name: "Marathi", marksField: "FS Mar Actual Marks", type: "marks", total: 50 },
+        { name: "Mathematics", marksField: "FS Maths Actual Marks", type: "marks", total: 50 },
+        { name: "General Science", marksField: "FS GSci Actual Marks", type: "marks", total: 30 },
+        { name: "Social Science", marksField: "FS SocialSci Actual Marks", type: "marks", total: 20 },
+        { name: "Arts", marksField: "FS Arts Actual Marks", type: "grade", total: null },
+        { name: "Work Experience", marksField: "FS WE Actual Marks", type: "grade", total: null },
+        { name: "Physical Education", marksField: "FS PE Actual Marks", type: "grade", total: null }
+    ];
+    
+    // Only calculate for marks-based subjects (first 6 subjects)
     for (let i = 0; i < 6; i++) {
+        const subject = fsSubjects[i];
         if (fsInputs[i] && fsInputs[i].type === 'number') {
-            totalMax += 50;
+            const maxMarks = subject.total;
+            totalMax += maxMarks;
+            
             let val = parseFloat(fsInputs[i]?.value) || 0;
-            if (val > 50) { fsInputs[i].value = 50; val = 50; }
-            if (val < 0) { fsInputs[i].value = 0; val = 0; }
+            
+            // Clamp value between 0 and max marks
+            if (val > maxMarks) {
+                fsInputs[i].value = maxMarks;
+                val = maxMarks;
+            }
+            if (val < 0) {
+                fsInputs[i].value = 0;
+                val = 0;
+            }
             totalActual += val;
+            
+            console.log(`${subject.name}: ${val}/${maxMarks}`);
         }
     }
     
+    // Update the UI
     const totalMarksCell = document.getElementById('fsTotalMarksCell');
     const actualTotalCell = document.getElementById('fsActualTotalCell');
+    const percentageEl = document.getElementById('fsPercentageValue');
+    const gradeEl = document.getElementById('fsGradeValue');
+    const resultBadge = document.getElementById('fsResultBadge');
+    
     if (totalMarksCell) totalMarksCell.innerText = totalMax;
     if (actualTotalCell) actualTotalCell.innerText = totalActual;
     
     let percentage = 0;
-    if (totalMax > 0) percentage = (totalActual / totalMax) * 100;
-    const percentageEl = document.getElementById('fsPercentageValue');
-    const gradeEl = document.getElementById('fsGradeValue');
+    let grade = 'N/A';
+    let result = 'Pending';
+    
+    if (totalMax > 0) {
+        percentage = (totalActual / totalMax) * 100;
+        grade = getGradeFromPercentage(percentage);
+        result = percentage >= 35 ? 'Pass' : 'Fail';
+    }
+    
     if (percentageEl) percentageEl.innerText = percentage.toFixed(2);
-    if (gradeEl) gradeEl.innerText = getGradeFromPercentage(percentage);
+    if (gradeEl) gradeEl.innerText = grade;
+    if (resultBadge) {
+        resultBadge.innerText = result;
+        resultBadge.className = `result-badge ${result === 'Pass' ? 'result-pass' : 'result-fail'}`;
+    }
+    
+    console.log(`FS Total: ${totalActual}/${totalMax} = ${percentage.toFixed(2)}% - Grade: ${grade} - Result: ${result}`);
+    
+    return { totalActual, totalMax, percentage: percentage.toFixed(2), grade, result };
 }
 
+// =====================================================
+// 🔥 CORRECTED updateSSTotal() - USING ACTUAL SUBJECT TOTALS
+// =====================================================
+
 function updateSSTotal() {
-    let totalActual = 0, totalMax = 0;
+    let totalActual = 0;
+    let totalMax = 0;
     
+    // Define subjects with their actual totals for SS
+    const ssSubjects = [
+        { name: "English", marksField: "SS Eng Actual Marks", type: "marks", total: 50 },
+        { name: "Hindi", marksField: "SS Hindi Actual Marks", type: "marks", total: 50 },
+        { name: "Marathi", marksField: "SS Mar Actual Marks", type: "marks", total: 50 },
+        { name: "Mathematics", marksField: "SS Maths Actual Marks", type: "marks", total: 50 },
+        { name: "General Science", marksField: "SS GSci Actual Marks", type: "marks", total: 30 },
+        { name: "Social Science", marksField: "SS SocialSci Actual Marks", type: "marks", total: 20 },
+        { name: "Arts", marksField: "SS Arts Actual Marks", type: "grade", total: null },
+        { name: "Work Experience", marksField: "SS WE Actual Marks", type: "grade", total: null },
+        { name: "Physical Education", marksField: "SS PE Actual Marks", type: "grade", total: null }
+    ];
+    
+    // Only calculate for marks-based subjects (first 6 subjects)
     for (let i = 0; i < 6; i++) {
+        const subject = ssSubjects[i];
         if (ssInputs[i] && ssInputs[i].type === 'number') {
-            totalMax += 50;
+            const maxMarks = subject.total;
+            totalMax += maxMarks;
+            
             let val = parseFloat(ssInputs[i]?.value) || 0;
-            if (val > 50) { ssInputs[i].value = 50; val = 50; }
-            if (val < 0) { ssInputs[i].value = 0; val = 0; }
+            
+            // Clamp value between 0 and max marks
+            if (val > maxMarks) {
+                ssInputs[i].value = maxMarks;
+                val = maxMarks;
+            }
+            if (val < 0) {
+                ssInputs[i].value = 0;
+                val = 0;
+            }
             totalActual += val;
+            
+            console.log(`SS ${subject.name}: ${val}/${maxMarks}`);
         }
     }
     
+    // Update the UI
     const totalMarksCell = document.getElementById('ssTotalMarksCell');
     const actualTotalCell = document.getElementById('ssActualTotalCell');
+    const percentageEl = document.getElementById('ssPercentageValue');
+    const gradeEl = document.getElementById('ssGradeValue');
+    const resultBadge = document.getElementById('ssResultBadge');
+    
     if (totalMarksCell) totalMarksCell.innerText = totalMax;
     if (actualTotalCell) actualTotalCell.innerText = totalActual;
     
     let percentage = 0;
-    if (totalMax > 0) percentage = (totalActual / totalMax) * 100;
-    const percentageEl = document.getElementById('ssPercentageValue');
-    const gradeEl = document.getElementById('ssGradeValue');
+    let grade = 'N/A';
+    let result = 'Pending';
+    
+    if (totalMax > 0) {
+        percentage = (totalActual / totalMax) * 100;
+        grade = getGradeFromPercentage(percentage);
+        result = percentage >= 35 ? 'Pass' : 'Fail';
+    }
+    
     if (percentageEl) percentageEl.innerText = percentage.toFixed(2);
-    if (gradeEl) gradeEl.innerText = getGradeFromPercentage(percentage);
+    if (gradeEl) gradeEl.innerText = grade;
+    if (resultBadge) {
+        resultBadge.innerText = result;
+        resultBadge.className = `result-badge ${result === 'Pass' ? 'result-pass' : 'result-fail'}`;
+    }
+    
+    console.log(`SS Total: ${totalActual}/${totalMax} = ${percentage.toFixed(2)}% - Grade: ${grade} - Result: ${result}`);
+    
+    return { totalActual, totalMax, percentage: percentage.toFixed(2), grade, result };
 }
 
+// =====================================================
+// 🔥 ENHANCED updateTotal() FUNCTION FOR REAL-TIME UPDATES
+// =====================================================
+
+function updateTotal(isFS) {
+    if (isFS) {
+        updateFSTotal();
+    } else {
+        updateSSTotal();
+    }
+}
 // =====================================================
 // 💾 SUBMIT UPDATE FUNCTIONS
 // =====================================================
