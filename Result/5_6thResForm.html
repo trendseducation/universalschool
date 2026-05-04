@@ -278,8 +278,8 @@
         { name: "Hindi", total: 50, type: "marks" },
         { name: "Marathi", total: 50, type: "marks" },
         { name: "Mathematics", total: 50, type: "marks" },
-		{ name: "General Science", total: 50, type: "marks" },
-        { name: "Social Science", total: 50, type: "marks" },
+		{ name: "General Science", total: 30, type: "marks" },
+        { name: "Social Science", total: 20, type: "marks" },
         { name: "Arts", total: null, type: "grade" },
         { name: "Work Experience", total: null, type: "grade" },
         { name: "Physical Education", total: null, type: "grade" }
@@ -338,10 +338,22 @@
         }
         return { percentage: formattedPercent, grade };
     }
+	
+	function formatDateDDMMYYYY(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+}
 
     function getAcademicYear() { const now = new Date(); const year = now.getFullYear(); const month = now.getMonth(); return month >= 3 ? `${year}-${year+1}` : `${year-1}-${year}`; }
     function setMaxBirthDate() { document.getElementById('Birth Date').setAttribute('max', new Date().toISOString().split('T')[0]); }
-    function setReopenMinDates() { const today = new Date().toISOString().split('T')[0]; document.getElementById('FSReopenDate').setAttribute('min', today); document.getElementById('SSReopenDate').setAttribute('min', today); }
+    function setReopenMinDates() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('FSReopenDate').setAttribute('min', today);
+    document.getElementById('SSReopenDate').setAttribute('min', today);
+}
 
     function buildTable(tbodyId, inputsArray, gradeInputsArray, isFS) {
         const tbody = document.getElementById(tbodyId);
@@ -548,14 +560,15 @@
         formData.append('FS Mathematics', 'Mathematics');
         formData.append('FS Maths Total Marks', subjects[3].total);
         formData.append('FS Maths Actual Marks', fsInputs[3]?.value || 0);
+		
+		formData.append('FS General Science', 'General Science');
+        formData.append('FS GSci Total Marks', subjects[4].total);
+        formData.append('FS GSci Actual Marks', fsInputs[4]?.value || 0);
         
         formData.append('FS Social Sci', 'Social Science');
-        formData.append('FS SocialSci Total Marks', subjects[4].total);
-        formData.append('FS SocialSci Actual Marks', fsInputs[4]?.value || 0);
+        formData.append('FS SocialSci Total Marks', subjects[5].total);
+        formData.append('FS SocialSci Actual Marks', fsInputs[5]?.value || 0);
         
-        formData.append('FS General Science', 'General Science');
-        formData.append('FS GSci Total Marks', subjects[5].total);
-        formData.append('FS GSci Actual Marks', fsInputs[5]?.value || 0);
         
         formData.append('FS Arts', 'Arts');
         formData.append('FS Arts Total Marks', 'Grade');
@@ -577,7 +590,8 @@
         formData.append('FS Special Progress', fsSpecialProgress);
         formData.append('FS Good', fsGood);
         formData.append('FS Remarks', fsRemarks);
-        formData.append('FS Reopen', document.getElementById('FSReopenDate').value || '');
+		const fsReopenRaw = document.getElementById('FSReopenDate').value;
+        formData.append('FS Reopen', fsReopenRaw ? formatDateDDMMYYYY(fsReopenRaw) : '');
         
         // SS marks & extra
         formData.append('SS English', 'English');
@@ -597,12 +611,12 @@
         formData.append('SS Maths Actual Marks', ssInputs[3]?.value || 0);
         
         formData.append('SS Social Sci', 'Social Science');
-        formData.append('SS SocialSci Total Marks', subjects[4].total);
-        formData.append('SS SocialSci Actual Marks', ssInputs[4]?.value || 0);
+        formData.append('SS SocialSci Total Marks', subjects[5].total);
+        formData.append('SS SocialSci Actual Marks', ssInputs[5]?.value || 0);
         
         formData.append('SS General Science', 'General Science');
-        formData.append('SS GSci Total Marks', subjects[5].total);
-        formData.append('SS GSci Actual Marks', ssInputs[5]?.value || 0);
+        formData.append('SS GSci Total Marks', subjects[4].total);
+        formData.append('SS GSci Actual Marks', ssInputs[4]?.value || 0);
         
         formData.append('SS Arts', 'Arts');
         formData.append('SS Arts Total Marks', 'Grade');
@@ -624,7 +638,8 @@
         formData.append('SS Special Progress', ssSpecialProgress);
         formData.append('SS Good', ssGood);
         formData.append('SS Remarks', ssRemarks);
-        formData.append('SS Reopen', document.getElementById('SSReopenDate').value || '');
+		const ssReopenRaw = document.getElementById('SSReopenDate').value;
+        formData.append('SS Reopen', ssReopenRaw ? formatDateDDMMYYYY(ssReopenRaw) : '');
         
         // Attendance fields unchanged but included
         formData.append('Working Day 1', 'Term 1 (June, July, August)');
@@ -660,7 +675,7 @@
         if (!formData) return;
         submitBtn.disabled = true; 
         submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting...';
-        msgDiv.innerHTML = '<div class="info-msg">⏳ Sending data to Google Sheet... Please wait.</div>';
+        msgDiv.innerHTML = '<div class="info-msg">⏳ Sending data... Please wait.</div>';
         try { 
             await fetch(SCRIPT_URL, { 
                 method: 'POST', 
@@ -668,7 +683,7 @@
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, 
                 body: formData.toString() 
             }); 
-            msgDiv.innerHTML = '<div class="success-msg">✅ Data sent successfully to Google Sheet "School"!<br><br>📌 Please check your spreadsheet to verify the new entry (including correct FS/SS Subject Total Marks, FS Percentage, FS Grade, SS Percentage, SS Grade).<br><br>📊 Working Day 1,2,3 / Present Day 1,2,3 / Class T. Sign 1,2,3 columns now contain term labels.<br>Individual month values are saved in their respective columns.</div>'; 
+            msgDiv.innerHTML = '<div class="success-msg">✅ Data sent successfully "School"!<br><br>📌 Please check your spreadsheet to verify the new entry (including correct FS/SS Subject Total Marks, FS Percentage, FS Grade, SS Percentage, SS Grade).<br><br>📊 Working Day 1,2,3 / Present Day 1,2,3 / Class T. Sign 1,2,3 columns now contain term labels.<br>Individual month values are saved in their respective columns.</div>'; 
             setTimeout(() => { if (confirm("Submit another student record?")) resetAllForms(); }, 1000); 
         } 
         catch (error) { 
