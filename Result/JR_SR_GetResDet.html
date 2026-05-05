@@ -1397,7 +1397,7 @@ function renderAttendanceView(s) {
         'Working Day 2', 'WD Sept', 'WD Oct', 'WD Nov', 'Present Day 2', 'PD Sept', 'PD Oct', 'PD Nov',
         'Class T. Sign 2', 'CS Sept', 'CS Oct', 'CS Nov', 'Gr. Sign 2', 'H.M 2',
         'Working Day 3', 'WD Dec', 'WD Jan', 'WD Feb', 'WD Mar', 'WD Apr', 'WD May', 
-        'Present Day 3', 'PD Dec', 'PD Jan', 'PD Feb', 'PD March', 'PD Apr', 'PD May', 
+        'Present Day 3', 'PD Dec', 'PD Jan', 'PD Feb', 'PD Mar', 'PD Apr', 'PD May', 
         'Class T. Sign 3', 'CS Dec', 'CS Jan', 'CS Feb', 'CS Mar', 'CS Apr', 'CS May', 'Gr. Sign 3', 'H.M 3'
     ];
     
@@ -2369,7 +2369,7 @@ function goBackToSearch() {
     window.openPrintProgressCard = function() {
         if (!currentStudentData) { alert("No student data loaded."); return; }
         const s = currentStudentData;
-        const months = ['Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+        const months = ['June','July','August','Sept','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
         const workingDays = months.map(m => formatValue(s[`WD ${m}`]));
         const presentDays = months.map(m => formatValue(s[`PD ${m}`]));
         const classSign = months.map(m => formatValue(s[`CS ${m}`]));
