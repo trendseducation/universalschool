@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Universal English Medium School · Requirements</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --bg-sidebar: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --logo-filter: none;
+            --overlay-bg: rgba(0,0,0,0.3);
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --admin-gold: #f59e0b;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-header: #111827;
+            --bg-sidebar: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --logo-filter: brightness(0) invert(1);
+            --overlay-bg: rgba(0,0,0,0.6);
+            --input-bg: #1e293b;
+            --input-border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem 2.5rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            background: var(--bg-header);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            transition: background var(--transition-normal);
+        }
+
+        .brand-area { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 44px; width: auto; filter: var(--logo-filter); object-fit: contain; }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Hide hamburger button - removed sidebar */
+        .hamburger-btn {
+            display: none !important;
+        }
+
+        .right-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.8rem;
+        }
+
+        .right-actions .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        /* Hide sidebar completely */
+        .sidebar-overlay,
+        .sidebar {
+            display: none !important;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .welcome-section {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 2rem 2.5rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .welcome-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome-section .sub-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .welcome-section .sub-text .highlight-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            background: var(--bg-card);
+            border-radius: 32px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid var(--border-light);
+            background: var(--bg-card);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            background: var(--accent-soft);
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn i {
+            font-size: 1.2rem;
+        }
+
+        .tab-content {
+            padding: 2rem 2.5rem;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section 1 - Your Comment */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+        }
+
+        .form-group textarea {
+            padding: 1rem 1.2rem;
+            border-radius: 16px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all var(--transition-fast);
+            width: 100%;
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .char-counter .warning { color: var(--warning); }
+        .char-counter .danger { color: var(--danger); }
+
+        .btn {
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-soft);
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-top: 1rem;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+        }
+        .status-success {
+            background: var(--success);
+            color: white;
+        }
+        .status-error {
+            background: var(--danger);
+            color: white;
+        }
+        .status-info {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Section 2 - Your Solution */
+        .solution-loading {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .solution-loading .spinner-large {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .solution-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .solution-item {
+            background: var(--bg-body);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition-fast);
+            position: relative;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .solution-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .solution-item .sr-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .solution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .solution-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .solution-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .solution-meta i {
+            font-size: 0.9rem;
+        }
+
+        .solution-comment {
+            margin: 0.8rem 0;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            line-height: 1.7;
+            color: var(--text-main);
+            border-left: 4px solid var(--accent);
+            word-wrap: break-word;
+        }
+
+        .solution-solution {
+            margin: 0.8rem 0;
+            padding: 1rem;
+            background: var(--accent-soft);
+            border-radius: 12px;
+            line-height: 1.7;
+            color: var(--text-main);
+            border-left: 4px solid var(--success);
+            display: none;
+            word-wrap: break-word;
+        }
+
+        .solution-solution.has-solution {
+            display: block;
+        }
+
+        .solution-link {
+            color: var(--accent) !important;
+            text-decoration: none;
+            word-break: break-all;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            background: var(--accent-soft);
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .solution-link:hover {
+            background: var(--accent);
+            color: white !important;
+            text-decoration: none;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .solution-link i {
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .solution-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .solution-actions .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 1.2rem;
+        }
+
+        .resolved-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid var(--success);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border-radius: 40px;
+            padding: 0;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: var(--card-border);
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 40px 40px 0 0;
+            color: white;
+        }
+
+        .modal-header.danger-header {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform var(--transition-fast);
+            line-height: 1;
+        }
+        .modal-close:hover { transform: rotate(90deg); }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 70px);
+        }
+
+        .modal-body .form-group textarea {
+            min-height: 120px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        .modal-actions .btn {
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        /* Scrollable table for desktop */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .solution-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 500px;
+        }
+
+        .solution-table thead {
+            background: var(--accent-soft);
+            border-radius: 12px;
+        }
+
+        .solution-table th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .solution-table td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
+            line-height: 1.6;
+        }
+
+        .solution-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .solution-table .comment-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .solution-table .solution-cell {
+            max-width: 250px;
+            word-wrap: break-word;
+        }
+
+        .solution-table .solution-cell .solution-link {
+            display: inline-block;
+            max-width: 200px;
+        }
+
+        .solution-table .actions-cell {
+            white-space: nowrap;
+            min-width: 140px;
+        }
+
+        .solution-table .btn {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+        }
+
+        .solution-table .btn i {
+            font-size: 0.7rem;
+        }
+
+        /* Mobile card view */
+        .solution-card-view {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .solution-card-view .solution-item {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .solution-card-view .solution-item .solution-meta {
+            font-size: 0.8rem;
+        }
+
+        .solution-card-view .solution-item .solution-comment {
+            margin: 0.8rem 0;
+        }
+
+        .solution-card-view .solution-item .solution-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .solution-card-view .solution-item .solution-actions .btn {
+            flex: 1;
+            min-width: 60px;
+            justify-content: center;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        .solution-card-view .solution-item .solution-solution .solution-link {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            display: block;
+            text-align: center;
+        }
+
+        /* Alert Popup */
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-hover);
+            border-radius: 0 16px 16px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-main);
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.warning { border-left-color: var(--warning); }
+        .alert-popup.info { border-left-color: var(--accent); }
+
+        /* Background loading indicator */
+        .bg-loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 9999;
+            background: var(--bg-body);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bg-loading-indicator.active {
+            opacity: 1;
+        }
+
+        .bg-loading-indicator .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #7c3aed, var(--accent));
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            transition: width 0.3s ease;
+            border-radius: 0 2px 2px 0;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Auto-update badge - hidden but functional */
+        .auto-update-badge {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .top-bar { 
+                border-radius: 32px; 
+                padding: 0.6rem 1.2rem; 
+            }
+            .brand-text { 
+                font-size: 1.1rem; 
+            }
+            .brand-logo { 
+                height: 32px; 
+            }
+            .app-wrapper { 
+                padding: 0.8rem 1rem 2rem; 
+            }
+            
+            .right-actions .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                border-radius: 30px;
+            }
+            .right-actions .btn i {
+                font-size: 0.8rem;
+            }
+            
+            .welcome-section { 
+                padding: 1.5rem; 
+            }
+            .welcome-section h1 { 
+                font-size: 1.5rem; 
+            }
+            .welcome-section .sub-text { 
+                font-size: 1rem; 
+            }
+            
+            .tab-content { 
+                padding: 1.5rem; 
+            }
+            .tab-btn { 
+                padding: 1rem 1rem; 
+                font-size: 0.9rem; 
+            }
+            .tab-btn i { 
+                font-size: 1rem; 
+            }
+            
+            .solution-table { 
+                display: none !important; 
+            }
+            .solution-card-view { 
+                display: flex !important; 
+            }
+            #tableView { 
+                display: none !important; 
+            }
+            #cardView { 
+                display: flex !important; 
+            }
+            
+            .btn { 
+                padding: 0.7rem 1.5rem; 
+                font-size: 0.9rem; 
+            }
+            
+            .alert-popup {
+                bottom: 70px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                font-size: 0.85rem;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (min-width: 821px) {
+            .solution-table { 
+                display: table !important; 
+            }
+            .solution-card-view { 
+                display: none !important; 
+            }
+            #tableView { 
+                display: block !important; 
+            }
+            #cardView { 
+                display: none !important; 
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 0.8rem 0.5rem;
+                flex-direction: column;
+                gap: 4px;
+            }
+            .tab-btn i { 
+                font-size: 1.2rem; 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-wrapper { 
+                padding: 0.5rem 0.6rem 1.5rem; 
+            }
+            .top-bar { 
+                padding: 0.4rem 0.8rem; 
+                border-radius: 24px; 
+                gap: 0.5rem;
+            }
+            .brand-text { 
+                font-size: 0.85rem; 
+            }
+            .brand-logo { 
+                height: 28px; 
+            }
+            
+            .right-actions .btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.65rem;
+                border-radius: 20px;
+            }
+            .right-actions .btn i {
+                font-size: 0.7rem;
+            }
+            
+            .welcome-section { 
+                padding: 1.2rem; 
+                border-radius: 24px; 
+            }
+            .welcome-section h1 { 
+                font-size: 1.2rem; 
+            }
+            .welcome-section .sub-text { 
+                font-size: 0.9rem; 
+            }
+            
+            .tab-content { 
+                padding: 1rem; 
+            }
+            .tab-btn { 
+                font-size: 0.7rem; 
+                padding: 0.6rem 0.3rem; 
+            }
+            .tab-btn i { 
+                font-size: 1rem; 
+            }
+            
+            .form-group textarea { 
+                font-size: 0.9rem; 
+                padding: 0.8rem 1rem; 
+                min-height: 120px; 
+            }
+            .btn { 
+                padding: 0.6rem 1rem; 
+                font-size: 0.85rem; 
+            }
+            
+            .solution-card-view .solution-item { 
+                padding: 1rem; 
+            }
+            .solution-card-view .solution-item .solution-meta { 
+                font-size: 0.7rem; 
+                gap: 0.8rem; 
+            }
+            .solution-card-view .solution-item .solution-comment { 
+                font-size: 0.9rem; 
+                padding: 0.8rem; 
+            }
+            
+            .modal-box { 
+                max-width: 100%; 
+                border-radius: 28px; 
+            }
+            .modal-header { 
+                padding: 1rem 1.2rem; 
+                border-radius: 28px 28px 0 0; 
+            }
+            .modal-body { 
+                padding: 1.2rem; 
+            }
+            .modal-actions { 
+                flex-direction: column; 
+            }
+            .modal-actions .btn { 
+                width: 100%; 
+            }
+            
+            .solution-link {
+                font-size: 0.8rem;
+                padding: 4px 8px;
+                max-width: 100%;
+                display: inline-block;
+                word-break: break-all;
+            }
+            
+            .solution-solution .solution-link {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Loading Indicator -->
+    <div class="bg-loading-indicator" id="bgLoadingIndicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="app-wrapper">
+
+        <header class="top-bar">
+            <div class="brand-area">
+                <img class="brand-logo" src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_" alt="Universal English Medium School logo">
+                <span class="brand-text">Universal English Medium School</span>
+            </div>
+            <div class="right-actions">
+                <!-- Auto-sync badge hidden but functional -->
+                <span class="auto-update-badge" id="autoUpdateBadge">
+                    <span class="pulse-dot"></span>
+                    Auto-sync
+                </span>
+                <a href="myaccount.html" class="btn btn-primary">
+                    <i class="fas fa-user"></i> My Account
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+
+            <!-- Welcome Section -->
+            <div class="welcome-section" id="welcomeSection">
+                <h1>Welcome <span class="highlight" id="fullNameDisplay">User</span> 👋</h1>
+                <p class="sub-text">
+                    We know you require something else! Can you tell us your requirements 
+                    <span class="highlight-name" id="requirementNameDisplay">User</span>?
+                </p>
+            </div>
+
+            <!-- Tab Container -->
+            <div class="tab-container">
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="commentTab">
+                        <i class="fas fa-comment"></i> Your Comment
+                    </button>
+                    <button class="tab-btn" data-tab="solutionTab">
+                        <i class="fas fa-check-circle"></i> Your Solution
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Tab 1: Your Comment -->
+                    <div class="tab-pane active" id="commentTab">
+                        <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-pen" style="color: var(--accent);"></i> Tell Us Your Requirement
+                        </h2>
+                        <form id="requirementForm">
+                            <div class="form-group">
+                                <label for="commentInput"><i class="fas fa-pen"></i> Your Requirement</label>
+                                <textarea 
+                                    id="commentInput" 
+                                    placeholder="Describe your requirements, suggestions, or feedback in detail..."
+                                    maxlength="1000"
+                                    required
+                                ></textarea>
+                                <div class="char-counter">
+                                    <span id="charCount">0</span> / 1000 characters
+                                </div>
+                            </div>
+                            <div id="formStatus" class="status-message"></div>
+                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> Submit Requirement
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 2: Your Solution -->
+                    <div class="tab-pane" id="solutionTab">
+                        <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-list" style="color: var(--accent);"></i> Your Requirements History
+                            <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-muted); margin-left: auto;">
+                                <i class="fas fa-sync-alt" id="refreshIcon" style="cursor: pointer;" onclick="manualRefresh()"></i>
+                            </span>
+                        </h2>
+                        <div id="solutionContainer">
+                            <!-- Loading Spinner -->
+                            <div id="solutionLoading" class="solution-loading">
+                                <div class="spinner-large"></div>
+                                <p>Loading your requirements...</p>
+                            </div>
+                            <!-- Table View (Desktop) -->
+                            <div class="table-wrapper" id="tableView" style="display: none;">
+                                <table class="solution-table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Comment</th>
+                                            <th>Solution</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="solutionTableBody">
+                                        <!-- Dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- Card View (Mobile) -->
+                            <div class="solution-card-view" id="cardView" style="display: none;">
+                                <!-- Dynamically populated -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Requirement</h3>
+                <button class="modal-close" id="editModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editCommentInput">Your Requirement</label>
+                        <textarea id="editCommentInput" maxlength="1000" required></textarea>
+                        <div class="char-counter">
+                            <span id="editCharCount">0</span> / 1000 characters
+                        </div>
+                    </div>
+                    <input type="hidden" id="editSrNo">
+                    <div id="editStatus" class="status-message"></div>
+                    <button type="submit" class="btn btn-success btn-block" id="editSubmitBtn">
+                        <i class="fas fa-save"></i> Update Requirement
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <div class="modal-header danger-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+                <button class="modal-close" id="deleteModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
+                    Are you sure you want to delete this requirement?
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    This action cannot be undone. All associated data will be permanently removed.
+                </p>
+                <input type="hidden" id="deleteSrNo">
+                <div id="deleteStatus" class="status-message"></div>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" id="deleteCancelBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-danger" id="deleteConfirmBtn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertBox" class="alert-popup">Message...</div>
+
+    <script>
+        // ============================================================
+        // ⭐ ENHANCED SESSION MANAGEMENT (FIXED FOR REMEMBER ME)
+        // ============================================================
+
+        const SESSION_KEYS = {
+            USER: 'Universal_user',
+            USER_DATA: 'Universal_user_data',
+            USER_TYPE: 'Universal_user_type',
+            REMEMBER_ME: 'Universal_remember_me',
+            SESSION_EXPIRY: 'Universal_session_expiry',
+            STUDENT_SHEET: 'student_sheet_name',
+            STUDENT_FOUND: 'student_data_found'
+        };
+
+        // ============================================================
+        // SESSION MANAGEMENT FUNCTIONS
+        // ============================================================
+
+        function getSessionData(key) {
+            // Check localStorage first (Remember Me)
+            const localData = localStorage.getItem(key);
+            if (localData) {
+                try {
+                    const parsed = JSON.parse(localData);
+                    // Check if it's a Remember Me session with expiry
+                    if (parsed.value && parsed.expiry && Date.now() < parsed.expiry) {
+                        return parsed.value;
+                    }
+                    // If it's just a direct value
+                    if (parsed.value !== undefined) return parsed.value;
+                    return parsed;
+                } catch (e) {
+                    // If not JSON, return as is
+                    return localData;
+                }
+            }
+            
+            // Check sessionStorage
+            const sessionData = sessionStorage.getItem(key);
+            if (sessionData) {
+                try {
+                    return JSON.parse(sessionData);
+                } catch (e) {
+                    return sessionData;
+                }
+            }
+            
+            return null;
+        }
+
+        function isRememberMeActive() {
+            const rememberMeData = localStorage.getItem(SESSION_KEYS.REMEMBER_ME);
+            if (rememberMeData) {
+                try {
+                    const parsed = JSON.parse(rememberMeData);
+                    return parsed.value === true && Date.now() < parsed.expiry;
+                } catch(e) {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function syncSessionFromRememberMe() {
+            if (isRememberMeActive()) {
+                const userData = getSessionData(SESSION_KEYS.USER_DATA);
+                const userType = getSessionData(SESSION_KEYS.USER_TYPE);
+                const email = getSessionData(SESSION_KEYS.USER);
+                
+                if (email && userData) {
+                    sessionStorage.setItem(SESSION_KEYS.USER, JSON.stringify(email));
+                    sessionStorage.setItem(SESSION_KEYS.USER_DATA, JSON.stringify(userData));
+                    if (userType) {
+                        sessionStorage.setItem(SESSION_KEYS.USER_TYPE, JSON.stringify(userType));
+                    }
+                    console.log('🔄 Synced session from Remember Me to sessionStorage');
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function getCurrentUser() {
+            // Try to sync from Remember Me first
+            syncSessionFromRememberMe();
+            
+            let savedUser = getSessionData(SESSION_KEYS.USER);
+            let savedUserData = getSessionData(SESSION_KEYS.USER_DATA);
+            
+            // Fallback to direct access
+            if (!savedUser) {
+                savedUser = sessionStorage.getItem(SESSION_KEYS.USER) || localStorage.getItem(SESSION_KEYS.USER);
+                if (savedUser) {
+                    try {
+                        savedUser = JSON.parse(savedUser);
+                    } catch(e) {}
+                }
+            }
+            
+            if (!savedUserData) {
+                savedUserData = sessionStorage.getItem(SESSION_KEYS.USER_DATA) || localStorage.getItem(SESSION_KEYS.USER_DATA);
+                if (savedUserData) {
+                    try {
+                        savedUserData = JSON.parse(savedUserData);
+                    } catch(e) {}
+                }
+            }
+            
+            if (!savedUser || !savedUserData) {
+                return null;
+            }
+
+            try {
+                if (typeof savedUserData === 'string') {
+                    savedUserData = JSON.parse(savedUserData);
+                }
+                
+                const firstName = savedUserData['First Name'] || '';
+                const lastName = savedUserData['Last Name'] || '';
+                const fullName = `${firstName} ${lastName}`.trim() || 'User';
+                const email = savedUserData['Email Id'] || savedUser;
+                
+                return {
+                    email: email,
+                    data: savedUserData,
+                    fullName: fullName,
+                    firstName: firstName,
+                    lastName: lastName
+                };
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // ⭐ AUTHENTICATION CHECK - FIXED FOR REMEMBER ME
+        // ============================================================
+        function checkLoginStatus() {
+            // Try to sync from Remember Me
+            syncSessionFromRememberMe();
+            
+            const user = getCurrentUser();
+            
+            if (!user) {
+                console.warn('⚠️ No session found, redirecting to login');
+                window.location.href = 'myaccount.html';
+                return false;
+            }
+
+            // Update UI with user info
+            dom.fullNameDisplay.textContent = user.fullName;
+            dom.requirementNameDisplay.textContent = user.fullName;
+            
+            // Store user globally
+            window._currentUser = user;
+            
+            const isRememberMe = isRememberMeActive();
+            console.log(`✅ User authenticated: ${user.fullName} (${user.email})`);
+            console.log(`📌 Session source: ${isRememberMe ? 'Remember Me (10 days)' : 'Session'}`);
+            
+            return true;
+        }
+
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+        const REQUIREMENT_SHEET = "Requirement";
+        const SPREADSHEET_ID = "1D5sgEXtGeNJNpwI6XyAvpt9bcI4eLQVF5Eq2w1rXRQY";
+
+        // Cache settings
+        const CACHE_DURATION = 60000; // 1 minute cache
+        const AUTO_UPDATE_INTERVAL = 30000; // 30 seconds auto-update
+
+        // ============================================================
+        // THEME SYNC
+        // ============================================================
+        function getStoredTheme() {
+            try {
+                return localStorage.getItem('user-theme-preference') || 'light';
+            } catch(e) {
+                return 'light';
+            }
+        }
+
+        function applyTheme(theme) {
+            try {
+                document.body.setAttribute('data-theme', theme);
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('user-theme-preference', theme);
+                
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+                if (metaThemeColor) {
+                    metaThemeColor.content = theme === 'dark' ? '#0a0f1c' : '#f4f7fc';
+                }
+                
+                console.log(`🎨 Theme applied: ${theme}`);
+                
+                try {
+                    if (window.parent && window.parent !== window) {
+                        window.parent.postMessage({
+                            type: 'themeChange',
+                            theme: theme,
+                            source: 'requirement.html'
+                        }, '*');
+                    }
+                } catch(e) {}
+            } catch(e) {
+                console.error('Error applying theme:', e);
+            }
+        }
+
+        function syncThemeWithParent() {
+            try {
+                const localTheme = localStorage.getItem('user-theme-preference');
+                if (localTheme) {
+                    applyTheme(localTheme);
+                    return;
+                }
+                try {
+                    if (window.parent && window.parent.document.body) {
+                        const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                        if (parentTheme) {
+                            applyTheme(parentTheme);
+                            return;
+                        }
+                    }
+                } catch(e) {}
+                
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('light');
+                }
+            } catch(e) {
+                console.error('Error syncing theme:', e);
+                applyTheme('light');
+            }
+        }
+
+        window.addEventListener('message', function(event) {
+            try {
+                if (event.data && event.data.type === 'themeChange') {
+                    const newTheme = event.data.theme;
+                    if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+                        console.log(`📩 Received theme change from parent: ${newTheme}`);
+                        applyTheme(newTheme);
+                    }
+                }
+            } catch(e) {}
+        });
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'user-theme-preference') {
+                const newTheme = e.newValue;
+                if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+                    console.log(`📦 Theme changed in another tab: ${newTheme}`);
+                    applyTheme(newTheme);
+                }
+            }
+        });
+
+        if (window.matchMedia) {
+            const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+            darkModeMedia.addEventListener('change', function(e) {
+                if (!localStorage.getItem('user-theme-preference')) {
+                    const theme = e.matches ? 'dark' : 'light';
+                    console.log(`🖥️ System theme changed: ${theme}`);
+                    applyTheme(theme);
+                }
+            });
+        }
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const dom = {};
+
+        function cacheDomElements() {
+            dom.alertBox = document.getElementById('alertBox');
+            dom.fullNameDisplay = document.getElementById('fullNameDisplay');
+            dom.requirementNameDisplay = document.getElementById('requirementNameDisplay');
+            dom.commentInput = document.getElementById('commentInput');
+            dom.charCount = document.getElementById('charCount');
+            dom.formStatus = document.getElementById('formStatus');
+            dom.submitBtn = document.getElementById('submitBtn');
+            dom.requirementForm = document.getElementById('requirementForm');
+            dom.solutionTableBody = document.getElementById('solutionTableBody');
+            dom.cardView = document.getElementById('cardView');
+            dom.tableView = document.getElementById('tableView');
+            dom.solutionLoading = document.getElementById('solutionLoading');
+            dom.solutionContainer = document.getElementById('solutionContainer');
+            dom.tabBtns = document.querySelectorAll('.tab-btn');
+            dom.tabPanes = document.querySelectorAll('.tab-pane');
+            dom.bgLoadingIndicator = document.getElementById('bgLoadingIndicator');
+            dom.progressBar = document.getElementById('progressBar');
+            dom.refreshIcon = document.getElementById('refreshIcon');
+            dom.autoUpdateBadge = document.getElementById('autoUpdateBadge');
+            
+            dom.editModal = document.getElementById('editModal');
+            dom.editModalClose = document.getElementById('editModalClose');
+            dom.editForm = document.getElementById('editForm');
+            dom.editCommentInput = document.getElementById('editCommentInput');
+            dom.editCharCount = document.getElementById('editCharCount');
+            dom.editSrNo = document.getElementById('editSrNo');
+            dom.editStatus = document.getElementById('editStatus');
+            dom.editSubmitBtn = document.getElementById('editSubmitBtn');
+            
+            dom.deleteModal = document.getElementById('deleteModal');
+            dom.deleteModalClose = document.getElementById('deleteModalClose');
+            dom.deleteCancelBtn = document.getElementById('deleteCancelBtn');
+            dom.deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+            dom.deleteSrNo = document.getElementById('deleteSrNo');
+            dom.deleteStatus = document.getElementById('deleteStatus');
+        }
+
+        // ============================================================
+        // CACHE SYSTEM
+        // ============================================================
+        const dataCache = {
+            requirements: null,
+            timestamp: 0,
+            isRefreshing: false
+        };
+
+        function isCacheValid() {
+            return dataCache.requirements && (Date.now() - dataCache.timestamp) < CACHE_DURATION;
+        }
+
+        function updateCache(data) {
+            dataCache.requirements = data;
+            dataCache.timestamp = Date.now();
+            dataCache.isRefreshing = false;
+        }
+
+        // ============================================================
+        // BACKGROUND LOADING INDICATOR
+        // ============================================================
+        function showBackgroundLoading(progress = 0) {
+            dom.bgLoadingIndicator.classList.add('active');
+            dom.progressBar.style.width = Math.min(progress, 100) + '%';
+        }
+
+        function hideBackgroundLoading() {
+            dom.bgLoadingIndicator.classList.remove('active');
+            dom.progressBar.style.width = '0%';
+        }
+
+        function updateProgress(progress) {
+            dom.progressBar.style.width = Math.min(progress, 100) + '%';
+        }
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        function showToast(msg, type = 'info') {
+            const box = dom.alertBox;
+            if (!box) return;
+            
+            box.textContent = msg;
+            box.className = `alert-popup ${type}`;
+            box.style.display = 'block';
+            clearTimeout(box._timeout);
+            box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4500);
+        }
+
+        function showSpinner(element, show) {
+            if (!element) return;
+            if (show) {
+                element.disabled = true;
+                const originalText = element.innerHTML;
+                element.setAttribute('data-original-text', originalText);
+                element.innerHTML = '<span class="spinner"></span> Processing...';
+            } else {
+                element.disabled = false;
+                const original = element.getAttribute('data-original-text');
+                if (original) element.innerHTML = original;
+            }
+        }
+
+        function getTodayDate() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            return `${dd}/${mm}/${yyyy}`;
+        }
+
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return 'N/A';
+            try {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                    const d = new Date(parts[2], parts[1] - 1, parts[0]);
+                    if (!isNaN(d)) {
+                        return d.toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                    }
+                }
+                return dateStr;
+            } catch(e) {
+                return dateStr;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================================
+        // URL EXTRACTION AND DETECTION
+        // ============================================================
+        function extractUrls(text) {
+            if (!text || typeof text !== 'string') return [];
+            
+            const urls = [];
+            const seen = new Set();
+            
+            const urlPattern = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+|[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?(?:[\/?#][^\s<>"']*)?)/gi;
+            
+            const matches = text.match(urlPattern);
+            if (matches) {
+                matches.forEach(match => {
+                    let cleanUrl = match.trim();
+                    cleanUrl = cleanUrl.replace(/[.,;:!?)]+$/, '');
+                    cleanUrl = cleanUrl.replace(/['"]+$/, '');
+                    
+                    if (cleanUrl.length < 3) return;
+                    
+                    if (!seen.has(cleanUrl)) {
+                        seen.add(cleanUrl);
+                        urls.push(cleanUrl);
+                    }
+                });
+            }
+            
+            return urls;
+        }
+
+        function hasUrl(text) {
+            if (!text) return false;
+            const urls = extractUrls(text);
+            return urls.length > 0;
+        }
+
+        function getFirstUrl(text) {
+            if (!text) return null;
+            const urls = extractUrls(text);
+            return urls.length > 0 ? urls[0] : null;
+        }
+
+        function normalizeUrl(url) {
+            if (!url) return '';
+            let trimmed = url.trim();
+            trimmed = trimmed.replace(/[.,;:!?)]+$/, '');
+            trimmed = trimmed.replace(/['"]+$/, '');
+            
+            if (!/^https?:\/\//i.test(trimmed) && !/^ftp:\/\//i.test(trimmed)) {
+                if (trimmed.startsWith('www.')) {
+                    return 'https://' + trimmed;
+                }
+                return 'https://' + trimmed;
+            }
+            return trimmed;
+        }
+
+        function linkifyText(text) {
+            if (!text) return '';
+            
+            let result = escapeHtml(text);
+            const urls = extractUrls(text);
+            
+            urls.forEach(url => {
+                const cleanUrl = url.trim()
+                    .replace(/[.,;:!?)]+$/, '')
+                    .replace(/['"]+$/, '');
+                
+                const normalized = normalizeUrl(cleanUrl);
+                const escapedUrl = escapeHtml(cleanUrl);
+                const linkHtml = `<a href="${normalized}" target="_blank" rel="noopener noreferrer" class="solution-link" title="${escapedUrl}">
+                    <i class="fas fa-external-link-alt"></i> ${escapedUrl}
+                </a>`;
+                
+                const escapedUrlForRegex = cleanUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(escapedUrlForRegex, 'gi');
+                result = result.replace(regex, linkHtml);
+            });
+            
+            result = result.replace(/\n/g, '<br>');
+            
+            return result;
+        }
+
+        // ============================================================
+        // GET USER'S REQUIREMENTS (WITH CACHING)
+        // ============================================================
+        async function getUserRequirements(forceRefresh = false) {
+            if (!forceRefresh && isCacheValid()) {
+                console.log('📦 Using cached data');
+                return dataCache.requirements;
+            }
+
+            if (dataCache.isRefreshing) {
+                return new Promise((resolve) => {
+                    const checkCache = setInterval(() => {
+                        if (!dataCache.isRefreshing && dataCache.requirements) {
+                            clearInterval(checkCache);
+                            resolve(dataCache.requirements);
+                        }
+                    }, 100);
+                });
+            }
+
+            dataCache.isRefreshing = true;
+            showBackgroundLoading(10);
+
+            try {
+                const user = window._currentUser;
+                if (!user) {
+                    dataCache.isRefreshing = false;
+                    hideBackgroundLoading();
+                    return [];
+                }
+
+                updateProgress(30);
+
+                const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                
+                updateProgress(70);
+
+                if (data.status === 'success' && data.data) {
+                    const userData = data.data.filter(row => {
+                        const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim() : '';
+                        return rowEmail === user.email;
+                    });
+                    
+                    userData.sort((a, b) => {
+                        const srA = parseInt(a['Sr. No']) || 0;
+                        const srB = parseInt(b['Sr. No']) || 0;
+                        return srB - srA;
+                    });
+                    
+                    updateCache(userData);
+                    updateProgress(100);
+                    
+                    setTimeout(hideBackgroundLoading, 300);
+                    
+                    return userData;
+                }
+                
+                updateCache([]);
+                hideBackgroundLoading();
+                return [];
+            } catch (err) {
+                console.error('Error fetching requirements:', err);
+                dataCache.isRefreshing = false;
+                hideBackgroundLoading();
+                
+                if (dataCache.requirements) {
+                    console.log('⚠️ Using stale cache due to error');
+                    return dataCache.requirements;
+                }
+                return [];
+            }
+        }
+
+        // ============================================================
+        // GET NEXT SR NO
+        // ============================================================
+        async function getNextSrNo() {
+            try {
+                const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                
+                if (data.status === 'success' && data.data && data.data.length > 0) {
+                    let maxSr = 0;
+                    data.data.forEach(row => {
+                        const sr = parseInt(row['Sr. No']);
+                        if (!isNaN(sr) && sr > maxSr) maxSr = sr;
+                    });
+                    return maxSr + 1;
+                }
+                return 1;
+            } catch (err) {
+                console.error('Error fetching SR NO:', err);
+                return 1;
+            }
+        }
+
+        // ============================================================
+        // RE-SORT SR NO
+        // ============================================================
+        async function resortSrNumbers() {
+            try {
+                const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                
+                if (data.status === 'success' && data.data) {
+                    const sorted = data.data.sort((a, b) => {
+                        const srA = parseInt(a['Sr. No']) || 0;
+                        const srB = parseInt(b['Sr. No']) || 0;
+                        return srA - srB;
+                    });
+                    
+                    for (let i = 0; i < sorted.length; i++) {
+                        const row = sorted[i];
+                        const newSr = i + 1;
+                        const currentSr = parseInt(row['Sr. No']);
+                        
+                        if (currentSr !== newSr) {
+                            const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                            const fetchResp = await fetch(fetchUrl);
+                            const fetchData = await fetchResp.json();
+                            
+                            let rowIndex = null;
+                            if (fetchData.status === 'success' && fetchData.data) {
+                                fetchData.data.forEach((r, idx) => {
+                                    if (parseInt(r['Sr. No']) === currentSr) {
+                                        rowIndex = idx + 2;
+                                    }
+                                });
+                            }
+                            
+                            if (rowIndex) {
+                                const params = new URLSearchParams();
+                                params.append("action", "update");
+                                params.append("spreadsheetId", SPREADSHEET_ID);
+                                params.append("sheetName", REQUIREMENT_SHEET);
+                                params.append("rowIndex", rowIndex);
+                                params.append("Sr. No", newSr);
+                                
+                                await fetch(SCRIPT_URL, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: params.toString()
+                                });
+                            }
+                        }
+                    }
+                    
+                    dataCache.timestamp = 0;
+                }
+            } catch (err) {
+                console.error('Error re-sorting SR numbers:', err);
+            }
+        }
+
+        // ============================================================
+        // DELETE REQUIREMENT
+        // ============================================================
+        async function deleteRequirement(srNo) {
+            try {
+                const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                
+                let rowIndex = null;
+                if (data.status === 'success' && data.data) {
+                    data.data.forEach((row, idx) => {
+                        if (parseInt(row['Sr. No']) === srNo) {
+                            rowIndex = idx + 2;
+                        }
+                    });
+                }
+                
+                if (!rowIndex) {
+                    throw new Error('Record not found');
+                }
+                
+                const params = new URLSearchParams();
+                params.append("action", "delete");
+                params.append("spreadsheetId", SPREADSHEET_ID);
+                params.append("sheetName", REQUIREMENT_SHEET);
+                params.append("rowIndex", rowIndex);
+                
+                const deleteResp = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                
+                const result = await deleteResp.json();
+                
+                if (result.status === 'success') {
+                    await resortSrNumbers();
+                    dataCache.timestamp = 0;
+                    return true;
+                } else {
+                    throw new Error(result.message || 'Delete failed');
+                }
+            } catch (err) {
+                console.error('Error deleting requirement:', err);
+                throw err;
+            }
+        }
+
+        // ============================================================
+        // UPDATE REQUIREMENT
+        // ============================================================
+        async function updateRequirement(srNo, newComment) {
+            try {
+                const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${REQUIREMENT_SHEET}&action=getData&_=${Date.now()}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                
+                let rowIndex = null;
+                if (data.status === 'success' && data.data) {
+                    data.data.forEach((row, idx) => {
+                        if (parseInt(row['Sr. No']) === srNo) {
+                            rowIndex = idx + 2;
+                        }
+                    });
+                }
+                
+                if (!rowIndex) {
+                    throw new Error('Record not found');
+                }
+                
+                const params = new URLSearchParams();
+                params.append("action", "update");
+                params.append("spreadsheetId", SPREADSHEET_ID);
+                params.append("sheetName", REQUIREMENT_SHEET);
+                params.append("rowIndex", rowIndex);
+                params.append("Comment", newComment);
+                
+                const updateResp = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                
+                const result = await updateResp.json();
+                
+                if (result.status === 'success') {
+                    dataCache.timestamp = 0;
+                    return true;
+                } else {
+                    throw new Error(result.message || 'Update failed');
+                }
+            } catch (err) {
+                console.error('Error updating requirement:', err);
+                throw err;
+            }
+        }
+
+        // ============================================================
+        // SUBMIT REQUIREMENT
+        // ============================================================
+        async function submitRequirement(comment) {
+            const submitBtn = dom.submitBtn;
+            const statusEl = dom.formStatus;
+            
+            statusEl.style.display = 'none';
+            showSpinner(submitBtn, true);
+
+            try {
+                const user = window._currentUser;
+                if (!user) {
+                    throw new Error('User not authenticated');
+                }
+
+                const srNo = await getNextSrNo();
+                const todayDate = getTodayDate();
+
+                const params = new URLSearchParams();
+                params.append("action", "insert");
+                params.append("spreadsheetId", SPREADSHEET_ID);
+                params.append("sheetName", REQUIREMENT_SHEET);
+                params.append("Sr. No", srNo);
+                params.append("Date", todayDate);
+                params.append("Student Name", user.fullName);
+                params.append("Email Id", user.email);
+                params.append("Comment", comment);
+
+                const resp = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+
+                const result = await resp.json();
+
+                if (result.status === 'success') {
+                    statusEl.className = 'status-message status-success';
+                    statusEl.textContent = '✅ Thank you! Your requirement has been submitted successfully.';
+                    statusEl.style.display = 'block';
+                    
+                    showToast('✅ Requirement submitted successfully!', 'success');
+                    
+                    dom.commentInput.value = '';
+                    updateCharCount();
+                    
+                    dataCache.timestamp = 0;
+                    await renderSolutions(true);
+                    
+                    return true;
+                } else {
+                    throw new Error(result.message || 'Unknown error');
+                }
+            } catch (err) {
+                statusEl.className = 'status-message status-error';
+                statusEl.textContent = '❌ Failed to submit: ' + err.message;
+                statusEl.style.display = 'block';
+                showToast('❌ Error: ' + err.message, 'error');
+                return false;
+            } finally {
+                showSpinner(submitBtn, false);
+            }
+        }
+
+        // ============================================================
+        // RENDER SOLUTIONS - WITH FULL URL SUPPORT
+        // ============================================================
+        let isRendering = false;
+        let isAutoUpdating = false;
+
+        async function renderSolutions(forceRefresh = false, isAutoUpdate = false) {
+            if (isRendering) return;
+            
+            if (!isAutoUpdate) {
+                dom.solutionLoading.style.display = 'block';
+                dom.tableView.style.display = 'none';
+                dom.cardView.style.display = 'none';
+            }
+            
+            isRendering = true;
+
+            try {
+                const requirements = await getUserRequirements(forceRefresh);
+                
+                if (!isAutoUpdate) {
+                    dom.solutionLoading.style.display = 'none';
+                }
+                
+                if (requirements.length === 0) {
+                    dom.tableView.style.display = 'block';
+                    dom.cardView.style.display = 'flex';
+                    dom.solutionTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 3rem;">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <h3>No Requirements Yet</h3>
+                                    <p>You haven't submitted any requirements yet. Go to the "Your Comment" tab to submit one.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    dom.cardView.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No Requirements Yet</h3>
+                            <p>You haven't submitted any requirements yet. Go to the "Your Comment" tab to submit one.</p>
+                        </div>
+                    `;
+                    isRendering = false;
+                    return;
+                }
+
+                dom.tableView.style.display = 'block';
+                dom.cardView.style.display = 'flex';
+
+                let tableHtml = '';
+                let cardHtml = '';
+                let serialNumber = 1;
+
+                requirements.forEach((row) => {
+                    const srNo = row['Sr. No'] || serialNumber;
+                    const comment = row['Comment'] || '';
+                    const solution = row['Solution'] || '';
+                    const hasSolution = solution && solution.trim() !== '';
+                    const date = row['Date'] || '';
+                    
+                    let formattedSolution = '';
+                    if (hasSolution) {
+                        formattedSolution = linkifyText(solution);
+                    }
+                    
+                    tableHtml += `
+                        <tr>
+                            <td><strong>${serialNumber}</strong></td>
+                            <td class="comment-cell">${escapeHtml(comment)}</td>
+                            <td class="solution-cell">
+                                ${hasSolution ? 
+                                    formattedSolution : 
+                                    '<span style="color: var(--text-light); font-style: italic;">No solution yet</span>'
+                                }
+                            </td>
+                            <td class="actions-cell">
+                                ${!hasSolution ? `
+                                    <button class="btn btn-warning btn-sm edit-btn" data-srno="${srNo}" data-comment="${escapeHtml(comment)}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-srno="${srNo}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                ` : `
+                                    <span class="resolved-badge">
+                                        <i class="fas fa-check-circle"></i> Resolved
+                                    </span>
+                                `}
+                            </td>
+                        </tr>
+                    `;
+
+                    cardHtml += `
+                        <div class="solution-item">
+                            <div class="solution-header">
+                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <span class="sr-number">${serialNumber}</span>
+                                    ${date ? `<span style="font-size: 0.75rem; color: var(--text-muted);"><i class="far fa-calendar-alt"></i> ${formatDateForDisplay(date)}</span>` : ''}
+                                    ${hasSolution ? '<span class="resolved-badge"><i class="fas fa-check-circle"></i> Resolved</span>' : ''}
+                                </div>
+                            </div>
+                            <div class="solution-comment">
+                                <strong style="font-size: 0.75rem; color: var(--text-muted);">Comment:</strong>
+                                <p style="margin-top: 4px;">${escapeHtml(comment)}</p>
+                            </div>
+                            ${hasSolution ? `
+                                <div class="solution-solution has-solution">
+                                    <strong style="font-size: 0.75rem; color: var(--text-muted);">Solution:</strong>
+                                    <p style="margin-top: 4px;">${formattedSolution}</p>
+                                </div>
+                            ` : ''}
+                            ${!hasSolution ? `
+                                <div class="solution-actions">
+                                    <button class="btn btn-warning btn-sm edit-btn" data-srno="${srNo}" data-comment="${escapeHtml(comment)}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-srno="${srNo}">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+
+                    serialNumber++;
+                });
+
+                dom.solutionTableBody.innerHTML = tableHtml;
+                dom.cardView.innerHTML = cardHtml;
+
+            } catch (err) {
+                console.error('Error rendering solutions:', err);
+                dom.solutionLoading.style.display = 'none';
+                dom.tableView.style.display = 'block';
+                dom.cardView.style.display = 'flex';
+                dom.solutionTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: var(--danger);">
+                            <i class="fas fa-exclamation-circle"></i> Error loading requirements: ${escapeHtml(err.message)}
+                        </td>
+                    </tr>
+                `;
+                dom.cardView.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                        <i class="fas fa-exclamation-circle"></i> Error loading requirements: ${escapeHtml(err.message)}
+                    </div>
+                `;
+            }
+            
+            isRendering = false;
+        }
+
+        // ============================================================
+        // CHARACTER COUNTER
+        // ============================================================
+        function updateCharCount() {
+            const text = dom.commentInput.value;
+            const count = text.length;
+            dom.charCount.textContent = count;
+            
+            dom.charCount.className = '';
+            if (count > 900) dom.charCount.classList.add('warning');
+            if (count > 990) dom.charCount.classList.add('danger');
+        }
+
+        function updateEditCharCount() {
+            const text = dom.editCommentInput.value;
+            const count = text.length;
+            dom.editCharCount.textContent = count;
+            
+            dom.editCharCount.className = '';
+            if (count > 900) dom.editCharCount.classList.add('warning');
+            if (count > 990) dom.editCharCount.classList.add('danger');
+        }
+
+        // ============================================================
+        // EDIT MODAL FUNCTIONS (GLOBAL)
+        // ============================================================
+        let currentEditSrNo = null;
+
+        window.openEditModal = function(srNo, comment) {
+            currentEditSrNo = srNo;
+            dom.editSrNo.value = srNo;
+            dom.editCommentInput.value = comment;
+            updateEditCharCount();
+            dom.editStatus.style.display = 'none';
+            dom.editModal.classList.add('active');
+            
+            setTimeout(() => {
+                dom.editCommentInput.focus();
+                dom.editCommentInput.selectionStart = dom.editCommentInput.value.length;
+                dom.editCommentInput.selectionEnd = dom.editCommentInput.value.length;
+            }, 350);
+        };
+
+        window.closeEditModal = function() {
+            dom.editModal.classList.remove('active');
+            currentEditSrNo = null;
+            dom.editForm.reset();
+        };
+
+        // ============================================================
+        // DELETE MODAL FUNCTIONS (GLOBAL)
+        // ============================================================
+        let currentDeleteSrNo = null;
+
+        window.openDeleteModal = function(srNo) {
+            currentDeleteSrNo = srNo;
+            dom.deleteSrNo.value = srNo;
+            dom.deleteStatus.style.display = 'none';
+            dom.deleteModal.classList.add('active');
+        };
+
+        window.closeDeleteModal = function() {
+            dom.deleteModal.classList.remove('active');
+            currentDeleteSrNo = null;
+            dom.deleteSrNo.value = '';
+        };
+
+        // ============================================================
+        // HANDLE DELETE CONFIRMATION (GLOBAL)
+        // ============================================================
+        window.handleDeleteConfirm = async function() {
+            const srNo = parseInt(dom.deleteSrNo.value);
+            const statusEl = dom.deleteStatus;
+            
+            statusEl.style.display = 'none';
+            showSpinner(dom.deleteConfirmBtn, true);
+            
+            try {
+                await deleteRequirement(srNo);
+                showToast('✅ Requirement deleted successfully!', 'success');
+                window.closeDeleteModal();
+                await renderSolutions(true);
+            } catch (err) {
+                statusEl.className = 'status-message status-error';
+                statusEl.textContent = '❌ Failed to delete: ' + err.message;
+                statusEl.style.display = 'block';
+                showToast('❌ Error: ' + err.message, 'error');
+            } finally {
+                showSpinner(dom.deleteConfirmBtn, false);
+            }
+        };
+
+        // ============================================================
+        // MANUAL REFRESH (GLOBAL)
+        // ============================================================
+        window.manualRefresh = function() {
+            if (dom.refreshIcon) {
+                dom.refreshIcon.classList.add('fa-spin');
+            }
+            renderSolutions(true, false).finally(() => {
+                if (dom.refreshIcon) {
+                    setTimeout(() => {
+                        dom.refreshIcon.classList.remove('fa-spin');
+                    }, 1000);
+                }
+                showToast('🔄 Data refreshed successfully', 'success');
+            });
+        };
+
+        // ============================================================
+        // TAB SWITCHING
+        // ============================================================
+        function switchTab(tabId) {
+            dom.tabBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+            
+            dom.tabPanes.forEach(pane => {
+                pane.classList.toggle('active', pane.id === tabId);
+            });
+            
+            if (tabId === 'solutionTab') {
+                renderSolutions(false, false);
+            }
+        }
+
+        // ============================================================
+        // AUTO UPDATE SYSTEM
+        // ============================================================
+        let autoUpdateTimer = null;
+        let isAutoUpdateEnabled = true;
+
+        function startAutoUpdate() {
+            if (autoUpdateTimer) clearInterval(autoUpdateTimer);
+            autoUpdateTimer = setInterval(() => {
+                const solutionTab = document.getElementById('solutionTab');
+                if (solutionTab && solutionTab.classList.contains('active') && isAutoUpdateEnabled) {
+                    console.log('🔄 Auto-updating data...');
+                    renderSolutions(true, true);
+                }
+            }, AUTO_UPDATE_INTERVAL);
+        }
+
+        function stopAutoUpdate() {
+            if (autoUpdateTimer) {
+                clearInterval(autoUpdateTimer);
+                autoUpdateTimer = null;
+            }
+        }
+
+        // ============================================================
+        // EVENT DELEGATION FOR DYNAMIC BUTTONS
+        // ============================================================
+        function setupEventDelegation() {
+            document.addEventListener('click', function(e) {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    e.preventDefault();
+                    const srNo = parseInt(editBtn.dataset.srno);
+                    const comment = editBtn.dataset.comment;
+                    if (typeof window.openEditModal === 'function') {
+                        window.openEditModal(srNo, comment);
+                    } else {
+                        showToast('Edit function not available', 'error');
+                    }
+                    return;
+                }
+                
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    e.preventDefault();
+                    const srNo = parseInt(deleteBtn.dataset.srno);
+                    if (typeof window.openDeleteModal === 'function') {
+                        window.openDeleteModal(srNo);
+                    } else {
+                        showToast('Delete function not available', 'error');
+                    }
+                    return;
+                }
+            });
+        }
+
+        // ============================================================
+        // ⭐ ENHANCED EVENT BINDINGS (FIXED FOR REMEMBER ME)
+        // ============================================================
+        function init() {
+            cacheDomElements();
+
+            // Initialize theme FIRST
+            syncThemeWithParent();
+            console.log('🎨 Theme initialized:', document.body.getAttribute('data-theme'));
+
+            // ⭐ ENHANCED: Check login with both storage types
+            const isLoggedIn = checkLoginStatus();
+            if (!isLoggedIn) return;
+
+            // Setup event delegation for dynamic buttons
+            setupEventDelegation();
+
+            // Tab switching
+            dom.tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+
+            // Character counter
+            dom.commentInput.addEventListener('input', updateCharCount);
+            dom.editCommentInput.addEventListener('input', updateEditCharCount);
+
+            // Form submit - Comment
+            dom.requirementForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const comment = dom.commentInput.value.trim();
+                
+                if (!comment) {
+                    showToast('Please enter your requirement', 'warning');
+                    dom.commentInput.focus();
+                    return;
+                }
+
+                if (comment.length < 5) {
+                    showToast('Please provide more details (min 5 characters)', 'warning');
+                    dom.commentInput.focus();
+                    return;
+                }
+
+                await submitRequirement(comment);
+            });
+
+            // Enter key in textarea
+            dom.commentInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    dom.requirementForm.dispatchEvent(new Event('submit'));
+                }
+            });
+
+            // Edit modal
+            dom.editModalClose.addEventListener('click', window.closeEditModal);
+            dom.editModal.addEventListener('click', function(e) {
+                if (e.target === this) window.closeEditModal();
+            });
+
+            // Edit form submit
+            dom.editForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const srNo = parseInt(dom.editSrNo.value);
+                const newComment = dom.editCommentInput.value.trim();
+                
+                if (!newComment) {
+                    showToast('Please enter your requirement', 'warning');
+                    return;
+                }
+                
+                if (newComment.length < 5) {
+                    showToast('Please provide more details (min 5 characters)', 'warning');
+                    return;
+                }
+                
+                showSpinner(dom.editSubmitBtn, true);
+                dom.editStatus.style.display = 'none';
+                
+                try {
+                    await updateRequirement(srNo, newComment);
+                    showToast('✅ Requirement updated successfully!', 'success');
+                    window.closeEditModal();
+                    await renderSolutions(true);
+                } catch (err) {
+                    dom.editStatus.className = 'status-message status-error';
+                    dom.editStatus.textContent = '❌ Failed to update: ' + err.message;
+                    dom.editStatus.style.display = 'block';
+                    showToast('❌ Error: ' + err.message, 'error');
+                } finally {
+                    showSpinner(dom.editSubmitBtn, false);
+                }
+            });
+
+            // Delete modal
+            dom.deleteModalClose.addEventListener('click', window.closeDeleteModal);
+            dom.deleteCancelBtn.addEventListener('click', window.closeDeleteModal);
+            dom.deleteModal.addEventListener('click', function(e) {
+                if (e.target === this) window.closeDeleteModal();
+            });
+            dom.deleteConfirmBtn.addEventListener('click', window.handleDeleteConfirm);
+
+            // Initial render of solutions
+            renderSolutions(false, false);
+
+            // Start auto-update
+            startAutoUpdate();
+
+            // Pause auto-update when user interacts with modals
+            document.addEventListener('click', function(e) {
+                const modal = e.target.closest('.modal-overlay');
+                if (modal && modal.classList.contains('active')) {
+                    isAutoUpdateEnabled = false;
+                }
+            });
+
+            // Resume auto-update when modals close
+            document.addEventListener('click', function(e) {
+                const closeBtn = e.target.closest('.modal-close, .btn-outline, .btn-success, .btn-danger');
+                if (closeBtn) {
+                    setTimeout(() => {
+                        const activeModals = document.querySelectorAll('.modal-overlay.active');
+                        if (activeModals.length === 0) {
+                            isAutoUpdateEnabled = true;
+                        }
+                    }, 500);
+                }
+            });
+
+            // Keyboard shortcut: Escape to close modals
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (dom.editModal.classList.contains('active')) {
+                        window.closeEditModal();
+                    }
+                    if (dom.deleteModal.classList.contains('active')) {
+                        window.closeDeleteModal();
+                    }
+                }
+            });
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', function() {
+                stopAutoUpdate();
+            });
+
+            console.log('✅ Universal English Medium School Requirement page loaded');
+            console.log(`✅ Welcome: ${window._currentUser?.fullName}`);
+            console.log(`✅ Email: ${window._currentUser?.email}`);
+            console.log(`✅ Cache duration: ${CACHE_DURATION/1000}s`);
+            console.log(`✅ Auto-update interval: ${AUTO_UPDATE_INTERVAL/1000}s`);
+            console.log(`🎨 Current theme: ${document.body.getAttribute('data-theme')}`);
+            console.log('🔗 URL detection: All URLs in solution will be clickable');
+            console.log('🔐 Remember Me support: Enabled');
+        }
+
+        // ============================================================
+        // START APP
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

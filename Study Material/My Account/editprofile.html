@@ -1,0 +1,2448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Universal English Medium School · Edit Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- ⭐ Remember Me Login Script -->
+    <script src="remember-me-login.js"></script>
+
+    <style>
+        /* ============================================================
+           CSS VARIABLES & THEME
+           ============================================================ */
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --bg-sidebar: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --shadow-lg: 0 20px 60px -12px rgba(0,0,0,0.15);
+            --accent: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --logo-filter: none;
+            --overlay-bg: rgba(0,0,0,0.3);
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --admin-gold: #f59e0b;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-header: #111827;
+            --bg-sidebar: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --shadow-lg: 0 20px 60px -12px rgba(0,0,0,0.6);
+            --accent: #3b82f6;
+            --accent-light: #1e3a5f;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --logo-filter: brightness(0) invert(1);
+            --overlay-bg: rgba(0,0,0,0.6);
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --success-light: #064e3b;
+            --danger-light: #7f1d1d;
+            --warning-light: #78350f;
+        }
+
+        /* ============================================================
+           BASE STYLES
+           ============================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spinPulse {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @keyframes modalFadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-light);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        /* ============================================================
+           LAYOUT
+           ============================================================ */
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem 2.5rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* ============================================================
+           TOP BAR
+           ============================================================ */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            background: var(--bg-header);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            transition: background var(--transition-normal);
+        }
+
+        .top-bar-left { display: flex; align-items: center; gap: 10px; }
+        .top-bar-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+
+        .brand-area { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 44px; width: auto; filter: var(--logo-filter); object-fit: contain; }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            margin-left: auto;
+            text-decoration: none;
+        }
+        .back-btn:hover { background: var(--accent-soft); transform: translateX(-2px); }
+        .back-btn i { font-size: 1.2rem; }
+        .back-btn .back-text { display: inline; }
+
+        /* ============================================================
+           PROFILE LAYOUT
+           ============================================================ */
+        .profile-layout {
+            display: flex;
+            gap: 1.8rem;
+            flex: 1;
+            min-height: 500px;
+        }
+
+        .profile-left {
+            flex: 0 0 30%;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 1.8rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+        .profile-card:hover { box-shadow: var(--shadow-hover); }
+
+        .profile-avatar-wrapper {
+            text-align: center;
+            margin-bottom: 1.2rem;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .profile-avatar-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            background: var(--input-bg);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+        }
+        .profile-avatar-container:hover .profile-avatar { filter: brightness(0.9); transform: scale(1.02); }
+        .profile-avatar-container:hover .avatar-edit-overlay { opacity: 1; transform: translateY(0); }
+
+        .avatar-edit-overlay {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: var(--accent);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 3px solid var(--bg-card);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        .avatar-edit-overlay:hover { background: #1d4ed8; transform: scale(1.1) translateY(0); }
+
+        .avatar-spinner-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .avatar-spinner-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+        .avatar-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top: 4px solid #ffffff;
+            border-radius: 50%;
+            animation: spinPulse 0.8s ease-in-out infinite;
+        }
+        .avatar-spinner-text {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+        .dots-loader { display: inline-block; width: 1.2em; text-align: left; }
+        .dots-loader::after { content: ''; animation: dots 1.2s steps(4, end) infinite; }
+        @keyframes dots {
+            0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; }
+            75% { content: '...'; } 100% { content: ''; }
+        }
+
+        .profile-name { text-align: center; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .profile-email { text-align: center; color: var(--text-muted); font-size: 0.9rem; word-break: break-all; }
+        .divider { border: none; border-top: 2px solid var(--border-light); margin: 1rem 0; }
+
+        .section-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 500;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        .section-nav-item:hover { background: var(--accent-soft); color: var(--text-main); transform: translateX(4px); }
+        .section-nav-item.active { background: var(--accent); color: white; }
+        .section-nav-item.active i { color: white; }
+        .section-nav-item i { width: 24px; font-size: 1.1rem; color: var(--accent); }
+
+        .profile-right {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .section-content.active { display: block; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .section-title { font-size: 1.3rem; font-weight: 700; }
+        .section-title i { color: var(--accent); margin-right: 10px; }
+
+        .field-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .field-group.single-col { grid-template-columns: 1fr; }
+        .field-item { display: flex; flex-direction: column; gap: 4px; }
+        .field-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+        }
+        .field-value {
+            padding: 0.7rem 1rem;
+            background: var(--input-bg);
+            border-radius: var(--radius-md);
+            border: 2px solid transparent;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            word-break: break-word;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* BUTTONS */
+        .btn {
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), #1d4ed8); color: white; box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background: var(--accent); color: white; transform: translateY(-2px); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); color: white; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.75rem; }
+        .btn-block { width: 100%; justify-content: center; padding: 0.8rem; margin-top: 0.5rem; }
+
+        .edit-toggle-btn {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .edit-toggle-btn:hover { background: var(--accent); color: white; transform: translateY(-2px); }
+
+        /* ============================================================
+           MODALS
+           ============================================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(16px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active { display: flex; visibility: visible; opacity: 1; }
+        .modal-overlay.closing { animation: modalFadeOut 0.3s ease forwards; }
+
+        .modal-box {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: 0;
+            max-width: 560px;
+            width: 100%;
+            max-height: 95vh;
+            border: var(--card-border);
+            box-shadow: var(--shadow-lg);
+            animation: fadeInScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            padding: 1.2rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            flex-shrink: 0;
+        }
+        .modal-header h3 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .modal-header h3 i { font-size: 1.3rem; }
+
+        .modal-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: white;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .modal-close:hover { background: rgba(255,255,255,0.3); transform: rotate(90deg); }
+
+        .modal-body {
+            padding: 1.8rem 2rem;
+            overflow-y: auto;
+            flex: 1;
+            max-height: calc(95vh - 140px);
+            scroll-behavior: smooth;
+        }
+        .modal-body::-webkit-scrollbar { width: 4px; }
+        .modal-body::-webkit-scrollbar-track { background: transparent; }
+        .modal-body::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        .modal-field-group { margin-bottom: 1.2rem; }
+        .modal-field-group:last-child { margin-bottom: 0; }
+
+        .modal-field-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            transition: color var(--transition-fast);
+        }
+        .modal-field-label i { font-size: 0.85rem; color: var(--accent); width: 18px; text-align: center; }
+        .modal-field-label .required-star { color: var(--danger); font-size: 1.1rem; margin-left: 2px; }
+
+        .modal-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            overflow: hidden;
+        }
+        .modal-input-wrapper:hover { border-color: var(--accent); background: var(--bg-card); }
+        .modal-input-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); background: var(--bg-card); }
+        .modal-input-wrapper .input-icon { padding: 0 0 0 14px; color: var(--text-light); font-size: 1rem; transition: color var(--transition-fast); flex-shrink: 0; }
+        .modal-input-wrapper:focus-within .input-icon { color: var(--accent); }
+        .modal-input-wrapper input,
+        .modal-input-wrapper select {
+            width: 100%;
+            padding: 12px 14px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-main);
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+        .modal-input-wrapper select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+        .modal-input-wrapper select option { background: var(--bg-card); color: var(--text-main); padding: 8px; }
+        .modal-input-wrapper input::placeholder { color: var(--text-light); font-weight: 400; }
+        .modal-input-wrapper input:disabled { opacity: 0.6; cursor: not-allowed; }
+        .modal-input-wrapper.success { border-color: var(--success); background: var(--success-light); }
+        .modal-input-wrapper.success .input-icon { color: var(--success); }
+        .modal-input-wrapper.error { border-color: var(--danger); background: var(--danger-light); }
+        .modal-input-wrapper.error .input-icon { color: var(--danger); }
+        .modal-input-wrapper.warning { border-color: var(--warning); background: var(--warning-light); }
+        .modal-input-wrapper.warning .input-icon { color: var(--warning); }
+
+        .modal-field-helper { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; padding-left: 4px; display: flex; align-items: center; gap: 6px; }
+        .modal-field-helper i { font-size: 0.65rem; }
+
+        .modal-status {
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-status.success { background: var(--success-light); color: var(--success); display: block; border: 1px solid var(--success); }
+        .modal-status.error { background: var(--danger-light); color: var(--danger); display: block; border: 1px solid var(--danger); }
+        .modal-status.warning { background: var(--warning-light); color: var(--warning); display: block; border: 1px solid var(--warning); }
+
+        .modal-footer {
+            padding: 1rem 1.8rem;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            background: var(--bg-card);
+        }
+        .modal-footer .btn { min-width: 120px; justify-content: center; padding: 0.8rem 1.5rem; font-weight: 700; }
+
+        /* IMAGE EDIT */
+        .image-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 2rem;
+            border: 2px dashed var(--border-light);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--input-bg);
+            margin-bottom: 1rem;
+        }
+        .image-upload-area:hover { border-color: var(--accent); background: var(--accent-soft); }
+        .image-upload-area img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-body);
+            border: 3px solid var(--accent);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .image-upload-area img:hover { transform: scale(1.05); }
+        .image-upload-area .upload-hint { font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+        .image-upload-area input { display: none; }
+
+        .preview-container { display: none; margin-top: 1rem; width: 100%; }
+        .image-to-crop { max-width: 100%; max-height: 380px; display: block; margin: 0 auto; border-radius: var(--radius-md); }
+
+        .crop-controls {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--accent-soft);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+        }
+        .crop-controls.visible { display: flex; }
+
+        .btn-tool {
+            background: var(--bg-card);
+            border: 2px solid var(--border-light);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 1 auto;
+            min-width: 70px;
+            justify-content: center;
+        }
+        .btn-tool:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .btn-tool:active { transform: scale(0.95); }
+        .btn-tool:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        .btn-tool i { font-size: 0.9rem; }
+        .btn-tool.success-tool { background: linear-gradient(135deg, var(--success), #059669); color: white; border-color: var(--success); }
+        .btn-tool.success-tool:hover { background: linear-gradient(135deg, #059669, #047857); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
+        .image-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .image-status.success { color: var(--success); background: var(--success-light); border: 1px solid var(--success); }
+        .image-status.error { color: var(--danger); background: var(--danger-light); border: 1px solid var(--danger); }
+        .image-status.info { color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); }
+
+        .cropped-thumbnail-container {
+            display: none;
+            margin-top: 16px;
+            text-align: center;
+            padding: 12px;
+            background: var(--input-bg);
+            border-radius: 20px;
+            border: 2px solid var(--success);
+            animation: fadeIn 0.3s ease;
+        }
+        .cropped-thumbnail-container .thumbnail-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .cropped-thumbnail-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--success);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin: 0 auto;
+            display: block;
+        }
+        .cropped-thumbnail-preview:hover { transform: scale(1.1); box-shadow: var(--shadow-hover); }
+
+        /* TOAST */
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-hover);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-main);
+            max-width: 400px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.warning { border-left-color: var(--warning); }
+        .alert-popup.info { border-left-color: var(--accent); }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .profile-left { flex: 0 0 35%; min-width: 200px; }
+        }
+
+        /* ⭐ ENHANCED: Mobile layout — Quick Info moved below sections */
+        @media (max-width: 820px) {
+            .app-wrapper { padding: 0.8rem 1rem 2rem; }
+            .profile-layout { flex-direction: column; gap: 1.2rem; }
+
+            /* Flatten .profile-left so its two cards become direct flex items
+               of .profile-layout — this lets us reorder them independently. */
+            .profile-left { display: contents; }
+
+            /* Mobile order: 1) avatar+nav  2) sections  3) quick info */
+            .profile-left .profile-card:nth-child(1) { order: 1; }
+            .profile-right                          { order: 2; }
+            .profile-left .profile-card:nth-child(2) { order: 3; }
+
+            /* Reset row-specific layout that no longer applies */
+            .profile-left .profile-card { flex: none; min-width: 0; padding: 1.2rem; }
+
+            .section-nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+            .section-nav-item {
+                flex: 1;
+                min-width: 80px;
+                justify-content: center;
+                padding: 0.6rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .profile-avatar { width: 80px; height: 80px; }
+            .profile-name { font-size: 1.1rem; }
+            .section-content { padding: 1.5rem; }
+            .field-group { grid-template-columns: 1fr; }
+            .section-title { font-size: 1.1rem; }
+
+            .modal-box { max-width: 95%; }
+            .modal-body { padding: 1.2rem; max-height: calc(95vh - 130px); }
+            .modal-field-label { font-size: 0.7rem; }
+            .modal-input-wrapper input,
+            .modal-input-wrapper select { padding: 10px 12px; font-size: 0.9rem; }
+
+            .top-bar { padding: 0.4rem 1rem; border-radius: 32px; }
+            .brand-text { font-size: 1.1rem; }
+            .brand-logo { height: 36px; }
+            .back-btn { font-size: 0.9rem; padding: 0.3rem 0.8rem; }
+            .back-btn .back-text { display: block; }
+            .back-btn i { font-size: 1.1rem; }
+
+            .crop-controls { gap: 6px; padding: 10px; }
+            .btn-tool { padding: 6px 12px; font-size: 0.75rem; min-width: 55px; }
+            .image-upload-area { padding: 1.5rem; }
+            .image-upload-area img { width: 80px; height: 80px; }
+
+            .modal-footer { padding: 0.8rem 1.2rem; }
+            .modal-footer .btn { min-width: 100px; padding: 0.6rem 1rem; font-size: 0.85rem; }
+
+            .avatar-spinner { width: 30px; height: 30px; }
+            .avatar-spinner-text { font-size: 0.6rem; }
+        }
+
+        @media (max-width: 480px) {
+            .app-wrapper { padding: 0.5rem 0.6rem 1.5rem; }
+            .top-bar { padding: 0.3rem 0.8rem; border-radius: 24px; }
+            .brand-text { font-size: 0.95rem; }
+            .brand-logo { height: 30px; }
+            .back-btn { font-size: 0.8rem; padding: 0.2rem 0.6rem; }
+            .back-btn .back-text { display: none; }
+            .back-btn i { font-size: 1rem; }
+
+            .profile-left .profile-card { padding: 1rem; }
+            .profile-avatar { width: 60px; height: 60px; }
+            .profile-name { font-size: 1rem; }
+            .profile-email { font-size: 0.75rem; }
+
+            .section-nav-item { font-size: 0.7rem; padding: 0.5rem 0.6rem; min-width: 60px; }
+            .section-nav-item i { font-size: 0.9rem; width: 18px; }
+            .section-nav-item span { font-size: 0.7rem; }
+
+            .section-content { padding: 1rem; border-radius: 24px; }
+            .section-title { font-size: 1rem; }
+            .field-label { font-size: 0.6rem; }
+            .field-value { padding: 0.5rem 0.8rem; font-size: 0.85rem; min-height: 38px; }
+
+            .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+            .edit-toggle-btn { font-size: 0.7rem; padding: 0.3rem 0.8rem; }
+
+            .modal-box { max-width: 100%; border-radius: 28px; }
+            .modal-header { padding: 0.8rem 1.2rem; border-radius: 28px 28px 0 0; }
+            .modal-header h3 { font-size: 1rem; }
+            .modal-body { padding: 1rem; max-height: calc(95vh - 120px); }
+
+            .modal-field-label { font-size: 0.65rem; }
+            .modal-field-label i { font-size: 0.75rem; width: 16px; }
+            .modal-input-wrapper { border-radius: var(--radius-sm); }
+            .modal-input-wrapper input,
+            .modal-input-wrapper select { padding: 8px 10px; font-size: 0.85rem; }
+            .modal-input-wrapper .input-icon { padding-left: 10px; font-size: 0.85rem; }
+
+            .crop-controls { gap: 4px; padding: 8px; border-radius: 16px; }
+            .btn-tool { padding: 5px 8px; font-size: 0.65rem; min-width: 45px; }
+            .btn-tool i { font-size: 0.7rem; }
+
+            .image-upload-area { padding: 1rem; }
+            .image-upload-area img { width: 60px; height: 60px; }
+            .image-upload-area .upload-hint { font-size: 0.7rem; }
+
+            .modal-footer { padding: 0.6rem 1rem; flex-direction: column; }
+            .modal-footer .btn { min-width: 100%; padding: 0.6rem; font-size: 0.85rem; }
+
+            .alert-popup { bottom: 70px; right: 15px; left: 15px; max-width: none; font-size: 0.85rem; padding: 12px 16px; }
+
+            .cropped-thumbnail-preview { width: 60px; height: 60px; }
+            .image-status { font-size: 0.75rem; padding: 6px 12px; min-height: 32px; }
+            .avatar-spinner { width: 26px; height: 26px; border-width: 3px; }
+            .avatar-spinner-text { font-size: 0.55rem; }
+        }
+
+        /* LOADING / ERROR */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            gap: 1rem;
+            min-height: 300px;
+        }
+        .loading-state .spinner { width: 40px; height: 40px; border-width: 4px; }
+        .loading-state p { color: var(--text-muted); font-size: 1rem; }
+
+        .error-state { text-align: center; padding: 3rem 1rem; color: var(--danger); }
+        .error-state i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <div class="brand-area">
+                <img class="brand-logo" src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_" alt="Universal English Medium School logo">
+                <span class="brand-text">Universal English Medium School</span>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <a href="myaccount.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span class="back-text">Back</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- PROFILE LAYOUT -->
+    <div class="profile-layout" id="profileLayout">
+
+        <!-- LEFT SECTION -->
+        <aside class="profile-left">
+            <div class="profile-card">
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar-container" id="avatarEditTrigger">
+                        <img id="profileAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=120" alt="Profile">
+                        <div class="avatar-spinner-overlay" id="avatarSpinnerOverlay">
+                            <div class="avatar-spinner"></div>
+                            <span class="avatar-spinner-text">Updating<span class="dots-loader"></span></span>
+                        </div>
+                        <div class="avatar-edit-overlay" title="Edit Profile Image">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-name" id="profileName">Loading...</div>
+                <div class="profile-email" id="profileEmail">loading@email.com</div>
+                <hr class="divider">
+                <div class="section-nav">
+                    <button class="section-nav-item active" data-section="personal">
+                        <i class="fas fa-user"></i>
+                        <span>Personal</span>
+                    </button>
+                    <button class="section-nav-item" data-section="education">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Education</span>
+                    </button>
+                    <button class="section-nav-item" data-section="other">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <span>Other</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-card" style="flex: 1;">
+                <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle"></i> Quick Info
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Status</span>
+                        <span id="quickStatus" style="font-weight: 600;">—</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Location</span>
+                        <span id="quickLocation" style="font-weight: 600;">—</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Insta</span>
+                        <span id="quickInsta" style="font-weight: 600;">—</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">College</span>
+                        <span id="quickCollege" style="font-weight: 600;">—</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT SECTION -->
+        <main class="profile-right" id="profileRight">
+
+            <div class="section-content active" id="section-personal">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-user-circle"></i> Personal Information</div>
+                    <button class="edit-toggle-btn" data-section="personal"><i class="fas fa-edit"></i> Edit</button>
+                </div>
+                <div class="field-group" id="personalFields">
+                    <div class="field-item"><span class="field-label">First Name</span><div class="field-value" data-field="First Name">—</div></div>
+                    <div class="field-item"><span class="field-label">Last Name</span><div class="field-value" data-field="Last Name">—</div></div>
+                    <div class="field-item"><span class="field-label">Mobile Number</span><div class="field-value" data-field="Mobile Number">—</div></div>
+                    <div class="field-item"><span class="field-label">Email Id</span><div class="field-value" data-field="Email Id">—</div></div>
+                </div>
+            </div>
+
+            <div class="section-content" id="section-education">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-graduation-cap"></i> Education Details</div>
+                    <button class="edit-toggle-btn" data-section="education"><i class="fas fa-edit"></i> Edit</button>
+                </div>
+                <div class="field-group single-col" id="educationFields">
+                    <div class="field-item"><span class="field-label">Education Details</span><div class="field-value" data-field="Education Details">—</div></div>
+                    <div class="field-item"><span class="field-label">College / School Name</span><div class="field-value" data-field="College Name">—</div></div>
+                </div>
+            </div>
+
+            <div class="section-content" id="section-other">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-ellipsis-h"></i> Other Details</div>
+                    <button class="edit-toggle-btn" data-section="other"><i class="fas fa-edit"></i> Edit</button>
+                </div>
+                <div class="field-group" id="otherFields">
+                    <div class="field-item"><span class="field-label">Insta Id</span><div class="field-value" data-field="Insta Id">—</div></div>
+                    <div class="field-item"><span class="field-label">Job Status</span><div class="field-value" data-field="Job Status">—</div></div>
+                    <div class="field-item" style="grid-column: 1 / -1;"><span class="field-label">Location</span><div class="field-value" data-field="Location">—</div></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> <span id="editModalTitle">Edit Details</span></h3>
+                <button class="modal-close" id="editModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div id="editFormFields"></div>
+                    <div id="editModalStatus" class="modal-status"></div>
+                    <button type="submit" class="btn btn-success btn-block" id="editModalSubmit">
+                        <i class="fas fa-save"></i> Update Details
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE EDIT MODAL -->
+    <div class="modal-overlay" id="imageEditModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-camera"></i> Edit Profile Image</h3>
+                <button class="modal-close" id="imageModalClose">×</button>
+            </div>
+            <div class="modal-body" id="imageModalBody">
+                <div class="image-upload-area" id="imageUploadArea">
+                    <img id="imagePreview" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=100" alt="Profile preview">
+                    <span class="upload-hint"><i class="fas fa-cloud-upload-alt"></i> Click to choose image or drag & drop</span>
+                    <input type="file" id="imageInput" accept="image/*">
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <img class="image-to-crop" id="imageToCrop" alt="Image to crop">
+                </div>
+                <div class="crop-controls" id="cropControls">
+                    <button type="button" class="btn-tool" id="rotateLeftBtn"><i class="fas fa-undo"></i> Left</button>
+                    <button type="button" class="btn-tool" id="rotateRightBtn"><i class="fas fa-redo"></i> Right</button>
+                    <button type="button" class="btn-tool" id="zoomInBtn"><i class="fas fa-search-plus"></i> Zoom+</button>
+                    <button type="button" class="btn-tool" id="zoomOutBtn"><i class="fas fa-search-minus"></i> Zoom-</button>
+                    <button type="button" class="btn-tool" id="resetCropBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+                    <button type="button" class="btn-tool success-tool" id="applyCropBtn"><i class="fas fa-check"></i> Apply Crop</button>
+                </div>
+                <div class="image-status info" id="imageStatus">
+                    <i class="fas fa-info-circle"></i> Select an image to start editing
+                </div>
+                <div class="cropped-thumbnail-container" id="croppedThumbnailContainer">
+                    <span class="thumbnail-label">✅ Cropped Preview</span>
+                    <img class="cropped-thumbnail-preview" id="croppedThumbnailPreview" src="" alt="Cropped preview">
+                    <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 6px;">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i> Image ready to apply
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="imageModalCancel"><i class="fas fa-times"></i> Cancel</button>
+                <button type="button" class="btn btn-success" id="applyImageBtn" disabled><i class="fas fa-check"></i> Apply Image</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="alertBox" class="alert-popup">Message...</div>
+
+    <!-- ============================================================ SCRIPT ============================================================ -->
+    <script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const STUDENT_SHEET = "Student_Login";
+const SPREADSHEET_ID = "1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA";
+const DRIVE_FOLDER_ID = "1IVFoLOI4Zt71wLwhLR4nH8KciAiquE6d";
+const IMAGE_COLUMN_NAME = "Image";
+
+// ⭐ Student Data Spreadsheet (mirror target)
+const STUDENT_DATA_SPREADSHEET_ID = "1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8";
+const STUDENT_DATA_SHEETS = [
+    'STD_1',
+    'STD_2',
+    'STD_3',
+    'STD_4',
+    'STD_5',
+    'STD_6',
+    'STD_7',
+    'STD_8',
+    'STD_9',
+    'STD_10'
+];
+
+const EDUCATION_OPTIONS = [
+    'STD_1', 'STD_2', 'STD_3', 'STD_4', 'STD_5', 'STD_6',
+    'STD_7', 'STD_8', 'STD_9', 'STD_10'
+];
+
+// ============================================================
+// THEME MANAGEMENT
+// ============================================================
+function getStoredTheme() {
+    try { return localStorage.getItem('user-theme-preference') || 'light'; }
+    catch (e) { return 'light'; }
+}
+
+function applyTheme(theme) {
+    try {
+        document.body.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('user-theme-preference', theme);
+
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.content = theme === 'dark' ? '#0a0f1c' : '#f4f7fc';
+        }
+
+        console.log(`🎨 Theme applied: ${theme}`);
+
+        try {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'themeChange',
+                    theme: theme,
+                    source: 'editprofile.html'
+                }, '*');
+            }
+        } catch (e) {}
+    } catch (e) {
+        console.error('Error applying theme:', e);
+    }
+}
+
+function syncThemeWithParent() {
+    try {
+        const localTheme = localStorage.getItem('user-theme-preference');
+        if (localTheme && (localTheme === 'light' || localTheme === 'dark')) {
+            applyTheme(localTheme);
+            return;
+        }
+
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme && (parentTheme === 'light' || parentTheme === 'dark')) {
+                    applyTheme(parentTheme);
+                    return;
+                }
+            }
+        } catch (e) {}
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    } catch (e) {
+        console.error('Error syncing theme:', e);
+        applyTheme('light');
+    }
+}
+
+window.addEventListener('storage', function (e) {
+    if (e.key === 'user-theme-preference') {
+        const newTheme = e.newValue;
+        if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+            console.log(`📦 Theme changed in another tab: ${newTheme}`);
+            applyTheme(newTheme);
+        }
+    }
+});
+
+window.addEventListener('message', function (event) {
+    try {
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme;
+            if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+                console.log(`📩 Received theme change from parent: ${newTheme}`);
+                applyTheme(newTheme);
+            }
+        }
+    } catch (e) {}
+});
+
+if (window.matchMedia) {
+    const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMedia.addEventListener('change', function (e) {
+        if (!localStorage.getItem('user-theme-preference')) {
+            const theme = e.matches ? 'dark' : 'light';
+            console.log(`🖥️ System theme changed: ${theme}`);
+            applyTheme(theme);
+        }
+    });
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function extractFileId(driveUrl) {
+    if (!driveUrl) return null;
+    const match = driveUrl.match(/[-\w]{25,}/);
+    return match ? match[0] : null;
+}
+
+function getDriveThumbnail(driveUrl, size = 200) {
+    const fileId = extractFileId(driveUrl);
+    if (fileId) {
+        return `https://lh3.googleusercontent.com/d/${fileId}=w${size}`;
+    }
+    return driveUrl;
+}
+
+function showToast(msg, type = 'info') {
+    const box = document.getElementById('alertBox');
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4000);
+}
+
+function showSpinner(element, show, customHtml = null) {
+    if (!element) return;
+    if (show) {
+        if (element.dataset.originalText) return;
+        element.dataset.originalText = element.innerHTML;
+        element.disabled = true;
+        element.innerHTML = customHtml || '<span class="spinner"></span> Updating...';
+    } else {
+        if (!element.dataset.originalText) return;
+        element.innerHTML = element.dataset.originalText;
+        delete element.dataset.originalText;
+        element.disabled = false;
+    }
+}
+
+// ============================================================
+// DOM REFERENCES
+// ============================================================
+const dom = {};
+
+function cacheDomElements() {
+    dom.profileAvatar = document.getElementById('profileAvatar');
+    dom.profileName = document.getElementById('profileName');
+    dom.profileEmail = document.getElementById('profileEmail');
+    dom.quickStatus = document.getElementById('quickStatus');
+    dom.quickLocation = document.getElementById('quickLocation');
+    dom.quickInsta = document.getElementById('quickInsta');
+    dom.quickCollege = document.getElementById('quickCollege');
+    dom.avatarSpinnerOverlay = document.getElementById('avatarSpinnerOverlay');
+
+    dom.sectionNavItems = document.querySelectorAll('.section-nav-item');
+    dom.sectionContents = document.querySelectorAll('.section-content');
+    dom.editButtons = document.querySelectorAll('.edit-toggle-btn');
+
+    dom.imageModal = document.getElementById('imageEditModal');
+    dom.imageModalBody = document.getElementById('imageModalBody');
+    dom.imageModalClose = document.getElementById('imageModalClose');
+    dom.imageModalCancel = document.getElementById('imageModalCancel');
+    dom.imageUploadArea = document.getElementById('imageUploadArea');
+    dom.imageInput = document.getElementById('imageInput');
+    dom.imagePreview = document.getElementById('imagePreview');
+    dom.imageToCrop = document.getElementById('imageToCrop');
+    dom.previewContainer = document.getElementById('previewContainer');
+    dom.cropControls = document.getElementById('cropControls');
+    dom.imageStatus = document.getElementById('imageStatus');
+    dom.croppedThumbnailContainer = document.getElementById('croppedThumbnailContainer');
+    dom.croppedThumbnailPreview = document.getElementById('croppedThumbnailPreview');
+    dom.applyImageBtn = document.getElementById('applyImageBtn');
+
+    dom.rotateLeftBtn = document.getElementById('rotateLeftBtn');
+    dom.rotateRightBtn = document.getElementById('rotateRightBtn');
+    dom.zoomInBtn = document.getElementById('zoomInBtn');
+    dom.zoomOutBtn = document.getElementById('zoomOutBtn');
+    dom.resetCropBtn = document.getElementById('resetCropBtn');
+    dom.applyCropBtn = document.getElementById('applyCropBtn');
+
+    dom.avatarEditTrigger = document.getElementById('avatarEditTrigger');
+
+    dom.editModal = document.getElementById('editModal');
+    dom.editModalTitle = document.getElementById('editModalTitle');
+    dom.editModalClose = document.getElementById('editModalClose');
+    dom.editForm = document.getElementById('editForm');
+    dom.editFormFields = document.getElementById('editFormFields');
+    dom.editModalStatus = document.getElementById('editModalStatus');
+    dom.editModalSubmit = document.getElementById('editModalSubmit');
+
+    dom.personalFields = document.getElementById('personalFields');
+    dom.educationFields = document.getElementById('educationFields');
+    dom.otherFields = document.getElementById('otherFields');
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let currentUserData = null;
+let currentUserRowIndex = null;
+let currentEditingSection = null;
+let originalData = {};
+let cropperInstance = null;
+let croppedImageData = null;
+let isApplyingImage = false;
+
+// ============================================================
+// FETCH USER DATA (primary Student_Login sheet)
+// ============================================================
+async function fetchUserData(email) {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        if (data.status === 'success' && data.data) {
+            const found = data.data.find((row, index) => {
+                const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim() : '';
+                if (rowEmail === email) {
+                    currentUserRowIndex = index + 2;
+                    return true;
+                }
+                return false;
+            });
+            return found || null;
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching user data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// UPDATE USER DATA (primary Student_Login sheet)
+// ============================================================
+async function updateUserData(rowIndex, updates) {
+    try {
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("rowIndex", rowIndex);
+
+        for (const [key, value] of Object.entries(updates)) {
+            if (value !== undefined && value !== null) {
+                params.append(key, value);
+            }
+        }
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        return await resp.json();
+    } catch (err) {
+        console.error('Error updating user data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// UPLOAD IMAGE TO DRIVE (primary — Student_Login sheet)
+// ============================================================
+async function uploadImageToDrive(base64Data, fileName, mimeType, oldFileId, rowIndex) {
+    try {
+        if (oldFileId) {
+            await deleteFileFromDrive(oldFileId);
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("fileCount", "1");
+        params.append("fileData1", base64Data);
+        params.append("fileName1", fileName);
+        params.append("fileType1", mimeType);
+        params.append("fileColumn1", IMAGE_COLUMN_NAME);
+        params.append("driveFolderId", DRIVE_FOLDER_ID);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        return await resp.json();
+    } catch (err) {
+        console.error('Error uploading image:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// DELETE FILE FROM DRIVE (primary Student_Login sheet)
+// ============================================================
+async function deleteFileFromDrive(fileId) {
+    try {
+        if (!fileId) return null;
+
+        const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+        const fetchResp = await fetch(fetchUrl);
+        const fetchData = await fetchResp.json();
+
+        let rowIndex = null;
+        if (fetchData.status === 'success' && fetchData.data) {
+            fetchData.data.forEach((row, idx) => {
+                const imageUrl = row['Image'] || '';
+                const extractedId = extractFileId(imageUrl);
+                if (extractedId === fileId) {
+                    rowIndex = idx + 2;
+                }
+            });
+        }
+
+        if (!rowIndex) {
+            console.warn('File not found in sheet');
+            return null;
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", "deleteimage");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("columnName", IMAGE_COLUMN_NAME);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        return await resp.json();
+    } catch (err) {
+        console.error('Error deleting file:', err);
+        return null;
+    }
+}
+
+// ============================================================
+// ⭐ MIRROR IMAGE LINK TO STUDENT DATA SPREADSHEET (FIXED)
+// ============================================================
+/**
+ * Mirror the uploaded image URL into the matching row of the Student Data
+ * spreadsheet (ID: 1n21WMpSxap6CgfXBt3guK4DUKpFfDG69fiMm3_4r2hc).
+ *
+ * KEY FIX: The backend writes only to headers whose EXACT string matches the
+ * POST parameter key. So we must discover the sheet's ACTUAL header strings
+ * (which may have trailing spaces, different casing, etc.) and use those
+ * exact strings as both the write parameter key and the delete columnName.
+ *
+ * @param {string} email       - User's email to search for
+ * @param {string} newImageUrl - New Drive file URL to mirror
+ * @returns {Promise<Object>}
+ */
+async function mirrorImageToStudentSheets(email, newImageUrl) {
+    const result = {
+        found: false,
+        matchedSheets: [],
+        updatedSheets: [],
+        errors: []
+    };
+
+    if (!email || !newImageUrl) {
+        result.errors.push('Missing email or image URL');
+        return result;
+    }
+
+    const normalizedEmail = email.toString().trim().toLowerCase();
+    const newFileId = extractFileId(newImageUrl);
+
+    // ----------------------------------------------------------
+    // Normalizer for fuzzy header comparison
+    // ----------------------------------------------------------
+    const normalize = (s) => s.toString().trim().toLowerCase().replace(/\s+/g, '');
+
+    // ----------------------------------------------------------
+    // STEP 1: Scan all sheets in parallel.
+    // For each sheet, capture the EXACT header string that represents
+    // "Email Id" and "Image" so we can use those exact strings later.
+    // ----------------------------------------------------------
+    const scans = STUDENT_DATA_SHEETS.map(async (sheetName) => {
+        try {
+            const url = `${SCRIPT_URL}?spreadsheetId=${STUDENT_DATA_SPREADSHEET_ID}` +
+                        `&sheetName=${encodeURIComponent(sheetName)}` +
+                        `&action=getData&_=${Date.now()}`;
+
+            const resp = await fetch(url);
+            const data = await resp.json();
+
+            if (data.status !== 'success' || !Array.isArray(data.data)) {
+                return { sheetName, matched: false, reason: 'no-data-or-error' };
+            }
+
+            // The backend returns objects whose keys are the raw header strings.
+            // We infer headers from the first row's keys (any row works, but
+            // we also need a row to know exact key names). Use the first row
+            // if present, else an empty array.
+            const sampleRow = data.data[0] || {};
+            const headerKeys = Object.keys(sampleRow);
+
+            // Discover the actual header strings used in this sheet
+            const emailHeader = headerKeys.find(k => normalize(k) === 'emailid');
+            const imageHeader = headerKeys.find(k => normalize(k) === 'image');
+
+            if (!emailHeader) {
+                return {
+                    sheetName,
+                    matched: false,
+                    reason: 'no-email-header',
+                    headerKeys
+                };
+            }
+
+            if (!imageHeader) {
+                return {
+                    sheetName,
+                    matched: false,
+                    reason: 'no-image-header',
+                    headerKeys
+                };
+            }
+
+            // Find all rows matching the email
+            const matches = [];
+            data.data.forEach((row, idx) => {
+                const rowEmail = row[emailHeader];
+                const rowEmailNorm = rowEmail === null || rowEmail === undefined
+                    ? ''
+                    : rowEmail.toString().trim().toLowerCase();
+
+                if (rowEmailNorm === normalizedEmail) {
+                    matches.push({
+                        dataIndex: idx,
+                        sheetRowIndex: idx + 2,   // +2: header is row 1
+                        oldImageUrl: row[imageHeader] || '',
+                        emailHeader: emailHeader,   // ← exact header string
+                        imageHeader: imageHeader    // ← exact header string
+                    });
+                }
+            });
+
+            return {
+                sheetName,
+                matched: matches.length > 0,
+                matches,
+                emailHeader,
+                imageHeader
+            };
+        } catch (err) {
+            console.warn(`⚠️ Scan failed for "${sheetName}":`, err);
+            return {
+                sheetName,
+                matched: false,
+                reason: 'exception',
+                error: err.message
+            };
+        }
+    });
+
+    const scanResults = await Promise.all(scans);
+
+    // Collect all matches across all sheets
+    const allMatches = [];
+    scanResults.forEach(scan => {
+        if (scan.matched && scan.matches) {
+            scan.matches.forEach(m => {
+                allMatches.push({
+                    sheetName: scan.sheetName,
+                    sheetRowIndex: m.sheetRowIndex,
+                    oldImageUrl: m.oldImageUrl,
+                    emailHeader: m.emailHeader,
+                    imageHeader: m.imageHeader
+                });
+            });
+        }
+    });
+
+    // Email not found → skip silently
+    if (allMatches.length === 0) {
+        console.log(`ℹ️ Email "${email}" not found in any student data sheet — mirror skipped.`);
+
+        // Helpful diagnostic: if any sheet was missing the header we expected,
+        // log it so we can see why.
+        scanResults.forEach(r => {
+            if (r.reason === 'no-image-header' || r.reason === 'no-email-header') {
+                console.warn(`⚠️ Sheet "${r.sheetName}" missing expected header (${r.reason}). Found headers:`, r.headerKeys);
+            }
+        });
+
+        return result;
+    }
+
+    result.found = true;
+    result.matchedSheets = allMatches.map(m => m.sheetName);
+
+    console.log(`🎯 Email found in ${allMatches.length} student sheet(s):`, result.matchedSheets);
+
+    // ----------------------------------------------------------
+    // STEP 2: For each match → delete old file + write new URL
+    //         Using the EXACT header strings discovered from that sheet.
+    // ----------------------------------------------------------
+    for (const match of allMatches) {
+        const { sheetName, sheetRowIndex, oldImageUrl, imageHeader } = match;
+
+        try {
+            // ----- 2a. Delete old image if different -----
+            const oldFileId = oldImageUrl ? extractFileId(oldImageUrl) : null;
+
+            if (oldFileId && oldFileId !== newFileId) {
+                try {
+                    const delParams = new URLSearchParams();
+                    delParams.append("action", "deleteimage");
+                    delParams.append("spreadsheetId", STUDENT_DATA_SPREADSHEET_ID);
+                    delParams.append("sheetName", sheetName);
+                    delParams.append("rowIndex", sheetRowIndex);
+                    delParams.append("columnName", imageHeader);  // ← exact header!
+
+                    const delResp = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: delParams.toString()
+                    });
+
+                    const delResult = await delResp.json();
+                    if (delResult.status === 'success') {
+                        console.log(`🗑️ Deleted old image in "${sheetName}" row ${sheetRowIndex}: ${oldFileId}`);
+                    } else {
+                        console.warn(`⚠️ Old image delete non-success in "${sheetName}":`, delResult.message);
+                    }
+                } catch (delErr) {
+                    console.warn(`⚠️ Old image delete threw for "${sheetName}":`, delErr);
+                }
+            } else if (oldFileId && oldFileId === newFileId) {
+                console.log(`ℹ️ "${sheetName}" already has the same image — no change needed.`);
+            }
+
+            // ----- 2b. Write the NEW image URL using the EXACT header key -----
+            const updParams = new URLSearchParams();
+            updParams.append("action", "update");
+            updParams.append("spreadsheetId", STUDENT_DATA_SPREADSHEET_ID);
+            updParams.append("sheetName", sheetName);
+            updParams.append("rowIndex", sheetRowIndex);
+            // ⭐ CRITICAL FIX: use the exact header string as the parameter key
+            updParams.append(imageHeader, newImageUrl);
+
+            console.log(`📤 Writing to "${sheetName}" row ${sheetRowIndex}, key="${imageHeader}", value="${newImageUrl}"`);
+
+            const updResp = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: updParams.toString()
+            });
+
+            const updResult = await updResp.json();
+
+            if (updResult.status === 'success') {
+                result.updatedSheets.push(sheetName);
+                console.log(`✅ Mirrored image to "${sheetName}" row ${sheetRowIndex}`);
+            } else {
+                const msg = updResult.message || 'Unknown error';
+                result.errors.push(`${sheetName}: ${msg}`);
+                console.warn(`❌ Mirror update failed for "${sheetName}": ${msg}`);
+            }
+        } catch (err) {
+            result.errors.push(`${sheetName}: ${err.message}`);
+            console.error(`❌ Mirror error for "${sheetName}":`, err);
+        }
+    }
+
+    return result;
+}
+
+// ============================================================
+// AVATAR SPINNER CONTROLS
+// ============================================================
+function showAvatarSpinner() {
+    dom.avatarSpinnerOverlay.classList.add('active');
+    dom.profileAvatar.style.opacity = '0.5';
+    dom.profileAvatar.style.filter = 'blur(2px)';
+}
+
+function hideAvatarSpinner() {
+    dom.avatarSpinnerOverlay.classList.remove('active');
+    dom.profileAvatar.style.opacity = '1';
+    dom.profileAvatar.style.filter = 'none';
+}
+
+// ============================================================
+// DISPLAY USER DATA
+// ============================================================
+function displayUserData(data) {
+    if (!data) {
+        showErrorState('No user data found');
+        return;
+    }
+
+    currentUserData = data;
+
+    const fullName = `${data['First Name'] || ''} ${data['Last Name'] || ''}`.trim() || 'User';
+    dom.profileName.textContent = fullName;
+    dom.profileEmail.textContent = data['Email Id'] || 'No email';
+
+    const imageLink = data['Image'] || '';
+    if (imageLink) {
+        dom.profileAvatar.src = getDriveThumbnail(imageLink, 200);
+    } else {
+        dom.profileAvatar.src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=2563eb&color=fff&size=120`;
+    }
+
+    dom.quickStatus.textContent = data['Job Status'] || '—';
+    dom.quickLocation.textContent = data['Location'] || '—';
+    dom.quickInsta.textContent = data['Insta Id'] || '—';
+    dom.quickCollege.textContent = data['College Name'] || '—';
+
+    const personalMap = {
+        'First Name': data['First Name'] || '—',
+        'Last Name': data['Last Name'] || '—',
+        'Mobile Number': data['Mobile Number'] || '—',
+        'Email Id': data['Email Id'] || '—'
+    };
+    dom.personalFields.querySelectorAll('.field-value').forEach(el => {
+        const field = el.dataset.field;
+        if (personalMap[field] !== undefined) el.textContent = personalMap[field];
+    });
+
+    const eduMap = {
+        'Education Details': data['Education Details'] || '—',
+        'College Name': data['College Name'] || '—'
+    };
+    dom.educationFields.querySelectorAll('.field-value').forEach(el => {
+        const field = el.dataset.field;
+        if (eduMap[field] !== undefined) el.textContent = eduMap[field];
+    });
+
+    const otherMap = {
+        'Insta Id': data['Insta Id'] || '—',
+        'Job Status': data['Job Status'] || '—',
+        'Location': data['Location'] || '—'
+    };
+    dom.otherFields.querySelectorAll('.field-value').forEach(el => {
+        const field = el.dataset.field;
+        if (otherMap[field] !== undefined) el.textContent = otherMap[field];
+    });
+
+    originalData = { ...data };
+}
+
+function showErrorState(message) {
+    const container = document.getElementById('profileRight');
+    container.innerHTML = `
+        <div class="error-state">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>${message}</h3>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">Please go back and try again.</p>
+            <a href="myaccount.html" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="fas fa-user"></i> Go to Login
+            </a>
+        </div>
+    `;
+    const left = document.querySelector('.profile-left');
+    if (left) left.style.display = 'none';
+}
+
+function showLoadingState() {
+    const container = document.getElementById('profileRight');
+    container.innerHTML = `
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading your profile...</p>
+        </div>
+    `;
+}
+
+// ============================================================
+// SECTION NAVIGATION
+// ============================================================
+function navigateToSection(sectionId) {
+    dom.sectionNavItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.section === sectionId);
+    });
+    dom.sectionContents.forEach(content => {
+        content.classList.toggle('active', content.id === `section-${sectionId}`);
+    });
+}
+
+// ============================================================
+// IMAGE EDIT MODAL
+// ============================================================
+function openImageEditModal() {
+    croppedImageData = null;
+    if (cropperInstance) {
+        cropperInstance.destroy();
+        cropperInstance = null;
+    }
+
+    dom.previewContainer.style.display = 'none';
+    dom.cropControls.classList.remove('visible');
+    dom.croppedThumbnailContainer.style.display = 'none';
+    dom.applyImageBtn.disabled = true;
+    dom.imageInput.value = '';
+
+    const currentImage = currentUserData['Image'] || '';
+    if (currentImage) {
+        dom.imagePreview.src = getDriveThumbnail(currentImage, 200);
+        dom.imageStatus.className = 'image-status info';
+        dom.imageStatus.innerHTML = `<i class="fas fa-info-circle"></i> Current profile image loaded. Click to change.`;
+    } else {
+        const fullName = `${currentUserData['First Name'] || ''} ${currentUserData['Last Name'] || ''}`.trim() || 'User';
+        dom.imagePreview.src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=2563eb&color=fff&size=100`;
+        dom.imageStatus.className = 'image-status info';
+        dom.imageStatus.innerHTML = `<i class="fas fa-info-circle"></i> No profile image set. Upload one!`;
+    }
+
+    dom.imageModal.classList.add('active');
+    dom.imageModalBody.scrollTop = 0;
+}
+
+function closeImageEditModal() {
+    dom.imageModal.classList.remove('active');
+    dom.imageModal.classList.remove('closing');
+    if (cropperInstance) {
+        cropperInstance.destroy();
+        cropperInstance = null;
+    }
+    dom.previewContainer.style.display = 'none';
+    dom.cropControls.classList.remove('visible');
+    dom.croppedThumbnailContainer.style.display = 'none';
+    dom.applyImageBtn.disabled = true;
+}
+
+function closeImageModalWithDelay() {
+    dom.imageModal.classList.add('closing');
+    setTimeout(() => {
+        closeImageEditModal();
+    }, 300);
+}
+
+// ============================================================
+// CROPPER HANDLERS
+// ============================================================
+function initCropper(imageElement) {
+    if (cropperInstance) {
+        cropperInstance.destroy();
+        cropperInstance = null;
+    }
+
+    cropperInstance = new Cropper(imageElement, {
+        aspectRatio: 1,
+        viewMode: 1,
+        autoCropArea: 0.9,
+        responsive: true,
+        restore: true,
+        guides: true,
+        center: true,
+        highlight: true,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: true,
+    });
+
+    dom.cropControls.classList.add('visible');
+    dom.applyImageBtn.disabled = true;
+    dom.croppedThumbnailContainer.style.display = 'none';
+
+    dom.imageStatus.className = 'image-status info';
+    dom.imageStatus.innerHTML = `
+        <i class="fas fa-crop-alt"></i>
+        Image loaded! Use the tools below to crop, then click <strong>"Apply Crop"</strong>
+    `;
+}
+
+function handleImageUpload(file) {
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        dom.imageStatus.className = 'image-status error';
+        dom.imageStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Image too large! Max 5MB.`;
+        return;
+    }
+    if (!file.type.startsWith('image/')) {
+        dom.imageStatus.className = 'image-status error';
+        dom.imageStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Please select a valid image.`;
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        dom.imagePreview.src = event.target.result;
+        dom.imageToCrop.src = event.target.result;
+        dom.previewContainer.style.display = 'block';
+
+        dom.imageToCrop.onload = function () {
+            initCropper(dom.imageToCrop);
+        };
+
+        if (dom.imageToCrop.complete) {
+            initCropper(dom.imageToCrop);
+        }
+
+        dom.imageStatus.className = 'image-status info';
+        dom.imageStatus.innerHTML = `<i class="fas fa-check-circle"></i> Image loaded. Adjust crop area and apply.`;
+    };
+    reader.readAsDataURL(file);
+}
+
+// ============================================================
+// CROP TOOLS
+// ============================================================
+function rotateImage(degrees) {
+    if (!cropperInstance) return;
+    cropperInstance.rotate(degrees);
+    dom.imageStatus.className = 'image-status info';
+    dom.imageStatus.innerHTML = `<i class="fas fa-sync-alt"></i> Image rotated ${degrees}°`;
+}
+
+function zoomImage(factor) {
+    if (!cropperInstance) return;
+    cropperInstance.zoom(factor);
+}
+
+function resetCrop() {
+    if (!cropperInstance) return;
+    cropperInstance.reset();
+    dom.imageStatus.className = 'image-status info';
+    dom.imageStatus.innerHTML = `<i class="fas fa-undo-alt"></i> Crop reset to original`;
+}
+
+function applyCrop() {
+    if (!cropperInstance) {
+        dom.imageStatus.className = 'image-status error';
+        dom.imageStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> No image loaded to crop.`;
+        return;
+    }
+
+    try {
+        const canvas = cropperInstance.getCroppedCanvas({
+            width: 400,
+            height: 400,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
+
+        if (!canvas) throw new Error('Could not crop image');
+
+        const base64Data = canvas.toDataURL('image/jpeg', 0.92);
+        const fileName = `profile_${Date.now()}.jpg`;
+
+        croppedImageData = {
+            base64Data: base64Data.split(',')[1],
+            fileName: fileName,
+            mimeType: 'image/jpeg',
+            fullDataUrl: base64Data
+        };
+
+        dom.croppedThumbnailPreview.src = base64Data;
+        dom.croppedThumbnailContainer.style.display = 'block';
+        dom.applyImageBtn.disabled = false;
+
+        dom.imageStatus.className = 'image-status success';
+        dom.imageStatus.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            Image cropped successfully! Click <strong>"Apply Image"</strong> to save.
+        `;
+
+        setTimeout(() => {
+            dom.applyImageBtn.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }, 300);
+
+        showToast('✅ Image cropped successfully!', 'success');
+
+    } catch (error) {
+        dom.imageStatus.className = 'image-status error';
+        dom.imageStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Failed to crop: ${error.message}`;
+        showToast('❌ Failed to crop image', 'error');
+    }
+}
+
+// ============================================================
+// TEXT EDIT MODAL
+// ============================================================
+function openEditModal(section) {
+    currentEditingSection = section;
+    const data = currentUserData;
+
+    if (!data) {
+        showToast('No data to edit', 'error');
+        return;
+    }
+
+    let fields = [];
+    let title = '';
+
+    switch (section) {
+        case 'personal':
+            title = 'Edit Personal Information';
+            fields = [
+                { key: 'First Name', type: 'text', value: data['First Name'] || '', icon: 'fa-user', required: true },
+                { key: 'Last Name', type: 'text', value: data['Last Name'] || '', icon: 'fa-user', required: true },
+                { key: 'Mobile Number', type: 'tel', value: data['Mobile Number'] || '', icon: 'fa-phone', required: false },
+                { key: 'Email Id', type: 'email', value: data['Email Id'] || '', icon: 'fa-envelope', required: true, disabled: true }
+            ];
+            break;
+        case 'education':
+            title = 'Edit Education Details';
+            fields = [
+                {
+                    key: 'Education Details', type: 'select', value: data['Education Details'] || '',
+                    options: EDUCATION_OPTIONS, icon: 'fa-book', required: false
+                },
+                { key: 'College Name', type: 'text', value: data['College Name'] || '', icon: 'fa-university', required: false }
+            ];
+            break;
+        case 'other':
+            title = 'Edit Other Details';
+            fields = [
+                { key: 'Insta Id', type: 'text', value: data['Insta Id'] || '', icon: 'fa-instagram', required: false },
+                { key: 'Job Status', type: 'text', value: data['Job Status'] || '', icon: 'fa-briefcase', required: false },
+                { key: 'Location', type: 'text', value: data['Location'] || '', icon: 'fa-map-marker-alt', required: false }
+            ];
+            break;
+        default:
+            showToast('Invalid section', 'error');
+            return;
+    }
+
+    dom.editModalTitle.textContent = title;
+    dom.editFormFields.innerHTML = '';
+
+    fields.forEach((field) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'modal-field-group';
+
+        const label = document.createElement('label');
+        label.className = 'modal-field-label';
+        label.htmlFor = `edit_${field.key.replace(/\s/g, '_')}`;
+        label.innerHTML = `
+            <i class="fas ${field.icon || 'fa-pen'}"></i>
+            ${field.key}
+            ${field.required ? '<span class="required-star">*</span>' : ''}
+        `;
+        wrapper.appendChild(label);
+
+        const inputWrapper = document.createElement('div');
+        inputWrapper.className = 'modal-input-wrapper';
+
+        const leftIcon = document.createElement('span');
+        leftIcon.className = 'input-icon';
+        leftIcon.innerHTML = `<i class="fas ${field.icon || 'fa-pen'}"></i>`;
+        inputWrapper.appendChild(leftIcon);
+
+        if (field.type === 'select') {
+            const select = document.createElement('select');
+            select.name = field.key;
+            select.id = `edit_${field.key.replace(/\s/g, '_')}`;
+            select.required = field.required || false;
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = `Select ${field.key}`;
+            select.appendChild(placeholder);
+
+            field.options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                if (opt === field.value) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            inputWrapper.appendChild(select);
+        } else {
+            const input = document.createElement('input');
+            input.type = field.type || 'text';
+            input.name = field.key;
+            input.id = `edit_${field.key.replace(/\s/g, '_')}`;
+            input.value = field.value || '';
+            input.placeholder = `Enter ${field.key}`;
+            input.required = field.required || false;
+
+            if (field.disabled) {
+                input.disabled = true;
+            }
+
+            inputWrapper.appendChild(input);
+        }
+
+        wrapper.appendChild(inputWrapper);
+
+        const helper = document.createElement('div');
+        helper.className = 'modal-field-helper';
+        if (field.disabled) {
+            helper.innerHTML = `<i class="fas fa-lock"></i> This field cannot be edited`;
+        } else if (field.required) {
+            helper.innerHTML = `<i class="fas fa-info-circle"></i> This field is required`;
+        } else {
+            helper.innerHTML = `<i class="fas fa-info-circle"></i> Optional field`;
+        }
+        wrapper.appendChild(helper);
+
+        dom.editFormFields.appendChild(wrapper);
+    });
+
+    dom.editModalStatus.className = 'modal-status';
+    dom.editModalStatus.style.display = 'none';
+    dom.editModalStatus.textContent = '';
+
+    dom.editModal.classList.add('active');
+}
+
+function closeEditModal() {
+    dom.editModal.classList.remove('active');
+    currentEditingSection = null;
+}
+
+// ============================================================
+// HANDLE TEXT EDIT SUBMIT
+// ============================================================
+async function handleEditSubmit(e) {
+    e.preventDefault();
+
+    const submitBtn = dom.editModalSubmit;
+    const statusEl = dom.editModalStatus;
+
+    const formData = new FormData(dom.editForm);
+    const updates = {};
+
+    for (const [key, value] of formData.entries()) {
+        if (value && value.trim() !== '') {
+            updates[key] = value.trim();
+        }
+    }
+
+    let hasChanges = false;
+    for (const [key, value] of Object.entries(updates)) {
+        if (originalData[key] !== value) {
+            hasChanges = true;
+            break;
+        }
+    }
+
+    if (!hasChanges) {
+        statusEl.className = 'modal-status warning';
+        statusEl.textContent = '⚠️ No changes detected';
+        statusEl.style.display = 'block';
+        return;
+    }
+
+    showSpinner(submitBtn, true);
+    statusEl.style.display = 'none';
+
+    try {
+        const result = await updateUserData(currentUserRowIndex, updates);
+
+        if (result.status === 'success') {
+            statusEl.className = 'modal-status success';
+            statusEl.textContent = '✅ Profile updated successfully!';
+            statusEl.style.display = 'block';
+
+            const refreshedData = await fetchUserData(currentUser);
+            if (refreshedData) {
+                currentUserData = refreshedData;
+                originalData = { ...refreshedData };
+                displayUserData(refreshedData);
+
+                sessionStorage.setItem('Universal_user_data', JSON.stringify(refreshedData));
+                if (RememberMe.isRememberMeActive()) {
+                    localStorage.setItem('Universal_user_data', JSON.stringify({
+                        value: refreshedData,
+                        expiry: Date.now() + (10 * 24 * 60 * 60 * 1000)
+                    }));
+                }
+
+                showToast('✅ Profile updated successfully!', 'success');
+                setTimeout(() => closeEditModal(), 1200);
+            }
+        } else {
+            throw new Error(result.message || 'Update failed');
+        }
+    } catch (err) {
+        statusEl.className = 'modal-status error';
+        statusEl.textContent = '❌ Error: ' + err.message;
+        statusEl.style.display = 'block';
+        showToast('❌ Update failed: ' + err.message, 'error');
+    } finally {
+        showSpinner(submitBtn, false);
+    }
+}
+
+// ============================================================
+// SAVE IMAGE (with mirror to student data spreadsheet)
+// ============================================================
+async function saveImage() {
+    if (!croppedImageData || !croppedImageData.base64Data) {
+        showToast('Please crop an image first', 'warning');
+        return;
+    }
+
+    if (isApplyingImage) return;
+    isApplyingImage = true;
+
+    const btn = dom.applyImageBtn;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span> Applying...';
+    btn.disabled = true;
+
+    showAvatarSpinner();
+
+    try {
+        const oldImageUrl = currentUserData['Image'] || '';
+        const oldFileId = oldImageUrl ? extractFileId(oldImageUrl) : null;
+
+        const uploadPromise = uploadImageToDrive(
+            croppedImageData.base64Data,
+            croppedImageData.fileName,
+            croppedImageData.mimeType,
+            oldFileId,
+            currentUserRowIndex
+        );
+
+        setTimeout(() => closeImageModalWithDelay(), 2000);
+
+        const result = await uploadPromise;
+
+        if (result.status === 'success') {
+            showToast('✅ Profile image updated successfully!', 'success');
+
+            const refreshedData = await fetchUserData(currentUser);
+            if (refreshedData) {
+                currentUserData = refreshedData;
+                originalData = { ...refreshedData };
+                displayUserData(refreshedData);
+
+                sessionStorage.setItem('Universal_user_data', JSON.stringify(refreshedData));
+                if (RememberMe.isRememberMeActive()) {
+                    localStorage.setItem('Universal_user_data', JSON.stringify({
+                        value: refreshedData,
+                        expiry: Date.now() + (10 * 24 * 60 * 60 * 1000)
+                    }));
+                }
+
+                // ⭐ Mirror new image URL to student data spreadsheet
+                const newImageUrl = refreshedData['Image'] || '';
+                if (newImageUrl) {
+                    mirrorImageToStudentSheets(currentUser, newImageUrl)
+                        .then(mirrorResult => {
+                            if (mirrorResult.found && mirrorResult.updatedSheets.length > 0) {
+                                console.log(`✅ Image mirrored to: ${mirrorResult.updatedSheets.join(', ')}`);
+                            }
+                            if (mirrorResult.errors.length > 0) {
+                                console.warn(`⚠️ Mirror errors: ${mirrorResult.errors.join('; ')}`);
+                            }
+                        })
+                        .catch(err => console.warn('Mirror exception:', err));
+                } else {
+                    console.log('ℹ️ No image URL in refreshed data — mirror skipped.');
+                }
+            }
+        } else {
+            throw new Error(result.message || 'Upload failed');
+        }
+    } catch (err) {
+        showToast('❌ Failed to update image: ' + err.message, 'error');
+        dom.imageStatus.className = 'image-status error';
+        dom.imageStatus.innerHTML = `<i class="fas fa-exclamation-circle"></i> Error: ${err.message}`;
+    } finally {
+        isApplyingImage = false;
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        setTimeout(() => hideAvatarSpinner(), 500);
+    }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+    cacheDomElements();
+    syncThemeWithParent();
+    console.log('🎨 Theme initialized:', document.body.getAttribute('data-theme'));
+
+    const isLoggedIn = RememberMe.checkLoginStatus('myaccount.html', function (user) {
+        console.log(`✅ User authenticated via remember-me-login.js: ${user.fullName}`);
+
+        currentUser = user.email;
+        currentUserData = user.data;
+
+        displayUserData(user.data);
+
+        if (RememberMe.isRememberMeActive()) {
+            console.log('📌 Remember Me is active - 10 days session');
+        }
+
+        refreshUserDataInBackground();
+        setupEventListeners();
+
+        console.log('✅ Edit Profile page loaded successfully');
+        console.log(`✅ User: ${user.fullName} (${user.email})`);
+        console.log('🪞 Image mirror to student data spreadsheet enabled');
+    });
+
+    if (!isLoggedIn) {
+        return;
+    }
+}
+
+async function refreshUserDataInBackground() {
+    try {
+        const data = await fetchUserData(currentUser);
+        if (data) {
+            currentUserData = data;
+            displayUserData(data);
+            sessionStorage.setItem('Universal_user_data', JSON.stringify(data));
+        }
+    } catch (err) {
+        console.warn('Background refresh failed:', err);
+    }
+}
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+function setupEventListeners() {
+    dom.sectionNavItems.forEach(item => {
+        item.addEventListener('click', function () {
+            navigateToSection(this.dataset.section);
+        });
+    });
+
+    dom.editButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+            openEditModal(this.dataset.section);
+        });
+    });
+
+    dom.avatarEditTrigger.addEventListener('click', function () {
+        if (currentUserData) {
+            openImageEditModal();
+        } else {
+            showToast('Please wait for data to load', 'warning');
+        }
+    });
+
+    dom.imageModalClose.addEventListener('click', closeImageEditModal);
+    dom.imageModalCancel.addEventListener('click', closeImageEditModal);
+    dom.imageModal.addEventListener('click', function (e) {
+        if (e.target === this) closeImageEditModal();
+    });
+
+    dom.imageUploadArea.addEventListener('click', function () {
+        dom.imageInput.click();
+    });
+
+    dom.imageInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) handleImageUpload(file);
+    });
+
+    dom.imageUploadArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--accent)';
+        this.style.background = 'var(--accent-soft)';
+    });
+
+    dom.imageUploadArea.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--border-light)';
+        this.style.background = 'var(--input-bg)';
+    });
+
+    dom.imageUploadArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--border-light)';
+        this.style.background = 'var(--input-bg)';
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            dom.imageInput.files = e.dataTransfer.files;
+            handleImageUpload(file);
+        }
+    });
+
+    dom.rotateLeftBtn.addEventListener('click', () => rotateImage(-90));
+    dom.rotateRightBtn.addEventListener('click', () => rotateImage(90));
+    dom.zoomInBtn.addEventListener('click', () => zoomImage(0.1));
+    dom.zoomOutBtn.addEventListener('click', () => zoomImage(-0.1));
+    dom.resetCropBtn.addEventListener('click', resetCrop);
+    dom.applyCropBtn.addEventListener('click', applyCrop);
+    dom.applyImageBtn.addEventListener('click', saveImage);
+
+    dom.editModalClose.addEventListener('click', closeEditModal);
+    dom.editModal.addEventListener('click', function (e) {
+        if (e.target === this) closeEditModal();
+    });
+    dom.editForm.addEventListener('submit', handleEditSubmit);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (dom.imageModal.classList.contains('active')) closeImageEditModal();
+            if (dom.editModal.classList.contains('active')) closeEditModal();
+        }
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+            if (dom.imageModal.classList.contains('active') && cropperInstance) {
+                e.preventDefault();
+                applyCrop();
+            }
+        }
+    });
+}
+
+// ============================================================
+// START
+// ============================================================
+document.addEventListener('DOMContentLoaded', init);
+
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    syncThemeWithParent();
+}
+
+window.__app = {
+    currentUser: () => currentUser,
+    currentUserData: () => currentUserData,
+    refresh: refreshUserDataInBackground,
+    showToast: showToast,
+    openImageEditor: openImageEditModal,
+    cropper: () => cropperInstance,
+    showAvatarSpinner: showAvatarSpinner,
+    hideAvatarSpinner: hideAvatarSpinner,
+    mirrorImage: mirrorImageToStudentSheets,
+    RememberMe: window.RememberMe
+};
+
+console.log('✅ Edit Profile page loaded with remember-me-login.js');
+console.log('🔐 Authentication handled by remember-me-login.js');
+console.log('📸 Click on profile avatar to edit image');
+console.log('🪞 Image mirror to student data spreadsheet enabled');
+console.log('ℹ️ Use window.__app for debugging');
+</script>
+</body>
+</html>

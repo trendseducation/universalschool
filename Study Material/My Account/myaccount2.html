@@ -1,0 +1,4262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Ujjwal Academy · My Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --bg-sidebar: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --logo-filter: none;
+            --overlay-bg: rgba(0,0,0,0.3);
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --admin-gold: #f59e0b;
+            --admin-badge-bg: rgba(245, 158, 11, 0.15);
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-header: #111827;
+            --bg-sidebar: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --logo-filter: brightness(0) invert(1);
+            --overlay-bg: rgba(0,0,0,0.6);
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --admin-badge-bg: rgba(245, 158, 11, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem 2.5rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            background: var(--bg-header);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            transition: background var(--transition-normal);
+        }
+
+        .brand-area { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 44px; width: auto; filter: var(--logo-filter); object-fit: contain; }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            transition: background var(--transition-fast);
+        }
+        .hamburger-btn:hover { background: var(--accent-soft); }
+
+        .right-actions { display: flex; align-items: center; gap: 1rem; }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--overlay-bg);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-light);
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem 2rem;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+            overflow-y: auto;
+        }
+        .sidebar.open { transform: translateX(0%); }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2.2rem;
+        }
+        .sidebar-brand img { height: 44px; filter: var(--logo-filter); }
+        .sidebar-brand span {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar-menu li {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .sidebar-menu li i { width: 24px; font-size: 1.2rem; color: var(--accent); }
+        .sidebar-menu li:hover { background: var(--accent-soft); transform: translateX(4px); }
+        .sidebar-menu li.active { background: var(--accent); color: white; }
+        .sidebar-menu li.active i { color: white; }
+        .sidebar-menu li a {
+            color: inherit;
+            text-decoration: none;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            transition: background var(--transition-fast);
+        }
+        .sidebar-close:hover { background: var(--accent-soft); }
+
+        .account-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .auth-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 1.5rem 2rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, var(--admin-gold), #d97706);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--admin-badge-bg);
+            color: var(--admin-gold);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--admin-gold);
+        }
+
+        .profile-section {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 2rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: none;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .profile-section.visible { display: flex; }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            background: var(--input-bg);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .profile-info p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================================
+           MENU GRID - FIXED VISIBILITY
+           ============================================================ */
+        .menu-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .menu-grid.visible {
+            display: grid;
+        }
+
+        .menu-grid .card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+            position: relative;
+        }
+
+        .menu-grid .card[style*="display: none"] {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            border: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            order: 0 !important;
+        }
+
+        .menu-grid .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+        .menu-grid .card i {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+        .menu-grid .card span {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .menu-grid .card.admin-card {
+            border: 2px solid var(--admin-gold);
+            background: var(--admin-badge-bg);
+        }
+        .menu-grid .card.admin-card i {
+            color: var(--admin-gold);
+        }
+        .menu-grid .card.admin-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+        }
+
+        .about-section {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 2rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-top: 1rem;
+            display: block !important;
+        }
+        .about-section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+        .about-section p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-overlay.nested {
+            z-index: 1001;
+        }
+
+        .modal-box {
+            background: var(--bg-card);
+            border-radius: 40px;
+            padding: 0;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: var(--card-border);
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 40px 40px 0 0;
+            color: white;
+        }
+        .modal-header.admin-header {
+            background: linear-gradient(135deg, var(--admin-gold), #d97706);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform var(--transition-fast);
+            line-height: 1;
+        }
+        .modal-close:hover { transform: rotate(90deg); }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(90vh - 70px);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+        }
+
+        .form-group input {
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 3rem;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .settings-switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .settings-switch-row:last-child {
+            border-bottom: none;
+        }
+        .settings-switch-row .label {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .settings-switch-row .sub-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+            font-weight: 400;
+        }
+
+        .switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #cbd5e1;
+            transition: 0.25s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.25s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .image-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.5rem;
+            border: 2px dashed var(--border-light);
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: var(--input-bg);
+        }
+        .image-upload-area:hover { border-color: var(--accent); }
+        .image-upload-area img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-body);
+            border: 3px solid var(--accent);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .image-upload-area img:hover {
+            transform: scale(1.05);
+        }
+        .image-upload-area input { display: none; }
+
+        .preview-container {
+            display: none;
+            margin-top: 1rem;
+            max-width: 100%;
+        }
+        .image-to-crop {
+            max-width: 100%;
+            display: block;
+        }
+
+        .crop-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-tool {
+            background: var(--input-bg);
+            border: 1px solid var(--border-light);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-main);
+            flex: 0 1 auto;
+        }
+        .btn-tool:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-tool:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .image-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-light);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-top: 1rem;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+        }
+        .status-success {
+            background: var(--success);
+            color: white;
+        }
+        .status-error {
+            background: var(--danger);
+            color: white;
+        }
+        .status-info {
+            background: var(--accent);
+            color: white;
+        }
+
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-hover);
+            border-radius: 0 16px 16px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-main);
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.warning { border-left-color: var(--warning); }
+        .alert-popup.info { border-left-color: var(--accent); }
+
+        .password-reveal-box {
+            background: var(--accent-soft);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+        .password-reveal-box .password-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+        .password-reveal-box .password-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .forgot-password-link {
+            text-align: right;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .forgot-password-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+
+        .avatar-clickable {
+            position: relative;
+            cursor: pointer;
+        }
+        .avatar-clickable::after {
+            content: '✎';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: var(--admin-gold);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            border: 2px solid var(--bg-card);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        .avatar-clickable:hover::after {
+            opacity: 1;
+        }
+
+        .cropped-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--admin-gold);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin: 0 auto;
+            display: block;
+        }
+        .cropped-thumbnail:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* ============================================================
+           MOBILE RESPONSIVE
+           ============================================================ */
+        @media (max-width: 820px) {
+            .hamburger-btn { 
+                display: inline-flex; 
+            }
+            
+            .top-bar { 
+                border-radius: 32px; 
+                padding: 0.6rem 1.2rem; 
+            }
+            
+            .brand-text { 
+                font-size: 1.2rem; 
+            }
+            
+            .brand-logo { 
+                height: 38px; 
+            }
+            
+            .app-wrapper { 
+                padding: 0.8rem 1rem 2rem; 
+            }
+            
+            .auth-section {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1.2rem;
+            }
+
+            .auth-buttons {
+                display: grid;
+                grid-template-columns: repeat(2, 2fr);
+                gap: 0.6rem;
+                width: 100%;
+            }
+
+            .auth-buttons button,
+            .auth-buttons .btn {
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.8rem 1.2rem;
+                font-size: 1rem;
+                min-width: unset;
+                flex: none;
+            }
+            
+            .btn i {
+                font-size: 1.1rem;
+            }
+            
+            .modal-box { 
+                max-width: 95%; 
+            }
+            
+            .profile-section { 
+                flex-direction: column; 
+                text-align: center; 
+                padding: 1.5rem;
+            }
+            
+            .profile-actions { 
+                margin-left: 0; 
+                justify-content: center; 
+                width: 100%;
+            }
+            
+            .profile-actions .btn {
+                width: auto;
+                flex: 1;
+            }
+            
+            .profile-info h2 { 
+                justify-content: center; 
+                font-size: 1.2rem;
+            }
+            
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 0.8rem;
+            }
+            
+            .menu-grid .card {
+                padding: 1.2rem 0.8rem;
+            }
+            
+            .menu-grid .card i {
+                font-size: 1.8rem;
+            }
+            
+            .menu-grid .card span {
+                font-size: 0.85rem;
+            }
+            
+            .about-section {
+                padding: 1.5rem;
+            }
+            
+            .about-section h2 {
+                font-size: 1.3rem;
+            }
+            
+            .about-section p {
+                font-size: 0.9rem;
+            }
+
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .form-group input {
+                font-size: 1rem;
+                padding: 0.8rem 1rem;
+            }
+
+            .btn-block {
+                padding: 0.9rem;
+            }
+
+            .crop-controls .btn-tool {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+
+            .settings-switch-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .switch {
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-wrapper {
+                padding: 0.5rem 0.6rem 1.5rem;
+            }
+
+            .top-bar {
+                padding: 0.4rem 0.8rem;
+                border-radius: 24px;
+            }
+
+            .brand-text {
+                font-size: 1rem;
+            }
+
+            .brand-logo {
+                height: 32px;
+            }
+
+            .hamburger-btn {
+                font-size: 1.4rem;
+                padding: 0.1rem 0.4rem;
+            }
+
+            .auth-section {
+                padding: 1rem;
+                border-radius: 24px;
+            }
+
+            .btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+                border-radius: 30px;
+            }
+
+            .profile-section {
+                padding: 1.2rem;
+                border-radius: 24px;
+            }
+
+            .profile-avatar {
+                width: 70px;
+                height: 70px;
+            }
+
+            .profile-info h2 {
+                font-size: 1rem;
+            }
+
+            .profile-info p {
+                font-size: 0.8rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 0.6rem;
+            }
+
+            .menu-grid .card {
+                padding: 1rem 0.6rem;
+                border-radius: 18px;
+            }
+
+            .menu-grid .card i {
+                font-size: 1.5rem;
+            }
+
+            .menu-grid .card span {
+                font-size: 0.75rem;
+            }
+
+            .modal-box {
+                max-width: 100%;
+                border-radius: 28px;
+            }
+
+            .modal-header {
+                padding: 1rem 1.2rem;
+                border-radius: 28px 28px 0 0;
+            }
+
+            .modal-header h3 {
+                font-size: 1.1rem;
+            }
+
+            .modal-body {
+                padding: 1.2rem;
+            }
+
+            .form-group label {
+                font-size: 0.65rem;
+            }
+
+            .form-group input {
+                font-size: 0.9rem;
+                padding: 0.6rem 0.8rem;
+                border-radius: 12px;
+            }
+
+            .about-section {
+                padding: 1.2rem;
+                border-radius: 24px;
+            }
+
+            .about-section h2 {
+                font-size: 1.1rem;
+            }
+
+            .about-section p {
+                font-size: 0.85rem;
+            }
+
+            .alert-popup {
+                bottom: 70px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                font-size: 0.85rem;
+                padding: 12px 16px;
+                border-radius: 0 12px 12px 0;
+            }
+
+            .image-upload-area {
+                padding: 1rem;
+            }
+
+            .image-upload-area img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .cropped-thumbnail {
+                width: 50px;
+                height: 50px;
+            }
+
+            .crop-controls {
+                gap: 6px;
+            }
+
+            .crop-controls .btn-tool {
+                font-size: 0.65rem;
+                padding: 5px 10px;
+            }
+
+            .sidebar {
+                width: 260px;
+                padding: 1.5rem 1rem;
+            }
+
+            .sidebar-brand img {
+                height: 36px;
+            }
+
+            .sidebar-brand span {
+                font-size: 1.1rem;
+            }
+
+            .sidebar-menu li {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .sidebar-menu li i {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .app-wrapper {
+                padding: 0.5rem 1rem 1rem;
+            }
+
+            .top-bar {
+                margin-bottom: 0.8rem;
+                padding: 0.4rem 1rem;
+            }
+
+            .auth-section {
+                padding: 0.8rem 1.2rem;
+            }
+
+            .auth-buttons {
+                flex-direction: row;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .profile-section {
+                padding: 1rem;
+            }
+
+            .profile-avatar {
+                width: 60px;
+                height: 60px;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 0.5rem;
+            }
+
+            .menu-grid .card {
+                padding: 0.8rem 0.5rem;
+            }
+
+            .menu-grid .card i {
+                font-size: 1.3rem;
+            }
+
+            .modal-box {
+                max-height: 85vh;
+            }
+
+            .modal-body {
+                padding: 1rem;
+                max-height: calc(85vh - 60px);
+            }
+
+            .about-section {
+                padding: 1rem;
+                margin-top: 0.5rem;
+            }
+
+            .about-section h2 {
+                font-size: 1rem;
+            }
+
+            .about-section p {
+                font-size: 0.8rem;
+            }
+        }
+
+        body.sidebar-open { overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+
+        <header class="top-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="hamburger-btn" id="hamburgerOpen" aria-label="Open menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="brand-area">
+                    <img class="brand-logo" src="https://lh3.googleusercontent.com/d/1HUjvQXeYLxFtt5StZMinVh8sXRZ_TI0F" alt="Ujjwal Academy logo">
+                    <span class="brand-text">Ujjwal Academy</span>
+                </div>
+            </div>
+            <div class="right-actions"></div>
+        </header>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <aside class="sidebar" id="mobileSidebar">
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+            <div class="sidebar-brand">
+                <img src="https://lh3.googleusercontent.com/d/1HUjvQXeYLxFtt5StZMinVh8sXRZ_TI0F" alt="logo">
+                <span>Ujjwal Academy</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="../../index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="../Textbook/textbook.html"><i class="fas fa-book-open"></i> Textbooks</a></li>
+                <li><a href="notes.html"><i class="fas fa-sticky-note"></i> Notes</a></li>
+                <li><a href="solution.html"><i class="fas fa-check-circle"></i> Solutions</a></li>
+                <li><a href="questionpaper.html"><i class="fas fa-file-alt"></i> Questions Paper</a></li>
+                <li><a href="project.html"><i class="fas fa-box"></i> Project</a></li>
+            </ul>
+        </aside>
+
+        <div class="account-content" id="accountContent">
+
+            <div class="auth-section" id="authSection">
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-outline" id="signupBtn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                    <button class="btn btn-admin" id="adminLoginBtn">
+                        <i class="fas fa-user-shield"></i> Admin Login
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-section" id="profileSection">
+                <div id="avatarContainer">
+                    <img id="profileAvatar" class="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=100" alt="Profile">
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileName">User Name</h2>
+                    <p id="profileEmail">user@email.com</p>
+                </div>
+                <div class="profile-actions">
+                    <a href="#" class="btn btn-outline btn-sm" id="editProfileBtn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 MENU GRID - FIXED VISIBILITY RULES
+                 ============================================================ -->
+            <div class="menu-grid" id="menuGrid">
+                <!-- 1. Home - Always visible -->
+                <a href="../../index.html" class="card" id="home" style="order: 1;">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    <span>Home</span>
+                </a>
+                
+                <!-- 2. Your Details - Only when email found in student sheets -->
+                <a href="#" class="card student-only" id="yourDetailsCard" style="display: none; order: 2;">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Your Details</span>
+                </a>
+                
+                <!-- 3. Book Marks - Student only -->
+                <a href="bookmark.html" class="card student-only" style="order: 3;">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Book Marks</span>
+                </a>
+                
+                <!-- 4. Your Review - Student only -->
+                <a href="review.html" class="card student-only" style="order: 4;">
+                    <i class="fas fa-star"></i>
+                    <span>Your Review</span>
+                </a>
+                
+                <!-- 5. Your Requirement - Student only -->
+                <a href="requirement.html" class="card student-only" style="order: 5;">
+                    <i class="fas fa fa-question-circle" aria-hidden="true"></i>
+                    <span>Your Requirement</span>
+                </a>
+                
+                <!-- 6. Donate Us - Student only -->
+                <a href="donate.html" class="card student-only" style="order: 6;">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Donate Us</span>
+                </a>
+                
+                <!-- 7. Change Password - Student only -->
+                <a href="#" class="card student-only" id="changePasswordLink" style="order: 7;">
+                    <i class="fas fa-key"></i>
+                    <span>Change Password</span>
+                </a>
+                
+                <!-- 8. About Us - Guest and Student only (Hidden for Admin) -->
+                <a href="#" class="card common-card" id="aboutUsLink" style="order: 8;">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About Us</span>
+                </a>
+                
+                <!-- 9. Settings - Guest and Student only (Hidden for Admin) -->
+                <a href="#" class="card common-card" id="settingsLink" style="order: 9;">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                
+                <!-- 10. Admin Login - Admin only -->
+                <a href="#" class="card admin-card" id="adminLoginCard" style="order: 10; display: none;">
+                    <i class="fas fa-user-shield" style="color: var(--admin-gold);"></i>
+                    <span>Admin Login</span>
+                </a>
+                
+                <!-- 11. Admin Change Password - Admin only -->
+                <a href="#" class="card admin-card" id="adminChangePasswordLink" style="order: 11; display: none;">
+                    <i class="fas fa-key" style="color: var(--admin-gold);"></i>
+                    <span>Admin Change Password</span>
+                </a>
+                
+                <!-- 12. Admin Setting - Admin only -->
+                <a href="#" class="card admin-card" id="adminSettingsLink" style="order: 12; display: none;">
+                    <i class="fas fa-cog" style="color: var(--admin-gold);"></i>
+                    <span>Admin Settings</span>
+                </a>
+                
+                <!-- 13. Management - Admin only -->
+                <a href="../../Forms/Dashboard.html" class="card admin-card" id="adminManagementCard" style="order: 13; display: none;">
+                    <i class="fas fa-building" style="color: var(--admin-gold);"></i>
+                    <span>Management</span>
+                </a>
+                
+                <!-- 14. Logout - Student and Admin only -->
+                <a href="#" class="card" id="logoutCard" style="order: 14; display: none; border-color: var(--danger);">
+                    <i class="fas fa-sign-out-alt" style="color: var(--danger);"></i>
+                    <span style="color: var(--danger);">Logout</span>
+                </a>
+            </div>
+
+            <div class="about-section" id="aboutSection">
+                <h2>About Ujjwal Academy</h2>
+                <p>Ujjwal Academy is a premier educational institution dedicated to providing quality education across school and college streams. We offer comprehensive learning resources, expert guidance, and future-ready career counseling. Our mission is to empower students with knowledge, skills, and values to excel in their academic and professional journeys. With a focus on innovation and holistic development, we prepare learners for the challenges of tomorrow.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Login</h3>
+                <button class="modal-close" id="loginModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Enter your credentials to access your account</p>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Email Id</label>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPassword" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="forgot-password-link">
+                        <a id="forgotPasswordLink">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay nested" id="forgotPasswordModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Forgot Password</h3>
+                <button class="modal-close" id="forgotPasswordModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Enter your registered email and mobile number</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label>Registered Email Id</label>
+                        <input type="email" id="forgotEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Registered Mobile Number</label>
+                        <input type="tel" id="forgotMobile" placeholder="10 digit mobile number" pattern="[6-9][0-9]{9}" maxlength="10" required>
+                    </div>
+                    <div id="forgotStatus" class="status-message"></div>
+                    <div class="password-reveal-box" id="passwordRevealBox">
+                        <div class="password-label">🔑 Your Password</div>
+                        <div class="password-value" id="revealedPassword">********</div>
+                        <button type="button" class="btn btn-outline btn-sm" style="margin-top: 10px;" onclick="copyPasswordToClipboard()">
+                            <i class="fas fa-copy"></i> Copy Password
+                        </button>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="forgotPasswordBtn">Find Password</button>
+                    <button type="button" class="btn btn-outline btn-block" style="margin-top: 8px;" onclick="closeForgotPasswordAndOpenLogin()">
+                        <i class="fas fa-arrow-left"></i> Back to Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal-box" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Create Account</h3>
+                <button class="modal-close" id="signupModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Join Ujjwal Academy today</p>
+                <form id="signupForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" id="firstName" placeholder="First name" required oninput="capitalizeFirst(this)">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" id="lastName" placeholder="Last name" required oninput="capitalizeFirst(this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="tel" id="mobileNumber" placeholder="10 digit, start with 6-9" pattern="[6-9][0-9]{9}" maxlength="10">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Id</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Education Details <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <input type="text" id="educationDetails" placeholder="Studies in section">
+                    </div>
+                    <div class="form-group">
+                        <label>College Name / School Name</label>
+                        <input type="text" id="collegeName" placeholder="Your college / school">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="signupPassword" placeholder="Min 8 chars" required minlength="8">
+                            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Image <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+                        <div class="image-upload-area" id="imageUploadArea">
+                            <img id="profilePreview" src="https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=80" alt="profile">
+                            <span style="font-size:0.85rem;color:var(--text-muted);">Click to choose image (crop tool will appear)</span>
+                            <input type="file" id="profileImageInput" accept="image/*">
+                        </div>
+                        <div class="preview-container" id="signupPreviewContainer">
+                            <img class="image-to-crop" id="signupImageToCrop">
+                            <div class="crop-controls">
+                                <button type="button" class="btn-tool" onclick="rotateLeft('signup')">↺ Rotate Left</button>
+                                <button type="button" class="btn-tool" onclick="rotateRight('signup')">↻ Rotate Right</button>
+                                <button type="button" class="btn-tool" onclick="applyCrop('signup')">✓ Apply Crop</button>
+                            </div>
+                        </div>
+                        <div class="image-status" id="signupImageStatus"></div>
+                    </div>
+                    <div id="formStatus" class="status-message"></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="signupSubmitBtn">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Change Password</h3>
+                <button class="modal-close" id="changePasswordModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Enter your new password below</p>
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="newPassword" placeholder="Min 8 chars" required minlength="8">
+                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmNewPassword" placeholder="Re-enter new password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div id="changePasswordStatus" class="status-message"></div>
+                    <button type="submit" class="btn btn-primary btn-block" id="changePasswordBtn">Update Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Change Password Modal -->
+    <div class="modal-overlay" id="adminChangePasswordModal">
+        <div class="modal-box">
+            <div class="modal-header admin-header">
+                <h3><i class="fas fa-user-shield"></i> Admin Change Password</h3>
+                <button class="modal-close" id="adminChangePasswordModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Update your admin account password</p>
+                <form id="adminChangePasswordForm">
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="adminNewPassword" placeholder="Min 8 chars" required minlength="8">
+                            <button type="button" class="password-toggle" onclick="togglePassword('adminNewPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="adminConfirmNewPassword" placeholder="Re-enter new password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('adminConfirmNewPassword', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div id="adminChangePasswordStatus" class="status-message"></div>
+                    <button type="submit" class="btn btn-admin btn-block" id="adminChangePasswordBtn">Update Admin Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal-box">
+            <div class="modal-header admin-header">
+                <h3><i class="fas fa-user-shield"></i> Admin Login</h3>
+                <button class="modal-close" id="adminModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Secure access for administrators</p>
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" id="adminUser" placeholder="Admin username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="adminPass" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('adminPass', this)"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Math Verification: <span id="mathQuestion">12 + 8 = ?</span></label>
+                        <input type="number" id="mathAnswer" placeholder="Enter answer" required>
+                    </div>
+                    <button type="submit" class="btn btn-admin btn-block">Admin Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modal-close" id="settingsModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-switch-row">
+                    <div>
+                        <div class="label">Dark Mode</div>
+                        <span class="sub-label">Switch between light and dark theme</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="settingsThemeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div style="margin-top: 1rem; text-align: center; color: var(--text-muted); font-size: 0.8rem;">
+                    Theme preference is saved automatically
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Settings Modal -->
+    <div class="modal-overlay" id="adminSettingsModal">
+        <div class="modal-box">
+            <div class="modal-header admin-header">
+                <h3><i class="fas fa-cog"></i> Admin Settings</h3>
+                <button class="modal-close" id="adminSettingsModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-switch-row">
+                    <div>
+                        <div class="label">Dark Mode</div>
+                        <span class="sub-label">Switch between light and dark theme</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="adminSettingsThemeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div style="margin-top: 1rem; text-align: center; color: var(--text-muted); font-size: 0.8rem;">
+                    Theme preference is saved automatically
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Admin Profile Modal -->
+    <div class="modal-overlay" id="editAdminProfileModal">
+        <div class="modal-box" style="max-width: 500px;">
+            <div class="modal-header admin-header">
+                <h3><i class="fas fa-user-edit"></i> Edit Admin Profile</h3>
+                <button class="modal-close" id="editAdminProfileModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Update your admin profile information</p>
+                <form id="editAdminProfileForm">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" id="editAdminUsername" placeholder="Admin username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Image</label>
+                        <div class="image-upload-area" id="editAdminImageUploadArea">
+                            <img id="editAdminProfilePreview" src="https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff&size=80" alt="profile">
+                            <span style="font-size:0.85rem;color:var(--text-muted);">Click to change image (crop tool will appear)</span>
+                            <input type="file" id="editAdminProfileImageInput" accept="image/*">
+                        </div>
+                        <div class="preview-container" id="editAdminPreviewContainer">
+                            <img class="image-to-crop" id="editAdminImageToCrop">
+                            <div class="crop-controls">
+                                <button type="button" class="btn-tool" onclick="rotateLeft('admin')">↺ Rotate Left</button>
+                                <button type="button" class="btn-tool" onclick="rotateRight('admin')">↻ Rotate Right</button>
+                                <button type="button" class="btn-tool" id="applyAdminCropBtn" onclick="applyCrop('admin')">✓ Apply Crop</button>
+                            </div>
+                        </div>
+                        <div class="image-status" id="editAdminImageStatus"></div>
+                        <div id="editAdminCroppedThumbnailContainer" style="display: none; margin-top: 10px; text-align: center;">
+                            <img id="editAdminCroppedThumbnailPreview" class="cropped-thumbnail" src="" alt="Cropped preview">
+                            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Click thumbnail to edit</p>
+                        </div>
+                    </div>
+                    <div id="editAdminProfileStatus" class="status-message"></div>
+                    <button type="submit" class="btn btn-admin btn-block" id="editAdminProfileSubmitBtn" disabled>Update Admin Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertBox" class="alert-popup">Message...</div>
+
+    <script>
+        // ============================================================
+// THEME SYNC
+// ============================================================
+function getStoredTheme() {
+    return localStorage.getItem('user-theme-preference') || 'light';
+}
+
+function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('user-theme-preference', theme);
+    
+    const studentToggle = document.getElementById('settingsThemeToggle');
+    const adminToggle = document.getElementById('adminSettingsThemeToggle');
+    
+    if (studentToggle) studentToggle.checked = (theme === 'dark');
+    if (adminToggle) adminToggle.checked = (theme === 'dark');
+    
+    try {
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+                type: 'themeChange',
+                theme: theme
+            }, '*');
+        }
+    } catch(e) {}
+}
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        applyTheme(localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    applyTheme(parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+
+syncThemeWithParent();
+
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') {
+        syncThemeWithParent();
+    }
+});
+
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            applyTheme(newTheme);
+        }
+    }
+});
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoDds81u8M5N8micA_hoIBgCS7aCFm0NUmwW6XLH4m_fRJ8R9pGqjgFGMeBxBd2dSL/exec";
+const STUDENT_SHEET = "Student_Login";
+const ADMIN_SHEET = "Admin_Login";
+const SPREADSHEET_ID = "1iK6_Ge2OAlA6a0ISR19MTBQcwoHth0fKVzMGgQFeIjY";
+const DRIVE_FOLDER_ID = "1M0AZkLkR9t2NmkM4kOS8mka5KkobUlwD";
+const IMAGE_COLUMN_NAME = "Image";
+
+const STUDENT_SHEETS = [
+    '5th_Std',
+    '6th_Std', 
+    '7th_Std',
+    '8th_Std',
+    '9th_Std',
+    '10th_Std',
+    '11_Com',
+    '12_Com',
+    '11_Sci',
+    '12_Sci'
+];
+const STUDENT_DATA_SPREADSHEET_ID = '1n21WMpSxap6CgfXBt3guK4DUKpFfDG69fiMm3_4r2hc';
+
+// Cache configuration
+const CACHE_KEYS = {
+    STUDENT_DATA: 'ujjwal_student_data_cache',
+    ADMIN_DATA: 'ujjwal_admin_data_cache',
+    STUDENT_SHEETS_DATA: 'ujjwal_student_sheets_cache',
+    USER_SESSION: 'ujjwal_user_session',
+    USER_DATA: 'ujjwal_user_data_cache'
+};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let currentUser = null;
+let currentUserData = null;
+let currentUserType = null;
+let mathAnswer = 0;
+let forgotPasswordData = null;
+let isCheckingStudentSheets = false;
+let backgroundUpdateInProgress = false;
+let updateQueue = [];
+let isProcessingQueue = false;
+let signupEmailCheckTimeout = null;
+
+let croppers = {
+    signup: null,
+    admin: null
+};
+
+let croppedImageData = {
+    signup: null,
+    admin: null
+};
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const dom = {};
+
+function cacheDomElements() {
+    dom.sidebar = document.getElementById('mobileSidebar');
+    dom.overlay = document.getElementById('sidebarOverlay');
+    dom.hamburger = document.getElementById('hamburgerOpen');
+    dom.closeBtn = document.getElementById('sidebarClose');
+    dom.authButtons = document.getElementById('authButtons');
+    dom.menuGrid = document.getElementById('menuGrid');
+    dom.alertBox = document.getElementById('alertBox');
+    dom.profileSection = document.getElementById('profileSection');
+    dom.profileAvatar = document.getElementById('profileAvatar');
+    dom.profileName = document.getElementById('profileName');
+    dom.profileEmail = document.getElementById('profileEmail');
+    
+    dom.adminManagementCard = document.getElementById('adminManagementCard');
+    dom.adminChangePasswordLink = document.getElementById('adminChangePasswordLink');
+    dom.adminSettingsLink = document.getElementById('adminSettingsLink');
+    dom.adminLoginCard = document.getElementById('adminLoginCard');
+    dom.editProfileBtn = document.getElementById('editProfileBtn');
+    dom.editAdminProfileSubmitBtn = document.getElementById('editAdminProfileSubmitBtn');
+    dom.applyAdminCropBtn = document.getElementById('applyAdminCropBtn');
+    dom.yourDetailsCard = document.getElementById('yourDetailsCard');
+    dom.logoutCard = document.getElementById('logoutCard');
+    dom.aboutUsLink = document.getElementById('aboutUsLink');
+    dom.settingsLink = document.getElementById('settingsLink');
+    
+    dom.signupEmail = document.getElementById('signupEmail');
+    dom.signupEmailStatus = document.getElementById('signupEmailStatus');
+    dom.signupSubmitBtn = document.getElementById('signupSubmitBtn');
+}
+
+// ============================================================
+// CACHE UTILITY FUNCTIONS
+// ============================================================
+function getCachedData(cacheKey) {
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (!cached) return null;
+        
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < CACHE_TTL) {
+            return data;
+        }
+        return null;
+    } catch (e) {
+        console.warn('Cache read error:', e);
+        return null;
+    }
+}
+
+function setCachedData(cacheKey, data) {
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify({
+            data: data,
+            timestamp: Date.now()
+        }));
+    } catch (e) {
+        console.warn('Cache write error:', e);
+    }
+}
+
+function clearCache(cacheKey) {
+    if (cacheKey) {
+        localStorage.removeItem(cacheKey);
+    } else {
+        Object.values(CACHE_KEYS).forEach(key => {
+            localStorage.removeItem(key);
+        });
+    }
+}
+
+// ============================================================
+// BACKGROUND DATA UPDATE SYSTEM
+// ============================================================
+class BackgroundDataUpdater {
+    constructor() {
+        this.updateQueue = [];
+        this.isProcessing = false;
+        this.updateListeners = [];
+        this.lastUpdateTimes = {};
+    }
+
+    queueUpdate(taskId, updateFn, priority = 'normal') {
+        this.updateQueue.push({
+            id: taskId,
+            fn: updateFn,
+            priority: priority,
+            timestamp: Date.now()
+        });
+        
+        this.updateQueue.sort((a, b) => {
+            const priorityOrder = { high: 0, normal: 1, low: 2 };
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        });
+        
+        this.processQueue();
+    }
+
+    async processQueue() {
+        if (this.isProcessing || this.updateQueue.length === 0) return;
+        
+        this.isProcessing = true;
+        
+        while (this.updateQueue.length > 0) {
+            const task = this.updateQueue.shift();
+            try {
+                await task.fn();
+                this.notifyListeners(task.id, 'success');
+            } catch (error) {
+                console.error(`Background update failed for task ${task.id}:`, error);
+                this.notifyListeners(task.id, 'error', error.message);
+            }
+        }
+        
+        this.isProcessing = false;
+    }
+
+    addListener(listener) {
+        this.updateListeners.push(listener);
+    }
+
+    notifyListeners(taskId, status, message = '') {
+        this.updateListeners.forEach(listener => {
+            try {
+                listener(taskId, status, message);
+            } catch (e) {
+                console.warn('Listener error:', e);
+            }
+        });
+    }
+
+    getLastUpdateTime(taskId) {
+        return this.lastUpdateTimes[taskId] || null;
+    }
+
+    setLastUpdateTime(taskId) {
+        this.lastUpdateTimes[taskId] = Date.now();
+    }
+}
+
+const backgroundUpdater = new BackgroundDataUpdater();
+
+// ============================================================
+// FAST DATA FETCH WITH CACHE
+// ============================================================
+async function fetchDataFast(url, cacheKey, forceRefresh = false) {
+    if (!forceRefresh) {
+        const cachedData = getCachedData(cacheKey);
+        if (cachedData) {
+            if (!backgroundUpdateInProgress) {
+                backgroundUpdateInProgress = true;
+                backgroundUpdater.queueUpdate(
+                    `refresh_${cacheKey}`,
+                    async () => {
+                        try {
+                            const freshData = await fetchDataDirect(url);
+                            if (freshData) {
+                                setCachedData(cacheKey, freshData);
+                                console.log(`Background refresh completed for ${cacheKey}`);
+                            }
+                        } catch (err) {
+                            console.warn(`Background refresh failed for ${cacheKey}:`, err);
+                        } finally {
+                            backgroundUpdateInProgress = false;
+                        }
+                    },
+                    'low'
+                );
+            }
+            return cachedData;
+        }
+    }
+    
+    try {
+        const data = await fetchDataDirect(url);
+        if (data) {
+            setCachedData(cacheKey, data);
+        }
+        return data;
+    } catch (err) {
+        console.error('Fetch error:', err);
+        return null;
+    }
+}
+
+async function fetchDataDirect(url) {
+    try {
+        const response = await fetch(url);
+        const result = await response.json();
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            return result.data;
+        }
+        return null;
+    } catch (err) {
+        console.error('Direct fetch error:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// SIGNUP EMAIL VALIDATION
+// ============================================================
+async function checkEmailExistsInStudentLogin(email) {
+    try {
+        // Check cache first
+        const cacheKey = CACHE_KEYS.STUDENT_DATA;
+        let users = getCachedData(cacheKey);
+        
+        if (!users) {
+            // Fetch fresh data if not in cache
+            const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (data.status === 'success' && data.data) {
+                users = data.data;
+                setCachedData(cacheKey, users);
+            } else {
+                return false;
+            }
+        }
+        
+        // Check if email exists
+        if (users) {
+            const exists = users.some(row => {
+                const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim().toLowerCase() : '';
+                return rowEmail === email.toLowerCase().trim();
+            });
+            return exists;
+        }
+        return false;
+    } catch (err) {
+        console.error('Error checking email:', err);
+        return false;
+    }
+}
+
+// ============================================================
+// SIGNUP EMAIL VALIDATION UI
+// ============================================================
+function setupSignupEmailValidation() {
+    if (!dom.signupEmail) return;
+    
+    // Create status element if it doesn't exist
+    if (!dom.signupEmailStatus) {
+        const statusEl = document.createElement('div');
+        statusEl.id = 'signupEmailStatus';
+        statusEl.className = 'signup-email-status';
+        statusEl.style.cssText = `
+            font-size: 0.75rem;
+            margin-top: 4px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        `;
+        dom.signupEmail.parentNode.appendChild(statusEl);
+        dom.signupEmailStatus = statusEl;
+    }
+    
+    // Real-time validation on input
+    dom.signupEmail.addEventListener('input', function() {
+        clearTimeout(signupEmailCheckTimeout);
+        const email = this.value.trim();
+        
+        // Reset status
+        dom.signupEmailStatus.style.display = 'none';
+        dom.signupEmailStatus.textContent = '';
+        dom.signupSubmitBtn.disabled = false;
+        
+        // Validate email format first
+        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            // Show checking status
+            dom.signupEmailStatus.style.display = 'block';
+            dom.signupEmailStatus.textContent = '⏳ Checking email...';
+            dom.signupEmailStatus.style.color = 'var(--text-muted)';
+            dom.signupEmailStatus.style.background = 'var(--accent-soft)';
+            dom.signupEmailStatus.style.border = '1px solid var(--border-light)';
+            dom.signupSubmitBtn.disabled = true;
+            
+            // Debounce the check
+            signupEmailCheckTimeout = setTimeout(async () => {
+                try {
+                    const exists = await checkEmailExistsInStudentLogin(email);
+                    
+                    if (exists) {
+                        // Email exists - show error and prevent signup
+                        dom.signupEmailStatus.style.display = 'block';
+                        dom.signupEmailStatus.textContent = '❌ Please login! You already registered';
+                        dom.signupEmailStatus.style.color = 'var(--danger)';
+                        dom.signupEmailStatus.style.background = 'rgba(239, 68, 68, 0.1)';
+                        dom.signupEmailStatus.style.border = '1px solid var(--danger)';
+                        dom.signupSubmitBtn.disabled = true;
+                        dom.signupEmail.style.borderColor = 'var(--danger)';
+                        
+                        // Show toast notification
+                        showToast('⚠️ Please login! You already registered', 'warning');
+                    } else {
+                        // Email available
+                        dom.signupEmailStatus.style.display = 'block';
+                        dom.signupEmailStatus.textContent = '✅ Email available';
+                        dom.signupEmailStatus.style.color = 'var(--success)';
+                        dom.signupEmailStatus.style.background = 'rgba(16, 185, 129, 0.1)';
+                        dom.signupEmailStatus.style.border = '1px solid var(--success)';
+                        dom.signupSubmitBtn.disabled = false;
+                        dom.signupEmail.style.borderColor = 'var(--success)';
+                    }
+                } catch (err) {
+                    console.error('Email validation error:', err);
+                    dom.signupEmailStatus.style.display = 'none';
+                    dom.signupSubmitBtn.disabled = false;
+                }
+            }, 500);
+        } else if (email && email.length > 0) {
+            // Invalid email format
+            dom.signupEmailStatus.style.display = 'block';
+            dom.signupEmailStatus.textContent = '⚠️ Please enter a valid email address';
+            dom.signupEmailStatus.style.color = 'var(--warning)';
+            dom.signupEmailStatus.style.background = 'rgba(245, 158, 11, 0.1)';
+            dom.signupEmailStatus.style.border = '1px solid var(--warning)';
+            dom.signupSubmitBtn.disabled = true;
+            dom.signupEmail.style.borderColor = 'var(--warning)';
+        } else {
+            // Empty or cleared
+            dom.signupEmailStatus.style.display = 'none';
+            dom.signupSubmitBtn.disabled = false;
+            dom.signupEmail.style.borderColor = 'var(--input-border)';
+        }
+    });
+    
+    // Also validate on blur (when user leaves the field)
+    dom.signupEmail.addEventListener('blur', function() {
+        const email = this.value.trim();
+        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            // Trigger validation if not already validated
+            if (dom.signupEmailStatus.textContent === '⏳ Checking email...') {
+                // Wait for the check to complete
+            }
+        }
+    });
+}
+
+// ============================================================
+// FAST USER DATA FETCH WITH BACKGROUND UPDATE
+// ============================================================
+async function fetchUserDataFast(email, forceRefresh = false) {
+    const cacheKey = `${CACHE_KEYS.USER_DATA}_${email}`;
+    
+    if (!forceRefresh) {
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+            backgroundUpdater.queueUpdate(
+                `refresh_user_${email}`,
+                async () => {
+                    try {
+                        const freshData = await fetchUserDataDirect(email);
+                        if (freshData) {
+                            setCachedData(cacheKey, freshData);
+                            if (currentUser === email) {
+                                currentUserData = freshData;
+                                updateProfileDisplay(freshData, currentUserType);
+                            }
+                        }
+                    } catch (err) {
+                        console.warn('User data background refresh failed:', err);
+                    }
+                },
+                'normal'
+            );
+            return cached;
+        }
+    }
+    
+    const data = await fetchUserDataDirect(email);
+    if (data) {
+        setCachedData(cacheKey, data);
+    }
+    return data;
+}
+
+async function fetchUserDataDirect(email) {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.status === 'success' && data.data) {
+            return data.data.find(row => {
+                const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim() : '';
+                return rowEmail === email;
+            });
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching user data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// FAST ADMIN DATA FETCH WITH BACKGROUND UPDATE
+// ============================================================
+async function fetchAdminDataFast(username, forceRefresh = false) {
+    const cacheKey = `${CACHE_KEYS.ADMIN_DATA}_${username}`;
+    
+    if (!forceRefresh) {
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+            backgroundUpdater.queueUpdate(
+                `refresh_admin_${username}`,
+                async () => {
+                    try {
+                        const freshData = await fetchAdminDataDirect(username);
+                        if (freshData) {
+                            setCachedData(cacheKey, freshData);
+                            if (currentUser === username && currentUserType === 'admin') {
+                                currentUserData = freshData;
+                                updateProfileDisplay(freshData, 'admin');
+                            }
+                        }
+                    } catch (err) {
+                        console.warn('Admin data background refresh failed:', err);
+                    }
+                },
+                'normal'
+            );
+            return cached;
+        }
+    }
+    
+    const data = await fetchAdminDataDirect(username);
+    if (data) {
+        setCachedData(cacheKey, data);
+    }
+    return data;
+}
+
+async function fetchAdminDataDirect(username) {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.status === 'success' && data.data) {
+            return data.data.find(row => {
+                const rowUser = row['User Name'] ? row['User Name'].toString().trim() : '';
+                return rowUser === username;
+            });
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching admin data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// UPDATE PROFILE DISPLAY
+// ============================================================
+function updateProfileDisplay(userData, userType) {
+    if (!userData) return;
+    
+    if (userType === 'admin') {
+        const fullName = userData['User Name'] || 'Admin';
+        dom.profileName.innerHTML = `${fullName} <span class="admin-badge"><i class="fas fa-user-shield"></i> Admin</span>`;
+        
+        const imageLink = userData['Image'] || '';
+        if (imageLink) {
+            const thumbnail = getDriveThumbnail(imageLink);
+            dom.profileAvatar.src = thumbnail;
+        }
+    } else {
+        const fullName = `${userData['First Name'] || ''} ${userData['Last Name'] || ''}`.trim() || 'User';
+        dom.profileName.textContent = fullName;
+        
+        const imageLink = userData['Image'] || '';
+        if (imageLink) {
+            const thumbnail = getDriveThumbnail(imageLink);
+            dom.profileAvatar.src = thumbnail;
+        }
+    }
+}
+
+// ============================================================
+// FAST LOGIN WITH BACKGROUND UPDATE
+// ============================================================
+async function handleLoginFast(email, password) {
+    try {
+        const cacheKey = CACHE_KEYS.STUDENT_DATA;
+        let users = getCachedData(cacheKey);
+        
+        if (!users) {
+            const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (data.status === 'success' && data.data) {
+                users = data.data;
+                setCachedData(cacheKey, users);
+                
+                backgroundUpdater.queueUpdate(
+                    'refresh_student_login',
+                    async () => {
+                        try {
+                            const freshData = await fetchStudentLoginData();
+                            if (freshData) {
+                                setCachedData(cacheKey, freshData);
+                            }
+                        } catch (err) {
+                            console.warn('Student login background refresh failed:', err);
+                        }
+                    },
+                    'low'
+                );
+            }
+        }
+        
+        if (users) {
+            const found = users.find(row => {
+                const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim() : '';
+                const rowPass = row['Password'] ? row['Password'].toString().trim() : '';
+                return rowEmail === email && rowPass === password;
+            });
+            
+            if (found) {
+                return found;
+            }
+        }
+        return null;
+    } catch (err) {
+        console.error('Login error:', err);
+        throw new Error('Login error: ' + err.message);
+    }
+}
+
+async function fetchStudentLoginData() {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.status === 'success' && data.data) {
+            return data.data;
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching student login data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// FAST ADMIN LOGIN WITH BACKGROUND UPDATE
+// ============================================================
+async function handleAdminLoginFast(username, password) {
+    try {
+        const cacheKey = CACHE_KEYS.ADMIN_DATA;
+        let admins = getCachedData(cacheKey);
+        
+        if (!admins) {
+            const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (data.status === 'success' && data.data) {
+                admins = data.data;
+                setCachedData(cacheKey, admins);
+                
+                backgroundUpdater.queueUpdate(
+                    'refresh_admin_login',
+                    async () => {
+                        try {
+                            const freshData = await fetchAdminLoginData();
+                            if (freshData) {
+                                setCachedData(cacheKey, freshData);
+                            }
+                        } catch (err) {
+                            console.warn('Admin login background refresh failed:', err);
+                        }
+                    },
+                    'low'
+                );
+            }
+        }
+        
+        if (admins) {
+            const found = admins.find(row => {
+                const rowUser = row['User Name'] ? row['User Name'].toString().trim() : '';
+                const rowPass = row['Password'] ? row['Password'].toString().trim() : '';
+                return rowUser === username && rowPass === password;
+            });
+            return found || null;
+        }
+        return null;
+    } catch (err) {
+        console.error('Admin login error:', err);
+        throw new Error('Admin login error: ' + err.message);
+    }
+}
+
+async function fetchAdminLoginData() {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        if (data.status === 'success' && data.data) {
+            return data.data;
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching admin login data:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// FORGOT PASSWORD WITH CACHE
+// ============================================================
+async function findUserByEmailAndMobileFast(email, mobile) {
+    try {
+        const cacheKey = CACHE_KEYS.STUDENT_DATA;
+        let users = getCachedData(cacheKey);
+        
+        if (!users) {
+            const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (data.status === 'success' && data.data) {
+                users = data.data;
+                setCachedData(cacheKey, users);
+            }
+        }
+        
+        if (users) {
+            const found = users.find(row => {
+                const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim() : '';
+                const rowMobile = row['Mobile Number'] ? row['Mobile Number'].toString().trim() : '';
+                return rowEmail === email && rowMobile === mobile;
+            });
+            return found || null;
+        }
+        return null;
+    } catch (err) {
+        console.error('Error finding user:', err);
+        throw new Error('Error connecting to server: ' + err.message);
+    }
+}
+
+// ============================================================
+// UPDATE OPERATIONS WITH BACKGROUND SYNC
+// ============================================================
+async function updateDataWithBackgroundSync(operation, data) {
+    const taskId = `update_${operation}_${Date.now()}`;
+    
+    return new Promise((resolve, reject) => {
+        backgroundUpdater.queueUpdate(
+            taskId,
+            async () => {
+                try {
+                    const result = await performUpdateOperation(operation, data);
+                    clearRelevantCaches(operation);
+                    backgroundUpdater.setLastUpdateTime(taskId);
+                    resolve(result);
+                } catch (err) {
+                    reject(err);
+                }
+            },
+            'high'
+        );
+    });
+}
+
+async function performUpdateOperation(operation, data) {
+    switch(operation) {
+        case 'changePassword':
+            return await handleChangePassword(data.email, data.newPassword, data.rowIndex);
+        case 'adminChangePassword':
+            return await handleAdminChangePassword(data.username, data.newPassword, data.rowIndex);
+        case 'updateProfile':
+            return await handleEditAdminProfile(data.username, data.newUsername, data.rowIndex, data.imageData);
+        case 'updateUserData':
+            return await updateUserData(data.email, data.updates, data.rowIndex);
+        default:
+            throw new Error(`Unknown operation: ${operation}`);
+    }
+}
+
+function clearRelevantCaches(operation) {
+    switch(operation) {
+        case 'changePassword':
+        case 'updateUserData':
+            clearCache(CACHE_KEYS.STUDENT_DATA);
+            clearCache(`${CACHE_KEYS.USER_DATA}_${currentUser}`);
+            break;
+        case 'adminChangePassword':
+        case 'updateProfile':
+            clearCache(CACHE_KEYS.ADMIN_DATA);
+            clearCache(`${CACHE_KEYS.ADMIN_DATA}_${currentUser}`);
+            break;
+        default:
+            clearCache();
+    }
+}
+
+// ============================================================
+// CROPPER FUNCTIONS
+// ============================================================
+function getCropElements(section) {
+    if (section === 'signup') {
+        return {
+            container: document.getElementById('signupPreviewContainer'),
+            img: document.getElementById('signupImageToCrop'),
+            status: document.getElementById('signupImageStatus'),
+            preview: document.getElementById('profilePreview'),
+            cropBtn: null
+        };
+    } else if (section === 'admin') {
+        return {
+            container: document.getElementById('editAdminPreviewContainer'),
+            img: document.getElementById('editAdminImageToCrop'),
+            status: document.getElementById('editAdminImageStatus'),
+            preview: document.getElementById('editAdminProfilePreview'),
+            cropBtn: document.getElementById('applyAdminCropBtn'),
+            thumbnailContainer: document.getElementById('editAdminCroppedThumbnailContainer'),
+            thumbnailPreview: document.getElementById('editAdminCroppedThumbnailPreview'),
+            submitBtn: document.getElementById('editAdminProfileSubmitBtn')
+        };
+    }
+    return null;
+}
+
+function rotateLeft(section) {
+    if (croppers[section]) croppers[section].rotate(-90);
+}
+
+function rotateRight(section) {
+    if (croppers[section]) croppers[section].rotate(90);
+}
+
+function applyCrop(section) {
+    const elements = getCropElements(section);
+    if (!elements || !croppers[section]) {
+        elements.status.textContent = "❌ No image loaded to crop.";
+        elements.status.style.color = "var(--danger)";
+        return;
+    }
+
+    try {
+        const canvas = croppers[section].getCroppedCanvas({ width: 400, height: 400 });
+        if (!canvas) throw new Error("Could not crop image");
+        
+        const base64Data = canvas.toDataURL('image/jpeg', 0.9);
+        croppedImageData[section] = {
+            base64Data: base64Data.split(',')[1],
+            fileName: `${section}_profile_${Date.now()}.jpg`,
+            mimeType: 'image/jpeg',
+            fullDataUrl: base64Data
+        };
+        
+        elements.status.textContent = "✅ Image cropped and ready!";
+        elements.status.style.color = "var(--success)";
+        elements.preview.src = base64Data;
+
+        if (section === 'admin') {
+            const thumbnailContainer = elements.thumbnailContainer;
+            const thumbnailPreview = elements.thumbnailPreview;
+            thumbnailPreview.src = base64Data;
+            thumbnailContainer.style.display = 'block';
+            elements.submitBtn.disabled = false;
+            elements.submitBtn.title = "";
+            if (elements.cropBtn) elements.cropBtn.disabled = true;
+        }
+        
+    } catch (error) {
+        elements.status.textContent = "❌ Failed to crop image: " + error.message;
+        elements.status.style.color = "var(--danger)";
+        if (section === 'admin') {
+            elements.submitBtn.disabled = true;
+        }
+    }
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function capitalizeFirst(el) {
+    if (el.value.length > 0) {
+        el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1);
+    }
+}
+
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+function extractFileId(driveUrl) {
+    if (!driveUrl) return null;
+    const match = driveUrl.match(/[-\w]{25,}/);
+    return match ? match[0] : null;
+}
+
+function getDriveThumbnail(driveUrl) {
+    const fileId = extractFileId(driveUrl);
+    if (fileId) {
+        return `https://lh3.googleusercontent.com/d/${fileId}=w200`;
+    }
+    return driveUrl;
+}
+
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+    
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4500);
+}
+
+function showSpinner(element, show, customHtml = null) {
+    if (!element) return;
+    if (show) {
+        element.disabled = true;
+        const originalText = element.innerHTML;
+        element.setAttribute('data-original-text', originalText);
+        element.innerHTML = customHtml || '<span class="spinner"></span> Loading...';
+    } else {
+        element.disabled = false;
+        const original = element.getAttribute('data-original-text');
+        if (original) element.innerHTML = original;
+    }
+}
+
+function copyPasswordToClipboard() {
+    const passwordEl = document.getElementById('revealedPassword');
+    const password = passwordEl.textContent;
+    if (password && password !== '********') {
+        navigator.clipboard.writeText(password).then(() => {
+            showToast('✅ Password copied to clipboard!', 'success');
+        }).catch(() => {
+            const textArea = document.createElement('textarea');
+            textArea.value = password;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('✅ Password copied!', 'success');
+        });
+    }
+}
+
+function showProfilePlaceholder() {
+    if (dom.profileAvatar) {
+        dom.profileAvatar.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23e2e8f0"/%3E%3Ccircle cx="50" cy="40" r="25" fill="%2394a3b8"/%3E%3Ccircle cx="50" cy="80" r="30" fill="%2394a3b8"/%3E%3C/svg%3E';
+        dom.profileAvatar.style.animation = 'pulse 1.5s ease-in-out infinite';
+    }
+    if (dom.profileName) {
+        dom.profileName.textContent = 'Loading...';
+        dom.profileName.style.opacity = '0.6';
+    }
+    if (dom.profileEmail) {
+        dom.profileEmail.textContent = 'Loading...';
+        dom.profileEmail.style.opacity = '0.6';
+    }
+}
+
+function hideProfilePlaceholder() {
+    if (dom.profileAvatar) {
+        dom.profileAvatar.style.animation = 'none';
+    }
+    if (dom.profileName) {
+        dom.profileName.style.opacity = '1';
+    }
+    if (dom.profileEmail) {
+        dom.profileEmail.style.opacity = '1';
+    }
+}
+
+// ============================================================
+// MENU VISIBILITY FUNCTIONS
+// ============================================================
+function resetMenuVisibility() {
+    const allCards = dom.menuGrid.querySelectorAll('.card');
+    allCards.forEach(card => {
+        card.style.display = 'none';
+    });
+}
+
+function showGuestMenu() {
+    resetMenuVisibility();
+    document.getElementById('home').style.display = 'block';
+    dom.aboutUsLink.style.display = 'block';
+    dom.settingsLink.style.display = 'block';
+    
+    dom.yourDetailsCard.style.display = 'none';
+    document.querySelectorAll('.student-only').forEach(el => {
+        if (el.id !== 'yourDetailsCard') el.style.display = 'none';
+    });
+    dom.adminLoginCard.style.display = 'none';
+    dom.adminChangePasswordLink.style.display = 'none';
+    dom.adminSettingsLink.style.display = 'none';
+    dom.adminManagementCard.style.display = 'none';
+    dom.logoutCard.style.display = 'none';
+}
+
+function showStudentMenu(studentInfo) {
+    resetMenuVisibility();
+    document.getElementById('home').style.display = 'block';
+    
+    document.querySelectorAll('.student-only').forEach(el => {
+        if (el.id === 'yourDetailsCard') {
+            if (studentInfo && studentInfo.found) {
+                el.style.display = 'block';
+                el.innerHTML = `<i class="fas fa-user-graduate"></i><span>Your Details</span>`;
+                sessionStorage.setItem('student_sheet_name', studentInfo.sheetName);
+                sessionStorage.setItem('student_data_found', 'true');
+            } else {
+                el.style.display = 'none';
+                sessionStorage.setItem('student_data_found', 'false');
+                sessionStorage.removeItem('student_sheet_name');
+            }
+        } else {
+            el.style.display = 'block';
+        }
+    });
+    
+    dom.aboutUsLink.style.display = 'block';
+    dom.settingsLink.style.display = 'block';
+    dom.logoutCard.style.display = 'block';
+    
+    dom.adminLoginCard.style.display = 'none';
+    dom.adminChangePasswordLink.style.display = 'none';
+    dom.adminSettingsLink.style.display = 'none';
+    dom.adminManagementCard.style.display = 'none';
+}
+
+function showAdminMenu() {
+    resetMenuVisibility();
+    document.getElementById('home').style.display = 'block';
+    
+    dom.adminLoginCard.style.display = 'none';
+    dom.adminChangePasswordLink.style.display = 'block';
+    dom.adminSettingsLink.style.display = 'block';
+    dom.adminManagementCard.style.display = 'block';
+    dom.logoutCard.style.display = 'block';
+    
+    document.querySelectorAll('.student-only').forEach(el => {
+        el.style.display = 'none';
+    });
+    dom.aboutUsLink.style.display = 'none';
+    dom.settingsLink.style.display = 'none';
+}
+
+// ============================================================
+// CHECK EMAIL IN STUDENT SHEETS WITH CACHE
+// ============================================================
+async function checkEmailInStudentSheets(email) {
+    if (isCheckingStudentSheets) {
+        console.log('Already checking student sheets, waiting...');
+        return { found: false, checking: true };
+    }
+    
+    isCheckingStudentSheets = true;
+    
+    if (dom.yourDetailsCard) {
+        dom.yourDetailsCard.style.display = 'block';
+        dom.yourDetailsCard.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Checking...</span>
+        `;
+        dom.yourDetailsCard.style.cursor = 'default';
+        dom.yourDetailsCard.style.opacity = '0.7';
+        dom.yourDetailsCard.style.pointerEvents = 'none';
+    }
+    
+    try {
+        const cacheKey = `${CACHE_KEYS.STUDENT_SHEETS_DATA}_${email}`;
+        const result = await backgroundRefreshStudentSheets(email);
+        
+        if (dom.yourDetailsCard) {
+            dom.yourDetailsCard.style.cursor = 'pointer';
+            dom.yourDetailsCard.style.opacity = '1';
+            dom.yourDetailsCard.style.pointerEvents = 'auto';
+        }
+        
+        return result;
+    } catch (err) {
+        console.error('Error checking student sheets:', err);
+        if (dom.yourDetailsCard) {
+            dom.yourDetailsCard.style.cursor = 'pointer';
+            dom.yourDetailsCard.style.opacity = '1';
+            dom.yourDetailsCard.style.pointerEvents = 'auto';
+        }
+        return { found: false, error: err.message };
+    } finally {
+        isCheckingStudentSheets = false;
+    }
+}
+
+async function backgroundRefreshStudentSheets(email) {
+    const cacheKey = `${CACHE_KEYS.STUDENT_SHEETS_DATA}_${email}`;
+    
+    const cached = getCachedData(cacheKey);
+    if (cached) {
+        backgroundUpdater.queueUpdate(
+            `refresh_student_sheets_${email}`,
+            async () => {
+                try {
+                    const results = await checkAllStudentSheets(email);
+                    if (results) {
+                        setCachedData(cacheKey, results);
+                        console.log('Student sheets background refresh complete');
+                    }
+                } catch (err) {
+                    console.warn('Student sheets background refresh failed:', err);
+                }
+            },
+            'normal'
+        );
+        return cached;
+    }
+    
+    const results = await checkAllStudentSheets(email);
+    if (results) {
+        setCachedData(cacheKey, results);
+    }
+    return results;
+}
+
+async function checkAllStudentSheets(email) {
+    const sheetChecks = STUDENT_SHEETS.map(async (sheetName) => {
+        try {
+            const url = `${SCRIPT_URL}?spreadsheetId=${STUDENT_DATA_SPREADSHEET_ID}&sheetName=${sheetName}&_=${Date.now()}`;
+            const response = await fetch(url);
+            const result = await response.json();
+            
+            if (result.status === 'success' && Array.isArray(result.data)) {
+                const found = result.data.some(row => {
+                    const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim().toLowerCase() : '';
+                    return rowEmail === email.toLowerCase().trim();
+                });
+                
+                if (found) {
+                    return {
+                        found: true,
+                        sheetName: sheetName,
+                        data: result.data.find(row => {
+                            const rowEmail = row['Email Id'] ? row['Email Id'].toString().trim().toLowerCase() : '';
+                            return rowEmail === email.toLowerCase().trim();
+                        })
+                    };
+                }
+            }
+            return { found: false, sheetName: sheetName };
+        } catch (err) {
+            console.error(`Error checking sheet ${sheetName}:`, err);
+            return { found: false, sheetName: sheetName, error: err.message };
+        }
+    });
+
+    const results = await Promise.all(sheetChecks);
+    const foundResult = results.find(r => r.found === true);
+    
+    if (foundResult) {
+        return {
+            found: true,
+            sheetName: foundResult.sheetName,
+            studentData: foundResult.data
+        };
+    }
+    
+    return { found: false };
+}
+
+// ============================================================
+// DRIVE AND SHEET OPERATIONS
+// ============================================================
+async function deleteFileFromDrive(fileId) {
+    try {
+        if (!fileId) return null;
+        
+        const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+        const fetchResp = await fetch(fetchUrl);
+        const fetchData = await fetchResp.json();
+        
+        let rowIndex = null;
+        if (fetchData.status === 'success' && fetchData.data) {
+            fetchData.data.forEach((row, idx) => {
+                const imageUrl = row['Image'] || '';
+                const extractedId = extractFileId(imageUrl);
+                if (extractedId === fileId) {
+                    rowIndex = idx + 2;
+                }
+            });
+        }
+
+        if (!rowIndex) {
+            console.warn('File not found in sheet');
+            return null;
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", "deleteimage");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", ADMIN_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("columnName", IMAGE_COLUMN_NAME);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        return result;
+    } catch (err) {
+        console.error('Error deleting file:', err);
+        return null;
+    }
+}
+
+async function uploadImageWithReplace(base64Data, fileName, mimeType, oldFileId, rowIndex, username) {
+    try {
+        if (oldFileId) {
+            await deleteFileFromDrive(oldFileId);
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", ADMIN_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("User Name", username);
+        params.append("fileCount", "1");
+        params.append("fileData1", base64Data);
+        params.append("fileName1", fileName);
+        params.append("fileType1", mimeType);
+        params.append("fileColumn1", IMAGE_COLUMN_NAME);
+        params.append("driveFolderId", DRIVE_FOLDER_ID);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        return result;
+    } catch (err) {
+        console.error('Error uploading image:', err);
+        throw err;
+    }
+}
+
+// ============================================================
+// SIDEBAR FUNCTIONS
+// ============================================================
+function openSidebar() {
+    dom.sidebar.classList.add('open');
+    dom.overlay.classList.add('active');
+    document.body.classList.add('sidebar-open');
+}
+
+function closeSidebar() {
+    dom.sidebar.classList.remove('open');
+    dom.overlay.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+}
+
+// ============================================================
+// MODAL FUNCTIONS
+// ============================================================
+function openModal(id) { 
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('active'); 
+}
+
+function closeModal(id) { 
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('active'); 
+}
+
+// ============================================================
+// FORGOT PASSWORD FUNCTIONS
+// ============================================================
+async function handleForgotPassword(email, mobile) {
+    const statusEl = document.getElementById('forgotStatus');
+    const revealBox = document.getElementById('passwordRevealBox');
+    const passwordEl = document.getElementById('revealedPassword');
+    const submitBtn = document.getElementById('forgotPasswordBtn');
+
+    statusEl.style.display = 'none';
+    revealBox.style.display = 'none';
+    passwordEl.textContent = '********';
+
+    try {
+        showSpinner(submitBtn, true);
+        
+        const user = await findUserByEmailAndMobileFast(email, mobile);
+        
+        if (user) {
+            const password = user['Password'] || 'No password found';
+            forgotPasswordData = user;
+            
+            revealBox.style.display = 'block';
+            passwordEl.textContent = password;
+            
+            statusEl.className = 'status-message status-success';
+            statusEl.textContent = '✅ User found! Your password is shown below.';
+            statusEl.style.display = 'block';
+            
+            showToast('✅ Password recovered successfully!', 'success');
+        } else {
+            statusEl.className = 'status-message status-error';
+            statusEl.textContent = '❌ No user found with these credentials. Please check your email and mobile number.';
+            statusEl.style.display = 'block';
+            revealBox.style.display = 'none';
+            showToast('❌ User not found', 'error');
+        }
+    } catch (err) {
+        statusEl.className = 'status-message status-error';
+        statusEl.textContent = '❌ Error: ' + err.message;
+        statusEl.style.display = 'block';
+        showToast('❌ Error: ' + err.message, 'error');
+    } finally {
+        showSpinner(submitBtn, false);
+    }
+}
+
+function closeForgotPasswordAndOpenLogin() {
+    closeModal('forgotPasswordModal');
+    openModal('loginModal');
+}
+
+// ============================================================
+// USER DATA FUNCTIONS
+// ============================================================
+async function getUserData(email) {
+    return await fetchUserDataFast(email);
+}
+
+async function getAdminData(username) {
+    return await fetchAdminDataFast(username);
+}
+
+async function updateAdminData(username, updates, rowIndex) {
+    try {
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", ADMIN_SHEET);
+        params.append("rowIndex", rowIndex);
+        
+        for (const [key, value] of Object.entries(updates)) {
+            params.append(key, value);
+        }
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        
+        clearCache(CACHE_KEYS.ADMIN_DATA);
+        clearCache(`${CACHE_KEYS.ADMIN_DATA}_${username}`);
+        
+        return result;
+    } catch (err) {
+        console.error('Error updating admin data:', err);
+        throw err;
+    }
+}
+
+async function updateAdminPassword(username, newPassword, rowIndex) {
+    try {
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", ADMIN_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("Password", newPassword);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        
+        clearCache(CACHE_KEYS.ADMIN_DATA);
+        clearCache(`${CACHE_KEYS.ADMIN_DATA}_${username}`);
+        
+        return result;
+    } catch (err) {
+        console.error('Error updating admin password:', err);
+        throw err;
+    }
+}
+
+async function updateUserData(email, updates, rowIndex) {
+    try {
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("rowIndex", rowIndex);
+        
+        for (const [key, value] of Object.entries(updates)) {
+            params.append(key, value);
+        }
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        
+        clearCache(CACHE_KEYS.STUDENT_DATA);
+        clearCache(`${CACHE_KEYS.USER_DATA}_${email}`);
+        
+        return result;
+    } catch (err) {
+        console.error('Error updating user data:', err);
+        throw err;
+    }
+}
+
+async function handleChangePassword(email, newPassword, rowIndex) {
+    try {
+        const params = new URLSearchParams();
+        params.append("action", "update");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("rowIndex", rowIndex);
+        params.append("Password", newPassword);
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        
+        clearCache(CACHE_KEYS.STUDENT_DATA);
+        clearCache(`${CACHE_KEYS.USER_DATA}_${email}`);
+        
+        return result;
+    } catch (err) {
+        console.error('Error changing password:', err);
+        throw err;
+    }
+}
+
+async function handleAdminChangePassword(username, newPassword, rowIndex) {
+    return await updateAdminPassword(username, newPassword, rowIndex);
+}
+
+// ============================================================
+// EDIT ADMIN PROFILE FUNCTIONS
+// ============================================================
+async function handleEditAdminProfile(username, newUsername, rowIndex, imageData = null) {
+    try {
+        if (newUsername && newUsername !== username) {
+            const updateResult = await updateAdminData(username, { 'User Name': newUsername }, rowIndex);
+            if (updateResult.status !== 'success') {
+                throw new Error('Failed to update username');
+            }
+        }
+
+        if (imageData && imageData.base64Data) {
+            try {
+                const currentData = await getAdminData(newUsername || username);
+                const oldImageUrl = currentData ? currentData['Image'] : null;
+                const oldFileId = oldImageUrl ? extractFileId(oldImageUrl) : null;
+
+                const uploadResult = await uploadImageWithReplace(
+                    imageData.base64Data,
+                    imageData.fileName,
+                    imageData.mimeType,
+                    oldFileId,
+                    rowIndex,
+                    newUsername || username
+                );
+
+                if (uploadResult && uploadResult.status !== 'success') {
+                    throw new Error('Failed to update image: ' + (uploadResult.message || 'Unknown error'));
+                }
+            } catch (err) {
+                console.error('Image update error:', err);
+                throw new Error('Image upload failed: ' + err.message);
+            }
+        }
+
+        clearCache(CACHE_KEYS.ADMIN_DATA);
+        clearCache(`${CACHE_KEYS.ADMIN_DATA}_${username}`);
+        if (newUsername && newUsername !== username) {
+            clearCache(`${CACHE_KEYS.ADMIN_DATA}_${newUsername}`);
+        }
+
+        return { 
+            status: 'success', 
+            message: 'Profile updated successfully'
+        };
+    } catch (err) {
+        console.error('Error updating admin profile:', err);
+        throw err;
+    }
+}
+
+function openEditAdminProfileModal() {
+    if (currentUserType !== 'admin') {
+        showToast('Admin login required', 'warning');
+        return;
+    }
+    
+    document.getElementById('editAdminUsername').value = currentUserData['User Name'] || '';
+    
+    const currentImage = currentUserData['Image'] || '';
+    if (currentImage) {
+        document.getElementById('editAdminProfilePreview').src = getDriveThumbnail(currentImage);
+    } else {
+        const name = currentUserData['User Name'] || 'Admin';
+        document.getElementById('editAdminProfilePreview').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f59e0b&color=fff&size=80`;
+    }
+    
+    croppedImageData.admin = null;
+    document.getElementById('editAdminPreviewContainer').style.display = 'none';
+    document.getElementById('editAdminImageStatus').textContent = '';
+    document.getElementById('editAdminProfileStatus').style.display = 'none';
+    document.getElementById('editAdminProfileImageInput').value = '';
+    document.getElementById('editAdminCroppedThumbnailContainer').style.display = 'none';
+    document.getElementById('editAdminProfileSubmitBtn').disabled = true;
+    
+    openModal('editAdminProfileModal');
+}
+
+// ============================================================
+// YOUR DETAILS CARD CLICK HANDLER
+// ============================================================
+function setupYourDetailsHandler() {
+    if (dom.yourDetailsCard) {
+        dom.yourDetailsCard.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (this.style.display === 'none' || this.style.visibility === 'hidden') {
+                showToast('Your details not available', 'warning');
+                return;
+            }
+            
+            if (isCheckingStudentSheets) {
+                showToast('⏳ Still checking for your details...', 'info');
+                return;
+            }
+            
+            const studentSheetName = sessionStorage.getItem('student_sheet_name');
+            const studentDataFound = sessionStorage.getItem('student_data_found');
+            
+            if (studentDataFound === 'true' && studentSheetName) {
+                window.location.href = `studentdetails.html?sheet=${encodeURIComponent(studentSheetName)}&email=${encodeURIComponent(currentUser)}`;
+            } else {
+                showToast('Student data not found. Please contact support.', 'warning');
+            }
+        });
+    }
+}
+
+// ============================================================
+// UPDATE UI AFTER LOGIN
+// ============================================================
+async function updateUIAfterLogin(email, userData, userType = 'student') {
+    currentUser = email;
+    currentUserData = userData;
+    currentUserType = userType;
+    
+    dom.authButtons.style.display = 'none';
+    dom.profileSection.classList.add('visible');
+    showProfilePlaceholder();
+    dom.menuGrid.classList.add('visible');
+    dom.menuGrid.classList.remove('guest-mode', 'student-mode', 'admin-mode', 'logged-in');
+    dom.menuGrid.classList.add('logged-in');
+    
+    let studentInfo = null;
+    
+    if (userType === 'student') {
+        const result = await checkEmailInStudentSheets(email);
+        if (result.found) {
+            studentInfo = result;
+            console.log(`✅ Student found in sheet: ${result.sheetName}`);
+        } else {
+            console.log('ℹ️ Student email not found in any standard sheets');
+        }
+    }
+    
+    if (userType === 'admin') {
+        showAdminMenu();
+        dom.menuGrid.classList.add('admin-mode');
+        
+        const fullName = userData['User Name'] || 'Admin';
+        dom.profileName.innerHTML = `${fullName} <span class="admin-badge"><i class="fas fa-user-shield"></i> Admin</span>`;
+        dom.editProfileBtn.textContent = 'Edit Admin Profile';
+        dom.editProfileBtn.style.display = 'inline-flex';
+        document.getElementById('avatarContainer').classList.add('avatar-clickable');
+        
+        const imageLink = userData['Image'] || '';
+        if (imageLink) {
+            const thumbnail = getDriveThumbnail(imageLink);
+            dom.profileAvatar.src = thumbnail;
+        } else {
+            const name = userData['User Name'] || 'Admin';
+            dom.profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=f59e0b&color=fff&size=100`;
+        }
+        
+        dom.profileEmail.textContent = email;
+        hideProfilePlaceholder();
+        
+    } else {
+        showStudentMenu(studentInfo);
+        dom.menuGrid.classList.add('student-mode');
+        
+        const fullName = `${userData['First Name'] || ''} ${userData['Last Name'] || ''}`.trim() || 'User';
+        dom.profileName.textContent = fullName;
+        dom.editProfileBtn.textContent = 'Edit Profile';
+        dom.editProfileBtn.style.display = 'inline-flex';
+        document.getElementById('avatarContainer').classList.remove('avatar-clickable');
+        
+        const imageLink = userData['Image'] || '';
+        if (imageLink) {
+            const thumbnail = getDriveThumbnail(imageLink);
+            dom.profileAvatar.src = thumbnail;
+        } else {
+            dom.profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=2563eb&color=fff&size=100`;
+        }
+        
+        dom.profileEmail.textContent = email;
+        hideProfilePlaceholder();
+    }
+    
+    sessionStorage.setItem('ujjwal_user', email);
+    sessionStorage.setItem('ujjwal_user_data', JSON.stringify(userData));
+    sessionStorage.setItem('ujjwal_user_type', userType);
+    if (studentInfo && studentInfo.found) {
+        sessionStorage.setItem('student_sheet_name', studentInfo.sheetName);
+        sessionStorage.setItem('student_data_found', 'true');
+    } else {
+        sessionStorage.setItem('student_data_found', 'false');
+        sessionStorage.removeItem('student_sheet_name');
+    }
+}
+
+// ============================================================
+// LOGOUT FUNCTION
+// ============================================================
+function logout() {
+    currentUser = null;
+    currentUserData = null;
+    currentUserType = null;
+    
+    dom.authButtons.style.display = 'flex';
+    dom.profileSection.classList.remove('visible');
+    
+    dom.menuGrid.classList.remove('visible', 'logged-in', 'student-mode', 'admin-mode');
+    dom.menuGrid.classList.add('visible', 'guest-mode');
+    
+    showGuestMenu();
+    
+    dom.editProfileBtn.style.display = 'none';
+    document.getElementById('avatarContainer').classList.remove('avatar-clickable');
+    
+    dom.profileAvatar.src = 'https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=100';
+    dom.profileName.textContent = 'User Name';
+    dom.profileEmail.textContent = 'user@email.com';
+    hideProfilePlaceholder();
+    
+    sessionStorage.removeItem('ujjwal_user');
+    sessionStorage.removeItem('ujjwal_user_data');
+    sessionStorage.removeItem('ujjwal_user_type');
+    sessionStorage.removeItem('student_sheet_name');
+    sessionStorage.removeItem('student_data_found');
+    
+    showToast('Logged out successfully', 'info');
+}
+
+// ============================================================
+// SIGNUP FUNCTION - WITH EMAIL VALIDATION
+// ============================================================
+async function handleSignup(formData) {
+    // Double-check email existence before submitting
+    const emailExists = await checkEmailExistsInStudentLogin(formData.email);
+    if (emailExists) {
+        showToast('⚠️ Please login! You already registered', 'warning');
+        if (dom.signupEmailStatus) {
+            dom.signupEmailStatus.style.display = 'block';
+            dom.signupEmailStatus.textContent = '❌ Please login! You already registered';
+            dom.signupEmailStatus.style.color = 'var(--danger)';
+            dom.signupEmailStatus.style.background = 'rgba(239, 68, 68, 0.1)';
+            dom.signupEmailStatus.style.border = '1px solid var(--danger)';
+        }
+        return false;
+    }
+    
+    const submitBtn = document.getElementById('signupSubmitBtn');
+    showSpinner(submitBtn, true);
+
+    try {
+        let nextSrNo = 1;
+        try {
+            const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+            const fetchResp = await fetch(fetchUrl);
+            const fetchData = await fetchResp.json();
+            if (fetchData.status === 'success' && fetchData.data && fetchData.data.length > 0) {
+                let maxSr = 0;
+                fetchData.data.forEach(row => {
+                    const sr = parseInt(row['Sr. No']);
+                    if (!isNaN(sr) && sr > maxSr) maxSr = sr;
+                });
+                nextSrNo = maxSr + 1;
+            }
+        } catch (err) {
+            console.log('Could not fetch existing data, starting from 1');
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", "insert");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", STUDENT_SHEET);
+        params.append("Sr. No", nextSrNo);
+        params.append("First Name", formData.firstName);
+        params.append("Last Name", formData.lastName);
+        params.append("Mobile Number", formData.mobile);
+        params.append("Email Id", formData.email);
+        params.append("Education Details", formData.educationDetails);
+        params.append("College Name", formData.collegeName);
+        params.append("Password", formData.password);
+
+        if (croppedImageData.signup && croppedImageData.signup.base64Data) {
+            try {
+                params.append("fileCount", "1");
+                params.append("fileData1", croppedImageData.signup.base64Data);
+                params.append("fileName1", croppedImageData.signup.fileName);
+                params.append("fileType1", croppedImageData.signup.mimeType);
+                params.append("fileColumn1", IMAGE_COLUMN_NAME);
+                params.append("driveFolderId", DRIVE_FOLDER_ID);
+            } catch (err) {
+                showToast('⚠️ Image upload failed, but account will be created.', 'warning');
+            }
+        }
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+
+        const result = await resp.json();
+        
+        if (result.status === 'success') {
+            showToast('✅ Signup successful! Logging in...', 'success');
+            closeModal('signupModal');
+            
+            clearCache(CACHE_KEYS.STUDENT_DATA);
+            
+            const user = await getUserData(formData.email);
+            if (user) {
+                await updateUIAfterLogin(formData.email, user, 'student');
+            }
+            
+            document.getElementById('signupForm').reset();
+            document.getElementById('profilePreview').src = 'https://ui-avatars.com/api/?name=User&background=2563eb&color=fff&size=80';
+            croppedImageData.signup = null;
+            document.getElementById('profileImageInput').value = '';
+            document.getElementById('signupPreviewContainer').style.display = 'none';
+            document.getElementById('signupImageStatus').textContent = '';
+            
+            // Reset email status
+            if (dom.signupEmailStatus) {
+                dom.signupEmailStatus.style.display = 'none';
+                dom.signupEmailStatus.textContent = '';
+            }
+            
+            return true;
+        } else {
+            throw new Error(result.message || 'Unknown error');
+        }
+    } catch (err) {
+        showToast('❌ Signup failed: ' + err.message, 'error');
+        return false;
+    } finally {
+        showSpinner(submitBtn, false);
+    }
+}
+
+// ============================================================
+// EVENT BINDINGS
+// ============================================================
+function init() {
+    cacheDomElements();
+
+    dom.hamburger.addEventListener('click', openSidebar);
+    dom.closeBtn.addEventListener('click', closeSidebar);
+    dom.overlay.addEventListener('click', closeSidebar);
+
+    let touchStartX = 0, touchStartY = 0;
+    document.querySelector('.app-wrapper').addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    document.querySelector('.app-wrapper').addEventListener('touchend', function(e) {
+        const diffX = e.changedTouches[0].screenX - touchStartX;
+        const diffY = Math.abs(e.changedTouches[0].screenY - touchStartY);
+        if (diffY > 50) return;
+        const isOpen = dom.sidebar.classList.contains('open');
+        if (diffX > 60 && touchStartX < 40 && !isOpen) openSidebar();
+        else if (diffX < -60 && isOpen) closeSidebar();
+    }, { passive: true });
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 820) closeSidebar();
+    });
+
+    document.getElementById('loginModalClose').addEventListener('click', () => closeModal('loginModal'));
+    document.getElementById('signupModalClose').addEventListener('click', () => closeModal('signupModal'));
+    document.getElementById('adminModalClose').addEventListener('click', () => closeModal('adminModal'));
+    document.getElementById('changePasswordModalClose').addEventListener('click', () => closeModal('changePasswordModal'));
+    document.getElementById('adminChangePasswordModalClose').addEventListener('click', () => closeModal('adminChangePasswordModal'));
+    document.getElementById('settingsModalClose').addEventListener('click', () => closeModal('settingsModal'));
+    document.getElementById('adminSettingsModalClose').addEventListener('click', () => closeModal('adminSettingsModal'));
+    document.getElementById('forgotPasswordModalClose').addEventListener('click', () => closeModal('forgotPasswordModal'));
+    document.getElementById('editAdminProfileModalClose').addEventListener('click', () => closeModal('editAdminProfileModal'));
+
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+        el.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
+    document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
+    document.getElementById('adminLoginBtn').addEventListener('click', () => openModal('adminModal'));
+
+    // Setup signup email validation
+    setupSignupEmailValidation();
+
+    dom.aboutUsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentUserType === 'admin') {
+            showToast('Admin users cannot access About Us', 'warning');
+            return;
+        }
+        document.getElementById('aboutSection').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
+    });
+
+    dom.settingsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        if (!currentUser || currentUserType === 'admin') {
+            showToast('Please login as student to access Settings', 'warning');
+            return;
+        }
+        
+        const currentTheme = localStorage.getItem('user-theme-preference') || 'light';
+        document.getElementById('settingsThemeToggle').checked = (currentTheme === 'dark');
+        openModal('settingsModal');
+    });
+
+    document.getElementById('settingsThemeToggle').addEventListener('change', function(e) {
+        const theme = e.target.checked ? 'dark' : 'light';
+        applyTheme(theme);
+        showToast(`✅ ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode applied`, 'success');
+    });
+
+    dom.adminSettingsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentUserType !== 'admin') {
+            showToast('Admin login required', 'warning');
+            return;
+        }
+        const currentTheme = localStorage.getItem('user-theme-preference') || 'light';
+        document.getElementById('adminSettingsThemeToggle').checked = (currentTheme === 'dark');
+        openModal('adminSettingsModal');
+    });
+
+    document.getElementById('adminSettingsThemeToggle').addEventListener('change', function(e) {
+        const theme = e.target.checked ? 'dark' : 'light';
+        applyTheme(theme);
+        showToast(`✅ ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode applied`, 'success');
+    });
+
+    dom.adminLoginCard.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal('adminModal');
+    });
+
+    dom.editProfileBtn.addEventListener('click', function(e) {
+        if (currentUserType === 'admin') {
+            e.preventDefault();
+            openEditAdminProfileModal();
+        } else if (currentUserType === 'student') {
+            window.location.href = 'editprofile.html';
+        } else {
+            e.preventDefault();
+            showToast('Please login first', 'warning');
+        }
+    });
+
+    document.getElementById('avatarContainer').addEventListener('click', function() {
+        if (currentUserType === 'admin') {
+            openEditAdminProfileModal();
+        }
+    });
+
+    document.getElementById('editAdminImageUploadArea').addEventListener('click', function() {
+        document.getElementById('editAdminProfileImageInput').click();
+    });
+
+    document.getElementById('editAdminProfileImageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        if (file.size > 5 * 1024 * 1024) {
+            document.getElementById('editAdminImageStatus').textContent = "❌ Image too large! Max 5MB.";
+            document.getElementById('editAdminImageStatus').style.color = "var(--danger)";
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            document.getElementById('editAdminImageStatus').textContent = "❌ Please select a valid image.";
+            document.getElementById('editAdminImageStatus').style.color = "var(--danger)";
+            return;
+        }
+
+        document.getElementById('editAdminProfileSubmitBtn').disabled = true;
+        document.getElementById('editAdminProfileSubmitBtn').title = "Please apply crop first";
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.getElementById('editAdminImageToCrop');
+            img.src = event.target.result;
+            const previewContainer = document.getElementById('editAdminPreviewContainer');
+            previewContainer.style.display = 'block';
+            if (croppers.admin) croppers.admin.destroy();
+            croppers.admin = new Cropper(img, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true
+            });
+            document.getElementById('editAdminImageStatus').textContent = "✅ Image loaded. Please apply crop.";
+            document.getElementById('editAdminImageStatus').style.color = "var(--success)";
+            croppedImageData.admin = null;
+            document.getElementById('editAdminCroppedThumbnailContainer').style.display = 'none';
+            document.getElementById('applyAdminCropBtn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.addEventListener('click', function(e) {
+        const thumbnail = document.getElementById('editAdminCroppedThumbnailPreview');
+        if (e.target === thumbnail) {
+            document.getElementById('editAdminProfileImageInput').click();
+        }
+    });
+
+    document.getElementById('editAdminProfileForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const newUsername = document.getElementById('editAdminUsername').value.trim();
+        
+        if (!newUsername) {
+            showToast('Username is required', 'error');
+            return;
+        }
+
+        const submitBtn = document.getElementById('editAdminProfileSubmitBtn');
+        showSpinner(submitBtn, true);
+
+        try {
+            const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+            const fetchResp = await fetch(fetchUrl);
+            const fetchData = await fetchResp.json();
+            
+            let rowIndex = null;
+            if (fetchData.status === 'success' && fetchData.data) {
+                fetchData.data.forEach((row, idx) => {
+                    if (row['User Name'] && row['User Name'].toString().trim() === currentUser) {
+                        rowIndex = idx + 2;
+                    }
+                });
+            }
+
+            if (!rowIndex) {
+                showToast('Admin not found in sheet', 'error');
+                return;
+            }
+
+            let imageData = null;
+            if (croppedImageData.admin && croppedImageData.admin.base64Data) {
+                imageData = croppedImageData.admin;
+            }
+
+            const result = await handleEditAdminProfile(
+                currentUser,
+                newUsername,
+                rowIndex,
+                imageData
+            );
+
+            if (result.status === 'success') {
+                showToast('✅ Admin profile updated successfully!', 'success');
+                closeModal('editAdminProfileModal');
+                
+                croppedImageData.admin = null;
+                document.getElementById('editAdminPreviewContainer').style.display = 'none';
+                document.getElementById('editAdminCroppedThumbnailContainer').style.display = 'none';
+                document.getElementById('editAdminProfileSubmitBtn').disabled = true;
+                
+                const updatedAdminData = await getAdminData(newUsername);
+                if (updatedAdminData) {
+                    currentUser = newUsername;
+                    currentUserData = updatedAdminData;
+                    updateUIAfterLogin(newUsername, updatedAdminData, 'admin');
+                    sessionStorage.setItem('ujjwal_user', newUsername);
+                    sessionStorage.setItem('ujjwal_user_data', JSON.stringify(updatedAdminData));
+                }
+            } else {
+                showToast('❌ Failed to update profile: ' + (result.message || 'Unknown error'), 'error');
+            }
+        } catch (err) {
+            showToast('❌ Error: ' + err.message, 'error');
+        } finally {
+            showSpinner(submitBtn, false);
+        }
+    });
+
+    document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        closeModal('loginModal');
+        document.getElementById('forgotPasswordForm').reset();
+        document.getElementById('forgotStatus').style.display = 'none';
+        document.getElementById('passwordRevealBox').style.display = 'none';
+        document.getElementById('revealedPassword').textContent = '********';
+        forgotPasswordData = null;
+        setTimeout(() => {
+            openModal('forgotPasswordModal');
+        }, 200);
+    });
+
+    document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('forgotEmail').value.trim();
+        const mobile = document.getElementById('forgotMobile').value.trim();
+
+        if (!email || !mobile) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Invalid email format', 'error');
+            return;
+        }
+
+        if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+            showToast('Mobile must be 10 digits starting with 6-9', 'error');
+            return;
+        }
+
+        await handleForgotPassword(email, mobile);
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+
+        if (!email || !password) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        showSpinner(submitBtn, true);
+
+        try {
+            const user = await handleLoginFast(email, password);
+            if (user) {
+                closeModal('loginModal');
+                await updateUIAfterLogin(email, user, 'student');
+                this.reset();
+                showToast('✅ Login successful!', 'success');
+            } else {
+                showToast('❌ Invalid Email or Password', 'error');
+            }
+        } catch (err) {
+            showToast('❌ Error: ' + err.message, 'error');
+        } finally {
+            showSpinner(submitBtn, false);
+        }
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const mobile = document.getElementById('mobileNumber').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const educationDetails = document.getElementById('educationDetails').value.trim();
+        const collegeName = document.getElementById('collegeName').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('confirmPassword').value;
+
+        if (!firstName || !lastName || !email || !password || !confirm) {
+            showToast('Please fill all required fields', 'error');
+            return;
+        }
+        if (password !== confirm) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+        if (password.length < 8) {
+            showToast('Password must be at least 8 characters', 'error');
+            return;
+        }
+        if (mobile && !/^[6-9][0-9]{9}$/.test(mobile)) {
+            showToast('Mobile must be 10 digits starting with 6-9', 'error');
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Invalid email format', 'error');
+            return;
+        }
+
+        // Check if email already exists before submitting
+        const emailExists = await checkEmailExistsInStudentLogin(email);
+        if (emailExists) {
+            showToast('⚠️ Please login! You already registered', 'warning');
+            if (dom.signupEmailStatus) {
+                dom.signupEmailStatus.style.display = 'block';
+                dom.signupEmailStatus.textContent = '❌ Please login! You already registered';
+                dom.signupEmailStatus.style.color = 'var(--danger)';
+                dom.signupEmailStatus.style.background = 'rgba(239, 68, 68, 0.1)';
+                dom.signupEmailStatus.style.border = '1px solid var(--danger)';
+                dom.signupEmail.style.borderColor = 'var(--danger)';
+            }
+            return;
+        }
+
+        const formData = {
+            firstName,
+            lastName,
+            mobile,
+            email,
+            educationDetails,
+            collegeName,
+            password
+        };
+
+        await handleSignup(formData);
+    });
+
+    document.getElementById('imageUploadArea').addEventListener('click', function() {
+        document.getElementById('profileImageInput').click();
+    });
+
+    document.getElementById('profileImageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        if (file.size > 5 * 1024 * 1024) {
+            document.getElementById('signupImageStatus').textContent = "❌ Image too large! Max 5MB.";
+            document.getElementById('signupImageStatus').style.color = "var(--danger)";
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            document.getElementById('signupImageStatus').textContent = "❌ Please select a valid image.";
+            document.getElementById('signupImageStatus').style.color = "var(--danger)";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.getElementById('signupImageToCrop');
+            img.src = event.target.result;
+            document.getElementById('signupPreviewContainer').style.display = 'block';
+            if (croppers.signup) croppers.signup.destroy();
+            croppers.signup = new Cropper(img, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true
+            });
+            document.getElementById('signupImageStatus').textContent = "✅ Image loaded. Crop if needed.";
+            document.getElementById('signupImageStatus').style.color = "var(--success)";
+            croppedImageData.signup = null;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById('changePasswordLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!currentUser || currentUserType !== 'student') {
+            showToast('Please login as student first', 'warning');
+            return;
+        }
+        document.getElementById('changePasswordForm').reset();
+        document.getElementById('changePasswordStatus').style.display = 'none';
+        openModal('changePasswordModal');
+    });
+
+    document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+        if (!newPassword || !confirmNewPassword) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+        if (newPassword.length < 8) {
+            showToast('Password must be at least 8 characters', 'error');
+            return;
+        }
+        if (newPassword !== confirmNewPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+
+        const submitBtn = document.getElementById('changePasswordBtn');
+        showSpinner(submitBtn, true);
+
+        try {
+            const userData = await getUserData(currentUser);
+            if (!userData) {
+                showToast('User not found', 'error');
+                return;
+            }
+
+            const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${STUDENT_SHEET}&action=getData&_=${Date.now()}`;
+            const fetchResp = await fetch(fetchUrl);
+            const fetchData = await fetchResp.json();
+            
+            let rowIndex = null;
+            if (fetchData.status === 'success' && fetchData.data) {
+                fetchData.data.forEach((row, idx) => {
+                    if (row['Email Id'] && row['Email Id'].toString().trim() === currentUser) {
+                        rowIndex = idx + 2;
+                    }
+                });
+            }
+
+            if (!rowIndex) {
+                showToast('User not found in sheet', 'error');
+                return;
+            }
+
+            const result = await updateDataWithBackgroundSync('changePassword', {
+                email: currentUser,
+                newPassword: newPassword,
+                rowIndex: rowIndex
+            });
+            
+            if (result.status === 'success') {
+                showToast('✅ Password updated successfully!', 'success');
+                closeModal('changePasswordModal');
+                document.getElementById('changePasswordForm').reset();
+            } else {
+                showToast('❌ Failed to update password: ' + (result.message || 'Unknown error'), 'error');
+            }
+        } catch (err) {
+            showToast('❌ Error: ' + err.message, 'error');
+        } finally {
+            showSpinner(submitBtn, false);
+        }
+    });
+
+    document.getElementById('adminChangePasswordLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!currentUser || currentUserType !== 'admin') {
+            showToast('Admin login required', 'warning');
+            return;
+        }
+        document.getElementById('adminChangePasswordForm').reset();
+        document.getElementById('adminChangePasswordStatus').style.display = 'none';
+        openModal('adminChangePasswordModal');
+    });
+
+    document.getElementById('adminChangePasswordForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const newPassword = document.getElementById('adminNewPassword').value;
+        const confirmNewPassword = document.getElementById('adminConfirmNewPassword').value;
+
+        if (!newPassword || !confirmNewPassword) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+        if (newPassword.length < 8) {
+            showToast('Password must be at least 8 characters', 'error');
+            return;
+        }
+        if (newPassword !== confirmNewPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+
+        const submitBtn = document.getElementById('adminChangePasswordBtn');
+        showSpinner(submitBtn, true);
+
+        try {
+            const adminData = await getAdminData(currentUser);
+            if (!adminData) {
+                showToast('Admin not found', 'error');
+                return;
+            }
+
+            const fetchUrl = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${ADMIN_SHEET}&action=getData&_=${Date.now()}`;
+            const fetchResp = await fetch(fetchUrl);
+            const fetchData = await fetchResp.json();
+            
+            let rowIndex = null;
+            if (fetchData.status === 'success' && fetchData.data) {
+                fetchData.data.forEach((row, idx) => {
+                    if (row['User Name'] && row['User Name'].toString().trim() === currentUser) {
+                        rowIndex = idx + 2;
+                    }
+                });
+            }
+
+            if (!rowIndex) {
+                showToast('Admin not found in sheet', 'error');
+                return;
+            }
+
+            const result = await updateDataWithBackgroundSync('adminChangePassword', {
+                username: currentUser,
+                newPassword: newPassword,
+                rowIndex: rowIndex
+            });
+            
+            if (result.status === 'success') {
+                showToast('✅ Admin password updated successfully!', 'success');
+                closeModal('adminChangePasswordModal');
+                document.getElementById('adminChangePasswordForm').reset();
+            } else {
+                showToast('❌ Failed to update admin password: ' + (result.message || 'Unknown error'), 'error');
+            }
+        } catch (err) {
+            showToast('❌ Error: ' + err.message, 'error');
+        } finally {
+            showSpinner(submitBtn, false);
+        }
+    });
+
+    function generateMath() {
+        const a = Math.floor(Math.random() * 20) + 1;
+        const b = Math.floor(Math.random() * 20) + 1;
+        document.getElementById('mathQuestion').textContent = `${a} + ${b} = ?`;
+        mathAnswer = a + b;
+    }
+    generateMath();
+
+    document.getElementById('adminForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const user = document.getElementById('adminUser').value.trim();
+        const pass = document.getElementById('adminPass').value.trim();
+        const mathInput = parseInt(document.getElementById('mathAnswer').value);
+
+        if (!user || !pass) {
+            showToast('Please fill all fields', 'error');
+            return;
+        }
+        if (mathInput !== mathAnswer) {
+            showToast('Math verification failed', 'error');
+            generateMath();
+            return;
+        }
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        showSpinner(submitBtn, true);
+
+        try {
+            const admin = await handleAdminLoginFast(user, pass);
+            if (admin) {
+                showToast('✅ Admin login successful!', 'success');
+                closeModal('adminModal');
+                this.reset();
+                generateMath();
+                await updateUIAfterLogin(user, admin, 'admin');
+            } else {
+                showToast('❌ Invalid Admin credentials', 'error');
+            }
+        } catch (err) {
+            showToast('❌ Admin login error: ' + err.message, 'error');
+        } finally {
+            showSpinner(submitBtn, false);
+        }
+    });
+
+    document.getElementById('adminManagementCard').addEventListener('click', function(e) {
+        if (!currentUser || currentUserType !== 'admin') {
+            e.preventDefault();
+            showToast('Admin login required to access Management', 'warning');
+        }
+    });
+
+    document.getElementById('logoutCard').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (currentUser) {
+            logout();
+        } else {
+            showToast('You are not logged in', 'warning');
+        }
+    });
+
+    setupYourDetailsHandler();
+
+    const savedUser = sessionStorage.getItem('ujjwal_user');
+    const savedUserData = sessionStorage.getItem('ujjwal_user_data');
+    const savedUserType = sessionStorage.getItem('ujjwal_user_type');
+
+    if (savedUser && savedUserData) {
+        try {
+            const userData = JSON.parse(savedUserData);
+            const userType = savedUserType || 'student';
+            updateUIAfterLogin(savedUser, userData, userType);
+        } catch (e) {
+            console.log('Error restoring session');
+            showGuestMenu();
+            dom.menuGrid.classList.add('visible', 'guest-mode');
+        }
+    } else {
+        showGuestMenu();
+        dom.menuGrid.classList.add('visible', 'guest-mode');
+    }
+
+    console.log('✅ Ujjwal Academy My Account page loaded');
+    console.log('✅ Background data update system active');
+    console.log('✅ Cache TTL: 5 minutes');
+    console.log('✅ Signup email validation active');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
