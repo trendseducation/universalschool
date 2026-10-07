@@ -1,203 +1,1718 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Student Result</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-deep: #f8fafc;
-            --bg-card: #ffffff;
-            --accent: #2563eb;
-            --border: #e2e8f0;
-            --text-main: #0f172a;
-            --text-dim: #64748b;
-            --shadow: rgba(0, 0, 0, 0.05);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#f59e0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<title>Universal School · Home</title>
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-        /* ========== HEADER ========== */
-        .app-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px var(--shadow);
-        }
+<script>
+/* Prevent FOUC — same key as TeacherDashboard.html */
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
 
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<style>
+/* ============================================================
+   THEME VARIABLES — Yellow / White / Teal Edition
+   ============================================================ */
+:root {
+    --bg-body:        #fffdf5;
+    --bg-card:        #ffffff;
+    --bg-header:      #ffffff;
+    --bg-sidebar:     #ffffff;
+    --bg-soft:        #fff9e6;
 
-        .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-icon { color: var(--accent); font-size: 1.5rem; }
-        .logo-text h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; }
-        .logo-text span { color: var(--accent); font-weight: 400; font-size: 0.9rem; }
+    --text-main:      #1f2937;
+    --text-muted:     #6b7280;
+    --text-light:     #9ca3af;
+    --border-light:   #f0e8d0;
 
-        /* ========== MAIN CONTENT LAYOUT ========== */
-        .main-content {
-            flex: 1;
-            max-width: 1400px;
-            width: 92%;
-            margin: 1rem auto 3rem auto;
-        }
+    --shadow-sm:      0 10px 28px -12px rgba(245, 158, 11, 0.18);
+    --shadow-hover:   0 22px 44px -18px rgba(245, 158, 11, 0.32);
 
-        .category-header {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 15px;
-            text-align: center;
-            color: #dc2626; /* Red-600 */
-            margin: 2rem 0 1rem 0;
-            font-size: 1.1rem;
-            border: 1px solid var(--border);
-        }
+    --gold:           #f59e0b;
+    --gold-2:         #fbbf24;
+    --gold-soft:      rgba(245, 158, 11, 0.12);
+    --gold-glow:      rgba(245, 158, 11, 0.4);
 
-        .fleet-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(2, 1fr);
-        }
+    --accent:         #0d9488;   /* teal, ties to TeacherDashboard */
+    --accent-2:       #14b8a6;
+    --accent-soft:    rgba(13, 148, 136, 0.10);
+    --accent-glow:    rgba(13, 148, 136, 0.35);
 
-        @media (min-width: 768px) {
-            .fleet-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        }
+    --visitor-color:  #10b981;
+    --visitor-bg:     rgba(16, 185, 129, 0.10);
+    --total-color:    #f59e0b;
+    --total-bg:       rgba(245, 158, 11, 0.12);
 
-        @media (min-width: 1024px) {
-            .fleet-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        }
+    --success:        #10b981;
+    --danger:         #ef4444;
+    --warning:        #f59e0b;
 
-        /* ========== CARD STYLING ========== */
-        .card-link { text-decoration: none; display: block; }
+    --card-border:    1px solid rgba(245, 158, 11, 0.10);
+    --gradient-hero:  linear-gradient(135deg, #fffbeb 0%, #fef3c7 60%, #fde68a 100%);
+    --logo-filter:    none;
+    --overlay-bg:     rgba(15, 23, 42, 0.45);
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+}
 
-        .fleet-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px var(--shadow);
-        }
+[data-theme="dark"] {
+    --bg-body:        #0b0e0d;
+    --bg-card:        #16201e;
+    --bg-header:      #0f1a18;
+    --bg-sidebar:     #0f1a18;
+    --bg-soft:        #131d1b;
 
-        .fleet-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
-        }
+    --text-main:      #f1f5f9;
+    --text-muted:     #9ca3af;
+    --text-light:     #64748b;
+    --border-light:   #1f2b28;
 
-        .card-icon {
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
+    --shadow-sm:      0 10px 30px -12px rgba(0, 0, 0, 0.65);
+    --shadow-hover:   0 22px 44px -18px rgba(0, 0, 0, 0.85);
 
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 0.4rem;
-        }
+    --gold:           #fbbf24;
+    --gold-2:         #fcd34d;
+    --gold-soft:      rgba(251, 191, 36, 0.18);
+    --gold-glow:      rgba(251, 191, 36, 0.5);
 
-        .card-description {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            line-height: 1.4;
-        }
+    --accent:         #14b8a6;
+    --accent-2:       #2dd4bf;
+    --accent-soft:    rgba(20, 184, 166, 0.18);
+    --accent-glow:    rgba(20, 184, 166, 0.45);
 
-        /* ========== FOOTER ========== */
-        .app-footer {
-            padding: 2rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            border-top: 1px solid var(--border);
-            background: #fff;
-        }
-    </style>
+    --visitor-color:  #34d399;
+    --visitor-bg:     rgba(52, 211, 153, 0.12);
+    --total-color:    #fbbf24;
+    --total-bg:       rgba(251, 191, 36, 0.15);
+
+    --success:        #34d399;
+    --danger:         #f87171;
+    --warning:        #fbbf24;
+
+    --card-border:    1px solid rgba(251, 191, 36, 0.12);
+    --gradient-hero:  linear-gradient(135deg, #0b0e0d 0%, #16201e 60%, #1f2b28 100%);
+    --logo-filter:    brightness(0) invert(1);
+    --overlay-bg:     rgba(0, 0, 0, 0.75);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background var(--transition-normal), color var(--transition-normal);
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); color: var(--gold); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app-wrapper {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 1.2rem 1.8rem 2.5rem;
+    padding-left: max(1.8rem, env(safe-area-inset-left));
+    padding-right: max(1.8rem, env(safe-area-inset-right));
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    background: var(--bg-header);
+    padding: 0.6rem 1.5rem;
+    border-radius: 60px;
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.8rem;
+    transition: background var(--transition-normal);
+    position: sticky;
+    top: 8px;
+    z-index: 100;
+}
+
+.brand-area { display: flex; align-items: center; gap: 10px; }
+
+.brand-logo {
+    height: 44px;
+    width: auto;
+    filter: var(--logo-filter);
+    transition: filter 0.25s;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--gold), var(--gold-2), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    transition: background var(--transition-fast);
+}
+.hamburger-btn:hover { background: var(--accent-soft); }
+
+.account-btn-desktop {
+    background: var(--gold-soft);
+    border: 1px solid var(--border-light);
+    padding: 0.4rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+.account-btn-desktop i { color: var(--gold); }
+.account-btn-desktop:hover {
+    background: var(--gold);
+    color: #1f2937;
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px var(--gold-glow);
+}
+.account-btn-desktop:hover i { color: #1f2937; }
+
+.right-actions { display: flex; align-items: center; gap: 1rem; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.sidebar-overlay.active { opacity: 1; visibility: visible; }
+
+.sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-light);
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem 2rem;
+    box-shadow: 8px 0 30px rgba(0,0,0,0.15);
+    overflow-y: auto;
+}
+.sidebar.open { transform: translateX(0%); }
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2.2rem;
+}
+.sidebar-brand img { height: 44px; filter: var(--logo-filter); }
+.sidebar-brand span {
+    font-size: 1.3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold), var(--gold-2), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.sidebar-menu {
+    list-style: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.sidebar-menu li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+.sidebar-menu li i { width: 24px; font-size: 1.2rem; color: var(--gold); }
+.sidebar-menu li:hover { background: var(--gold-soft); transform: translateX(4px); }
+.sidebar-menu li.active { background: var(--gold); color: #1f2937; }
+.sidebar-menu li.active i { color: #1f2937; }
+.sidebar-menu li a {
+    color: inherit;
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.sidebar-account {
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border-light);
+}
+.sidebar-account a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0.8rem 1rem;
+    border-radius: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    transition: all var(--transition-fast);
+}
+.sidebar-account a i { color: var(--gold); width: 24px; }
+.sidebar-account a:hover { background: var(--gold-soft); transform: translateX(4px); }
+
+.sidebar-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    transition: background var(--transition-fast);
+}
+.sidebar-close:hover { background: var(--accent-soft); }
+
+/* ============================================================
+   DESKTOP MENU NAV
+   ============================================================ */
+.menu-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
+    background: var(--bg-card);
+    padding: 0.5rem 1.5rem;
+    border-radius: 60px;
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+    transition: background var(--transition-normal);
+}
+
+.menu-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+.menu-item i { font-size: 1rem; color: var(--gold); width: 18px; text-align: center; }
+.menu-item:hover { background: var(--gold-soft); transform: translateY(-2px); color: var(--gold); }
+.menu-item.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #1f2937;
+    box-shadow: 0 6px 14px -4px var(--gold-glow);
+}
+.menu-item.active i { color: #1f2937; }
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-bottom: 2.2rem;
+    box-shadow: var(--shadow-sm);
+    background: var(--gradient-hero);
+    aspect-ratio: 16 / 6;
+    min-height: 200px;
+    transition: background var(--transition-normal);
+}
+.slider-wrapper.hidden { display: none; }
+
+.slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; }
+
+.slider-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    background: var(--gradient-hero);
+}
+.slider-slide.active { opacity: 1; z-index: 2; }
+.slider-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    border-radius: 60px;
+    z-index: 10;
+    transition: all var(--transition-fast);
+    line-height: 1;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.slider-btn:hover {
+    background: rgba(0,0,0,0.6);
+    transform: translateY(-50%) scale(1.05);
+}
+.slider-btn.prev { left: 16px; }
+.slider-btn.next { right: 16px; }
+
+.slider-dots {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+.slider-dots span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.slider-dots span.active {
+    background: var(--gold-2);
+    transform: scale(1.25);
+    border-color: var(--gold-2);
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+}
+
+/* ============================================================
+   FRONT CARDS
+   ============================================================ */
+.front-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.8rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.hero-card {
+    background: var(--bg-card);
+    border-radius: 28px;
+    padding: 1.8rem 1.2rem 1.5rem;
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-soft), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.hero-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--gold-glow);
+}
+.hero-card:hover::before { opacity: 1; }
+
+.hero-card .card-icon {
+    font-size: 2.4rem;
+    color: var(--gold);
+    background: var(--gold-soft);
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 28px;
+    margin: 0 auto 1rem;
+    transition: all var(--transition-fast);
+    position: relative;
+    z-index: 1;
+}
+.hero-card:hover .card-icon {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #1f2937;
+    transform: scale(1.06) rotate(-6deg);
+    box-shadow: 0 12px 24px -8px var(--gold-glow);
+}
+.hero-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.2rem; position: relative; z-index: 1; }
+.hero-card p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; position: relative; z-index: 1; }
+.badge-new {
+    background: linear-gradient(135deg, var(--gold), var(--gold-2));
+    color: #1f2937;
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 0.2rem 0.9rem;
+    border-radius: 40px;
+    display: inline-block;
+    margin-top: 0.6rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================================
+   INFO ROW & COUNTERS
+   ============================================================ */
+.info-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    border-radius: 40px;
+    padding: 1rem 2rem;
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    margin-top: 0.8rem;
+}
+
+.info-row .highlight { display: flex; align-items: center; gap: 10px; }
+.info-row .highlight i { color: var(--gold); font-size: 1.4rem; }
+.info-row .highlight span { font-weight: 600; }
+
+.visitor-counter,
+.total-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.4rem 1.2rem 0.4rem 1rem;
+    border-radius: 40px;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+.visitor-counter { background: var(--visitor-bg); }
+.total-counter { background: var(--total-bg); }
+
+.visitor-counter:hover,
+.total-counter:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-sm);
+}
+
+.visitor-counter i {
+    color: var(--visitor-color);
+    font-size: 1rem;
+    animation: pulse 2s infinite;
+}
+.total-counter i { color: var(--total-color); font-size: 1rem; }
+
+.visitor-counter .visitor-label,
+.total-counter .total-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.visitor-counter .visitor-count,
+.total-counter .total-count {
+    font-weight: 800;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    min-width: 45px;
+    display: inline-block;
+    text-align: center;
+}
+.visitor-counter .visitor-count { color: var(--visitor-color); }
+.total-counter .total-count { color: var(--total-color); }
+
+.visitor-count.pop, .total-count.pop { animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+.sync-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+.sync-status.success { color: var(--success); }
+.sync-status.error { color: var(--danger); }
+.sync-status.syncing { color: var(--warning); animation: pulse 1s infinite; }
+
+.info-row .meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============================================================
+   SYNC BUTTON
+   ============================================================ */
+.sync-btn {
+    background: var(--gold-soft);
+    border: 1px solid var(--border-light);
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+}
+.sync-btn:hover {
+    background: var(--gold);
+    color: #1f2937;
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -10px var(--gold-glow);
+}
+.sync-btn:hover i { color: #1f2937; }
+.sync-btn i { color: var(--gold); font-size: 0.7rem; }
+.sync-btn.loading i { animation: spin 1s linear infinite; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer-note {
+    margin-top: 2.2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-light);
+    padding-top: 1.5rem;
+}
+
+body.sidebar-open { overflow: hidden; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: var(--gold);
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 400px;
+    font-family: inherit;
+}
+.toast-notification.success { background: var(--success); color: #fff; }
+.toast-notification.error   { background: var(--danger);  color: #fff; }
+.toast-notification.info    { background: var(--accent);  color: #fff; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 820px) {
+    .hamburger-btn { display: inline-flex; }
+    .account-btn-desktop { display: none; }
+    .top-bar { border-radius: 32px; padding: 0.6rem 1.2rem; }
+    .brand-text { font-size: 1.2rem; }
+    .brand-logo { height: 38px; }
+    .menu-nav { display: none; }
+    .app-wrapper { padding: 0.8rem 1rem 2rem; }
+
+    .slider-wrapper { border-radius: 24px; aspect-ratio: 16 / 9; min-height: 160px; }
+    .slider-btn { padding: 0.5rem 0.8rem; font-size: 1rem; }
+    .slider-btn.prev { left: 8px; }
+    .slider-btn.next { right: 8px; }
+    .slider-dots { bottom: 12px; gap: 8px; }
+    .slider-dots span { width: 8px; height: 8px; }
+
+    .front-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+    .hero-card { padding: 1.2rem 0.8rem; }
+    .hero-card .card-icon { width: 60px; height: 60px; font-size: 2rem; }
+
+    .info-row {
+        flex-direction: row;
+        align-items: stretch;
+        padding: 1rem 1.2rem;
+        gap: 0.8rem;
+    }
+    .info-row .highlight { justify-content: center; }
+    .visitor-counter, .total-counter { justify-content: center; padding: 0.3rem 1rem; }
+}
+
+@media (max-width: 480px) {
+    .app-wrapper { padding: 0.6rem 0.8rem 1.2rem; }
+    .top-bar { border-radius: 20px; padding: 0.4rem 0.8rem; margin-bottom: 0.8rem; gap: 0.4rem; }
+    .brand-area { gap: 6px; }
+    .brand-logo { height: 28px; }
+    .brand-text { font-size: 0.95rem; letter-spacing: -0.2px; }
+    .hamburger-btn { font-size: 1.3rem; padding: 0.1rem 0.4rem; }
+    .right-actions { gap: 0.5rem; }
+
+    .slider-wrapper { aspect-ratio: 4 / 3; min-height: 130px; border-radius: 16px; margin-bottom: 1rem; }
+    .slider-btn {
+        padding: 0.3rem 0.5rem; font-size: 0.8rem; opacity: 0.6;
+        min-width: 32px; min-height: 32px;
+        background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+    }
+    .slider-btn:hover { opacity: 1; background: rgba(0,0,0,0.7); }
+    .slider-btn.prev { left: 6px; }
+    .slider-btn.next { right: 6px; }
+    .slider-dots { bottom: 8px; gap: 6px; }
+    .slider-dots span { width: 7px; height: 7px; }
+
+    .front-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; margin: 0.3rem 0 0.8rem; }
+    .hero-card { padding: 0.8rem 0.5rem 0.8rem; border-radius: 14px; }
+    .hero-card .card-icon { width: 44px; height: 44px; font-size: 1.3rem; border-radius: 14px; margin: 0 auto 0.5rem; }
+    .hero-card h3 { font-size: 0.78rem; font-weight: 700; margin-bottom: 0.1rem; }
+    .hero-card p {
+        font-size: 0.6rem; line-height: 1.2;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .badge-new { font-size: 0.45rem; padding: 0.1rem 0.6rem; margin-top: 0.3rem; }
+
+    .info-row {
+        flex-direction: column; align-items: stretch;
+        padding: 0.7rem 0.8rem; gap: 0.5rem;
+        border-radius: 16px; margin-top: 0.4rem;
+    }
+    .info-row .highlight { justify-content: center; font-size: 0.75rem; padding: 0.1rem 0; }
+    .info-row .highlight i { font-size: 0.9rem; }
+    .info-row .meta {
+        font-size: 0.6rem; text-align: center; padding-top: 0.3rem;
+        border-top: 1px solid var(--border-light);
+        display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.4rem;
+    }
+
+    .visitor-counter, .total-counter {
+        justify-content: center; padding: 0.25rem 0.6rem;
+        font-size: 0.7rem; border-radius: 24px;
+        width: 100%; max-width: 180px; margin: 0 auto; gap: 4px;
+    }
+    .visitor-counter i, .total-counter i { font-size: 0.75rem; }
+    .visitor-counter .visitor-count, .total-counter .total-count { font-size: 0.85rem; min-width: 32px; font-weight: 800; }
+    .visitor-counter .visitor-label, .total-counter .total-label { font-size: 0.6rem; font-weight: 600; }
+
+    .sync-status { font-size: 0.5rem; margin-left: 2px; min-width: 16px; }
+    .sync-btn { font-size: 0.6rem; padding: 0.2rem 0.7rem; gap: 4px; }
+    .sync-btn i { font-size: 0.6rem; }
+
+    .footer-note { margin-top: 1rem; padding-top: 0.8rem; font-size: 0.6rem; }
+
+    .sidebar { width: 260px; padding: 1.2rem 1rem 1.2rem; }
+    .sidebar-brand img { height: 30px; }
+    .sidebar-brand span { font-size: 1rem; }
+    .sidebar-brand { gap: 8px; margin-bottom: 1.5rem; }
+    .sidebar-menu li { padding: 0.5rem 0.7rem; font-size: 0.8rem; gap: 10px; border-radius: 12px; }
+    .sidebar-menu li i { font-size: 0.9rem; width: 18px; }
+    .sidebar-account a { padding: 0.5rem 0.7rem; font-size: 0.8rem; }
+    .sidebar-close { font-size: 1.1rem; padding: 0.2rem 0.4rem; top: 0.6rem; right: 0.6rem; }
+
+    .toast-notification {
+        bottom: 16px; right: 16px; left: 16px;
+        max-width: none; font-size: 12px; padding: 10px 16px; border-radius: 10px;
+    }
+}
+
+@media (max-width: 375px) {
+    .front-grid { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+    .hero-card { padding: 0.6rem 0.3rem 0.6rem; border-radius: 12px; }
+    .hero-card .card-icon { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 10px; margin: 0 auto 0.4rem; }
+    .hero-card h3 { font-size: 0.7rem; }
+    .hero-card p { font-size: 0.55rem; -webkit-line-clamp: 1; }
+    .badge-new { font-size: 0.4rem; padding: 0.08rem 0.5rem; }
+    .brand-text { font-size: 0.85rem; }
+    .brand-logo { height: 24px; }
+    .slider-wrapper { aspect-ratio: 1 / 1; min-height: 110px; border-radius: 12px; }
+    .slider-btn { padding: 0.2rem 0.4rem; font-size: 0.7rem; min-width: 28px; min-height: 28px; }
+    .info-row { padding: 0.5rem 0.6rem; gap: 0.4rem; border-radius: 14px; }
+    .info-row .highlight { font-size: 0.65rem; }
+    .info-row .highlight i { font-size: 0.8rem; }
+    .info-row .meta { font-size: 0.55rem; }
+    .visitor-counter, .total-counter { max-width: 150px; padding: 0.2rem 0.5rem; font-size: 0.6rem; border-radius: 20px; }
+    .visitor-counter .visitor-count, .total-counter .total-count { font-size: 0.75rem; min-width: 28px; }
+    .visitor-counter .visitor-label, .total-counter .total-label { font-size: 0.5rem; }
+    .app-wrapper { padding: 0.4rem 0.5rem 1rem; }
+    .top-bar { padding: 0.3rem 0.6rem; border-radius: 16px; margin-bottom: 0.6rem; }
+    .hamburger-btn { font-size: 1.1rem; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .front-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .hero-card { padding: 1rem 0.7rem 1rem; }
+    .hero-card .card-icon { width: 50px; height: 50px; font-size: 1.6rem; border-radius: 16px; }
+    .hero-card h3 { font-size: 0.9rem; }
+    .hero-card p { font-size: 0.7rem; }
+    .slider-wrapper { aspect-ratio: 16 / 9; min-height: 170px; border-radius: 20px; }
+    .info-row { flex-wrap: wrap; justify-content: center; gap: 0.6rem; padding: 0.8rem 1rem; border-radius: 18px; }
+    .visitor-counter, .total-counter { padding: 0.3rem 0.8rem; font-size: 0.75rem; max-width: 200px; }
+    .brand-text { font-size: 1.1rem; }
+    .brand-logo { height: 32px; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .slider-btn { min-width: 40px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+    .menu-item { padding: 0.5rem 0.8rem; min-height: 40px; }
+    .hero-card { cursor: default; }
+    .hero-card:hover { transform: none; }
+    .hero-card:hover::before { opacity: 0; }
+    .hero-card:hover .card-icon { background: var(--gold-soft); color: var(--gold); transform: none; box-shadow: none; }
+    .visitor-counter:hover, .total-counter:hover { transform: none; }
+    .hero-card:active { transform: scale(0.96); }
+    .sync-btn:active { transform: scale(0.95); }
+    .slider-btn:active { transform: translateY(-50%) scale(0.9); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="header-container">
-            <div class="logo-area">
-                <div class="logo-icon"><i class="fas fa-radar"></i></div>
-                <div class="logo-text">
-                    <h1>Universal School <span>Data Sheet</span></h1>
-                </div>
+<div class="app-wrapper">
+
+    <!-- ===================== TOP BAR ===================== -->
+    <header class="top-bar">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="hamburger-btn" id="hamburgerOpen" aria-label="Open menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="brand-area">
+                <img class="brand-logo"
+                     src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                     alt="Universal School logo">
+                <span class="brand-text">Universal School</span>
             </div>
-            <div class="status-indicator" style="font-size: 0.7rem; color: #16a34a; font-weight: 600;">
-                <i class="fas fa-circle" style="font-size: 0.5rem;"></i> SYSTEM ONLINE
-            </div>
+        </div>
+
+        <div class="right-actions">
+            <a href="Study Material/My Account/myaccount.html" class="account-btn-desktop">
+                <i class="fas fa-user-circle"></i> My Account
+            </a>
         </div>
     </header>
 
-    <main class="main-content">
-        
-      <!--  <h3 class="category-header">Campa Taloja Vehicles</h3> -->
-        <div class="fleet-grid">
-            <a href="Result/JR_SR_GetResDet.html" class="card-link">
-                <div class="fleet-card">
-                    <div class="card-icon"><i class="fa fa-truck"></i></div>
-                    <h3 class="card-title">JR & SR KG</h3>
-                    <p class="card-description">Get Details & Entry of Result for JR & SR KG</p>
-                </div>
-            </a>
+    <!-- ===================== DESKTOP MENU ===================== -->
+    <nav class="menu-nav" id="desktopMenu">
+        <a href="Study Material/Textbook/textbook.html" class="menu-item active" data-key="textbooks"><i class="fas fa-book-open"></i> Textbooks</a>
+        <a href="Study Material/Notes/notes.html" class="menu-item" data-key="notes"><i class="fas fa-sticky-note"></i> Notes</a>
+        <a href="Study Material/Solution/Solution.html" class="menu-item" data-key="solutions"><i class="fas fa-check-circle"></i> Solutions</a>
+        <a href="Study Material/Question Paper/Questionpaper.html" class="menu-item" data-key="papers"><i class="fas fa-file-alt"></i> Questions Paper</a>
+        <a href="Study Material/Project/Project.html" class="menu-item" data-key="project"><i class="fas fa-box"></i> Project</a>
+    </nav>
 
-            <a href="Result/5_6thGetRes.html" class="card-link">
-                <div class="fleet-card">
-                    <div class="card-icon"><i class="fa fa-truck"></i></div>
-                    <h3 class="card-title">5 & 6 Std</h3>
-                    <p class="card-description">Get Details & Entry of Result for 5th & 6th Std</p>
-                </div>
-            </a>
+    <!-- ===================== SLIDER ===================== -->
+    <div class="slider-wrapper" id="sliderWrapper">
+        <div class="slider-container" id="sliderContainer"></div>
+        <button class="slider-btn prev" id="sliderPrev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-btn next" id="sliderNext" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+        <div class="slider-dots" id="sliderDots"></div>
+    </div>
 
-            <a href="Result/7_8thGetRes.html" class="card-link">
-                <div class="fleet-card">
-                    <div class="card-icon"><i class="fa fa-truck"></i></div>
-                    <h3 class="card-title">7 Std</h3>
-                    <p class="card-description">Get Details & Entry of Result foR 7 Std</p>
-                </div>
-            </a>
+    <!-- ===================== FRONT CARDS ===================== -->
+    <div class="front-grid" id="frontGrid">
+        <a href="Study Material/Textbook/textbook.html" class="hero-card" data-menu="textbooks">
+            <div class="card-icon"><i class="fas fa-book-open"></i></div>
+            <h3>Textbooks</h3>
+            <p>Complete curriculum &amp; reference.</p>
+            <span class="badge-new">new</span>
+        </a>
+        <a href="Study Material/Notes/notes.html" class="hero-card" data-menu="notes">
+            <div class="card-icon"><i class="fas fa-sticky-note"></i></div>
+            <h3>Notes</h3>
+            <p>Concise, exam-ready notes.</p>
+            <span class="badge-new">top</span>
+        </a>
+        <a href="Study Material/Solution/Solution.html" class="hero-card" data-menu="solutions">
+            <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+            <h3>Solutions</h3>
+            <p>Step-by-step problem solving.</p>
+            <span class="badge-new">verified</span>
+        </a>
+        <a href="Study Material/Question Paper/Questionpaper.html" class="hero-card" data-menu="papers">
+            <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+            <h3>Questions Paper</h3>
+            <p>Mock tests &amp; past papers.</p>
+            <span class="badge-new">2026</span>
+        </a>
+        <a href="Study Material/Project/Project.html" class="hero-card" data-menu="project">
+            <div class="card-icon"><i class="fas fa-box"></i></div>
+            <h3>Project</h3>
+            <p>Learning kits &amp; tools.</p>
+            <span class="badge-new">shop</span>
+        </a>
+    </div>
 
-            <a href="Result/8thGetRes.html" class="card-link">
-                <div class="fleet-card">
-                    <div class="card-icon"><i class="fa fa-truck"></i></div>
-                    <h3 class="card-title">8 Std</h3>
-                    <p class="card-description">Get Details & Entry of Result for 8 Std</p>
-                </div>
-            </a>
+    <!-- ===================== INFO ROW WITH VISITOR COUNTERS ===================== -->
+    <div class="info-row">
+        <div class="total-counter" id="totalCounter">
+            <i class="fas fa-chart-line"></i>
+            <span class="total-label">Total Visits</span>
+            <span class="total-count" id="totalCount">—</span>
+            <span class="sync-status" id="totalSyncStatus"></span>
         </div>
 
-    </main>
+        <div class="visitor-counter" id="visitorCounter">
+            <i class="fas fa-user"></i>
+            <span class="visitor-label">Unique Visitors</span>
+            <span class="visitor-count" id="visitorCount">—</span>
+            <span class="sync-status" id="uniqueSyncStatus"></span>
+        </div>
 
-    <footer class="app-footer">
-        &copy; 2026 Universal School | School Management System
-    </footer>
+        <div class="meta">
+            <i class="far fa-calendar-alt"></i> 2026 – Universal School
+            <button class="sync-btn" id="manualSyncBtn" onclick="manualRefresh()" type="button">
+                <i class="fas fa-sync-alt"></i> Sync
+            </button>
+        </div>
+    </div>
 
+    <div class="footer-note">
+        <i class="fas fa-arrow-right" style="opacity:0.5; margin-right:6px;"></i>
+        Explore resources &amp; elevate your learning.
+    </div>
+</div>
+
+<!-- ===================== SIDEBAR (mobile) ===================== -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="mobileSidebar">
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu"><i class="fas fa-times"></i></button>
+
+    <div class="sidebar-brand">
+        <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_" alt="Universal School logo">
+        <span>Universal School</span>
+    </div>
+
+    <ul class="sidebar-menu" id="sidebarMenu">
+        <li data-key="textbooks"><i class="fas fa-book-open"></i> <a href="Study Material/Textbook/textbook.html">Textbooks</a></li>
+        <li data-key="notes"><i class="fas fa-sticky-note"></i> <a href="Study Material/Notes/notes.html">Notes</a></li>
+        <li data-key="solutions"><i class="fas fa-check-circle"></i> <a href="Study Material/Solution/Solution.html">Solutions</a></li>
+        <li data-key="papers"><i class="fas fa-file-alt"></i> <a href="Study Material/Question Paper/Questionpaper.html">Questions Paper</a></li>
+        <li data-key="project"><i class="fas fa-box"></i> <a href="Study Material/Project/Project.html">Project</a></li>
+    </ul>
+
+    <div class="sidebar-account">
+        <a href="Study Material/My Account/myaccount.html"><i class="fas fa-user-circle"></i> My Account</a>
+    </div>
+</aside>
+
+<script>
+'use strict';
+(function() {
+
+/* ============================================================
+   THEME SYNC (matches TeacherDashboard.html)
+   ============================================================ */
+const body = document.body;
+const THEME_KEY = 'user-theme-preference';
+
+function getStoredTheme() {
+    return localStorage.getItem(THEME_KEY) || 'light';
+}
+
+function applyTheme(theme) {
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    body.setAttribute('data-theme', t);
+    try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+    try { localStorage.setItem('theme-change-trigger', Date.now().toString()); } catch (e) {}
+
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#0b0e0d' : '#f59e0b');
+
+    try {
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'themeChange', theme: t }, '*');
+        }
+    } catch (e) {}
+}
+
+applyTheme(getStoredTheme());
+
+window.addEventListener('storage', function(e) {
+    if (e.key === THEME_KEY && e.newValue) {
+        document.documentElement.setAttribute('data-theme', e.newValue);
+        body.setAttribute('data-theme', e.newValue);
+    }
+    if (e.key === 'theme-change-trigger') {
+        const currentTheme = localStorage.getItem(THEME_KEY);
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            body.setAttribute('data-theme', currentTheme);
+        }
+    }
+});
+
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) applyTheme(newTheme);
+    }
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        const latest = localStorage.getItem(THEME_KEY);
+        if (latest) {
+            document.documentElement.setAttribute('data-theme', latest);
+            body.setAttribute('data-theme', latest);
+        }
+    }
+});
+
+/* ============================================================
+   GOOGLE SHEETS CONFIGURATION
+   ============================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec';
+const VISITOR_SPREADSHEET_ID = '1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA';
+const VISITOR_SHEET_NAME = 'Visitor';
+
+/* ✨ NEW: Universal School Slider sheet */
+const SLIDER_SPREADSHEET_ID = '1D5sgEXtGeNJNpwI6XyAvpt9bcI4eLQVF5Eq2w1rXRQY';
+const SLIDER_SHEET_NAME = 'Slider';
+const SLIDER_CACHE_KEY = 'universal_slider_data';
+const SLIDER_CACHE_TIME_KEY = 'universal_slider_time';
+const SLIDER_CACHE_DURATION = 30 * 60 * 1000;
+
+/* ============================================================
+   VISITOR COUNTER (preserved from original)
+   ============================================================ */
+const TOTAL_KEY = 'universal_total_visits';
+const UNIQUE_KEY = 'universal_unique_visitors';
+const SESSION_KEY = 'universal_visitor_session';
+const DATE_KEY = 'universal_visitor_date';
+const CACHE_KEY = 'universal_visitor_cache';
+const CACHE_TIME_KEY = 'universal_cache_time';
+const CACHE_DURATION = 5 * 60 * 1000;
+const BASE_COUNT = 1000;
+
+let isSyncing = false;
+let syncQueue = [];
+let isInitialized = false;
+
+function getTodayDate() {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+}
+function getStoredDate() { try { return localStorage.getItem(DATE_KEY); } catch(e) { return null; } }
+function setStoredDate(d) { try { localStorage.setItem(DATE_KEY, d); } catch(e) {} }
+function isNewDay() { return getStoredDate() !== getTodayDate(); }
+function resetForNewDay() {
+    if (isNewDay()) {
+        setStoredDate(getTodayDate());
+        setTotalVisits(BASE_COUNT);
+        setUniqueVisitors(BASE_COUNT);
+        return true;
+    }
+    return false;
+}
+function getTotalVisits() {
+    try {
+        const s = localStorage.getItem(TOTAL_KEY);
+        if (s) {
+            const c = parseInt(s, 10);
+            if (!isNaN(c) && c >= BASE_COUNT) return c;
+        }
+    } catch(e) {}
+    return BASE_COUNT;
+}
+function getUniqueVisitors() {
+    try {
+        const s = localStorage.getItem(UNIQUE_KEY);
+        if (s) {
+            const c = parseInt(s, 10);
+            if (!isNaN(c) && c >= BASE_COUNT) return c;
+        }
+    } catch(e) {}
+    return BASE_COUNT;
+}
+function setTotalVisits(c) { try { localStorage.setItem(TOTAL_KEY, String(c)); } catch(e) {} }
+function setUniqueVisitors(c) { try { localStorage.setItem(UNIQUE_KEY, String(c)); } catch(e) {} }
+
+function getCachedData() {
+    try {
+        const c = localStorage.getItem(CACHE_KEY);
+        const t = localStorage.getItem(CACHE_TIME_KEY);
+        if (c && t) {
+            const age = Date.now() - parseInt(t);
+            if (age < CACHE_DURATION) return JSON.parse(c);
+        }
+    } catch(e) {}
+    return null;
+}
+function setCacheData(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
+    } catch(e) {}
+}
+function formatNumber(num) { return num.toLocaleString('en-IN'); }
+
+function updateDisplay(total, unique, syncStatus = null) {
+    const totalElement = document.getElementById('totalCount');
+    const uniqueElement = document.getElementById('visitorCount');
+    const totalSyncStatus = document.getElementById('totalSyncStatus');
+    const uniqueSyncStatus = document.getElementById('uniqueSyncStatus');
+
+    if (totalElement) {
+        const oldValue = totalElement.textContent;
+        const newValue = formatNumber(total);
+        totalElement.textContent = newValue;
+        if (oldValue !== newValue && oldValue !== '—') {
+            totalElement.classList.remove('pop');
+            void totalElement.offsetWidth;
+            totalElement.classList.add('pop');
+        }
+    }
+    if (uniqueElement) {
+        const oldValue = uniqueElement.textContent;
+        const newValue = formatNumber(unique);
+        uniqueElement.textContent = newValue;
+        if (oldValue !== newValue && oldValue !== '—') {
+            uniqueElement.classList.remove('pop');
+            void uniqueElement.offsetWidth;
+            uniqueElement.classList.add('pop');
+        }
+    }
+    if (syncStatus) {
+        [totalSyncStatus, uniqueSyncStatus].forEach(el => {
+            if (!el) return;
+            el.className = `sync-status ${syncStatus}`;
+            el.textContent = syncStatus === 'success' ? '✓' :
+                             syncStatus === 'error' ? '✗' : '⟳';
+        });
+    }
+}
+
+/* ============================================================
+   PULL SYNC
+   ============================================================ */
+async function checkForUpdates() {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${VISITOR_SPREADSHEET_ID}&sheetName=${VISITOR_SHEET_NAME}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const result = await response.json();
+
+        if (result.status === 'success' && result.data) {
+            const today = getTodayDate();
+            let sheetTotal = null;
+            let sheetUnique = null;
+
+            result.data.forEach(row => {
+                const rowDate = row['Date'] || row['date'] || row['DATE'] || '';
+                if (rowDate === today) {
+                    sheetTotal = parseInt(row['Total Visit']) || null;
+                    sheetUnique = parseInt(row['Unique Visit']) || null;
+                }
+            });
+            if (sheetTotal === null && result.data.length > 0) {
+                const lastRow = result.data[result.data.length - 1];
+                sheetTotal = parseInt(lastRow['Total Visit']) || null;
+                sheetUnique = parseInt(lastRow['Unique Visit']) || null;
+            }
+            if (sheetTotal !== null && sheetUnique !== null) {
+                const localTotal = getTotalVisits();
+                const localUnique = getUniqueVisitors();
+                if (sheetTotal > localTotal || sheetUnique > localUnique) {
+                    setTotalVisits(Math.max(localTotal, sheetTotal));
+                    setUniqueVisitors(Math.max(localUnique, sheetUnique));
+                    const newTotal = getTotalVisits();
+                    const newUnique = getUniqueVisitors();
+                    updateDisplay(newTotal, newUnique, 'success');
+                    return { updated: true, total: newTotal, unique: newUnique };
+                }
+            }
+        }
+        return { updated: false };
+    } catch (error) {
+        return { updated: false, error: error.message };
+    }
+}
+
+function setupAutoSync() {
+    setInterval(async () => { try { await checkForUpdates(); } catch(e) {} }, 30000);
+}
+
+window.manualRefresh = async function() {
+    const btn = document.getElementById('manualSyncBtn');
+    if (!btn) return;
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner"></i> Syncing...';
+    btn.disabled = true;
+    try {
+        const result = await checkForUpdates();
+        if (result.updated) showToast('Data synced successfully!', 'success');
+        else showToast('No updates found', 'info');
+    } catch (error) {
+        showToast('Sync failed. Please try again.', 'error');
+    } finally {
+        btn.classList.remove('loading');
+        btn.innerHTML = '<i class="fas fa-sync-alt"></i> Sync';
+        btn.disabled = false;
+    }
+};
+
+function showToast(message, type = 'success') {
+    const existing = document.querySelector('.toast-notification');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    const icon = type === 'success' ? 'fa-check-circle' :
+                 type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i><span>${message}</span>`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => {
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+    });
+    setTimeout(() => {
+        toast.style.transform = 'translateY(100px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+}
+
+/* ============================================================
+   PUSH SYNC
+   ============================================================ */
+async function checkExistingEntry() {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${VISITOR_SPREADSHEET_ID}&sheetName=${VISITOR_SHEET_NAME}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.status === 'success' && data.data) {
+            const today = getTodayDate();
+            let existingRow = null, rowIndex = -1;
+            data.data.forEach((row, index) => {
+                const rowDate = row['Date'] || row['date'] || row['DATE'] || '';
+                if (rowDate === today) { existingRow = row; rowIndex = index + 2; }
+            });
+            return { existingRow, rowIndex };
+        }
+        return { existingRow: null, rowIndex: -1 };
+    } catch (error) {
+        return { existingRow: null, rowIndex: -1 };
+    }
+}
+
+async function syncToGoogleSheets(total, unique, retryCount = 0) {
+    const MAX_RETRIES = 3;
+    const today = getTodayDate();
+    if (isSyncing) { syncQueue.push({ total, unique }); return; }
+    try {
+        isSyncing = true;
+        updateDisplay(total, unique, 'syncing');
+        const { existingRow, rowIndex } = await checkExistingEntry();
+        const formData = new FormData();
+        formData.append('spreadsheetId', VISITOR_SPREADSHEET_ID);
+        formData.append('sheetName', VISITOR_SHEET_NAME);
+        formData.append('Date', today);
+        formData.append('Total Visit', String(total));
+        formData.append('Unique Visit', String(unique));
+
+        if (existingRow && rowIndex > 0) {
+            formData.append('action', 'update');
+            formData.append('rowIndex', String(rowIndex));
+            const existingSrNo = existingRow['Sr. No'] || existingRow['Sr No'] || existingRow['SrNo'] || '';
+            if (existingSrNo) {
+                formData.append('Sr. No', String(existingSrNo));
+                formData.append('Sr No', String(existingSrNo));
+                formData.append('SrNo', String(existingSrNo));
+            }
+            formData.append('PreserveDate', 'true');
+        } else {
+            formData.append('action', 'insert');
+        }
+        const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const result = await response.json();
+        if (result.status === 'success') {
+            updateDisplay(total, unique, 'success');
+            setCacheData({ total, unique });
+            setTimeout(() => updateDisplay(total, unique), 3000);
+            processQueue();
+            return true;
+        } else {
+            throw new Error(result.message || 'Sync failed');
+        }
+    } catch (error) {
+        if (retryCount < MAX_RETRIES) {
+            await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
+            return syncToGoogleSheets(total, unique, retryCount + 1);
+        }
+        updateDisplay(total, unique, 'error');
+        setTimeout(() => updateDisplay(total, unique), 5000);
+        processQueue();
+        return false;
+    } finally {
+        isSyncing = false;
+    }
+}
+
+function processQueue() {
+    if (syncQueue.length > 0) {
+        const next = syncQueue.shift();
+        syncToGoogleSheets(next.total, next.unique);
+    }
+}
+
+function setupPeriodicSync() {
+    setInterval(async () => {
+        if (!isSyncing) {
+            await syncToGoogleSheets(getTotalVisits(), getUniqueVisitors());
+        }
+    }, 5 * 60 * 1000);
+}
+
+async function fetchDataFromSheet() {
+    const cached = getCachedData();
+    if (cached && cached.total !== undefined && cached.unique !== undefined) return cached;
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${VISITOR_SPREADSHEET_ID}&sheetName=${VISITOR_SHEET_NAME}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+            const today = getTodayDate();
+            let totalFromSheet = BASE_COUNT;
+            let uniqueFromSheet = BASE_COUNT;
+            result.data.forEach(row => {
+                const rowDate = row['Date'] || row['date'] || row['DATE'] || '';
+                if (rowDate === today) {
+                    totalFromSheet = parseInt(row['Total Visit']) || BASE_COUNT;
+                    uniqueFromSheet = parseInt(row['Unique Visit']) || BASE_COUNT;
+                }
+            });
+            const data = { total: totalFromSheet, unique: uniqueFromSheet };
+            setCacheData(data);
+            return data;
+        }
+        throw new Error('Invalid response from server');
+    } catch (error) {
+        const staleCache = localStorage.getItem(CACHE_KEY);
+        if (staleCache) {
+            try { return JSON.parse(staleCache); } catch (e) {}
+        }
+        return { total: BASE_COUNT, unique: BASE_COUNT };
+    }
+}
+
+async function initializeFromSheet() {
+    try {
+        const data = await fetchDataFromSheet();
+        const today = getTodayDate();
+        if (getStoredDate() !== today) {
+            setStoredDate(today);
+            setTotalVisits(data.total);
+            setUniqueVisitors(data.unique);
+        } else {
+            const storedTotal = getTotalVisits();
+            const storedUnique = getUniqueVisitors();
+            if (storedTotal < data.total || storedUnique < data.unique) {
+                setTotalVisits(Math.max(storedTotal, data.total));
+                setUniqueVisitors(Math.max(storedUnique, data.unique));
+            }
+        }
+        const finalTotal = getTotalVisits();
+        const finalUnique = getUniqueVisitors();
+        updateDisplay(finalTotal, finalUnique);
+        isInitialized = true;
+        return { total: finalTotal, unique: finalUnique };
+    } catch (error) {
+        const total = getTotalVisits();
+        const unique = getUniqueVisitors();
+        updateDisplay(total, unique);
+        return { total, unique };
+    }
+}
+
+async function trackVisits() {
+    try {
+        if (!isInitialized) await initializeFromSheet();
+        resetForNewDay();
+        let totalVisits = getTotalVisits();
+        let uniqueVisitors = getUniqueVisitors();
+        const sessionId = sessionStorage.getItem(SESSION_KEY);
+        const currentSession = Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 6);
+        let countsChanged = false;
+        if (!sessionId) {
+            totalVisits += 1;
+            uniqueVisitors += 1;
+            setTotalVisits(totalVisits);
+            setUniqueVisitors(uniqueVisitors);
+            sessionStorage.setItem(SESSION_KEY, currentSession);
+            countsChanged = true;
+        } else {
+            totalVisits += 1;
+            setTotalVisits(totalVisits);
+            countsChanged = true;
+        }
+        updateDisplay(totalVisits, uniqueVisitors);
+        if (countsChanged) syncToGoogleSheets(totalVisits, uniqueVisitors);
+        return { totalVisits, uniqueVisitors };
+    } catch (e) {
+        const totalVisits = getTotalVisits();
+        const uniqueVisitors = getUniqueVisitors();
+        updateDisplay(totalVisits, uniqueVisitors);
+        return { totalVisits, uniqueVisitors };
+    }
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+const sidebar = document.getElementById('mobileSidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const hamburger = document.getElementById('hamburgerOpen');
+const closeBtn = document.getElementById('sidebarClose');
+
+function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    document.body.classList.add('sidebar-open');
+}
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
+}
+
+hamburger.addEventListener('click', openSidebar);
+closeBtn.addEventListener('click', closeSidebar);
+overlay.addEventListener('click', closeSidebar);
+
+let touchStartX = 0, touchStartY = 0;
+document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+    const diffX = e.changedTouches[0].screenX - touchStartX;
+    const diffY = Math.abs(e.changedTouches[0].screenY - touchStartY);
+    if (diffY > 60) return;
+    const isOpen = sidebar.classList.contains('open');
+    if (diffX > 70 && touchStartX < 40 && !isOpen) openSidebar();
+    else if (diffX < -70 && isOpen) closeSidebar();
+}, { passive: true });
+
+/* ============================================================
+   MENU SYNC
+   ============================================================ */
+const menuItems = document.querySelectorAll('.menu-item');
+const sidebarItems = document.querySelectorAll('.sidebar-menu li');
+
+function setActiveMenu(key) {
+    menuItems.forEach(el => el.classList.toggle('active', el.dataset.key === key));
+    sidebarItems.forEach(el => el.classList.toggle('active', el.dataset.key === key));
+}
+const pageMap = {
+    'textbook': 'textbooks',
+    'notes': 'notes',
+    'solution': 'solutions',
+    'questionpaper': 'papers',
+    'project': 'project'
+};
+const path = window.location.pathname.split('/').pop().replace('.html', '');
+setActiveMenu(pageMap[path] || 'textbooks');
+
+/* ============================================================
+   SLIDER (Universal School — separate spreadsheet)
+   ============================================================ */
+const sliderWrapper = document.getElementById('sliderWrapper');
+const sliderContainer = document.getElementById('sliderContainer');
+const dotsContainer = document.getElementById('sliderDots');
+const prevBtn = document.getElementById('sliderPrev');
+const nextBtn = document.getElementById('sliderNext');
+
+let slides = [];
+let currentIndex = 0;
+let autoSlideInterval = null;
+const AUTO_SLIDE_DELAY = 5000;
+
+function isDesktop() { return window.innerWidth > 820; }
+
+function getImageUrls(row) {
+    const desktopImages = [];
+    const mobileImages = [];
+    for (let i = 1; i <= 5; i++) {
+        const desktopKey = `Desktop Image ${i}`;
+        const mobileKey = `Mobile Image ${i}`;
+        if (row[desktopKey] && row[desktopKey].toString().trim() !== '') {
+            desktopImages.push(row[desktopKey].toString().trim());
+        }
+        if (row[mobileKey] && row[mobileKey].toString().trim() !== '') {
+            mobileImages.push(row[mobileKey].toString().trim());
+        }
+    }
+    return { desktopImages, mobileImages };
+}
+
+function getSliderCachedData() {
+    try {
+        const cached = localStorage.getItem(SLIDER_CACHE_KEY);
+        const cachedTime = localStorage.getItem(SLIDER_CACHE_TIME_KEY);
+        if (cached && cachedTime) {
+            const age = Date.now() - parseInt(cachedTime);
+            if (age < SLIDER_CACHE_DURATION) return JSON.parse(cached);
+        }
+    } catch (e) {}
+    return null;
+}
+
+function setSliderCacheData(data) {
+    try {
+        localStorage.setItem(SLIDER_CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(SLIDER_CACHE_TIME_KEY, String(Date.now()));
+    } catch (e) {}
+}
+
+function fetchSliderData() {
+    const cached = getSliderCachedData();
+    if (cached && cached.slides && cached.slides.length > 0) {
+        slides = cached.slides;
+        renderSlider();
+        fetchFreshSliderData();
+        return;
+    }
+    fetchFreshSliderData();
+}
+
+function fetchFreshSliderData() {
+    const url = `${SCRIPT_URL}?spreadsheetId=${SLIDER_SPREADSHEET_ID}&sheetName=${SLIDER_SHEET_NAME}`;
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success' && data.data && data.data.length > 0) {
+                const activeRow = data.data.find(row => {
+                    const status = row['Status'] ? row['Status'].toString().trim().toLowerCase() : '';
+                    return status === 'active';
+                });
+                if (activeRow) {
+                    const { desktopImages, mobileImages } = getImageUrls(activeRow);
+                    const images = isDesktop() ? desktopImages : mobileImages;
+                    const validImages = images.filter(url => url && url.trim() !== '');
+                    if (validImages.length > 0) {
+                        slides = validImages;
+                        setSliderCacheData({ slides: slides });
+                        renderSlider();
+                        return;
+                    }
+                }
+            }
+            sliderWrapper.classList.add('hidden');
+        })
+        .catch(error => {
+            console.error('Error fetching slider data:', error);
+            const cached = getSliderCachedData();
+            if (cached && cached.slides && cached.slides.length > 0) {
+                slides = cached.slides;
+                renderSlider();
+            } else {
+                sliderWrapper.classList.add('hidden');
+            }
+        });
+}
+
+function renderSlider() {
+    if (!slides || slides.length === 0) {
+        sliderWrapper.classList.add('hidden');
+        return;
+    }
+    sliderWrapper.classList.remove('hidden');
+    sliderContainer.innerHTML = '';
+    dotsContainer.innerHTML = '';
+
+    slides.forEach((url, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slider-slide' + (index === 0 ? ' active' : '');
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `Slide ${index + 1}`;
+        img.loading = 'lazy';
+        slide.appendChild(img);
+        sliderContainer.appendChild(slide);
+
+        const dot = document.createElement('span');
+        dot.className = index === 0 ? 'active' : '';
+        dot.dataset.index = index;
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+
+    if (slides.length > 1) {
+        prevBtn.style.display = 'block';
+        nextBtn.style.display = 'block';
+        startAutoSlide();
+    } else {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    }
+    currentIndex = 0;
+}
+
+function goToSlide(index) {
+    if (!slides || slides.length === 0) return;
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    const slideElements = sliderContainer.querySelectorAll('.slider-slide');
+    const dotElements = dotsContainer.querySelectorAll('span');
+    slideElements.forEach((el, i) => el.classList.toggle('active', i === index));
+    dotElements.forEach((el, i) => el.classList.toggle('active', i === index));
+    currentIndex = index;
+    resetAutoSlide();
+}
+function nextSlide() { goToSlide(currentIndex + 1); }
+function prevSlide() { goToSlide(currentIndex - 1); }
+
+function startAutoSlide() {
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
+    if (slides.length > 1) autoSlideInterval = setInterval(nextSlide, AUTO_SLIDE_DELAY);
+}
+function resetAutoSlide() {
+    if (autoSlideInterval) { clearInterval(autoSlideInterval); startAutoSlide(); }
+}
+
+prevBtn.addEventListener('click', prevSlide);
+nextBtn.addEventListener('click', nextSlide);
+sliderWrapper.addEventListener('mouseenter', () => { if (autoSlideInterval) clearInterval(autoSlideInterval); });
+sliderWrapper.addEventListener('mouseleave', startAutoSlide);
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(async function init() {
+    await initializeFromSheet();
+    await trackVisits();
+    setupPeriodicSync();
+    setupAutoSync();
+    fetchSliderData();
+    console.log('🏫 Universal School - Home');
+    console.log(`📅 ${getTodayDate()}`);
+    console.log(`📊 Total: ${formatNumber(getTotalVisits())} · Unique: ${formatNumber(getUniqueVisitors())}`);
+    console.log('🎨 Theme: Yellow / White / Teal');
+})();
+
+})();
+</script>
 </body>
 </html>
