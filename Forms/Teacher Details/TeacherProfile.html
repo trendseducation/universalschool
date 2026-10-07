@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- ══════════════════════════════════════════════════════════════
+     PRELOAD + PRECONNECT
+     ══════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+
+<title>Universal School · Teacher Profile</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
+
+<style>
+/* ============================================================
+   THEME VARIABLES (auto-follows myaccount.html)
+   ============================================================ */
+:root {
+    --bg-body: #eef7f5;
+    --bg-card: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #f6faf9;
+    --text-main: #0f172a;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #d9e8e5;
+    --border-strong: #b8d4cf;
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-hover: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+    --accent: #0d9488;
+    --accent-2: #14b8a6;
+    --accent-soft: rgba(13, 148, 136, 0.10);
+    --accent-glow: rgba(13, 148, 136, 0.35);
+    --success: #10b981;
+    --success-soft: rgba(16, 185, 129, 0.10);
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --chip-bg: rgba(13, 148, 136, 0.08);
+    --logo-filter: none;
+    --grad-hero: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+}
+[data-theme="dark"] {
+    --bg-body: #061714;
+    --bg-card: #0f2624;
+    --bg-elevated: #143531;
+    --bg-soft: #0b1f1d;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1e3b38;
+    --border-strong: #2b504b;
+    --shadow-xs: 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
+    --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    --shadow-hover: 0 26px 52px -22px rgba(0, 0, 0, 0.85);
+    --accent: #14b8a6;
+    --accent-2: #2dd4bf;
+    --accent-soft: rgba(20, 184, 166, 0.18);
+    --accent-glow: rgba(20, 184, 166, 0.45);
+    --input-bg: #143531;
+    --backdrop: rgba(0, 0, 0, 0.75);
+    --chip-bg: rgba(20, 184, 166, 0.15);
+    --logo-filter: brightness(0) invert(1);
+    --grad-hero: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background 300ms ease, color 300ms ease;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes shimmer { 0% { background-position: -500px 0; } 100% { background-position: 500px 0; } }
+@keyframes softPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+}
+
+.spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    will-change: transform;
+}
+
+/* App shell */
+.app-shell {
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(0.75rem, 2vw, 1.4rem);
+    padding-top: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-top));
+    padding-bottom: calc(clamp(1rem, 2vw, 1.5rem) + var(--safe-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+    align-content: start;
+    min-height: 100dvh;
+}
+
+/* Topbar */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-card);
+    border-radius: 999px;
+    padding: 0.5rem clamp(0.85rem, 2vw, 1.4rem);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: calc(var(--safe-top) + 6px);
+    z-index: 50;
+    contain: layout paint;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.brand img { height: clamp(30px, 3.5vw, 40px); width: auto; filter: var(--logo-filter); object-fit: contain; flex-shrink: 0; }
+.brand-name {
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Back pill */
+.back-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--chip-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: background 260ms ease, color 260ms ease, border-color 260ms ease,
+                transform 260ms ease, box-shadow 260ms ease;
+    color: var(--text-main);
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: clamp(0.72rem, 1.05vw, 0.85rem);
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+}
+.back-pill i { font-size: 0.9em; transition: transform 260ms ease; }
+.back-pill:hover,
+.back-pill:active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+.back-pill:hover i { transform: translateX(-3px); }
+.back-pill .label-short { display: none; }
+
+/* Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-soft) 0%, var(--border-light) 50%, var(--bg-soft) 100%);
+    background-size: 500px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 6px;
+}
+.skeleton-line { height: 12px; margin-bottom: 6px; }
+.skeleton-line.lg { height: 18px; width: 60%; }
+.skeleton-line.md { width: 40%; }
+.skeleton-block { border-radius: 20px; }
+
+/* Background refresh indicator */
+.refresh-dot {
+    position: fixed;
+    top: calc(var(--safe-top) + 14px);
+    right: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 60;
+    transition: opacity 300ms ease;
+}
+.refresh-dot.show {
+    opacity: 1;
+    animation: softPulse 1.4s ease-in-out infinite;
+}
+
+.state-box {
+    background: var(--bg-card);
+    border-radius: clamp(20px, 3vw, 28px);
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico { font-size: clamp(2rem, 5vw, 3rem); color: var(--accent); margin-bottom: 1rem; }
+.state-box h3 { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 0.4rem; font-weight: 700; }
+.state-box p { color: var(--text-muted); font-size: clamp(0.82rem, 1.4vw, 0.9rem); max-width: 420px; margin: 0 auto; line-height: 1.6; }
+.state-box .btn { margin-top: 1rem; }
+
+/* Profile header card (with background image) */
+.profile-header {
+    background: var(--bg-card);
+    border-radius: clamp(20px, 3vw, 28px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    contain: layout paint;
+}
+.profile-header-bg {
+    height: clamp(120px, 18vw, 200px);
+    background: var(--grad-hero);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    transition: background-image 400ms ease;
+}
+.profile-header-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, transparent 30%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+}
+.profile-header-body {
+    padding: 0 clamp(1rem, 3vw, 2rem) clamp(1.2rem, 2.5vw, 1.6rem);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(0.9rem, 2vw, 1.4rem);
+    align-items: center;
+    margin-top: clamp(-46px, -5vw, -56px);
+    position: relative;
+    z-index: 2;
+}
+.profile-avatar {
+    width: clamp(84px, 11vw, 112px);
+    height: clamp(84px, 11vw, 112px);
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--input-bg, #f6faf9);
+    border: 4px solid var(--bg-card);
+    box-shadow: var(--shadow-md);
+    flex-shrink: 0;
+}
+.profile-meta {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: clamp(24px, 4vw, 34px);
+}
+.profile-meta h1 {
+    font-size: clamp(1.05rem, 2.3vw, 1.5rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    word-break: break-word;
+}
+.profile-meta .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: clamp(0.66rem, 1vw, 0.76rem);
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+.chip.primary { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-soft); }
+.chip.success { background: var(--success-soft); color: var(--success); }
+.chip.neutral { background: var(--bg-soft); color: var(--text-muted); border-color: var(--border-light); }
+.chip.warning { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+
+/* Section block */
+.section-block {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 2.5vw, 24px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+.section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(0.9rem, 2vw, 1.1rem) clamp(1rem, 2.5vw, 1.5rem);
+    border-bottom: 1px solid var(--border-light);
+    background: linear-gradient(180deg, var(--bg-soft), transparent);
+}
+.section-head .s-ico {
+    width: clamp(32px, 3.5vw, 38px);
+    height: clamp(32px, 3.5vw, 38px);
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    flex-shrink: 0;
+}
+.section-head h2 {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.section-head .count-chip {
+    font-size: 0.66rem;
+    font-weight: 700;
+    background: var(--chip-bg);
+    color: var(--text-muted);
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-left: auto;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Field grid */
+.field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: clamp(0.65rem, 1.5vw, 0.9rem);
+    padding: clamp(0.9rem, 2vw, 1.25rem);
+}
+.field-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(12px, 1.6vw, 16px);
+    padding: clamp(0.7rem, 1.6vw, 0.9rem) clamp(0.8rem, 1.8vw, 1rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.55rem, 1.2vw, 0.85rem);
+    transition: transform 260ms cubic-bezier(0.2, 0.9, 0.3, 1.1),
+                box-shadow 260ms ease,
+                border-color 260ms ease,
+                background 260ms ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 66px;
+    min-width: 0;
+    contain: layout paint;
+}
+.field-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 3px;
+    height: 0%;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 3px;
+    transition: height 320ms ease;
+}
+.field-card:hover {
+    background: var(--bg-card);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-soft);
+}
+.field-card:hover::before { height: 100%; }
+.field-card .f-ico {
+    width: clamp(32px, 4vw, 40px);
+    height: clamp(32px, 4vw, 40px);
+    border-radius: clamp(10px, 1.3vw, 13px);
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.8rem, 1.2vw, 1rem);
+    flex-shrink: 0;
+    transition: transform 260ms ease;
+}
+.field-card:hover .f-ico { transform: scale(1.08) rotate(-4deg); }
+.field-card .f-meta { min-width: 0; flex: 1; }
+.field-card .f-lbl {
+    font-size: clamp(0.6rem, 0.85vw, 0.66rem);
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--text-light);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.field-card .f-val {
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    font-weight: 700;
+    color: var(--text-main);
+    word-break: break-word;
+    line-height: 1.3;
+}
+.field-card .f-val.empty {
+    color: var(--text-light);
+    font-weight: 500;
+    font-style: italic;
+}
+.field-card.wide { grid-column: 1 / -1; }
+.field-card.wide .f-val { font-size: clamp(0.88rem, 1.3vw, 1rem); }
+
+/* Buttons */
+.btn {
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease, color 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: inherit;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: 0 6px 18px -6px var(--accent-glow);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -8px var(--accent-glow); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 20px;
+    background: var(--bg-card);
+    border-left: 5px solid var(--accent);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 16px 16px 0;
+    box-shadow: var(--shadow-hover);
+    font-weight: 600;
+    font-size: 0.88rem;
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    color: var(--text-main);
+    max-width: 340px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error   { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+/* Wrapper for the injected profile content */
+#profileWrap {
+    display: grid;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+}
+#profileWrap[hidden] { display: none; }
+
+/* Responsive */
+@media (max-width: 1000px) {
+    .field-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+}
+@media (max-width: 800px) {
+    .field-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    body {
+        font-size: 14px;
+        background: radial-gradient(1200px 500px at 50% -10%, var(--accent-soft), transparent 60%), var(--bg-body);
+    }
+    .app-shell {
+        padding: 0.65rem 0.75rem;
+        padding-top: calc(0.65rem + var(--safe-top));
+        padding-bottom: calc(1rem + var(--safe-bottom));
+        gap: 0.85rem;
+    }
+    .topbar { border-radius: 20px; padding: 0.5rem 0.75rem; top: calc(var(--safe-top) + 4px); }
+    .brand-name { font-size: 0.95rem; }
+    .back-pill { padding: 5px 11px; gap: 7px; }
+    .back-pill .label-full { display: none; }
+    .back-pill .label-short { display: inline; }
+
+    .profile-header { border-radius: 22px; }
+    .profile-header-bg { height: clamp(110px, 30vw, 160px); }
+    .profile-header-body {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        margin-top: -44px;
+        gap: 0.7rem;
+    }
+    .profile-meta { align-items: center; width: 100%; padding-top: 0; }
+    .profile-meta h1 { text-align: center; }
+    .profile-meta .chips { justify-content: center; }
+
+    .section-block { border-radius: 20px; }
+
+    .field-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0.75rem;
+        gap: 0.55rem;
+    }
+    .field-card {
+        min-height: 76px;
+        padding: 0.65rem 0.7rem;
+        border-radius: 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.4rem;
+        text-align: left;
+    }
+    .field-card .f-ico { width: 30px; height: 30px; font-size: 0.75rem; border-radius: 10px; }
+    .field-card .f-meta { width: 100%; }
+    .field-card .f-lbl { font-size: 0.58rem; letter-spacing: 0.5px; }
+    .field-card .f-val { font-size: 0.82rem; line-height: 1.25; }
+
+    .field-card:hover { transform: none; box-shadow: none; background: var(--bg-soft); }
+    .field-card:hover::before { height: 0; }
+    .field-card:hover .f-ico { transform: none; }
+    .field-card:active {
+        background: var(--bg-card);
+        border-color: var(--accent-soft);
+        transform: scale(0.98);
+    }
+
+    .toast {
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + var(--safe-bottom));
+        max-width: none;
+        border-radius: 14px;
+        border-left: none;
+        border-top: 4px solid var(--accent);
+    }
+    .toast.success { border-top-color: var(--success); border-left-color: transparent; }
+    .toast.error   { border-top-color: var(--danger); border-left-color: transparent; }
+    .toast.warning { border-top-color: var(--warning); border-left-color: transparent; }
+}
+@media (max-width: 400px) {
+    .brand-name { font-size: 0.88rem; }
+    .profile-meta h1 { font-size: 1.05rem; }
+    .section-head { padding: 0.85rem 1rem; }
+    .field-grid { padding: 0.65rem; gap: 0.5rem; }
+    .field-card { min-height: 72px; padding: 0.6rem 0.65rem; }
+    .field-card .f-val { font-size: 0.78rem; }
+    .field-card .f-lbl { font-size: 0.55rem; }
+}
+@media (max-width: 340px) {
+    .field-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School" width="40" height="40"
+                 decoding="async" fetchpriority="high">
+            <span class="brand-name">Universal School</span>
+        </div>
+        <a href="TeacherDashboard.html" class="back-pill" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
+            <span class="label-full">Back to Dashboard</span>
+            <span class="label-short">Back</span>
+        </a>
+    </header>
+
+    <!-- Skeleton shown only on cold start -->
+    <div id="skeleton" aria-hidden="true" style="display: none;">
+        <div class="profile-header" style="margin-bottom: clamp(0.85rem, 2vw, 1.3rem);">
+            <div class="profile-header-bg skeleton-block" style="background: var(--bg-soft); height: 160px;"></div>
+            <div class="profile-header-body" style="margin-top: -50px;">
+                <div class="profile-avatar skeleton-block" style="background: var(--bg-soft);"></div>
+                <div class="profile-meta">
+                    <div class="skeleton skeleton-line lg"></div>
+                    <div class="skeleton skeleton-line md"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section-block" style="margin-bottom: clamp(0.85rem, 2vw, 1.3rem);">
+            <div class="section-head">
+                <div class="s-ico skeleton-block" style="background: var(--bg-soft);"></div>
+                <div class="skeleton skeleton-line md" style="flex:1;"></div>
+            </div>
+            <div class="field-grid">
+                <div class="field-card skeleton-block" style="background: var(--bg-soft);"></div>
+                <div class="field-card skeleton-block" style="background: var(--bg-soft);"></div>
+                <div class="field-card skeleton-block" style="background: var(--bg-soft);"></div>
+                <div class="field-card skeleton-block" style="background: var(--bg-soft);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="state-box" id="errorState">
+        <div class="state-ico" style="color: var(--danger);"><i class="fas fa-user-slash"></i></div>
+        <h3 id="errorTitle">We couldn't find your profile</h3>
+        <p id="errorMsg">Please log in again from My Account, or contact the academy if you think this is a mistake.</p>
+        <a href="TeacherDashboard.html" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <main id="profileWrap" hidden></main>
+</div>
+
+<!-- Tiny refresh indicator -->
+<div class="refresh-dot" id="refreshDot" aria-hidden="true"></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Message…</div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+
+/* Teacher/Staff data source */
+const TEACHER_SPREADSHEET_ID = "19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4";
+const TEACHER_SHEET_NAME      = "Teacher Details";
+const STAFF_SHEET_NAME        = "Staff Details";
+
+/* Login sheet for fallback name resolution */
+const LOGIN_SPREADSHEET_ID = "1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA";
+const LOGIN_SHEET_NAME     = "Teacher_Login";
+
+/* Both sheets are scanned for the logged-in email */
+const TEACHER_DATA_SHEETS = [
+    { sheet: TEACHER_SHEET_NAME, type: 'teacher' },
+    { sheet: STAFF_SHEET_NAME,   type: 'staff'   }
+];
+
+/* Column map for both sheets */
+const COL = {
+    EMAIL:         'Email Id',
+    TEACHER_NAME:  'Teacher Name',
+    STAFF_NAME:    'Staff Name',
+    SR_NO:         'Sr. No',
+    DOJ:           'Date of Joining',
+    MOBILE:        'Mobile No',
+    ALT_MOBILE:    'Alter Mobile No',
+    EXP1:          'Experience 1',
+    EXP2:          'Experience 2',
+    SPEC1:         'Specility in Subject 1',
+    SPEC2:         'Specility in Subject 2',
+    CURRENT_WORK:  'Current Working as',
+    SPEC_WORK:     'Specility in Work',
+    STATUS:        'Status',
+    DEACTIVE_DATE: 'Deactive    Date',
+    ADDRESS:       'Address',
+    NOTE:          'Note',
+    IMAGE:         'Image',
+    BACKGROUND:    'Background Image'
+};
+
+/* Aliases for name column across both sheets */
+const TEACHER_NAME_ALIASES = [
+    'teacher name', 'teachername', 'teacher_name', 'teacher-name',
+    'name', 'full name', 'fullname', 'full_name', 'full-name',
+    'staff name', 'staffname', 'staff_name', 'staff-name'
+];
+
+/* ══════════════════════════════════════════════════════════════
+   SESSION + CACHE KEYS — MUST MATCH TeacherDashboard.html
+   ══════════════════════════════════════════════════════════════ */
+const SESSION_KEYS       = { USER: 'Universal_user', USER_TYPE: 'Universal_user_type' };
+const PROFILE_KEY_PREFIX = 'Universal_teacher_dash_v1_profile_';
+const SHEET_KEY_PREFIX   = 'Universal_teacher_dash_v1_sheet_';
+
+const THEME_KEY = 'user-theme-preference';
+
+const SHEET_CACHE_TTL   = 5 * 60 * 1000;        // 5 min
+const PROFILE_CACHE_TTL = 24 * 60 * 60 * 1000;  // 24 h (soft)
+
+/* ---------- Safe localStorage wrappers ---------- */
+function lsGet(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch (e) { return null; }
+}
+function lsSet(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+        return true;
+    } catch (e) {
+        try { evictOldestSheetCache(); } catch (e2) {}
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (e3) { return false; }
+    }
+}
+function lsRemove(key) {
+    try { localStorage.removeItem(key); } catch (e) {}
+}
+function evictOldestSheetCache() {
+    const entries = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith(SHEET_KEY_PREFIX)) continue;
+        try {
+            const v = JSON.parse(localStorage.getItem(k));
+            entries.push({ k, ts: (v && v.ts) || 0 });
+        } catch (e) {}
+    }
+    entries.sort((a, b) => a.ts - b.ts);
+    const drop = Math.max(1, Math.floor(entries.length * 0.3));
+    for (let i = 0; i < drop; i++) lsRemove(entries[i].k);
+}
+
+/* ---------- Layer 3: in-memory cache ---------- */
+const memSheet = new Map();
+const memProfile = new Map();
+
+/* ---------- Layer 2: sheet cache ---------- */
+function sheetCacheKey(spreadsheetId, sheetName) {
+    return `${SHEET_KEY_PREFIX}${spreadsheetId}::${sheetName}`;
+}
+function getCachedSheet(spreadsheetId, sheetName, { allowStale = false } = {}) {
+    const key = sheetCacheKey(spreadsheetId, sheetName);
+    const mem = memSheet.get(key);
+    if (mem && (allowStale || (Date.now() - mem.ts) < SHEET_CACHE_TTL)) return mem.rows;
+
+    const stored = lsGet(key);
+    if (stored && Array.isArray(stored.rows)) {
+        memSheet.set(key, { ts: stored.ts, rows: stored.rows });
+        if (allowStale || (Date.now() - stored.ts) < SHEET_CACHE_TTL) return stored.rows;
+    }
+    return null;
+}
+function setCachedSheet(spreadsheetId, sheetName, rows) {
+    const key = sheetCacheKey(spreadsheetId, sheetName);
+    const payload = { ts: Date.now(), rows };
+    memSheet.set(key, payload);
+    lsSet(key, payload);
+}
+function clearSheetCache(spreadsheetId, sheetName) {
+    const key = sheetCacheKey(spreadsheetId, sheetName);
+    memSheet.delete(key);
+    lsRemove(key);
+}
+
+/* ---------- Layer 1: profile cache ---------- */
+function profileCacheKey(email) {
+    return `${PROFILE_KEY_PREFIX}${normalizeEmail(email)}`;
+}
+function getCachedProfile(email, { allowStale = true } = {}) {
+    if (!email) return null;
+    const key = profileCacheKey(email);
+    const mem = memProfile.get(key);
+    if (mem && (allowStale || (Date.now() - mem.ts) < PROFILE_CACHE_TTL)) return mem;
+
+    const stored = lsGet(key);
+    if (stored && stored.row) {
+        memProfile.set(key, stored);
+        if (allowStale || (Date.now() - stored.ts) < PROFILE_CACHE_TTL) return stored;
+    }
+    return null;
+}
+function setCachedProfile(email, payload) {
+    if (!email) return;
+    const key = profileCacheKey(email);
+    const wrapped = { ts: Date.now(), ...payload };
+    memProfile.set(key, wrapped);
+    lsSet(key, wrapped);
+}
+function clearCachedProfile(email) {
+    const key = profileCacheKey(email);
+    memProfile.delete(key);
+    lsRemove(key);
+}
+
+const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Crect width='240' height='240' fill='%230d9488'/%3E%3Ccircle cx='120' cy='95' r='42' fill='%23ffffff' opacity='0.85'/%3E%3Cellipse cx='120' cy='200' rx='70' ry='55' fill='%23ffffff' opacity='0.85'/%3E%3C/svg%3E";
+const DEFAULT_BG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='400'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230d9488'/%3E%3Cstop offset='1' stop-color='%2314b8a6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='400' fill='url(%23g)'/%3E%3C/svg%3E";
+
+/* ============================================================
+   FIELD DEFINITIONS — Dynamic based on record type
+   ============================================================ */
+
+/* Shared contact + other fields (used by both teacher and staff) */
+const SHARED_CONTACT = [
+    { key: COL.EMAIL,      label: 'Email Id',        icon: 'fa-envelope' },
+    { key: COL.MOBILE,     label: 'Mobile No',       icon: 'fa-mobile-screen' },
+    { key: COL.ALT_MOBILE, label: 'Alternate Mobile', icon: 'fa-phone' },
+    { key: COL.ADDRESS,    label: 'Address',         icon: 'fa-location-dot', wide: true }
+];
+
+const SHARED_OTHER = [
+    { key: COL.NOTE, label: 'Note', icon: 'fa-sticky-note', wide: true }
+];
+
+const SHARED_STATUS = [
+    { key: COL.STATUS,        label: 'Status',         icon: 'fa-circle-check' },
+    { key: COL.DEACTIVE_DATE, label: 'Deactive Date',  icon: 'fa-calendar-xmark' }
+];
+
+/* TEACHER-specific fields */
+const FIELDS_TEACHER = {
+    basic: [
+        { key: COL.TEACHER_NAME, label: 'Teacher Name', icon: 'fa-user', wide: true },
+        { key: COL.DOJ,          label: 'Date of Joining', icon: 'fa-calendar-check' },
+        { key: COL.SR_NO,        label: 'Sr. No',       icon: 'fa-hashtag' }
+    ],
+    experience: [
+        { key: COL.EXP1, label: 'Experience 1', icon: 'fa-briefcase', wide: true },
+        { key: COL.EXP2, label: 'Experience 2', icon: 'fa-briefcase', wide: true }
+    ],
+    specialization: [
+        { key: COL.SPEC1, label: 'Specility in Subject 1', icon: 'fa-book' },
+        { key: COL.SPEC2, label: 'Specility in Subject 2', icon: 'fa-book' }
+    ],
+    contact: SHARED_CONTACT,
+    status: SHARED_STATUS,
+    other: SHARED_OTHER
+};
+
+/* STAFF-specific fields */
+const FIELDS_STAFF = {
+    basic: [
+        { key: COL.STAFF_NAME, label: 'Staff Name', icon: 'fa-user-tie', wide: true },
+        { key: COL.DOJ,        label: 'Date of Joining', icon: 'fa-calendar-check' },
+        { key: COL.SR_NO,      label: 'Sr. No',     icon: 'fa-hashtag' }
+    ],
+    experience: [
+        { key: COL.EXP1, label: 'Experience 1', icon: 'fa-briefcase', wide: true },
+        { key: COL.EXP2, label: 'Experience 2', icon: 'fa-briefcase', wide: true }
+    ],
+    work: [
+        { key: COL.CURRENT_WORK, label: 'Current Working as', icon: 'fa-user-gear', wide: true },
+        { key: COL.SPEC_WORK,    label: 'Specility in Work',  icon: 'fa-screwdriver-wrench', wide: true }
+    ],
+    contact: SHARED_CONTACT,
+    status: SHARED_STATUS,
+    other: SHARED_OTHER
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentEmail = null;
+let currentRow = null;
+let currentFullName = '';
+let currentRecordType = null; // 'teacher' or 'staff'
+let refreshInFlight = false;
+let profileRendered = false;
+
+/* ============================================================
+   DOM HELPERS
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.toast       = $('toast');
+    dom.skeleton    = $('skeleton');
+    dom.errorState  = $('errorState');
+    dom.errorTitle  = $('errorTitle');
+    dom.errorMsg    = $('errorMsg');
+    dom.profileWrap = $('profileWrap');
+    dom.refreshDot  = $('refreshDot');
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function getFileId(url) {
+    if (!url) return '';
+    const m = url.toString().match(/\/d\/([-\w]{25,})|id=([-\w]{25,})/);
+    if (m) return m[1] || m[2] || '';
+    const bare = url.toString().match(/^([-\w]{25,})$/);
+    return bare ? bare[1] : '';
+}
+const SUPPORTS_WEBP = (() => {
+    try {
+        const c = document.createElement('canvas');
+        c.width = c.height = 1;
+        return c.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    } catch (e) { return false; }
+})();
+function driveThumb(url, size = 400) {
+    const id = getFileId(url);
+    if (!id) return '';
+    const base = `https://lh3.googleusercontent.com/d/${id}=w${size}`;
+    return SUPPORTS_WEBP ? base + '-rw' : base;
+}
+function normalizeEmail(v) {
+    return (v || '').toString().trim().toLowerCase();
+}
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function debounce(fn, wait = 200) {
+    let t = null;
+    return function debounced(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAME HELPERS — mirrors TeacherDashboard.html
+   ══════════════════════════════════════════════════════════════ */
+function getRowFullName(row) {
+    if (!row) return '';
+    /* Try both Teacher Name and Staff Name first */
+    const direct = row[COL.TEACHER_NAME] || row[COL.STAFF_NAME];
+    if (direct != null && direct.toString().trim() !== '') {
+        return direct.toString().trim();
+    }
+    /* Fall back to any alias */
+    for (const key of Object.keys(row)) {
+        const norm = key.toString().trim().toLowerCase();
+        if (TEACHER_NAME_ALIASES.includes(norm)) {
+            const v = row[key];
+            if (v != null && v.toString().trim() !== '') {
+                return v.toString().trim();
+            }
+        }
+    }
+    return '';
+}
+
+function deriveNameFromEmail(email) {
+    const local = (email || '').split('@')[0] || 'Teacher';
+    return local
+        .replace(/[._-]+/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase())
+        .trim() || 'Teacher';
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg, type = 'info', ms = 3800) {
+    const t = dom.toast;
+    if (!t) return;
+    t.textContent = msg;
+    t.className = `toast ${type}`;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, ms);
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+function applyTheme(theme) {
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    document.body.setAttribute('data-theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#061714' : '#0d9488');
+}
+const applyThemeDebounced = debounce(applyTheme, 50);
+function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    applyTheme(saved || 'light');
+    window.addEventListener('storage', (e) => {
+        if (e.key === THEME_KEY && e.newValue) applyThemeDebounced(e.newValue);
+    });
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'themeChange' && e.data.theme) {
+            applyThemeDebounced(e.data.theme);
+        }
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            const latest = localStorage.getItem(THEME_KEY);
+            if (latest) applyTheme(latest);
+        }
+    });
+}
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+function readSessionValue(key) {
+    const localRaw = localStorage.getItem(key);
+    if (localRaw) {
+        try {
+            const parsed = JSON.parse(localRaw);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        } catch (e) { return localRaw; }
+    }
+    const s = sessionStorage.getItem(key);
+    if (s) {
+        try { return JSON.parse(s); } catch (e) { return s; }
+    }
+    return null;
+}
+function getLoggedInEmail() {
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    if (userType !== 'teacher') return null;
+    const email = readSessionValue(SESSION_KEYS.USER);
+    if (!email) return null;
+    return normalizeEmail(email);
+}
+
+/* ============================================================
+   NETWORK
+   ============================================================ */
+async function fetchSheetFromNetwork(spreadsheetId, sheetName) {
+    const url = `${SCRIPT_URL}?spreadsheetId=${spreadsheetId}&sheetName=${encodeURIComponent(sheetName)}&action=getData&_=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error('Network error');
+    const json = await resp.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Invalid response');
+    }
+    setCachedSheet(spreadsheetId, sheetName, json.data);
+    return json.data;
+}
+async function fetchSheet(spreadsheetId, sheetName, { allowStale = false, force = false } = {}) {
+    if (!force) {
+        const cached = getCachedSheet(spreadsheetId, sheetName, { allowStale });
+        if (cached) return cached;
+    }
+    return fetchSheetFromNetwork(spreadsheetId, sheetName);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FIND TEACHER/STAFF
+   - `mode: 'fast'`   → cache only, no network
+   - `mode: 'refresh'`→ network for every sheet
+   - `mode: 'default'`→ cache first, network for misses
+   ══════════════════════════════════════════════════════════════ */
+async function findTeacherByEmail(email, { mode = 'default' } = {}) {
+    const target = normalizeEmail(email);
+
+    if (mode === 'fast') {
+        for (const { sheet, type } of TEACHER_DATA_SHEETS) {
+            const rows = getCachedSheet(TEACHER_SPREADSHEET_ID, sheet, { allowStale: true });
+            if (!rows) continue;
+            const idx = rows.findIndex(r => normalizeEmail(r[COL.EMAIL]) === target);
+            if (idx !== -1) {
+                return { sheet, row: rows[idx], rowIndex: idx + 2, type, fromCache: true };
+            }
+        }
+        return null;
+    }
+
+    const tasks = TEACHER_DATA_SHEETS.map(async ({ sheet, type }) => {
+        try {
+            const rows = await fetchSheet(
+                TEACHER_SPREADSHEET_ID,
+                sheet,
+                { allowStale: true, force: mode === 'refresh' }
+            );
+            const idx = rows.findIndex(r => normalizeEmail(r[COL.EMAIL]) === target);
+            if (idx !== -1) return { sheet, row: rows[idx], rowIndex: idx + 2, type };
+        } catch (e) {}
+        return null;
+    });
+
+    const results = await Promise.all(tasks);
+    return results.find(r => r !== null) || null;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESOLVE FULL NAME — 3-tier fallback
+   Tier 1: row's Teacher Name / Staff Name (or alias)
+   Tier 2: Teacher_Login sheet's Full Name
+   Tier 3: Title-cased email local-part
+   ══════════════════════════════════════════════════════════════ */
+async function resolveFullName(row, email) {
+    const fromRow = getRowFullName(row);
+    if (fromRow) return fromRow;
+
+    try {
+        const loginRows = await fetchSheet(LOGIN_SPREADSHEET_ID, LOGIN_SHEET_NAME, { allowStale: true });
+        const idx = loginRows.findIndex(r => normalizeEmail(r[COL.EMAIL]) === normalizeEmail(email));
+        if (idx !== -1) {
+            const loginName = getRowFullName(loginRows[idx]);
+            if (loginName) return loginName;
+        }
+    } catch (e) { /* ignore */ }
+
+    return deriveNameFromEmail(email);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER — build entire profile as one HTML string
+   ══════════════════════════════════════════════════════════════ */
+function buildFieldCard(field, row, overrides = {}) {
+    const raw = overrides[field.key] !== undefined ? overrides[field.key] : row[field.key];
+    const isEmpty = raw === undefined || raw === null || raw.toString().trim() === '';
+    const display = isEmpty ? 'Not provided' : raw.toString().trim();
+
+    return `
+        <div class="field-card${field.wide ? ' wide' : ''}">
+            <div class="f-ico"><i class="fas ${field.icon}"></i></div>
+            <div class="f-meta">
+                <div class="f-lbl">${escapeHtml(field.label)}</div>
+                <div class="f-val${isEmpty ? ' empty' : ''}">${escapeHtml(display)}</div>
+            </div>
+        </div>
+    `;
+}
+
+function countFilled(fields, row, overrides = {}) {
+    let n = 0;
+    for (const f of fields) {
+        const v = overrides[f.key] !== undefined ? overrides[f.key] : row[f.key];
+        if (v !== undefined && v !== null && v.toString().trim() !== '') n++;
+    }
+    return n;
+}
+
+function buildSectionBlock(id, icon, title, fields, row, overrides = {}) {
+    const filled = countFilled(fields, row, overrides);
+    const total = fields.length;
+    const cards = fields.map(f => buildFieldCard(f, row, overrides)).join('');
+    return `
+        <section class="section-block" data-section="${id}">
+            <div class="section-head">
+                <div class="s-ico"><i class="fas ${icon}"></i></div>
+                <h2>${escapeHtml(title)}</h2>
+                <span class="count-chip">${filled}/${total}</span>
+            </div>
+            <div class="field-grid">${cards}</div>
+        </section>
+    `;
+}
+
+function buildProfileHTML(row, fullName, recordType) {
+    const name = escapeHtml(fullName || getRowFullName(row) || 'Teacher');
+    const isStaff = recordType === 'staff';
+    const roleLabel = isStaff ? 'Staff' : 'Teacher';
+    const roleIcon = isStaff ? 'fa-user-tie' : 'fa-chalkboard-teacher';
+
+    /* Status chip */
+    const rawStatus = (row[COL.STATUS] || '').toString().trim();
+    const statusLower = rawStatus.toLowerCase();
+    const isActive = !rawStatus || statusLower === 'active' || statusLower === 'yes';
+    const statusClass = isActive ? 'success' : 'warning';
+    const statusLabel = rawStatus || (isActive ? 'Active' : 'Inactive');
+
+    /* Specialization/work chip */
+    const spec = row[COL.SPEC1] || row[COL.SPEC_WORK] || row[COL.CURRENT_WORK] || '';
+
+    const FIELDS = isStaff ? FIELDS_STAFF : FIELDS_TEACHER;
+
+    /* Override the Name field with resolved name (Tier-2/3 fallback) */
+    const nameKey = isStaff ? COL.STAFF_NAME : COL.TEACHER_NAME;
+    const overrides = { [nameKey]: fullName || getRowFullName(row) || '' };
+
+    /* Section titles depend on record type */
+    const expTitle = 'Experience';
+    const specTitle = isStaff ? 'Work Details' : 'Specialization';
+
+    return `
+        <section class="profile-header" aria-label="Profile header">
+            <div class="profile-header-bg" id="headerBg"></div>
+            <div class="profile-header-body">
+                <img class="profile-avatar" id="profileAvatar" alt="Profile"
+                     width="112" height="112" decoding="async"
+                     src="${DEFAULT_AVATAR}">
+                <div class="profile-meta">
+                    <h1>${name}</h1>
+                    <div class="chips">
+                        <span class="chip primary"><i class="fas ${roleIcon}"></i> ${roleLabel}</span>
+                        ${spec ? `<span class="chip neutral"><i class="fas fa-book"></i> ${escapeHtml(spec)}</span>` : ''}
+                        <span class="chip ${statusClass}">
+                            <i class="fas ${isActive ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${escapeHtml(statusLabel)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        ${buildSectionBlock('basic',          'fa-id-card',        'Basic Information', FIELDS.basic,          row, overrides)}
+        ${buildSectionBlock('experience',     'fa-briefcase',      expTitle,            FIELDS.experience,     row)}
+        ${buildSectionBlock('specialization', 'fa-graduation-cap', specTitle,           isStaff ? FIELDS.work : FIELDS.specialization, row)}
+        ${buildSectionBlock('contact',        'fa-address-book',   'Contact Details',   FIELDS.contact,        row)}
+        ${buildSectionBlock('status',         'fa-circle-info',    'Status',            FIELDS.status,         row)}
+        ${buildSectionBlock('other',          'fa-clipboard-list', 'Other Details',     FIELDS.other,          row)}
+    `;
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+function setHeaderBackground(url) {
+    const el = $('headerBg');
+    if (!el) return;
+    const thumb = driveThumb(url, 1600);
+    if (!thumb) { el.style.backgroundImage = `url("${DEFAULT_BG}")`; return; }
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => { el.style.backgroundImage = `url("${thumb}")`; };
+    img.onerror = () => { el.style.backgroundImage = `url("${DEFAULT_BG}")`; };
+    img.src = thumb;
+}
+
+function setHeaderAvatar(url) {
+    const el = $('profileAvatar');
+    if (!el) return;
+    const thumb = driveThumb(url, 400);
+    if (!thumb) { el.src = DEFAULT_AVATAR; return; }
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => { el.src = thumb; };
+    img.onerror = () => { el.src = DEFAULT_AVATAR; };
+    img.src = thumb;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER PROFILE
+   ══════════════════════════════════════════════════════════════ */
+function profileSignature(row, fullName) {
+    return [
+        fullName || getRowFullName(row) || '',
+        row[COL.STATUS] || ''
+    ].join('|') + '::' +
+    Object.values(COL)
+        .map(k => (row[k] == null ? '' : String(row[k])))
+        .join('|');
+}
+
+function renderProfile(row, fullName, recordType, { skipImages = false } = {}) {
+    currentRow = row;
+    currentFullName = fullName || getRowFullName(row) || '';
+    currentRecordType = recordType || 'teacher';
+
+    dom.profileWrap.innerHTML = buildProfileHTML(row, currentFullName, currentRecordType);
+    dom.profileWrap.hidden = false;
+    dom.skeleton.style.display = 'none';
+    profileRendered = true;
+
+    if (!skipImages) {
+        requestAnimationFrame(() => {
+            setHeaderBackground(row[COL.BACKGROUND]);
+            setHeaderAvatar(row[COL.IMAGE]);
+        });
+    }
+}
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+function showError(title, msg) {
+    if (dom.skeleton) dom.skeleton.style.display = 'none';
+    dom.profileWrap.hidden = true;
+    dom.errorTitle.textContent = title;
+    dom.errorMsg.textContent = msg;
+    dom.errorState.classList.add('show');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BACKGROUND REFRESH
+   ══════════════════════════════════════════════════════════════ */
+function setRefreshIndicator(on) {
+    if (!dom.refreshDot) return;
+    if (on) dom.refreshDot.classList.add('show');
+    else dom.refreshDot.classList.remove('show');
+}
+
+async function backgroundRefresh() {
+    if (refreshInFlight) return;
+    if (!currentEmail) return;
+    if (document.visibilityState !== 'visible') return;
+    if (!navigator.onLine) return;
+
+    refreshInFlight = true;
+    setRefreshIndicator(true);
+
+    try {
+        const fresh = await findTeacherByEmail(currentEmail, { mode: 'refresh' });
+
+        if (!fresh) {
+            if (!profileRendered) {
+                showError('Profile not found',
+                    `We couldn't find any record for ${currentEmail}. Please contact the academy.`);
+            }
+            return;
+        }
+
+        const freshName = await resolveFullName(fresh.row, currentEmail);
+
+        setCachedProfile(currentEmail, {
+            row: fresh.row,
+            sheetName: fresh.sheet,
+            rowIndex: fresh.rowIndex,
+            type: fresh.type,
+            fullName: freshName
+        });
+
+        const prevSig = currentRow ? profileSignature(currentRow, currentFullName) : '';
+        const newSig = profileSignature(fresh.row, freshName);
+
+        if (!profileRendered || prevSig !== newSig) {
+            const imageIdOld = currentRow ? getFileId(currentRow[COL.IMAGE] || '') : '';
+            const imageIdNew = getFileId(fresh.row[COL.IMAGE] || '');
+            const bgIdOld    = currentRow ? getFileId(currentRow[COL.BACKGROUND] || '') : '';
+            const bgIdNew    = getFileId(fresh.row[COL.BACKGROUND] || '');
+            const skipImages = imageIdOld === imageIdNew && bgIdOld === bgIdNew;
+            renderProfile(fresh.row, freshName, fresh.type, { skipImages });
+        }
+    } catch (err) {
+        console.warn('[Refresh] failed:', err.message);
+    } finally {
+        refreshInFlight = false;
+        setRefreshIndicator(false);
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════════════════════════════ */
+async function init() {
+    cacheDom();
+    initTheme();
+
+    currentEmail = getLoggedInEmail();
+    if (!currentEmail) {
+        showError('Please log in as teacher', 'You need to be logged in as a teacher to view this page.');
+        return;
+    }
+
+    /* ---------- INSTANT PATH ---------- */
+    const cached = getCachedProfile(currentEmail);
+    if (cached && cached.row) {
+        renderProfile(
+            cached.row,
+            cached.fullName || getRowFullName(cached.row) || '',
+            cached.type || 'teacher',
+            { skipImages: false }
+        );
+        requestAnimationFrame(() => {
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(backgroundRefresh, { timeout: 1200 });
+            } else {
+                setTimeout(backgroundRefresh, 50);
+            }
+        });
+        return;
+    }
+
+    /* ---------- COLD PATH ---------- */
+    dom.skeleton.style.display = 'block';
+    try {
+        const found = await findTeacherByEmail(currentEmail, { mode: 'default' });
+        if (!found) {
+            showError('Profile not found',
+                `We couldn't find any record for ${currentEmail}. Please contact the academy.`);
+            return;
+        }
+
+        const fullName = await resolveFullName(found.row, currentEmail);
+
+        setCachedProfile(currentEmail, {
+            row: found.row,
+            sheetName: found.sheet,
+            rowIndex: found.rowIndex,
+            type: found.type,
+            fullName
+        });
+
+        renderProfile(found.row, fullName, found.type);
+    } catch (err) {
+        showError('Failed to load profile',
+            err.message || 'Something went wrong. Please try again.');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REFRESH TRIGGERS
+   ══════════════════════════════════════════════════════════════ */
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    if (!currentEmail) return;
+    const cached = getCachedProfile(currentEmail);
+    if (cached && (Date.now() - cached.ts) > 60 * 1000) {
+        backgroundRefresh();
+    }
+});
+
+window.addEventListener('online', () => {
+    if (currentEmail) backgroundRefresh();
+});
+
+/* BFCache restore */
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted && currentEmail) {
+        backgroundRefresh();
+    }
+});
+
+/* ---------- SCHEDULE ---------- */
+function scheduleInit() {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => init(), { timeout: 1500 });
+    } else {
+        setTimeout(init, 0);
+    }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleInit, { once: true });
+} else {
+    scheduleInit();
+}
+
+})();
+</script>
+</body>
+</html>

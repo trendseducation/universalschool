@@ -1,0 +1,3357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+
+<title>Universal School · Attendance</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</noscript>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</noscript>
+
+<script>
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<style>
+/* ============================================================
+   THEME VARIABLES
+   ============================================================ */
+:root {
+    --bg-body: #eef2f9;
+    --bg-body-grad: radial-gradient(1400px 700px at 50% -10%, rgba(37,99,235,0.08), transparent 60%);
+    --bg-card: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #f8fafc;
+    --bg-softer: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #e2e8f0;
+    --border-strong: #cbd5e1;
+
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-lg: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+
+    --accent: #2563eb;
+    --accent-2: #7c3aed;
+    --accent-soft: rgba(37, 99, 235, 0.10);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+
+    --success: #10b981;
+    --success-2: #059669;
+    --success-soft: rgba(16, 185, 129, 0.12);
+
+    --danger: #ef4444;
+    --danger-2: #dc2626;
+    --danger-soft: rgba(239, 68, 68, 0.12);
+
+    --warning: #f59e0b;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+
+    --leave: #f97316;
+    --leave-soft: rgba(249, 115, 22, 0.12);
+
+    --input-bg: #f8fafc;
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --chip-bg: rgba(37, 99, 235, 0.08);
+
+    --grad-hero: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --grad-success: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+    --grad-danger: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);
+    --grad-warning: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    --grad-leave: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+}
+[data-theme="dark"] {
+    --bg-body: #060b18;
+    --bg-body-grad: radial-gradient(1400px 700px at 50% -10%, rgba(59,130,246,0.10), transparent 60%);
+    --bg-card: #0f172a;
+    --bg-elevated: #16213a;
+    --bg-soft: #0d1526;
+    --bg-softer: #101a30;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1e2a44;
+    --border-strong: #2b3a58;
+
+    --shadow-xs: 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.65);
+    --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+    --shadow-lg: 0 26px 52px -22px rgba(0, 0, 0, 0.9);
+
+    --accent: #3b82f6;
+    --accent-2: #a78bfa;
+    --accent-soft: rgba(59, 130, 246, 0.18);
+    --accent-glow: rgba(59, 130, 246, 0.5);
+
+    --success: #22c55e;
+    --success-2: #16a34a;
+    --success-soft: rgba(34, 197, 94, 0.18);
+
+    --danger: #f87171;
+    --danger-2: #ef4444;
+    --danger-soft: rgba(248, 113, 113, 0.18);
+
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, 0.18);
+
+    --leave: #fb923c;
+    --leave-soft: rgba(251, 146, 60, 0.18);
+
+    --input-bg: #16213a;
+    --backdrop: rgba(0, 0, 0, 0.78);
+    --chip-bg: rgba(59, 130, 246, 0.15);
+
+    --grad-hero: linear-gradient(135deg, #1e40af 0%, #6d28d9 100%);
+    --grad-success: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+    --grad-danger: linear-gradient(135deg, #dc2626 0%, #be185d 100%);
+    --grad-warning: linear-gradient(135deg, #d97706 0%, #ea580c 100%);
+    --grad-leave: linear-gradient(135deg, #ea580c 0%, #d97706 100%);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body-grad), var(--bg-body);
+    color: var(--text-main);
+    transition: background 400ms ease, color 300ms ease;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+::-webkit-scrollbar-track { background: transparent; }
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shimmer { 0% { background-position: -500px 0; } 100% { background-position: 500px 0; } }
+@keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+@keyframes scaleIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes todayPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4), 0 8px 22px -10px var(--accent-glow); }
+    50%      { box-shadow: 0 0 0 6px rgba(37,99,235,0), 0 8px 22px -10px var(--accent-glow); }
+}
+@keyframes countUp {
+    from { transform: translateY(4px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+.spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    will-change: transform;
+}
+.spinner-accent {
+    border: 3px solid var(--border-light);
+    border-top-color: var(--accent);
+}
+
+/* ═══════════════ APP SHELL ═══════════════ */
+.app-shell {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: clamp(0.75rem, 2vw, 1.6rem);
+    padding-top: calc(clamp(0.75rem, 2vw, 1.6rem) + var(--safe-top));
+    padding-bottom: calc(clamp(0.75rem, 2vw, 1.6rem) + var(--safe-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.85rem, 2vw, 1.4rem);
+    min-height: 100dvh;
+    align-content: start;
+}
+
+/* ═══════════════ TITLE BAR ═══════════════ */
+.title-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 0.4rem 0.2rem; flex-wrap: wrap;
+}
+.title-left { display: flex; align-items: center; gap: 0.85rem; min-width: 0; flex: 1; }
+.student-avatar-mini {
+    width: clamp(38px, 4.2vw, 48px); height: clamp(38px, 4.2vw, 48px);
+    border-radius: 50%; object-fit: cover;
+    background: var(--bg-soft);
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 4px 12px -4px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+    transition: transform 300ms cubic-bezier(0.2,0.9,0.3,1.1);
+}
+.student-avatar-mini:hover { transform: scale(1.06); }
+.student-title {
+    font-size: clamp(1.1rem, 2.6vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, var(--warning) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.title-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+
+.btn-back {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    font-size: clamp(0.78rem, 1.1vw, 0.88rem);
+    cursor: pointer;
+    transition: background 220ms ease, color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+.btn-back:hover { background: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 10px 22px -10px var(--accent-glow); }
+.btn-back:active { transform: scale(0.97); }
+.btn-back i { transition: transform 260ms ease; }
+.btn-back:hover i { transform: translateX(-3px); }
+
+.date-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    font-weight: 700;
+    font-size: clamp(0.78rem, 1.1vw, 0.9rem);
+    color: var(--text-main);
+    box-shadow: var(--shadow-xs);
+    white-space: nowrap;
+}
+.date-pill i { color: var(--accent); }
+
+.live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px var(--success-soft);
+    animation: softPulse 2s ease-in-out infinite;
+    transition: background 300ms ease, box-shadow 300ms ease, opacity 200ms ease;
+}
+.live-dot.offline { background: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); animation: none; }
+
+/* ═══════════════ STAT CARDS ═══════════════ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.6rem, 1.4vw, 1rem);
+}
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(14px, 2vw, 20px);
+    padding: clamp(0.9rem, 2vw, 1.35rem) clamp(0.6rem, 1.4vw, 1rem);
+    text-align: center;
+    box-shadow: var(--shadow-xs);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    transition: transform 260ms cubic-bezier(0.2,0.9,0.3,1.1),
+                box-shadow 260ms ease,
+                border-color 260ms ease,
+                background 260ms ease;
+    min-height: 96px;
+    position: relative;
+    overflow: hidden;
+    contain: layout paint;
+    cursor: pointer;
+    user-select: none;
+}
+.stat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, var(--accent-soft) 100%);
+    opacity: 0;
+    transition: opacity 320ms ease;
+    pointer-events: none;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-soft);
+}
+.stat-card:hover::after { opacity: 1; }
+.stat-card:active { transform: scale(0.97); }
+.stat-card.is-active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-sm);
+}
+.stat-num {
+    font-size: clamp(1.35rem, 3vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    animation: countUp 320ms ease;
+}
+.stat-lbl {
+    font-size: clamp(0.6rem, 0.95vw, 0.74rem);
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.stat-num.c-total   { color: var(--text-main); }
+.stat-num.c-present { color: var(--success); }
+.stat-num.c-absent  { color: var(--danger); }
+.stat-num.c-holiday { color: var(--warning); }
+.stat-num.c-leave   { color: var(--leave); }
+
+/* ═══════════════ FILTER CARD ═══════════════ */
+.filter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(14px, 2vw, 20px);
+    padding: clamp(1rem, 2.2vw, 1.4rem);
+    box-shadow: var(--shadow-xs);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(0.7rem, 1.6vw, 1.2rem);
+    position: relative;
+}
+.filter-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 3px 3px 0 0;
+    opacity: 0.9;
+}
+.filter-group { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.filter-label {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: clamp(0.68rem, 1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.filter-label i { color: var(--accent); font-size: 0.95em; flex-shrink: 0; }
+
+.filter-select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border-light);
+    border-radius: 999px;
+    padding: 0.7rem 2.2rem 0.7rem 0.9rem;
+    font-family: inherit;
+    font-size: clamp(0.78rem, 1.05vw, 0.92rem);
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b6e8c' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    text-overflow: ellipsis;
+}
+[data-theme="dark"] .filter-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.filter-select:hover { border-color: var(--accent); }
+.filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.filter-select option { background: var(--bg-elevated); color: var(--text-main); }
+
+.filter-footer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-light);
+    margin-top: 0.2rem;
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    color: var(--text-muted);
+    font-weight: 600;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.filter-actions { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.mini-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+    border-radius: 999px;
+    padding: 0.34rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 200ms ease, color 200ms ease, transform 200ms ease, border-color 200ms ease;
+    white-space: nowrap;
+}
+.mini-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); }
+.mini-btn:active { transform: scale(0.97); }
+.mini-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.mini-btn i { font-size: 0.9em; }
+
+/* ═══════════════ MONTH HEADER ═══════════════ */
+.month-header {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    border-radius: clamp(12px, 1.8vw, 16px);
+    padding: 0.75rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #fff;
+    box-shadow: 0 8px 24px -12px var(--accent-glow);
+    position: sticky;
+    top: calc(var(--safe-top) + 8px);
+    z-index: 20;
+    transition: opacity 200ms ease;
+    overflow: hidden;
+}
+.month-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 100%, rgba(255,255,255,0.15), transparent 60%);
+    pointer-events: none;
+}
+.month-header i { font-size: 1.05rem; position: relative; z-index: 1; }
+.month-header .mh-name {
+    font-weight: 800;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+}
+.month-header .mh-count {
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: clamp(0.68rem, 0.95vw, 0.78rem);
+    font-weight: 700;
+    backdrop-filter: blur(6px);
+    position: relative;
+    z-index: 1;
+    margin-left: auto;
+}
+
+/* ═══════════════ RECORDS ═══════════════ */
+.records-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(16px, 2.2vw, 22px);
+    padding: clamp(0.85rem, 2vw, 1.3rem);
+    box-shadow: var(--shadow-xs);
+}
+.records-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.6rem, 1.4vw, 0.9rem);
+}
+.record-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(12px, 1.6vw, 16px);
+    padding: clamp(0.7rem, 1.6vw, 1rem) clamp(0.75rem, 1.6vw, 1.1rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    transition: transform 240ms cubic-bezier(0.2,0.9,0.3,1.1),
+                box-shadow 240ms ease,
+                border-color 240ms ease,
+                background 240ms ease;
+    min-width: 0;
+    content-visibility: auto;
+    contain-intrinsic-size: 60px;
+    position: relative;
+}
+.record-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--accent-soft);
+    background: var(--bg-card);
+}
+.record-card.today {
+    border-color: var(--accent);
+    animation: todayPulse 2.4s ease-in-out infinite;
+}
+.record-date {
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.32rem 0.75rem;
+    border-radius: 999px;
+    font-size: clamp(0.66rem, 0.95vw, 0.76rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1.5px solid transparent;
+}
+.status-badge i { font-size: 0.85em; }
+.status-present { background: var(--success-soft); color: var(--success); border-color: rgba(16, 185, 129, 0.25); }
+.status-absent  { background: var(--danger-soft);  color: var(--danger);  border-color: rgba(239, 68, 68, 0.25); }
+.status-holiday { background: var(--warning-soft); color: var(--warning); border-color: rgba(245, 158, 11, 0.25); }
+.status-leave   { background: var(--leave-soft);   color: var(--leave);   border-color: rgba(249, 115, 22, 0.25); }
+.status-unknown { background: var(--bg-soft);      color: var(--text-muted); border-color: var(--border-light); }
+
+/* ═══════════════ CHARTS ═══════════════ */
+.charts-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+}
+.chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(16px, 2.2vw, 22px);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform 260ms ease, box-shadow 260ms ease;
+}
+.chart-card:hover { box-shadow: var(--shadow-sm); }
+.chart-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: clamp(0.85rem, 1.8vw, 1.1rem) clamp(1rem, 2.2vw, 1.3rem);
+    border-bottom: 1px solid var(--border-light);
+    background: linear-gradient(180deg, var(--bg-soft), transparent);
+}
+.chart-head .ch-ico {
+    width: clamp(34px, 3.8vw, 40px);
+    height: clamp(34px, 3.8vw, 40px);
+    border-radius: 12px;
+    background: var(--grad-hero);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px -6px var(--accent-glow);
+}
+.chart-head h2 {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+.chart-sub {
+    font-size: clamp(0.68rem, 0.95vw, 0.76rem);
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+}
+.chart-body {
+    padding: clamp(0.85rem, 1.8vw, 1.2rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    min-height: 300px;
+}
+.chart-body canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+}
+.chart-body-bar { flex-direction: column; align-items: stretch; }
+.chart-body-bar canvas { width: 100%; }
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 140px;
+    flex: 1;
+}
+.chart-body-bar .chart-legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7rem 1.1rem;
+    min-width: 0;
+}
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--text-main);
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+    transition: background 200ms ease;
+}
+.legend-item:hover { background: var(--bg-soft); }
+.legend-item .lg-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.legend-item .lg-count {
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-left: 2px;
+}
+.legend-item .lg-pct {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-left: 2px;
+}
+.chart-loader {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 5;
+    border-radius: 0 0 clamp(16px, 2.2vw, 22px) clamp(16px, 2.2vw, 22px);
+}
+[data-theme="dark"] .chart-loader { background: rgba(10,15,30,0.65); }
+.chart-loader.show { display: flex; }
+.chart-loader .spinner-accent { width: 28px; height: 28px; border-width: 3.5px; }
+
+/* ═══════════════ INSIGHTS ═══════════════ */
+.insight-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(0.65rem, 1.5vw, 1rem);
+}
+.insight-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(14px, 1.9vw, 18px);
+    padding: clamp(0.85rem, 1.8vw, 1.15rem) clamp(1rem, 2.2vw, 1.3rem);
+    box-shadow: var(--shadow-xs);
+    transition: transform 240ms ease, box-shadow 240ms ease;
+    min-width: 0;
+}
+.insight-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+.insight-ico {
+    width: clamp(38px, 4vw, 46px);
+    height: clamp(38px, 4vw, 46px);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px -8px rgba(0,0,0,0.25);
+}
+.insight-ico.i-accent  { background: var(--grad-hero); }
+.insight-ico.i-success { background: var(--grad-success); }
+.insight-ico.i-danger  { background: var(--grad-danger); }
+.insight-ico.i-warning { background: var(--grad-warning); }
+.insight-meta { min-width: 0; flex: 1; }
+.insight-lbl {
+    font-size: clamp(0.62rem, 0.9vw, 0.72rem);
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.insight-val {
+    font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.insight-val small { font-size: 0.7em; color: var(--text-muted); font-weight: 600; }
+
+/* ═══════════════ STATES ═══════════════ */
+.state-box {
+    background: var(--bg-card);
+    border-radius: clamp(16px, 2.2vw, 22px);
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-xs);
+    display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--accent);
+    margin-bottom: 1rem;
+    animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.state-box h3 { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 0.4rem; font-weight: 700; }
+.state-box p { color: var(--text-muted); font-size: clamp(0.82rem, 1.4vw, 0.9rem); max-width: 420px; margin: 0 auto; line-height: 1.6; }
+
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-soft) 0%, var(--border-light) 50%, var(--bg-soft) 100%);
+    background-size: 500px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 8px;
+    will-change: background-position;
+}
+.skeleton-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: clamp(14px, 2vw, 20px);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+}
+
+.records-loader {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    animation: fadeIn 0.3s ease;
+}
+.records-loader .spinner-accent { width: 30px; height: 30px; border-width: 3.5px; }
+.records-loader p { font-weight: 600; font-size: 0.86rem; }
+
+.empty-illus {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    animation: fadeIn 0.4s ease;
+}
+.empty-illus .emoji {
+    display: inline-block;
+    font-size: 3.2rem;
+    margin-bottom: 0.6rem;
+    animation: softPulse 2.4s ease-in-out infinite;
+}
+.empty-illus p { font-weight: 600; font-size: 0.9rem; }
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast-host {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2000;
+    pointer-events: none;
+    max-width: min(92vw, 340px);
+}
+.toast {
+    background: var(--bg-card);
+    border-left: 5px solid var(--accent);
+    padding: 0.8rem 1rem;
+    border-radius: 0 14px 14px 0;
+    box-shadow: var(--shadow-lg);
+    font-weight: 600;
+    font-size: 0.86rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+    animation: fadeUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    will-change: transform, opacity;
+}
+.toast.leaving { animation: fadeIn 0.2s ease reverse; }
+.toast.success { border-left-color: var(--success); }
+.toast.error   { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.info    { border-left-color: var(--accent); }
+.toast i { font-size: 1rem; }
+.toast.success i { color: var(--success); }
+.toast.error i   { color: var(--danger); }
+.toast.warning i { color: var(--warning); }
+.toast.info i    { color: var(--accent); }
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media (max-width: 1100px) {
+    .charts-wrap { grid-template-columns: 1fr; }
+}
+@media (max-width: 1024px) {
+    .records-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+    .records-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    body { font-size: 14px; }
+    .app-shell {
+        padding: 0.65rem 0.75rem;
+        padding-top: calc(0.65rem + var(--safe-top));
+        padding-bottom: calc(0.9rem + var(--safe-bottom));
+    }
+    .title-bar { gap: 0.7rem; }
+    .title-right { width: 100%; justify-content: space-between; }
+    .btn-back, .date-pill { padding: 0.42rem 0.8rem; font-size: 0.78rem; }
+    .student-title { font-size: 1.05rem; }
+
+    .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+    .stat-card { min-height: 82px; padding: 0.75rem 0.4rem; border-radius: 14px; }
+    .stat-num { font-size: 1.3rem; }
+    .stat-lbl { font-size: 0.6rem; letter-spacing: 0.04em; }
+
+    .filter-card {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 0.55rem;
+        padding: 0.85rem;
+    }
+    .filter-label { font-size: 0.66rem; gap: 5px; }
+    .filter-select {
+        padding: 0.55rem 1.7rem 0.55rem 0.7rem;
+        font-size: 0.78rem;
+        background-position: right 0.6rem center;
+    }
+    .filter-footer { font-size: 0.68rem; padding-top: 0.4rem; gap: 6px; }
+    .mini-btn { padding: 0.28rem 0.6rem; font-size: 0.64rem; }
+
+    .records-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .record-card { padding: 0.7rem 0.8rem; border-radius: 12px; }
+    .record-date { font-size: 0.82rem; }
+    .status-badge { font-size: 0.66rem; padding: 0.28rem 0.6rem; }
+
+    .chart-body { flex-direction: column; min-height: 260px; }
+    .chart-legend { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.5rem 0.9rem; min-width: 0; }
+    .chart-body canvas { max-height: 260px; }
+
+    .toast-host {
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + var(--safe-bottom));
+        max-width: none;
+    }
+    .toast { border-radius: 14px; border-left: none; border-top: 4px solid var(--accent); padding: 0.75rem 0.95rem; }
+    .toast.success { border-top-color: var(--success); border-left-color: transparent; }
+    .toast.error   { border-top-color: var(--danger);  border-left-color: transparent; }
+    .toast.warning { border-top-color: var(--warning); border-left-color: transparent; }
+    .toast.info    { border-top-color: var(--accent);  border-left-color: transparent; }
+}
+@media (max-width: 400px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .records-grid { grid-template-columns: 1fr; }
+    .filter-label { font-size: 0.62rem; }
+    .filter-select { font-size: 0.72rem; padding: 0.5rem 1.5rem 0.5rem 0.6rem; }
+    .student-title { font-size: 0.98rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .record-card.today { animation: none; }
+    .student-avatar-mini:hover { transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRINT REPORT — hidden on screen, shown only when printing
+   ══════════════════════════════════════════════════════════════ */
+.print-report { display: none; }
+
+@media print {
+
+    /* Hide everything except the report */
+    body > *:not(.app-shell) { display: none !important; }
+    .app-shell > *:not(#printReport) { display: none !important; }
+    #printReport { display: block !important; }
+
+    /* A4 page setup */
+    @page {
+        size: A4;
+        margin: 12mm 12mm 14mm 12mm;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        font-size: 11pt;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body { padding: 0 !important; margin: 0 !important; }
+    .app-shell { padding: 0 !important; margin: 0 !important; display: block !important; max-width: 100% !important; }
+
+    /* ── Report base ── */
+    .print-report {
+        width: 100%;
+        max-width: 190mm;
+        margin: 0 auto;
+        color: #1a1a1a;
+        font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        line-height: 1.4;
+    }
+
+    /* ── Header ── */
+    .pr-header {
+        border-bottom: 3px solid #b91c1c;
+        padding-bottom: 6mm;
+        margin-bottom: 5mm;
+    }
+    .pr-header-inner {
+        display: flex;
+        align-items: center;
+        gap: 6mm;
+    }
+    .pr-logo-wrap {
+        width: 22mm;
+        height: 22mm;
+        border-radius: 50%;
+        padding: 1.5mm;
+        background: #fff5f5;
+        border: 2px solid #b91c1c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .pr-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+    .pr-header-text { flex: 1; min-width: 0; }
+    .pr-academy {
+        font-size: 22pt;
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: #b91c1c;
+        line-height: 1.05;
+        margin-bottom: 1mm;
+        text-transform: uppercase;
+    }
+    .pr-title {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #7f1d1d;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        margin-bottom: 2mm;
+    }
+    .pr-rule {
+        height: 2px;
+        background: linear-gradient(90deg, #b91c1c 0%, #dc2626 40%, #fca5a5 100%);
+        border-radius: 2px;
+    }
+
+    /* ── Student identity block ── */
+    .pr-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 6mm;
+        padding: 4mm 5mm;
+        background: #fef2f2;
+        border-left: 5px solid #b91c1c;
+        border-radius: 2mm;
+        margin-bottom: 5mm;
+        page-break-inside: avoid;
+    }
+    .pr-meta-left { flex: 1; min-width: 0; }
+    .pr-meta-right { flex-shrink: 0; text-align: right; }
+
+    .pr-student-name {
+        font-family: 'Georgia', 'Times New Roman', serif;
+        font-size: 20pt;
+        font-weight: 700;
+        color: #7f1d1d;
+        letter-spacing: 0.5px;
+        line-height: 1.15;
+        margin-bottom: 1.5mm;
+        font-style: italic;
+    }
+    .pr-student-sub {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3mm;
+        align-items: center;
+        font-size: 10.5pt;
+        color: #404040;
+    }
+    .pr-student-sub strong { color: #b91c1c; font-weight: 700; }
+    .pr-sub-dot { color: #b91c1c; font-weight: 900; }
+
+    .pr-acad-year {
+        background: #b91c1c;
+        color: #fff;
+        padding: 2.5mm 5mm;
+        border-radius: 2mm;
+        text-align: center;
+        min-width: 32mm;
+        box-shadow: 0 2px 6px rgba(185, 28, 28, 0.25);
+    }
+    .pr-acad-label {
+        display: block;
+        font-size: 7.5pt;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin-bottom: 0.5mm;
+    }
+    .pr-acad-value {
+        display: block;
+        font-size: 13pt;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── Summary strip ── */
+    .pr-summary {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3mm;
+        margin-bottom: 5mm;
+        page-break-inside: avoid;
+    }
+    .pr-sum-card {
+        background: #fff;
+        border: 1.5px solid #fecaca;
+        border-radius: 2mm;
+        padding: 3mm 2mm;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .pr-sum-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: #b91c1c;
+    }
+    .pr-sum-card.pr-sum-present::before { background: #16a34a; }
+    .pr-sum-card.pr-sum-absent::before  { background: #dc2626; }
+    .pr-sum-card.pr-sum-holiday::before { background: #d97706; }
+    .pr-sum-card.pr-sum-leave::before   { background: #ea580c; }
+    .pr-sum-num {
+        font-size: 16pt;
+        font-weight: 900;
+        color: #1a1a1a;
+        line-height: 1;
+        margin-bottom: 1mm;
+    }
+    .pr-sum-present .pr-sum-num { color: #16a34a; }
+    .pr-sum-absent  .pr-sum-num { color: #dc2626; }
+    .pr-sum-holiday .pr-sum-num { color: #d97706; }
+    .pr-sum-leave   .pr-sum-num { color: #ea580c; }
+    .pr-sum-lbl {
+        font-size: 7pt;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #6b7280;
+    }
+
+    /* ── Section titles ── */
+    .pr-section-title {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+        font-size: 12pt;
+        font-weight: 800;
+        color: #7f1d1d;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin: 0 0 3mm;
+        page-break-after: avoid;
+    }
+    .pr-section-bar {
+        display: inline-block;
+        width: 5mm;
+        height: 5mm;
+        border-radius: 1mm;
+        background: linear-gradient(135deg, #b91c1c, #dc2626);
+    }
+
+    /* ── Records table ── */
+    .pr-records { margin-bottom: 6mm; }
+    .pr-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10pt;
+        page-break-inside: auto;
+    }
+    .pr-table thead { display: table-header-group; }
+    .pr-table tr { page-break-inside: avoid; page-break-after: auto; }
+    .pr-table th {
+        background: #b91c1c;
+        color: #fff;
+        font-weight: 800;
+        font-size: 9pt;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        padding: 2.5mm 3mm;
+        text-align: left;
+        border: 1px solid #7f1d1d;
+    }
+    .pr-table th.pr-col-no,
+    .pr-table th.pr-col-day,
+    .pr-table th.pr-col-status { text-align: center; }
+    .pr-table th.pr-col-no     { width: 10mm; }
+    .pr-table th.pr-col-date   { width: 30mm; }
+    .pr-table th.pr-col-day    { width: 25mm; }
+    .pr-table th.pr-col-status { width: 40mm; }
+
+    .pr-table td {
+        padding: 2mm 3mm;
+        border: 1px solid #fecaca;
+        color: #1a1a1a;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+    .pr-table tbody tr:nth-child(even) td { background: #fef2f2; }
+    .pr-table td.pr-col-no,
+    .pr-table td.pr-col-day,
+    .pr-table td.pr-col-status { text-align: center; }
+
+    .pr-status-pill {
+        display: inline-block;
+        padding: 1mm 3mm;
+        border-radius: 10mm;
+        font-size: 9pt;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        border: 1px solid;
+        min-width: 22mm;
+    }
+    .pr-status-pill.present { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .pr-status-pill.absent  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .pr-status-pill.holiday { background: #fef3c7; color: #b45309; border-color: #fcd34d; }
+    .pr-status-pill.leave   { background: #ffedd5; color: #c2410c; border-color: #fdba74; }
+    .pr-status-pill.unknown { background: #f3f4f6; color: #6b7280; border-color: #d1d5db; }
+
+    /* ── Graph section ── */
+    .pr-graphs {
+        margin-bottom: 5mm;
+        page-break-before: auto;
+        page-break-inside: avoid;
+    }
+    .pr-graphs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 4mm;
+        align-items: stretch;
+    }
+    .pr-graph-card {
+        background: #fff;
+        border: 1.5px solid #fecaca;
+        border-radius: 2mm;
+        padding: 3mm;
+        text-align: center;
+    }
+    .pr-graph-card h4 {
+        font-size: 10pt;
+        font-weight: 800;
+        color: #b91c1c;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 2mm;
+        padding-bottom: 1.5mm;
+        border-bottom: 1px solid #fecaca;
+    }
+    .pr-graph-card canvas {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    .pr-graph-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 1mm;
+        margin-top: 2mm;
+        font-size: 9pt;
+        font-weight: 700;
+        color: #404040;
+    }
+    .pr-graph-legend-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2mm 4mm;
+    }
+    .pr-graph-legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 1.5mm;
+    }
+    .pr-graph-legend-item .sw {
+        width: 3mm;
+        height: 3mm;
+        border-radius: 0.8mm;
+        flex-shrink: 0;
+    }
+    .pr-graph-legend-item .ct {
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    /* ── Footer ── */
+    .pr-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 3mm;
+        margin-top: 3mm;
+        border-top: 1.5px solid #fecaca;
+        font-size: 8.5pt;
+        color: #6b7280;
+        font-weight: 600;
+    }
+    .pr-footer-left { display: inline-flex; align-items: center; gap: 2mm; }
+    .pr-footer-dot {
+        width: 2.5mm;
+        height: 2.5mm;
+        border-radius: 50%;
+        background: #b91c1c;
+    }
+
+    .pr-records { page-break-after: auto; }
+    .pr-graphs  { page-break-before: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell" id="appShell">
+
+    <header class="title-bar" id="titleBar" style="display:none;">
+        <div class="title-left">
+            <img class="student-avatar-mini" id="studentAvatarMini" alt="" width="48" height="48"
+                 decoding="async" loading="lazy"
+                 src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%232563eb'/%3E%3Ccircle cx='24' cy='18' r='9' fill='%23fff' opacity='0.9'/%3E%3Cellipse cx='24' cy='42' rx='14' ry='12' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E">
+            <h1 class="student-title" id="studentTitle">Student Name</h1>
+        </div>
+        <div class="title-right">
+            <button class="btn-back" id="btnBack" type="button" aria-label="Back to dashboard">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="date-pill">
+                <i class="fas fa-calendar-days"></i>
+                <span id="todayPill">—</span>
+                <span class="live-dot" id="liveDot" title="Auto-update active" aria-label="Live"></span>
+            </div>
+        </div>
+    </header>
+
+    <div id="skeleton" style="display:none;">
+        <div class="stats-grid" style="margin-bottom: clamp(0.85rem, 2vw, 1.4rem);">
+            <div class="skeleton-card skeleton" style="min-height:96px;"></div>
+            <div class="skeleton-card skeleton" style="min-height:96px;"></div>
+            <div class="skeleton-card skeleton" style="min-height:96px;"></div>
+            <div class="skeleton-card skeleton" style="min-height:96px;"></div>
+            <div class="skeleton-card skeleton" style="min-height:96px;"></div>
+        </div>
+        <div class="skeleton-card skeleton" style="height:140px;margin-bottom: clamp(0.85rem, 2vw, 1.4rem);"></div>
+        <div class="skeleton-card skeleton" style="height:260px;"></div>
+    </div>
+
+    <div class="state-box" id="errorState" role="alert">
+        <div class="state-ico" style="color: var(--danger);"><i class="fas fa-user-slash"></i></div>
+        <h3 id="errorTitle">We couldn't find your attendance</h3>
+        <p id="errorMsg">Please log in again from My Account, or contact the academy if you think this is a mistake.</p>
+    </div>
+
+    <main id="mainContent" style="display:none;">
+
+        <section class="stats-grid" id="statsGrid" aria-label="Attendance summary"></section>
+
+        <section class="insight-strip" id="insightStrip" aria-label="Quick insights"></section>
+
+        <section class="filter-card" aria-label="Attendance filters">
+            <div class="filter-group">
+                <label class="filter-label" for="statusFilter">
+                    <i class="fas fa-filter"></i> Advance Filter
+                </label>
+                <select class="filter-select" id="statusFilter"></select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label" for="monthFilter">
+                    <i class="fas fa-calendar-alt"></i> Month Filter
+                </label>
+                <select class="filter-select" id="monthFilter"></select>
+            </div>
+            <div class="filter-footer">
+                <div class="filter-actions">
+                    <button class="mini-btn" id="refreshBtn" type="button" title="Force refresh (R)">
+                        <i class="fas fa-arrows-rotate"></i> Refresh
+                    </button>
+                    <button class="mini-btn" id="exportBtn" type="button" title="Download CSV (E)">
+                        <i class="fas fa-file-csv"></i> Export
+                    </button>
+                    <button class="mini-btn" id="printBtn" type="button" title="Print (P)">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+                <span id="recordCount">Showing all 0 records</span>
+            </div>
+        </section>
+
+        <div class="month-header" id="monthHeader">
+            <i class="fas fa-calendar-check"></i>
+            <span class="mh-name" id="mhName">—</span>
+            <span class="mh-count" id="mhCount">0 records</span>
+        </div>
+
+        <section class="records-wrap" aria-label="Attendance records">
+            <div class="records-grid" id="recordsGrid"></div>
+        </section>
+
+        <section class="charts-wrap" aria-label="Attendance charts">
+            <div class="chart-card">
+                <div class="chart-head">
+                    <div class="ch-ico"><i class="fas fa-chart-pie"></i></div>
+                    <div>
+                        <h2>Status Breakdown</h2>
+                        <p class="chart-sub" id="pieSub">—</p>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <div class="chart-loader" id="pieLoader"><span class="spinner spinner-accent"></span></div>
+                    <canvas id="pieChart" width="320" height="320" aria-label="Status breakdown chart"></canvas>
+                    <div class="chart-legend" id="pieLegend"></div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-head">
+                    <div class="ch-ico"><i class="fas fa-chart-column"></i></div>
+                    <div>
+                        <h2>Month-wise Trend</h2>
+                        <p class="chart-sub" id="barSub">Attendance across all 12 months</p>
+                    </div>
+                </div>
+                <div class="chart-body chart-body-bar">
+                    <div class="chart-loader" id="barLoader"><span class="spinner spinner-accent"></span></div>
+                    <canvas id="barChart" width="720" height="320" aria-label="Month-wise attendance chart"></canvas>
+                    <div class="chart-legend" id="barLegend"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ═══════════════ PRINT-ONLY REPORT ═══════════════ -->
+    <section id="printReport" class="print-report" aria-hidden="true">
+
+        <header class="pr-header">
+            <div class="pr-header-inner">
+                <div class="pr-logo-wrap">
+                    <img class="pr-logo"
+                         src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                         alt="Universal School" width="90" height="90">
+                </div>
+                <div class="pr-header-text">
+                    <h1 class="pr-academy">UNIVERSAL SCHOOL</h1>
+                    <h2 class="pr-title">Attendance Record</h2>
+                    <div class="pr-rule"></div>
+                </div>
+            </div>
+        </header>
+
+        <section class="pr-meta">
+            <div class="pr-meta-left">
+                <div class="pr-student-name" id="prStudentName">—</div>
+                <div class="pr-student-sub">
+                    <span><strong>Std:</strong> <span id="prStudentStd">—</span></span>
+                    <span class="pr-sub-dot">•</span>
+                    <span><strong>Attendance for the Month of</strong> <span id="prMonthLabel">—</span></span>
+                </div>
+            </div>
+            <div class="pr-meta-right">
+                <div class="pr-acad-year">
+                    <span class="pr-acad-label">Academic Year</span>
+                    <span class="pr-acad-value" id="prAcademicYear">—</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pr-summary" id="prSummary"></section>
+
+        <section class="pr-records">
+            <h3 class="pr-section-title">
+                <span class="pr-section-bar"></span> Daily Attendance
+            </h3>
+            <table class="pr-table" id="prTable">
+                <thead>
+                    <tr>
+                        <th class="pr-col-no">#</th>
+                        <th class="pr-col-date">Date</th>
+                        <th class="pr-col-day">Day</th>
+                        <th class="pr-col-status">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="prTableBody"></tbody>
+            </table>
+        </section>
+
+        <section class="pr-graphs">
+            <h3 class="pr-section-title">
+                <span class="pr-section-bar"></span> Graphical Analysis
+            </h3>
+            <div class="pr-graphs-grid">
+                <div class="pr-graph-card">
+                    <h4>Status Breakdown</h4>
+                    <canvas id="printPieChart" width="340" height="300"></canvas>
+                    <div class="pr-graph-legend" id="printPieLegend"></div>
+                </div>
+                <div class="pr-graph-card">
+                    <h4>Month-wise Trend</h4>
+                    <canvas id="printBarChart" width="600" height="300"></canvas>
+                    <div class="pr-graph-legend pr-graph-legend-row" id="printBarLegend"></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pr-footer">
+            <div class="pr-footer-left">
+                <span class="pr-footer-dot"></span>
+                Generated on <span id="prGeneratedOn">—</span>
+            </div>
+            <div class="pr-footer-right">
+                Universal School · Attendance Management System
+            </div>
+        </footer>
+
+    </section>
+</div>
+
+<div class="toast-host" id="toastHost" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+
+/* ══════════════════════════════════════════════════════════════
+   ATTENDANCE CLASS MAP
+   Each entry links a class/standard label to its attendance sheet.
+   `std` is matched via normalizeStd() against the student's "Adm In".
+   ══════════════════════════════════════════════════════════════ */
+const ATTENDANCE_CLASSES = [
+    { std: 'JR KG',    id: '1w0jAWAbkpK2U6blG9xkXPqwwkO_aMtXbBjpBVTgA9E0' },
+    { std: 'SR KG',    id: '1cjuV8dVYDY0eYWlCF2Oj8R3Nfh7RXzt-TfwhhkcY6ZU' },
+    { std: '1th Std',  id: '17898T5wVyQOlkTSOiuQ8CEeGCVwnFmK4nv-BhEmxywQ' },
+    { std: '2th Std',  id: '1yLJovtAtnMQpexCi11bVrgEbnOWtn25vfONran8OaZ0' },
+    { std: '3th Std',  id: '1oTGmBHZrhbDuUxKBDtEsjAEcnSZVDhtdXa0fi4Kmj8I' },
+    { std: '4th Std',  id: '1O4eBEi3ne4Gx1dJ0c3iJPHj-KfpUY52lEH6dTlKW_3U' },
+    { std: '5th Std',  id: '14Dqi9mAdMA_qpwOUl3u7rBbwD2Zo2_FyCRyZZDgBl-g' },
+    { std: '6th Std',  id: '10e6-jE-plVsw-kAZCEeXUmLcAWat9S2ypZ76l3jDCh8' },
+    { std: '7th Std',  id: '19k3RoRLEf6SXa56C70mZnlDLebcV3xI-9zRYFFbSE1U' },
+    { std: '8th Std',  id: '1HVuXR46X_iY1cNF2sm9I8sVyJveDVxCaa-K28FQ_tJo' },
+    { std: '9th Std',  id: '17IAHLwNn6tBj_Gwdf8t5k7nisSiANNumbIXa16VhR5g' },
+    { std: '10th Std', id: '1GvKYBzaZbpSpQQ8UWz_PzmWGxdsx3COowFbRgMpFgtE' }
+];
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED IDENTITY CONFIG — mirrors StudentDashboard.html
+   Used by the profile network fallback.
+   ══════════════════════════════════════════════════════════════ */
+const SPREADSHEET_ID       = '1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8'; // Admission
+const LOGIN_SPREADSHEET_ID = '1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA';
+const LOGIN_SHEET_NAME     = 'Student_Login';
+const STUDENT_SHEETS       = [
+    'JR_KG','SR_KG','STD_1','STD_2','STD_3','STD_4',
+    'STD_5','STD_6','STD_7','STD_8','STD_9','STD_10'
+];
+const COL = {
+    EMAIL: 'Email Id',
+    FULL_NAME: 'Full Name',
+    STD: 'Adm In',
+    IMAGE: 'Image'
+};
+
+const MONTH_SHEETS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONTH_LABELS = {
+    Jan: 'Jan', Feb: 'Feb', Mar: 'Mar', Apr: 'Apr', May: 'May', Jun: 'Jun',
+    Jul: 'Jul', Aug: 'Aug', Sep: 'Sep', Oct: 'Oct', Nov: 'Nov', Dec: 'Dec'
+};
+
+const NAME_HEADER_ALIASES = [
+    'student name', 'studentname', 'student_name', 'student-name',
+    "student's name", 'name of student', 'nameofstudent',
+    'name', 'full name', 'fullname', 'full_name', 'full-name'
+];
+
+/* Full alias set used when reading the student's name from the Admission sheet */
+const NAME_HEADER_ALIASES_FULL = [
+    'full name','fullname','name','student name','studentname',
+    'student','full_name','full-name','student_name','student-name',
+    'name of student','nameofstudent'
+];
+
+const STATUS_HEADER_ALIASES = ['status', 'attendance', 'attendance status', 'present/absent', 'present absent'];
+const DATE_HEADER_ALIASES   = ['date', 'day', 'attendance date', 'dt', 'entry date'];
+
+const SHEET_CACHE_TTL   = 5 * 60 * 1000;
+const PROFILE_CACHE_TTL = 24 * 60 * 60 * 1000;
+const POLL_INTERVAL_MS  = 30 * 1000;
+const FETCH_CONCURRENCY = 3;
+const DEBOUNCE_MS       = 250;
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+function lsGet(key) {
+    try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : null; }
+    catch (e) { return null; }
+}
+function lsSet(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) {
+        try { evictOldestSheetCache(); } catch (e2) {}
+        try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+        catch (e3) { return false; }
+    }
+}
+function lsRemove(key) { try { localStorage.removeItem(key); } catch (e) {} }
+
+/* ══════════════════════════════════════════════════════════════
+   SESSION + CACHE KEYS — must match StudentDashboard.html
+   ══════════════════════════════════════════════════════════════ */
+const SESSION_KEYS       = { USER: 'Universal_user', USER_TYPE: 'Universal_user_type' };
+const PROFILE_KEY_PREFIX = 'Universal_dash_v2_profile_';
+const SHEET_KEY_PREFIX   = 'Universal_dash_v2_sheet_';
+const VERSION_KEY_PREFIX = 'Universal_dash_v2_ver_';
+const MONTH_STATS_KEY    = 'Universal_dash_v2_month_stats';
+
+function normalizeEmail(v) { return (v || '').toString().trim().toLowerCase(); }
+
+function readSessionValue(key) {
+    const localRaw = localStorage.getItem(key);
+    if (localRaw) {
+        try {
+            const parsed = JSON.parse(localRaw);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key); return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        } catch (e) { return localRaw; }
+    }
+    const s = sessionStorage.getItem(key);
+    if (s) { try { return JSON.parse(s); } catch (e) { return s; } }
+    return null;
+}
+function getLoggedInEmail() {
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    if (userType !== 'student') return null;
+    const email = readSessionValue(SESSION_KEYS.USER);
+    return email ? normalizeEmail(email) : null;
+}
+function getCachedProfile(email) {
+    if (!email) return null;
+    try {
+        const key = PROFILE_KEY_PREFIX + normalizeEmail(email);
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !parsed.row) return null;
+        return parsed;
+    } catch (e) { return null; }
+}
+/* Writes with the same { ts, row, sheetName, rowIndex, fullName } shape
+   that StudentDashboard.html produces, so it can be reused there too. */
+function setCachedProfile(email, payload) {
+    if (!email) return;
+    try {
+        const key = PROFILE_KEY_PREFIX + normalizeEmail(email);
+        const wrapped = { ts: Date.now(), ...payload };
+        localStorage.setItem(key, JSON.stringify(wrapped));
+    } catch (e) {}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAME HELPERS — mirrors StudentDashboard.html
+   ══════════════════════════════════════════════════════════════ */
+function getRowFullName(row) {
+    if (!row) return '';
+    const direct = row[COL.FULL_NAME];
+    if (direct != null && direct.toString().trim() !== '') return direct.toString().trim();
+    for (const key of Object.keys(row)) {
+        const norm = key.toString().trim().toLowerCase();
+        if (NAME_HEADER_ALIASES_FULL.includes(norm)) {
+            const v = row[key];
+            if (v != null && v.toString().trim() !== '') return v.toString().trim();
+        }
+    }
+    return '';
+}
+
+/* ============================================================
+   SHEET CACHE
+   ============================================================ */
+const memSheet = new Map();
+function sheetCacheKey(id, name) { return `${SHEET_KEY_PREFIX}${id}::${name}`; }
+function versionCacheKey(id, name) { return `${VERSION_KEY_PREFIX}${id}::${name}`; }
+
+function evictOldestSheetCache() {
+    const entries = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith(SHEET_KEY_PREFIX)) continue;
+        try {
+            const v = JSON.parse(localStorage.getItem(k));
+            entries.push({ k, ts: (v && v.ts) || 0 });
+        } catch (e) {}
+    }
+    entries.sort((a, b) => a.ts - b.ts);
+    const drop = Math.max(1, Math.floor(entries.length * 0.3));
+    for (let i = 0; i < drop; i++) lsRemove(entries[i].k);
+}
+
+function getCachedSheet(id, name, { allowStale = false } = {}) {
+    const key = sheetCacheKey(id, name);
+    const mem = memSheet.get(key);
+    if (mem && (allowStale || (Date.now() - mem.ts) < SHEET_CACHE_TTL)) return mem.rows;
+    const stored = lsGet(key);
+    if (stored && Array.isArray(stored.rows)) {
+        memSheet.set(key, { ts: stored.ts, rows: stored.rows });
+        if (allowStale || (Date.now() - stored.ts) < SHEET_CACHE_TTL) return stored.rows;
+    }
+    return null;
+}
+function setCachedSheet(id, name, rows) {
+    const key = sheetCacheKey(id, name);
+    const payload = { ts: Date.now(), rows };
+    memSheet.set(key, payload);
+    lsSet(key, payload);
+}
+function clearSheetCache(id, name) {
+    memSheet.delete(sheetCacheKey(id, name));
+    lsRemove(sheetCacheKey(id, name));
+}
+
+function computeVersion(rows) {
+    if (!Array.isArray(rows) || !rows.length) return '0';
+    let h = 5381;
+    const firstKeys = Object.keys(rows[0]).join(',');
+    const s = rows.length + '::' + firstKeys + '::' + JSON.stringify(rows[rows.length - 1]);
+    for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return h.toString(36);
+}
+function getCachedVersion(id, name) { return localStorage.getItem(versionCacheKey(id, name)) || ''; }
+function setCachedVersion(id, name, v) { try { localStorage.setItem(versionCacheKey(id, name), v); } catch (e) {} }
+
+/* ============================================================
+   NETWORK
+   ============================================================ */
+let _activeFetches = 0;
+const _fetchQueue = [];
+function _acquireSlot() {
+    if (_activeFetches < FETCH_CONCURRENCY) { _activeFetches++; return Promise.resolve(); }
+    return new Promise(resolve => _fetchQueue.push(resolve)).then(() => { _activeFetches++; });
+}
+function _releaseSlot() {
+    _activeFetches--;
+    const next = _fetchQueue.shift();
+    if (next) next();
+}
+
+async function fetchSheetFromNetwork(id, name) {
+    await _acquireSlot();
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${id}&sheetName=${encodeURIComponent(name)}&action=getData&_=${Date.now()}`;
+        const resp = await fetch(url, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const json = await resp.json();
+        if (json.status !== 'success' || !Array.isArray(json.data)) {
+            throw new Error(json.message || 'Invalid response');
+        }
+        setCachedSheet(id, name, json.data);
+        setCachedVersion(id, name, computeVersion(json.data));
+        return json.data;
+    } finally { _releaseSlot(); }
+}
+
+async function fetchSheetVersionFromNetwork(id, name) {
+    await _acquireSlot();
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${id}&sheetName=${encodeURIComponent(name)}&action=version&_=${Date.now()}`;
+        const resp = await fetch(url, { cache: 'no-store' });
+        if (!resp.ok) return null;
+        const json = await resp.json();
+        if (json && json.status === 'success' && json.data && typeof json.data.version === 'string') {
+            return json.data.version;
+        }
+        return null;
+    } catch (e) { return null; }
+    finally { _releaseSlot(); }
+}
+
+async function fetchSheet(id, name, { force = false, allowStale = false } = {}) {
+    if (!force) {
+        const cached = getCachedSheet(id, name, { allowStale });
+        if (cached) return cached;
+    }
+    return fetchSheetFromNetwork(id, name);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ADMISSION SHEET LOOKUP — parallel search across all class sheets
+   Used when the local profile cache misses.
+   ══════════════════════════════════════════════════════════════ */
+async function findStudentInAdmissionSheet(email) {
+    const target = normalizeEmail(email);
+    const tasks = STUDENT_SHEETS.map(async (sheetName) => {
+        try {
+            const rows = await fetchSheet(SPREADSHEET_ID, sheetName, { force: false });
+            const idx = rows.findIndex(r => normalizeEmail(r[COL.EMAIL]) === target);
+            if (idx !== -1) return { sheet: sheetName, row: rows[idx], rowIndex: idx + 2 };
+        } catch (e) {}
+        return null;
+    });
+    const results = await Promise.all(tasks);
+    return results.find(r => r !== null) || null;
+}
+
+/* ============================================================
+   CLASS MATCHING
+   ══════════════════════════════════════════════════════════════
+   normalizeStd() also strips ordinal suffixes so that
+   '1th Std' → '1', 'STD_1' → '1', '2nd Std' → '2', etc.
+   ============================================================ */
+function normalizeStd(v) {
+    return (v || '').toString().trim().toLowerCase()
+        .replace(/[_\-.]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .replace(/\bstd\b/g, '')
+        .replace(/\bstandard\b/g, '')
+        .replace(/(\d+)(st|nd|rd|th)\b/g, '$1')   /* '1th' → '1', '2nd' → '2' */
+        .trim();
+}
+function findClassRecord(stdRaw) {
+    if (!stdRaw) return null;
+    const target = normalizeStd(stdRaw);
+    if (!target) return null;
+    for (const c of ATTENDANCE_CLASSES) if (normalizeStd(c.std) === target) return c;
+    for (const c of ATTENDANCE_CLASSES) {
+        const n = normalizeStd(c.std);
+        if (n.includes(target) || target.includes(n)) return c;
+    }
+    const m = target.match(/^(\d{1,2})/);
+    if (m) {
+        const num = m[1];
+        const candidates = ATTENDANCE_CLASSES.filter(c => normalizeStd(c.std).startsWith(num));
+        if (candidates.length === 1) return candidates[0];
+        const stdForm = candidates.find(c => /\bstd\b/i.test(c.std));
+        if (stdForm) return stdForm;
+        return candidates[0] || null;
+    }
+    return null;
+}
+
+/* ============================================================
+   HEADERS
+   ============================================================ */
+function findHeaderByAliases(headers, aliases) {
+    if (!Array.isArray(headers) || !aliases.length) return null;
+    const norm = aliases.map(a => a.toString().trim().toLowerCase());
+    for (let i = 0; i < headers.length; i++) {
+        const h = headers[i];
+        if (h == null) continue;
+        if (norm.includes(h.toString().trim().toLowerCase())) return h;
+    }
+    return null;
+}
+function findNameHeader(headers) { return findHeaderByAliases(headers, NAME_HEADER_ALIASES); }
+
+/* ============================================================
+   DATES
+   ============================================================ */
+const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const RE_DMY  = /^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/;
+const RE_YMD  = /^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/;
+const RE_DMON = /^(\d{1,2})\s+([A-Za-z]{3,9})\s+(\d{2,4})$/;
+
+function parseDateFlexible(input) {
+    if (input == null || input === '') return null;
+    if (input instanceof Date && !isNaN(input)) return input;
+    const s = input.toString().trim();
+    if (!s) return null;
+    let m = s.match(RE_DMY);
+    if (m) {
+        let dd = +m[1], mm = +m[2], yy = +m[3]; if (yy < 100) yy += 2000;
+        const d = new Date(yy, mm - 1, dd); if (!isNaN(d)) return d;
+    }
+    m = s.match(RE_YMD);
+    if (m) { const d = new Date(+m[1], +m[2] - 1, +m[3]); if (!isNaN(d)) return d; }
+    m = s.match(RE_DMON);
+    if (m) {
+        const mm = monthIndexFromName(m[2]);
+        if (mm >= 0) {
+            let yy = +m[3]; if (yy < 100) yy += 2000;
+            const d = new Date(yy, mm, +m[1]); if (!isNaN(d)) return d;
+        }
+    }
+    const d = new Date(s);
+    return isNaN(d) ? null : d;
+}
+function monthIndexFromName(name) {
+    const n = name.toString().trim().toLowerCase().slice(0, 3);
+    return ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'].indexOf(n);
+}
+function formatRecordDate(input) {
+    const d = parseDateFlexible(input);
+    if (!d) return (input == null ? '' : input.toString().trim());
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = MONTH_ABBR[d.getMonth()];
+    const yy = String(d.getFullYear()).slice(-2);
+    return `${dd} ${mm} ${yy}`;
+}
+function isToday(input) {
+    const d = parseDateFlexible(input);
+    if (!d) return false;
+    const t = new Date();
+    return d.getDate() === t.getDate() &&
+           d.getMonth() === t.getMonth() &&
+           d.getFullYear() === t.getFullYear();
+}
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+const STATUS_MAP = {
+    present: 'present', p: 'present', 'p.': 'present',
+    absent: 'absent',  a: 'absent',  'a.': 'absent',
+    holiday: 'holiday', h: 'holiday', 'h.': 'holiday',
+    leave: 'leave', 'full leave': 'leave', 'full-leave': 'leave',
+    fl: 'leave', 'f.l': 'leave'
+};
+function normalizeStatus(raw) {
+    if (raw == null) return 'unknown';
+    const key = raw.toString().trim().toLowerCase();
+    if (STATUS_MAP[key]) return STATUS_MAP[key];
+    if (key.includes('present')) return 'present';
+    if (key.includes('absent'))  return 'absent';
+    if (key.includes('holiday')) return 'holiday';
+    if (key.includes('leave'))   return 'leave';
+    return 'unknown';
+}
+function statusMeta(status) {
+    switch (status) {
+        case 'present': return { label: 'Present',    cls: 'status-present', icon: 'fa-circle-check' };
+        case 'absent':  return { label: 'Absent',     cls: 'status-absent',  icon: 'fa-circle-xmark' };
+        case 'holiday': return { label: 'Holiday',    cls: 'status-holiday', icon: 'fa-star' };
+        case 'leave':   return { label: 'Full Leave', cls: 'status-leave',   icon: 'fa-plane' };
+        default:        return { label: '—',          cls: 'status-unknown', icon: 'fa-circle-question' };
+    }
+}
+
+/* ============================================================
+   NAME INDEX CACHE
+   ============================================================ */
+const _nameIndexCache = new Map();
+function _indexNames(rows, nameHeader, cacheKey) {
+    if (_nameIndexCache.has(cacheKey)) return _nameIndexCache.get(cacheKey);
+    const idx = new Map();
+    for (let i = 0; i < rows.length; i++) {
+        const v = rows[i][nameHeader];
+        if (v == null) continue;
+        const key = v.toString().trim().toLowerCase().replace(/\s+/g, ' ');
+        if (key) idx.set(key, i);
+    }
+    _nameIndexCache.set(cacheKey, idx);
+    return idx;
+}
+async function searchStudentInSheet(id, name, studentName, { force = false } = {}) {
+    const rows = await fetchSheet(id, name, { force });
+    if (!Array.isArray(rows) || !rows.length) return null;
+    const headers = Object.keys(rows[0]);
+    const nameHeader = findNameHeader(headers);
+    if (!nameHeader) return null;
+    const target = studentName.toString().trim().toLowerCase().replace(/\s+/g, ' ');
+    const cacheKey = sheetCacheKey(id, name) + '::' + nameHeader;
+    const idxMap = _indexNames(rows, nameHeader, cacheKey);
+    const idx = idxMap.has(target) ? idxMap.get(target) : -1;
+    if (idx === -1) return null;
+    return { row: rows[idx], headers, nameHeader, rowIndex: idx + 2 };
+}
+
+/* ============================================================
+   BUILD RECORDS
+   ============================================================ */
+function buildRecordsFromRow(row, headers) {
+    const statusHeader = findHeaderByAliases(headers, STATUS_HEADER_ALIASES);
+    const dateHeader   = findHeaderByAliases(headers, DATE_HEADER_ALIASES);
+    const nameHeader   = findNameHeader(headers);
+    const records = [];
+
+    if (statusHeader) {
+        const rawStatus = row[statusHeader];
+        let rawDate = dateHeader ? row[dateHeader] : null;
+        if (!rawDate) {
+            for (const h of headers) {
+                if (h === statusHeader || h === nameHeader) continue;
+                if (parseDateFlexible(h)) { rawDate = h; break; }
+            }
+        }
+        if (!rawDate) {
+            for (const h of headers) {
+                if (h === statusHeader || h === nameHeader) continue;
+                if (parseDateFlexible(row[h])) { rawDate = row[h]; break; }
+            }
+        }
+        records.push({ rawDate, status: normalizeStatus(rawStatus) });
+        return records;
+    }
+    for (const h of headers) {
+        if (h === nameHeader) continue;
+        if (!parseDateFlexible(h)) continue;
+        const v = row[h];
+        if (v == null || v === '') continue;
+        records.push({ rawDate: h, status: normalizeStatus(v) });
+    }
+    return records;
+}
+
+/* ============================================================
+   DOM HELPERS
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.titleBar = $('titleBar'); dom.studentTitle = $('studentTitle');
+    dom.studentAvatarMini = $('studentAvatarMini'); dom.btnBack = $('btnBack');
+    dom.todayPill = $('todayPill'); dom.liveDot = $('liveDot');
+    dom.skeleton = $('skeleton'); dom.errorState = $('errorState');
+    dom.errorTitle = $('errorTitle'); dom.errorMsg = $('errorMsg');
+    dom.mainContent = $('mainContent'); dom.statsGrid = $('statsGrid');
+    dom.insightStrip = $('insightStrip');
+    dom.statusFilter = $('statusFilter'); dom.monthFilter = $('monthFilter');
+    dom.recordCount = $('recordCount'); dom.monthHeader = $('monthHeader');
+    dom.mhName = $('mhName'); dom.mhCount = $('mhCount');
+    dom.recordsGrid = $('recordsGrid'); dom.refreshBtn = $('refreshBtn');
+    dom.exportBtn = $('exportBtn'); dom.printBtn = $('printBtn');
+    dom.pieChart = $('pieChart'); dom.barChart = $('barChart');
+    dom.pieLegend = $('pieLegend'); dom.barLegend = $('barLegend');
+    dom.pieSub = $('pieSub'); dom.barSub = $('barSub');
+    dom.pieLoader = $('pieLoader'); dom.barLoader = $('barLoader');
+    dom.toastHost = $('toastHost');
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+const TOAST_ICONS = {
+    success: 'fa-circle-check',
+    error: 'fa-circle-xmark',
+    warning: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+};
+function showToast(msg, type = 'info', ms = 3200) {
+    if (!dom.toastHost) return;
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `<i class="fas ${TOAST_ICONS[type] || TOAST_ICONS.info}"></i><span>${escapeHtml(msg)}</span>`;
+    dom.toastHost.appendChild(el);
+    setTimeout(() => {
+        el.classList.add('leaving');
+        setTimeout(() => el.remove(), 220);
+    }, ms);
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function getFileId(url) {
+    if (!url) return '';
+    const m = url.toString().match(/\/d\/([-\w]{25,})|id=([-\w]{25,})/);
+    if (m) return m[1] || m[2] || '';
+    const bare = url.toString().match(/^([-\w]{25,})$/);
+    return bare ? bare[1] : '';
+}
+function setTodayPill() {
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = MONTH_ABBR[d.getMonth()];
+    const yy = String(d.getFullYear()).slice(-2);
+    if (dom.todayPill) dom.todayPill.textContent = `${dd} ${mm} ${yy}`;
+}
+function debounce(fn, wait = DEBOUNCE_MS) {
+    let t = null;
+    return function debounced(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let allRecords = [];
+let activeStatus = 'all';
+let activeMonthSheet = null;
+let monthAvailability = {};
+let currentClassRec = null;
+let currentStudentName = '';
+let isMonthLoading = false;
+let refreshInFlight = false;
+let pollTimer = null;
+
+/* ============================================================
+   MONTH STATS
+   ============================================================ */
+function loadMonthStats() {
+    try {
+        const raw = localStorage.getItem(MONTH_STATS_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return (parsed && typeof parsed === 'object') ? parsed : {};
+    } catch (e) { return {}; }
+}
+function saveMonthStats() {
+    try { localStorage.setItem(MONTH_STATS_KEY, JSON.stringify(monthStats)); } catch (e) {}
+}
+let monthStats = loadMonthStats();
+
+function updateMonthStats(sheetName, records) {
+    const counts = { present: 0, absent: 0, holiday: 0, leave: 0 };
+    records.forEach(r => { if (counts[r.status] != null) counts[r.status]++; });
+    counts.total = counts.present + counts.absent + counts.holiday + counts.leave;
+
+    const prev = monthStats[sheetName];
+    const same = prev &&
+        prev.present === counts.present &&
+        prev.absent === counts.absent &&
+        prev.holiday === counts.holiday &&
+        prev.leave === counts.leave &&
+        prev.total === counts.total;
+    if (same) return;
+    monthStats[sheetName] = counts;
+    saveMonthStats();
+}
+
+/* ============================================================
+   RENDER — STATS
+   ============================================================ */
+function renderStats(records) {
+    const total   = records.length;
+    const present = records.filter(r => r.status === 'present').length;
+    const absent  = records.filter(r => r.status === 'absent').length;
+    const holiday = records.filter(r => r.status === 'holiday').length;
+    const leave   = records.filter(r => r.status === 'leave').length;
+    const pct = (n) => total > 0 ? ` (${Math.round(n / total * 100)}%)` : ' (0%)';
+
+    dom.statsGrid.innerHTML =
+        `<div class="stat-card${activeStatus==='all'?' is-active':''}" data-stat="all" role="button" tabindex="0">
+            <div class="stat-num c-total">${total}</div><div class="stat-lbl">Total Days</div>
+        </div>` +
+        `<div class="stat-card${activeStatus==='present'?' is-active':''}" data-stat="present" role="button" tabindex="0">
+            <div class="stat-num c-present">${present}</div><div class="stat-lbl">Present${pct(present)}</div>
+        </div>` +
+        `<div class="stat-card${activeStatus==='absent'?' is-active':''}" data-stat="absent" role="button" tabindex="0">
+            <div class="stat-num c-absent">${absent}</div><div class="stat-lbl">Absent${pct(absent)}</div>
+        </div>` +
+        `<div class="stat-card${activeStatus==='holiday'?' is-active':''}" data-stat="holiday" role="button" tabindex="0">
+            <div class="stat-num c-holiday">${holiday}</div><div class="stat-lbl">Holiday${pct(holiday)}</div>
+        </div>` +
+        `<div class="stat-card${activeStatus==='leave'?' is-active':''}" data-stat="leave" role="button" tabindex="0">
+            <div class="stat-num c-leave">${leave}</div><div class="stat-lbl">Full Leave${pct(leave)}</div>
+        </div>`;
+
+    dom.statsGrid.querySelectorAll('.stat-card').forEach(card => {
+        const key = card.dataset.stat;
+        const handler = () => {
+            activeStatus = (key === 'all' || activeStatus === key) ? 'all' : key;
+            dom.statusFilter.value = activeStatus;
+            renderStats(allRecords);
+            applyStatusFilter();
+        };
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }
+        });
+    });
+}
+
+/* ============================================================
+   RENDER — INSIGHTS
+   ============================================================ */
+function renderInsights(records) {
+    const total = records.length;
+    const present = records.filter(r => r.status === 'present').length;
+    const absent  = records.filter(r => r.status === 'absent').length;
+    const attendanceRate = total > 0 ? Math.round((present / total) * 100) : 0;
+
+    const sorted = records.slice().sort((a, b) => {
+        const da = parseDateFlexible(a.rawDate);
+        const db = parseDateFlexible(b.rawDate);
+        return (da && db) ? da - db : 0;
+    });
+    let streak = 0, maxStreak = 0;
+    for (const r of sorted) {
+        if (r.status === 'present') { streak++; maxStreak = Math.max(maxStreak, streak); }
+        else streak = 0;
+    }
+
+    const monthName = MONTH_LABELS[activeMonthSheet] || '—';
+    const rateColor = attendanceRate >= 75 ? 'i-success' : (attendanceRate >= 50 ? 'i-warning' : 'i-danger');
+
+    dom.insightStrip.innerHTML = `
+        <div class="insight-card">
+            <div class="insight-ico ${rateColor}"><i class="fas fa-percent"></i></div>
+            <div class="insight-meta">
+                <div class="insight-lbl">Attendance Rate</div>
+                <div class="insight-val">${attendanceRate}%<small> · ${present}/${total}</small></div>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="insight-ico i-accent"><i class="fas fa-fire"></i></div>
+            <div class="insight-meta">
+                <div class="insight-lbl">Longest Streak</div>
+                <div class="insight-val">${maxStreak} <small>day${maxStreak === 1 ? '' : 's'}</small></div>
+            </div>
+        </div>
+        <div class="insight-card">
+            <div class="insight-ico i-danger"><i class="fas fa-user-xmark"></i></div>
+            <div class="insight-meta">
+                <div class="insight-lbl">Absences</div>
+                <div class="insight-val">${absent} <small>in ${monthName}</small></div>
+            </div>
+        </div>
+    `;
+}
+
+/* ============================================================
+   RENDER — FILTERS
+   ============================================================ */
+function populateStatusFilter(records) {
+    const counts = { all: records.length, present: 0, absent: 0, holiday: 0, leave: 0 };
+    records.forEach(r => { if (counts[r.status] != null) counts[r.status]++; });
+    dom.statusFilter.innerHTML =
+        `<option value="all">All (${counts.all})</option>` +
+        `<option value="present">Present (${counts.present})</option>` +
+        `<option value="absent">Absent (${counts.absent})</option>` +
+        `<option value="holiday">Holiday (${counts.holiday})</option>` +
+        `<option value="leave">Leave (${counts.leave})</option>`;
+    dom.statusFilter.value = activeStatus;
+}
+
+function populateMonthFilter() {
+    const currentMonthName = MONTH_SHEETS[new Date().getMonth()];
+    const options = MONTH_SHEETS.map(sheetName => {
+        const label = MONTH_LABELS[sheetName] || sheetName;
+        const state = monthAvailability[sheetName];
+        const isCurrent = sheetName === currentMonthName;
+        let suffix = '';
+        if (state === 'found') suffix = ' ✓';
+        else if (state === 'empty') suffix = ' ·';
+        return `<option value="${sheetName}"${isCurrent ? ' data-current="1"' : ''}>${label}${suffix}</option>`;
+    }).join('');
+    dom.monthFilter.innerHTML = options;
+    dom.monthFilter.value = activeMonthSheet || currentMonthName;
+}
+function refreshMonthFilterStyles() {
+    const opts = dom.monthFilter.options;
+    for (let i = 0; i < opts.length; i++) {
+        const o = opts[i];
+        const state = monthAvailability[o.value];
+        const label = MONTH_LABELS[o.value] || o.value;
+        o.textContent = label + (state === 'found' ? ' ✓' : state === 'empty' ? ' ·' : '');
+    }
+}
+
+function renderMonthHeader(sheetName, count) {
+    dom.mhName.textContent = MONTH_LABELS[sheetName] || sheetName;
+    dom.mhCount.textContent = `${count} record${count === 1 ? '' : 's'}`;
+}
+
+/* ============================================================
+   RENDER — RECORDS
+   ============================================================ */
+function renderRecords(records, { loading = false } = {}) {
+    if (loading) {
+        dom.recordsGrid.innerHTML = `
+            <div class="records-loader">
+                <span class="spinner spinner-accent"></span>
+                <p>Loading records…</p>
+            </div>`;
+        return;
+    }
+    if (!records.length) {
+        dom.recordsGrid.innerHTML = `
+            <div class="empty-illus">
+                <span class="emoji">📭</span>
+                <p>No records to show${activeStatus !== 'all' ? ' for this filter' : ''}</p>
+            </div>`;
+        return;
+    }
+    const sorted = records.slice().sort((a, b) => {
+        const da = parseDateFlexible(a.rawDate);
+        const db = parseDateFlexible(b.rawDate);
+        if (da && db) return db - da;
+        if (da) return -1;
+        if (db) return 1;
+        return 0;
+    });
+    let html = '';
+    for (let i = 0; i < sorted.length; i++) {
+        const r = sorted[i];
+        const meta = statusMeta(r.status);
+        const today = isToday(r.rawDate) ? ' today' : '';
+        html += `<div class="record-card${today}">
+            <span class="record-date">${escapeHtml(formatRecordDate(r.rawDate))}</span>
+            <span class="status-badge ${meta.cls}"><i class="fas ${meta.icon}"></i> ${meta.label}</span>
+        </div>`;
+    }
+    dom.recordsGrid.innerHTML = html;
+}
+
+/* ============================================================
+   APPLY FILTERS
+   ============================================================ */
+function applyStatusFilter() {
+    let filtered = allRecords;
+    if (activeStatus !== 'all') filtered = filtered.filter(r => r.status === activeStatus);
+    renderMonthHeader(activeMonthSheet, filtered.length);
+    renderRecords(filtered);
+    renderStats(allRecords);
+    renderInsights(allRecords);
+    dom.recordCount.textContent =
+        `Showing ${filtered.length} of ${allRecords.length} record${allRecords.length === 1 ? '' : 's'}`;
+    redrawCharts();
+    try { renderPrintReport(); } catch (e) {}
+}
+const applyStatusFilterDebounced = debounce(applyStatusFilter, DEBOUNCE_MS);
+const loadMonthDebounced = debounce(function (sheetName) {
+    if (sheetName !== activeMonthSheet) loadMonth(sheetName, { force: false });
+}, DEBOUNCE_MS);
+
+/* ============================================================
+   BIND FILTERS
+   ============================================================ */
+function bindFilters() {
+    dom.statusFilter.addEventListener('change', (e) => {
+        activeStatus = e.target.value;
+        applyStatusFilterDebounced();
+    }, { passive: true });
+    dom.monthFilter.addEventListener('change', (e) => {
+        loadMonthDebounced(e.target.value);
+    }, { passive: true });
+    dom.refreshBtn.addEventListener('click', () => { manualRefresh(); });
+    dom.exportBtn.addEventListener('click', () => { exportCSV(); });
+    dom.printBtn.addEventListener('click', () => {
+        renderPrintReport();
+        setTimeout(() => window.print(), 80);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.target.matches('input, select, textarea')) return;
+        if (e.key === 'r' || e.key === 'R') { e.preventDefault(); manualRefresh(); }
+        else if (e.key === 'e' || e.key === 'E') { e.preventDefault(); exportCSV(); }
+        else if (e.key === 'p' || e.key === 'P') {
+            e.preventDefault();
+            renderPrintReport();
+            setTimeout(() => window.print(), 80);
+        }
+    });
+}
+
+/* ============================================================
+   LOAD MONTH
+   ============================================================ */
+async function loadMonth(sheetName, { force = false } = {}) {
+    if (isMonthLoading) return;
+    isMonthLoading = true;
+
+    renderRecords([], { loading: true });
+    dom.monthHeader.style.opacity = '0.55';
+    dom.recordCount.textContent = 'Loading…';
+    if (dom.pieLoader) dom.pieLoader.classList.add('show');
+    if (dom.barLoader) dom.barLoader.classList.add('show');
+
+    try {
+        if (force) {
+            clearSheetCache(currentClassRec.id, sheetName);
+            _nameIndexCache.clear();
+        }
+        const found = await searchStudentInSheet(currentClassRec.id, sheetName, currentStudentName, { force });
+        if (!found) {
+            monthAvailability[sheetName] = 'empty';
+            allRecords = [];
+            activeMonthSheet = sheetName;
+            activeStatus = 'all';
+            updateMonthStats(sheetName, []);
+            renderStats(allRecords);
+            renderInsights(allRecords);
+            populateStatusFilter(allRecords);
+            renderMonthHeader(sheetName, 0);
+            renderRecords([]);
+            dom.recordCount.textContent = `No records in ${MONTH_LABELS[sheetName] || sheetName}`;
+            refreshMonthFilterStyles();
+            return;
+        }
+        monthAvailability[sheetName] = 'found';
+        allRecords = buildRecordsFromRow(found.row, found.headers);
+        activeMonthSheet = sheetName;
+        activeStatus = 'all';
+        updateMonthStats(sheetName, allRecords);
+        renderStats(allRecords);
+        renderInsights(allRecords);
+        populateStatusFilter(allRecords);
+        renderMonthHeader(sheetName, allRecords.length);
+        renderRecords(allRecords);
+        dom.recordCount.textContent = `Showing all ${allRecords.length} record${allRecords.length === 1 ? '' : 's'}`;
+        refreshMonthFilterStyles();
+        if (dom.monthFilter.value !== sheetName) dom.monthFilter.value = sheetName;
+    } catch (err) {
+        monthAvailability[sheetName] = 'empty';
+        allRecords = [];
+        activeMonthSheet = sheetName;
+        activeStatus = 'all';
+        updateMonthStats(sheetName, []);
+        renderStats(allRecords);
+        renderInsights(allRecords);
+        populateStatusFilter(allRecords);
+        renderMonthHeader(sheetName, 0);
+        renderRecords([]);
+        dom.recordCount.textContent = `Could not load ${MONTH_LABELS[sheetName] || sheetName}`;
+        refreshMonthFilterStyles();
+        showToast(`Could not load ${MONTH_LABELS[sheetName] || sheetName}`, 'error');
+    } finally {
+        dom.monthHeader.style.opacity = '1';
+        if (dom.pieLoader) dom.pieLoader.classList.remove('show');
+        if (dom.barLoader) dom.barLoader.classList.remove('show');
+        isMonthLoading = false;
+        redrawCharts();
+        try { renderPrintReport(); } catch (e) {}
+    }
+}
+
+/* ============================================================
+   RECORDS SIGNATURE
+   ============================================================ */
+function recordsSignature(records) {
+    if (!records.length) return '';
+    return records.map(r => (r.rawDate == null ? '' : String(r.rawDate)) + ':' + r.status).join('|');
+}
+
+/* ============================================================
+   FETCH + RENDER FRESH DATA
+   ============================================================ */
+async function fetchAndRenderFresh({ showErrorToast = false } = {}) {
+    if (!currentClassRec || !activeMonthSheet) return { changed: false };
+    try {
+        clearSheetCache(currentClassRec.id, activeMonthSheet);
+        _nameIndexCache.clear();
+        const found = await searchStudentInSheet(
+            currentClassRec.id, activeMonthSheet, currentStudentName, { force: true }
+        );
+        const prevSig = recordsSignature(allRecords);
+        let newRecords = [];
+        if (found) {
+            monthAvailability[activeMonthSheet] = 'found';
+            newRecords = buildRecordsFromRow(found.row, found.headers);
+        } else {
+            monthAvailability[activeMonthSheet] = 'empty';
+        }
+        updateMonthStats(activeMonthSheet, newRecords);
+        const newSig = recordsSignature(newRecords);
+        if (newSig === prevSig && newRecords.length === allRecords.length) {
+            return { changed: false };
+        }
+        allRecords = newRecords;
+        populateStatusFilter(allRecords);
+        renderStats(allRecords);
+        renderInsights(allRecords);
+        renderMonthHeader(activeMonthSheet, allRecords.length);
+        renderRecords(allRecords);
+        dom.recordCount.textContent = allRecords.length
+            ? `Showing all ${allRecords.length} record${allRecords.length === 1 ? '' : 's'}`
+            : `No records in ${MONTH_LABELS[activeMonthSheet] || activeMonthSheet}`;
+        refreshMonthFilterStyles();
+        redrawCharts();
+        try { renderPrintReport(); } catch (e) {}
+        return { changed: true };
+    } catch (e) {
+        if (showErrorToast) showToast('Refresh failed: ' + (e.message || 'network error'), 'error');
+        return { changed: false, error: e };
+    }
+}
+
+/* ============================================================
+   BACKGROUND REFRESH
+   ============================================================ */
+async function backgroundRefresh({ silent = false, force = false } = {}) {
+    if (refreshInFlight) return;
+    if (!currentClassRec || !activeMonthSheet) return;
+    if (document.visibilityState !== 'visible') return;
+    if (!navigator.onLine) { updateLiveDot(false); return; }
+    if (isMonthLoading) return;
+
+    refreshInFlight = true;
+    setRefreshIndicator(true);
+
+    try {
+        if (force) {
+            const result = await fetchAndRenderFresh();
+            updateLiveDot(true);
+            if (result.changed && !silent) showToast('Attendance updated', 'info', 2200);
+            return;
+        }
+        let newVersion = await fetchSheetVersionFromNetwork(currentClassRec.id, activeMonthSheet);
+        if (newVersion == null) {
+            try {
+                const fresh = await fetchSheetFromNetwork(currentClassRec.id, activeMonthSheet);
+                newVersion = computeVersion(fresh);
+            } catch (e) { newVersion = null; }
+        }
+        if (!newVersion) { updateLiveDot(false); return; }
+        const oldVersion = getCachedVersion(currentClassRec.id, activeMonthSheet);
+        setCachedVersion(currentClassRec.id, activeMonthSheet, newVersion);
+        if (oldVersion && oldVersion === newVersion) {
+            updateLiveDot(true);
+            return;
+        }
+        const result = await fetchAndRenderFresh();
+        if (result.changed && !silent) showToast('Attendance updated', 'info', 2200);
+        updateLiveDot(true);
+    } catch (e) {
+        updateLiveDot(false);
+    } finally {
+        refreshInFlight = false;
+        setRefreshIndicator(false);
+    }
+}
+
+/* ============================================================
+   POLLING
+   ============================================================ */
+function startPolling() {
+    stopPolling();
+    pollTimer = setTimeout(async function loop() {
+        if (document.visibilityState === 'visible' && navigator.onLine) {
+            await backgroundRefresh({ silent: true });
+        }
+        pollTimer = setTimeout(loop, POLL_INTERVAL_MS);
+    }, POLL_INTERVAL_MS);
+    updateLiveDot(navigator.onLine);
+}
+function stopPolling() {
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+}
+
+async function manualRefresh() {
+    if (dom.refreshBtn) dom.refreshBtn.disabled = true;
+    try {
+        await backgroundRefresh({ silent: false, force: true });
+        showToast('Refreshed', 'success', 1500);
+    } catch (e) {
+        showToast('Refresh failed', 'error');
+    } finally {
+        if (dom.refreshBtn) dom.refreshBtn.disabled = false;
+    }
+}
+
+/* ============================================================
+   REFRESH INDICATORS
+   ============================================================ */
+function setRefreshIndicator(on) {
+    if (!dom.liveDot) return;
+    if (on) dom.liveDot.style.opacity = '0.4';
+    else dom.liveDot.style.opacity = '';
+}
+function updateLiveDot(isLive) {
+    if (!dom.liveDot) return;
+    if (isLive) dom.liveDot.classList.remove('offline');
+    else dom.liveDot.classList.add('offline');
+}
+
+/* ============================================================
+   CHARTS
+   ============================================================ */
+function getChartColors() {
+    const css = getComputedStyle(document.documentElement);
+    return {
+        present: css.getPropertyValue('--success').trim() || '#10b981',
+        absent:  css.getPropertyValue('--danger').trim()  || '#ef4444',
+        holiday: css.getPropertyValue('--warning').trim() || '#f59e0b',
+        leave:   css.getPropertyValue('--leave').trim()   || '#f97316',
+        text:    css.getPropertyValue('--text-main').trim() || '#0f172a',
+        muted:   css.getPropertyValue('--text-muted').trim() || '#5b6e8c',
+        grid:    css.getPropertyValue('--border-light').trim() || '#e2e8f0',
+        accent:  css.getPropertyValue('--accent').trim() || '#2563eb',
+        card:    css.getPropertyValue('--bg-card').trim() || '#ffffff'
+    };
+}
+
+function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const cssW = rect.width || canvas.width;
+    const cssH = rect.height || canvas.height;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w: cssW, h: cssH };
+}
+
+function drawPie(records) {
+    const canvas = dom.pieChart;
+    if (!canvas) return;
+
+    const order = ['present', 'absent', 'holiday', 'leave'];
+    const labels = { present: 'Present', absent: 'Absent', holiday: 'Holiday', leave: 'Full Leave' };
+    const colors = getChartColors();
+    const colorMap = {
+        present: colors.present,
+        absent: colors.absent,
+        holiday: colors.holiday,
+        leave: colors.leave
+    };
+
+    const counts = { present: 0, absent: 0, holiday: 0, leave: 0 };
+    records.forEach(r => { if (counts[r.status] != null) counts[r.status]++; });
+    const total = counts.present + counts.absent + counts.holiday + counts.leave;
+
+    if (dom.pieSub) {
+        dom.pieSub.textContent = activeMonthSheet
+            ? `${MONTH_LABELS[activeMonthSheet] || activeMonthSheet} · ${total} record${total === 1 ? '' : 's'}`
+            : '—';
+    }
+
+    if (dom.pieLegend) {
+        dom.pieLegend.innerHTML = order.map(key => {
+            const pct = total > 0 ? Math.round((counts[key] / total) * 100) : 0;
+            return `<div class="legend-item">
+                <span class="lg-swatch" style="background:${colorMap[key]}"></span>
+                ${labels[key]}
+                <span class="lg-count">${counts[key]}</span>
+                <span class="lg-pct">${pct}%</span>
+            </div>`;
+        }).join('');
+    }
+
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0, 0, w, h);
+
+    if (total === 0) {
+        ctx.fillStyle = colors.muted;
+        ctx.font = '600 13px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No data', w / 2, h / 2);
+        return;
+    }
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = Math.min(w, h) / 2 - 12;
+    const innerR = radius * 0.62;
+    let startAngle = -Math.PI / 2;
+
+    order.forEach(key => {
+        const value = counts[key];
+        if (value === 0) return;
+        const angle = (value / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, startAngle + angle);
+        ctx.closePath();
+        ctx.fillStyle = colorMap[key];
+        ctx.fill();
+        ctx.strokeStyle = colors.card;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        startAngle += angle;
+    });
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+    ctx.fillStyle = colors.card;
+    ctx.fill();
+
+    const presentPct = Math.round((counts.present / total) * 100);
+    ctx.fillStyle = colors.text;
+    ctx.font = '800 ' + Math.round(radius * 0.28) + 'px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(presentPct + '%', cx, cy - 4);
+
+    ctx.fillStyle = colors.muted;
+    ctx.font = '600 ' + Math.round(radius * 0.11) + 'px Inter, sans-serif';
+    ctx.fillText('Present', cx, cy + radius * 0.22);
+}
+
+function drawBar() {
+    const canvas = dom.barChart;
+    if (!canvas) return;
+
+    const colors = getChartColors();
+    const months = MONTH_SHEETS;
+    const monthLabels = months.map(m => MONTH_LABELS[m] || m);
+    const data = months.map(m => monthStats[m] || { present: 0, absent: 0, holiday: 0, leave: 0, total: 0 });
+    const maxTotal = Math.max(1, ...data.map(d => d.total));
+
+    const { ctx, w, h } = setupCanvas(canvas);
+    ctx.clearRect(0, 0, w, h);
+
+    const padL = 40, padR = 12, padT = 24, padB = 46;
+    const plotW = w - padL - padR;
+    const plotH = h - padT - padB;
+
+    ctx.strokeStyle = colors.grid;
+    ctx.lineWidth = 1;
+    ctx.fillStyle = colors.muted;
+    ctx.font = '600 10px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    const yTicks = 4;
+    for (let i = 0; i <= yTicks; i++) {
+        const val = Math.round((maxTotal / yTicks) * i);
+        const y = padT + plotH - (plotH * i / yTicks);
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(w - padR, y);
+        ctx.stroke();
+        ctx.fillText(String(val), padL - 6, y);
+    }
+
+    const gap = Math.max(3, plotW * 0.012);
+    const barW = Math.max(6, (plotW - gap * (months.length - 1)) / months.length);
+    const selectedIdx = months.indexOf(activeMonthSheet);
+
+    months.forEach((m, i) => {
+        const d = data[i];
+        const x = padL + i * (barW + gap);
+        const totalH = d.total === 0 ? 0 : (d.total / maxTotal) * plotH;
+        const y = padT + plotH - totalH;
+        const isSelected = i === selectedIdx;
+
+        let cursorY = padT + plotH;
+        const segments = [
+            { val: d.present, color: colors.present },
+            { val: d.absent,  color: colors.absent },
+            { val: d.holiday, color: colors.holiday },
+            { val: d.leave,   color: colors.leave }
+        ];
+        segments.forEach(seg => {
+            if (seg.val <= 0) return;
+            const segH = (seg.val / maxTotal) * plotH;
+            cursorY -= segH;
+            ctx.fillStyle = seg.color;
+            const isTop = cursorY <= y + 1;
+            roundRect(ctx, x, cursorY, barW, segH, isTop ? Math.min(4, barW / 3) : 0);
+            ctx.fill();
+        });
+
+        if (isSelected) {
+            ctx.strokeStyle = colors.accent;
+            ctx.lineWidth = 2;
+            roundRect(ctx, x - 1, padT + plotH - totalH - 1, barW + 2, totalH + 2, 5);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = isSelected ? colors.accent : colors.muted;
+        ctx.font = (isSelected ? '800 ' : '600 ') + '10px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(monthLabels[i], x + barW / 2, padT + plotH + 8);
+
+        if (d.total > 0) {
+            ctx.fillStyle = isSelected ? colors.accent : colors.text;
+            ctx.font = '800 10px Inter, sans-serif';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(String(d.total), x + barW / 2, y - 3);
+        }
+    });
+
+    if (dom.barLegend) {
+        dom.barLegend.innerHTML = `
+            <div class="legend-item"><span class="lg-swatch" style="background:${colors.present}"></span>Present</div>
+            <div class="legend-item"><span class="lg-swatch" style="background:${colors.absent}"></span>Absent</div>
+            <div class="legend-item"><span class="lg-swatch" style="background:${colors.holiday}"></span>Holiday</div>
+            <div class="legend-item"><span class="lg-swatch" style="background:${colors.leave}"></span>Full Leave</div>
+        `;
+    }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    if (h <= 0) return;
+    r = Math.min(r, h / 2, w / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+let redrawRaf = null;
+function redrawCharts() {
+    if (redrawRaf) cancelAnimationFrame(redrawRaf);
+    redrawRaf = requestAnimationFrame(() => {
+        redrawRaf = null;
+        try { drawPie(allRecords); } catch (e) { console.warn('[charts] pie', e); }
+        try { drawBar(); }         catch (e) { console.warn('[charts] bar', e); }
+    });
+}
+
+/* ============================================================
+   PRINT REPORT — populates the hidden print section
+   ============================================================ */
+function getAcademicYear(row) {
+    const raw = row && (row['Academic Year'] || row['Acad Year'] || '');
+    if (raw && raw.toString().trim()) return raw.toString().trim();
+
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    /* Indian academic year: June → May */
+    if (m >= 5) return `${y}-${(y + 1).toString().slice(-2)}`;
+    return `${y - 1}-${y.toString().slice(-2)}`;
+}
+
+function renderPrintSummary(records) {
+    const el = $('prSummary');
+    if (!el) return;
+    const total   = records.length;
+    const present = records.filter(r => r.status === 'present').length;
+    const absent  = records.filter(r => r.status === 'absent').length;
+    const holiday = records.filter(r => r.status === 'holiday').length;
+    const leave   = records.filter(r => r.status === 'leave').length;
+
+    const cards = [
+        { cls: '',               num: total,   lbl: 'Total Days' },
+        { cls: 'pr-sum-present', num: present, lbl: 'Present' },
+        { cls: 'pr-sum-absent',  num: absent,  lbl: 'Absent'  },
+        { cls: 'pr-sum-holiday', num: holiday, lbl: 'Holiday' },
+        { cls: 'pr-sum-leave',   num: leave,   lbl: 'Full Leave' }
+    ];
+    el.innerHTML = cards.map(c => `
+        <div class="pr-sum-card ${c.cls}">
+            <div class="pr-sum-num">${c.num}</div>
+            <div class="pr-sum-lbl">${c.lbl}</div>
+        </div>
+    `).join('');
+}
+
+function renderPrintTable(records) {
+    const tbody = $('prTableBody');
+    if (!tbody) return;
+    if (!records.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:8mm;color:#6b7280;font-style:italic;">
+            No attendance records available for this month.
+        </td></tr>`;
+        return;
+    }
+    const sorted = records.slice().sort((a, b) => {
+        const da = parseDateFlexible(a.rawDate);
+        const db = parseDateFlexible(b.rawDate);
+        if (da && db) return da - db;
+        if (da) return -1;
+        if (db) return 1;
+        return 0;
+    });
+
+    const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    let html = '';
+    sorted.forEach((r, i) => {
+        const meta = statusMeta(r.status);
+        const d = parseDateFlexible(r.rawDate);
+        const dayName = d ? DAYS[d.getDay()] : '—';
+        const dateLabel = formatRecordDate(r.rawDate);
+        const statusCls = r.status === 'unknown' ? 'unknown' : r.status;
+
+        html += `<tr>
+            <td class="pr-col-no">${i + 1}</td>
+            <td class="pr-col-date">${escapeHtml(dateLabel)}</td>
+            <td class="pr-col-day">${escapeHtml(dayName)}</td>
+            <td class="pr-col-status">
+                <span class="pr-status-pill ${statusCls}">${meta.label}</span>
+            </td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
+
+function drawPrintPie(records) {
+    const canvas = $('printPieChart');
+    if (!canvas) return;
+
+    const order = ['present', 'absent', 'holiday', 'leave'];
+    const labels = { present: 'Present', absent: 'Absent', holiday: 'Holiday', leave: 'Full Leave' };
+    const colorsMap = { present: '#16a34a', absent: '#dc2626', holiday: '#d97706', leave: '#ea580c' };
+
+    const counts = { present: 0, absent: 0, holiday: 0, leave: 0 };
+    records.forEach(r => { if (counts[r.status] != null) counts[r.status]++; });
+    const total = counts.present + counts.absent + counts.holiday + counts.leave;
+
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = 340, cssH = 300;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    const cx = cssW / 2, cy = cssH / 2 - 6;
+    const radius = Math.min(cssW, cssH) / 2 - 24;
+    const innerR = radius * 0.6;
+    let startAngle = -Math.PI / 2;
+
+    if (total === 0) {
+        ctx.fillStyle = '#9ca3af';
+        ctx.font = '600 13px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No data', cx, cy);
+        return;
+    }
+
+    order.forEach(key => {
+        const val = counts[key];
+        if (val === 0) return;
+        const angle = (val / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, startAngle + angle);
+        ctx.closePath();
+        ctx.fillStyle = colorsMap[key];
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        startAngle += angle;
+    });
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = '#fecaca';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    const pct = Math.round((counts.present / total) * 100);
+    ctx.fillStyle = '#7f1d1d';
+    ctx.font = '800 ' + Math.round(radius * 0.32) + 'px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(pct + '%', cx, cy - 4);
+    ctx.fillStyle = '#b91c1c';
+    ctx.font = '700 ' + Math.round(radius * 0.12) + 'px Inter, sans-serif';
+    ctx.fillText('PRESENT', cx, cy + radius * 0.24);
+
+    const legend = $('printPieLegend');
+    if (legend) {
+        legend.innerHTML = order.map(key => {
+            const pct = total > 0 ? Math.round((counts[key] / total) * 100) : 0;
+            return `<div class="pr-graph-legend-item">
+                <span class="sw" style="background:${colorsMap[key]}"></span>
+                ${labels[key]} <span class="ct">(${counts[key]} · ${pct}%)</span>
+            </div>`;
+        }).join('');
+    }
+}
+
+function drawPrintBar() {
+    const canvas = $('printBarChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = 600, cssH = 300;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    const months = MONTH_SHEETS;
+    const monthLabels = months.map(m => MONTH_LABELS[m] || m);
+    const data = months.map(m => monthStats[m] || { present: 0, absent: 0, holiday: 0, leave: 0, total: 0 });
+    const maxTotal = Math.max(1, ...data.map(d => d.total));
+
+    const padL = 38, padR = 10, padT = 20, padB = 40;
+    const plotW = cssW - padL - padR;
+    const plotH = cssH - padT - padB;
+
+    ctx.strokeStyle = '#fecaca';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '600 10px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    const yTicks = 4;
+    for (let i = 0; i <= yTicks; i++) {
+        const val = Math.round((maxTotal / yTicks) * i);
+        const y = padT + plotH - (plotH * i / yTicks);
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(cssW - padR, y);
+        ctx.stroke();
+        ctx.fillStyle = '#6b7280';
+        ctx.fillText(String(val), padL - 6, y);
+    }
+
+    const gap = 5;
+    const barW = Math.max(8, (plotW - gap * (months.length - 1)) / months.length);
+    const selectedIdx = months.indexOf(activeMonthSheet);
+
+    const colorsMap = {
+        present: '#16a34a',
+        absent:  '#dc2626',
+        holiday: '#d97706',
+        leave:   '#ea580c'
+    };
+
+    months.forEach((m, i) => {
+        const d = data[i];
+        const x = padL + i * (barW + gap);
+        const totalH = d.total === 0 ? 0 : (d.total / maxTotal) * plotH;
+        const y = padT + plotH - totalH;
+        const isSelected = i === selectedIdx;
+
+        let cursorY = padT + plotH;
+        const segments = [
+            { val: d.present, color: colorsMap.present },
+            { val: d.absent,  color: colorsMap.absent },
+            { val: d.holiday, color: colorsMap.holiday },
+            { val: d.leave,   color: colorsMap.leave }
+        ];
+        segments.forEach(seg => {
+            if (seg.val <= 0) return;
+            const segH = (seg.val / maxTotal) * plotH;
+            cursorY -= segH;
+            ctx.fillStyle = seg.color;
+            const isTop = cursorY <= y + 1;
+            roundRect(ctx, x, cursorY, barW, segH, isTop ? Math.min(3, barW / 3) : 0);
+            ctx.fill();
+        });
+
+        if (isSelected) {
+            ctx.strokeStyle = '#b91c1c';
+            ctx.lineWidth = 2;
+            roundRect(ctx, x - 1, padT + plotH - totalH - 1, barW + 2, totalH + 2, 4);
+            ctx.stroke();
+        }
+
+        ctx.fillStyle = isSelected ? '#b91c1c' : '#6b7280';
+        ctx.font = (isSelected ? '800 ' : '600 ') + '10px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(monthLabels[i], x + barW / 2, padT + plotH + 6);
+
+        if (d.total > 0) {
+            ctx.fillStyle = isSelected ? '#b91c1c' : '#404040';
+            ctx.font = '800 10px Inter, sans-serif';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(String(d.total), x + barW / 2, y - 2);
+        }
+    });
+
+    const legend = $('printBarLegend');
+    if (legend) {
+        legend.innerHTML = `
+            <div class="pr-graph-legend-item"><span class="sw" style="background:${colorsMap.present}"></span>Present</div>
+            <div class="pr-graph-legend-item"><span class="sw" style="background:${colorsMap.absent}"></span>Absent</div>
+            <div class="pr-graph-legend-item"><span class="sw" style="background:${colorsMap.holiday}"></span>Holiday</div>
+            <div class="pr-graph-legend-item"><span class="sw" style="background:${colorsMap.leave}"></span>Full Leave</div>
+        `;
+    }
+}
+
+function renderPrintReport() {
+    if (!currentClassRec || !activeMonthSheet) return;
+
+    const profile = getCachedProfile(getLoggedInEmail());
+    const row = profile && profile.row ? profile.row : {};
+
+    const elName = $('prStudentName');
+    if (elName) elName.textContent = currentStudentName || '—';
+    const elStd = $('prStudentStd');
+    if (elStd) elStd.textContent = currentClassRec.std || '—';
+    const elMonth = $('prMonthLabel');
+    if (elMonth) elMonth.textContent = (MONTH_LABELS[activeMonthSheet] || activeMonthSheet) + ' ' + new Date().getFullYear();
+    const elYear = $('prAcademicYear');
+    if (elYear) elYear.textContent = getAcademicYear(row);
+
+    const now = new Date();
+    const ts = `${String(now.getDate()).padStart(2, '0')} ${MONTH_ABBR[now.getMonth()]} ${now.getFullYear()}, ` +
+               `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const elGen = $('prGeneratedOn');
+    if (elGen) elGen.textContent = ts;
+
+    const recordsToPrint = activeStatus === 'all'
+        ? allRecords
+        : allRecords.filter(r => r.status === activeStatus);
+    renderPrintSummary(recordsToPrint);
+    renderPrintTable(recordsToPrint);
+
+    requestAnimationFrame(() => {
+        try { drawPrintPie(recordsToPrint); } catch (e) { console.warn('[print-pie]', e); }
+        try { drawPrintBar(); }              catch (e) { console.warn('[print-bar]', e); }
+    });
+}
+
+/* ============================================================
+   CSV EXPORT
+   ============================================================ */
+function exportCSV() {
+    if (!allRecords.length) {
+        showToast('Nothing to export', 'warning');
+        return;
+    }
+    const month = MONTH_LABELS[activeMonthSheet] || activeMonthSheet || 'Month';
+    const rows = [['Date', 'Status']];
+    const sorted = allRecords.slice().sort((a, b) => {
+        const da = parseDateFlexible(a.rawDate);
+        const db = parseDateFlexible(b.rawDate);
+        if (da && db) return da - db;
+        if (da) return -1;
+        if (db) return 1;
+        return 0;
+    });
+    sorted.forEach(r => {
+        rows.push([formatRecordDate(r.rawDate), statusMeta(r.status).label]);
+    });
+    const csv = rows.map(row =>
+        row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
+    ).join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Attendance_${(currentStudentName || 'Student').replace(/\s+/g, '_')}_${month}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+    showToast(`Exported ${sorted.length} record${sorted.length === 1 ? '' : 's'}`, 'success', 2000);
+}
+
+/* ============================================================
+   ERROR STATE
+   ============================================================ */
+function showError(title, msg) {
+    if (dom.skeleton) dom.skeleton.style.display = 'none';
+    dom.mainContent.style.display = 'none';
+    dom.titleBar.style.display = 'none';
+    dom.errorTitle.textContent = title;
+    dom.errorMsg.textContent = msg;
+    dom.errorState.classList.add('show');
+}
+
+/* ============================================================
+   WARM ADJACENT MONTHS
+   ============================================================ */
+async function warmAdjacentMonths(id, studentName) {
+    const nowIdx = new Date().getMonth();
+    const prevIdx = (nowIdx - 1 + 12) % 12;
+    const nextIdx = (nowIdx + 1) % 12;
+    const targets = [MONTH_SHEETS[prevIdx], MONTH_SHEETS[nextIdx]];
+    await Promise.all(targets.map(async (m) => {
+        try { await fetchSheet(id, m, { force: false }); } catch (e) {}
+    }));
+}
+
+/* ============================================================
+   THEME SYNC
+   ============================================================ */
+function initThemeSync() {
+    const applyTheme = (t) => {
+        if (t) {
+            document.documentElement.setAttribute('data-theme', t);
+            setTimeout(redrawCharts, 60);
+        }
+    };
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user-theme-preference' && e.newValue) applyTheme(e.newValue);
+    });
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'themeChange' && e.data.theme) applyTheme(e.data.theme);
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) applyTheme(localStorage.getItem('user-theme-preference'));
+    });
+
+    const obs = new MutationObserver(() => redrawCharts());
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+initThemeSync();
+
+window.addEventListener('resize', debounce(redrawCharts, 180), { passive: true });
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+async function init() {
+    cacheDom();
+    setTodayPill();
+    bindFilters();
+
+    dom.btnBack.addEventListener('click', () => {
+        if (history.length > 1) history.back();
+        else window.location.href = 'StudentDashboard.html';
+    }, { once: true });
+
+    const email = getLoggedInEmail();
+    if (!email) {
+        showError('Please log in', 'You need to be logged in as a student to view attendance.');
+        return;
+    }
+
+    /* ── Try cached profile first (fast path from StudentDashboard.html) ── */
+    let row = null;
+    const cached = getCachedProfile(email);
+    if (cached && cached.row) {
+        row = cached.row;
+    } else {
+        /* ── Cache miss → fetch from Admission sheet (same logic as dashboard) ── */
+        try {
+            const found = await findStudentInAdmissionSheet(email);
+            if (found) {
+                row = found.row;
+                setCachedProfile(email, {
+                    row: found.row,
+                    sheetName: found.sheet,
+                    rowIndex: found.rowIndex,
+                    fullName: getRowFullName(found.row)
+                });
+            }
+        } catch (e) {
+            console.warn('[profile] network lookup failed:', e.message);
+        }
+    }
+
+    if (!row) {
+        showError('Profile not found',
+            'We could not find your student record. Please contact the academy.');
+        return;
+    }
+
+    const studentName = (getRowFullName(row) || '').toString().trim();
+    const stdRaw      = (row[COL.STD] || row['Std'] || row['Standard'] || '').toString().trim();
+    const avatarUrl   = row[COL.IMAGE] || '';
+
+    if (!studentName) { showError('Name missing', 'Your profile is missing a student name.'); return; }
+    if (!stdRaw)      { showError('Class missing', 'Your profile is missing a class/standard.'); return; }
+
+    const classRec = findClassRecord(stdRaw);
+    if (!classRec) {
+        showError('Class not recognised',
+            `We could not match "${stdRaw}" to an attendance sheet.`);
+        return;
+    }
+    currentClassRec = classRec;
+    currentStudentName = studentName;
+
+    dom.studentTitle.textContent = studentName || 'Student';
+    if (avatarUrl) {
+        const id = getFileId(avatarUrl);
+        if (id) dom.studentAvatarMini.src = `https://lh3.googleusercontent.com/d/${id}=w80`;
+    }
+    dom.titleBar.style.display = 'flex';
+
+    const currentMonthSheet = MONTH_SHEETS[new Date().getMonth()];
+    activeMonthSheet = currentMonthSheet;
+    MONTH_SHEETS.forEach(m => { monthAvailability[m] = 'unknown'; });
+
+    try {
+        const found = await searchStudentInSheet(classRec.id, currentMonthSheet, studentName);
+
+        dom.skeleton.style.display = 'none';
+        dom.mainContent.style.display = 'grid';
+        dom.mainContent.style.gap = 'clamp(0.85rem, 2vw, 1.4rem)';
+
+        if (found) {
+            monthAvailability[currentMonthSheet] = 'found';
+            allRecords = buildRecordsFromRow(found.row, found.headers);
+        } else {
+            monthAvailability[currentMonthSheet] = 'empty';
+            allRecords = [];
+        }
+        updateMonthStats(currentMonthSheet, allRecords);
+
+        renderStats(allRecords);
+        renderInsights(allRecords);
+        populateStatusFilter(allRecords);
+        populateMonthFilter();
+        renderMonthHeader(currentMonthSheet, allRecords.length);
+        renderRecords(allRecords);
+        dom.recordCount.textContent = allRecords.length
+            ? `Showing all ${allRecords.length} record${allRecords.length === 1 ? '' : 's'}`
+            : `No records in ${MONTH_LABELS[currentMonthSheet] || currentMonthSheet}`;
+        redrawCharts();
+        try { renderPrintReport(); } catch (e) {}
+
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => warmAdjacentMonths(classRec.id, studentName), { timeout: 4000 });
+        } else {
+            setTimeout(() => warmAdjacentMonths(classRec.id, studentName), 1500);
+        }
+
+        startPolling();
+    } catch (err) {
+        showError('Failed to load attendance', err.message || 'Something went wrong.');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REFRESH TRIGGERS
+   ══════════════════════════════════════════════════════════════ */
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        if (currentClassRec && activeMonthSheet) {
+            setTimeout(() => {
+                backgroundRefresh({ silent: false, force: true });
+                startPolling();
+            }, 60);
+        }
+    }
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { stopPolling(); return; }
+    if (!currentClassRec || !activeMonthSheet) return;
+    backgroundRefresh({ silent: true, force: false });
+    startPolling();
+});
+
+window.addEventListener('online', () => {
+    updateLiveDot(true);
+    if (currentClassRec) backgroundRefresh({ silent: false, force: true });
+    if (currentClassRec && activeMonthSheet) startPolling();
+});
+window.addEventListener('offline', () => {
+    updateLiveDot(false);
+    stopPolling();
+});
+
+/* ============================================================
+   BOOT SCHEDULER
+   ============================================================ */
+function scheduleInit() {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => init(), { timeout: 1200 });
+    } else {
+        setTimeout(init, 0);
+    }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleInit, { once: true });
+} else {
+    scheduleInit();
+}
+
+})();
+</script>
+</body>
+</html>

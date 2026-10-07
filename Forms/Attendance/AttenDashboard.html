@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Attendance Dashboard | Universal English Medium High School</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ⭐ loginadmin.js - Handles authentication -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <!-- ⭐ footer-loader.js -->
+    <script src="../../Script/footer-loader.js" data-footer="true" data-footer-path="../../Script/footer.html"></script>
+
+    <style>
+        /* ================================================================
+           CSS VARIABLES - Light & Dark Mode
+           ================================================================ */
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-section: #ffffff;
+            --bg-header: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --accent-hover: #1d4ed8;
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --gradient-accent: linear-gradient(135deg, #2563eb, #7c3aed);
+            --logo-filter: none;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-light: rgba(239, 68, 68, 0.1);
+            --info: #06b6d4;
+            --transition: 0.3s ease;
+            --attend-accent: #8b5cf6;
+            --attend-accent-soft: rgba(139, 92, 246, 0.08);
+            --attend-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            /* Secondary section — teal/cyan variant */
+            --secondary-accent: #0891b2;
+            --secondary-accent-soft: rgba(8, 145, 178, 0.08);
+            --secondary-gradient: linear-gradient(135deg, #0891b2, #06b6d4);
+            --header-radius: 60px;
+            --admin-gold: #f59e0b;
+            --admin-badge-bg: rgba(245, 158, 11, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-section: #111827;
+            --bg-header: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-hover: #60a5fa;
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --logo-filter: none;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --danger-light: rgba(239, 68, 68, 0.2);
+            --info: #22d3ee;
+            --attend-accent: #a78bfa;
+            --attend-accent-soft: rgba(167, 139, 250, 0.15);
+            --attend-gradient: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            --secondary-accent: #22d3ee;
+            --secondary-accent-soft: rgba(34, 211, 238, 0.15);
+            --secondary-gradient: linear-gradient(135deg, #0891b2, #22d3ee);
+            --admin-badge-bg: rgba(245, 158, 11, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background-color var(--transition), color var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================================================================
+           LOADING OVERLAY (Admin Auth)
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: background var(--transition);
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--attend-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           MAIN CONTENT
+           ================================================================ */
+        #mainContent { display: none; }
+        #mainContent.visible {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto 2rem auto;
+            padding: 0.8rem 0.8rem 0 0.8rem;
+        }
+
+        /* ================================================================
+           PAGE TITLE ROW
+           ================================================================ */
+        .page-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+            padding: 0.8rem 0;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .page-title-row-1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .page-title h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--attend-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            line-height: 1.15;
+        }
+        .page-title h1 i {
+            font-size: 1.3rem;
+            color: var(--attend-accent);
+            background: var(--attend-accent-soft);
+            padding: 8px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .page-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .academic-year {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 5px 14px;
+            border-radius: 30px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        /* Admin badge */
+        .admin-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: var(--admin-badge-bg);
+            color: var(--admin-gold);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            border: 1px solid var(--admin-gold);
+            white-space: nowrap;
+        }
+        .admin-badge.visible { display: inline-flex; }
+        .admin-badge i { font-size: 0.68rem; }
+        .admin-badge .session-pill {
+            font-size: 0.52rem;
+            padding: 1px 6px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+        .btn-my-account {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 5px 11px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn-my-account:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* ================================================================
+           SECTION HEADERS
+           ================================================================ */
+        .section-header {
+            background: var(--bg-section);
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin: 1.8rem 0 1rem 0;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background var(--transition), border-color var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: var(--attend-gradient);
+        }
+        .section-header.section-secondary::before {
+            background: var(--secondary-gradient);
+        }
+
+        .section-header .section-icon {
+            font-size: 1.2rem;
+            color: #fff;
+            background: var(--attend-gradient);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 6px 14px -6px rgba(139, 92, 246, 0.5);
+        }
+        .section-header.section-secondary .section-icon {
+            background: var(--secondary-gradient);
+            box-shadow: 0 6px 14px -6px rgba(8, 145, 178, 0.5);
+        }
+
+        .section-header .section-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .section-header .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        .section-header .section-sub {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: block;
+        }
+        .section-header .section-badge {
+            background: var(--attend-gradient);
+            color: #fff;
+            padding: 3px 11px;
+            border-radius: 30px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px -4px rgba(139, 92, 246, 0.5);
+        }
+        .section-header.section-secondary .section-badge {
+            background: var(--secondary-gradient);
+            box-shadow: 0 4px 10px -4px rgba(8, 145, 178, 0.5);
+        }
+
+        /* ================================================================
+           ATTENDANCE GRID
+           ================================================================ */
+        .attendance-grid {
+            display: grid;
+            gap: 0.8rem;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-link {
+            text-decoration: none;
+            display: block;
+            height: 100%;
+        }
+
+        .attendance-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.2rem 0.8rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            height: 100%;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .attendance-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--attend-gradient);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .attendance-card:active::before { opacity: 1; }
+        .attendance-card:active { transform: scale(0.97); }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--attend-accent);
+            background: var(--attend-accent-soft);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            margin: 0 auto 0.6rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+        .card-description {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+            display: none;
+        }
+        .card-badge {
+            display: inline-block;
+            margin-top: 0.4rem;
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px 10px;
+            border-radius: 30px;
+            background: var(--attend-accent-soft);
+            color: var(--attend-accent);
+            transition: all var(--transition);
+        }
+        .attendance-card:active .card-badge {
+            background: var(--attend-gradient);
+            color: white;
+        }
+
+        /* Color Variants */
+        .attendance-card.primary .card-icon {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .attendance-card.primary:active .card-icon {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .attendance-card.secondary .card-icon {
+            color: var(--secondary-accent);
+            background: var(--secondary-accent-soft);
+        }
+        .attendance-card.secondary:active .card-icon {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+        .attendance-card.secondary .card-badge {
+            background: var(--secondary-accent-soft);
+            color: var(--secondary-accent);
+        }
+        .attendance-card.secondary:active .card-badge {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+        .attendance-card.secondary::before {
+            background: var(--secondary-gradient);
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (min-width: 600px) {
+            .main-content { padding: 1rem 1.2rem 0 1.2rem; }
+            .page-title { flex-direction: row; align-items: center; justify-content: space-between; padding: 1rem 0; }
+            .page-title h1 { font-size: 1.6rem; }
+            .academic-year { font-size: 0.8rem; padding: 6px 16px; }
+            .section-header { padding: 14px 20px; border-radius: 18px; }
+            .section-header .section-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+            .section-header .section-title { font-size: 1.1rem; }
+            .section-header .section-sub { font-size: 0.7rem; }
+            .attendance-grid { gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+            .attendance-card { padding: 1.5rem 1rem; min-height: 150px; border-radius: 18px; }
+            .card-icon { width: 54px; height: 54px; font-size: 1.6rem; border-radius: 16px; }
+            .card-title { font-size: 0.95rem; }
+            .card-description { display: block; font-size: 0.7rem; }
+            .card-badge { font-size: 0.55rem; padding: 3px 12px; }
+            .admin-badge { font-size: 0.68rem; }
+            .btn-my-account { font-size: 0.72rem; padding: 6px 13px; }
+        }
+
+        @media (min-width: 1024px) {
+            .main-content { padding: 1.2rem 1.5rem 0 1.5rem; }
+            .page-title h1 { font-size: 2rem; }
+            .academic-year { font-size: 0.9rem; padding: 8px 20px; }
+            .section-header { padding: 16px 24px; border-radius: 20px; margin: 2.5rem 0 1.5rem 0; }
+            .section-header .section-icon { width: 50px; height: 50px; font-size: 1.5rem; }
+            .section-header .section-title { font-size: 1.3rem; }
+            .section-header .section-sub { font-size: 0.8rem; }
+            .attendance-grid { gap: 1.5rem; grid-template-columns: repeat(5, 1fr); }
+            .attendance-card { padding: 1.75rem 1.2rem; min-height: 180px; border-radius: 20px; }
+            .attendance-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+            .attendance-card:hover::before { opacity: 1; }
+            .attendance-card:hover .card-icon { background: var(--attend-gradient); color: white; transform: scale(1.05); }
+            .attendance-card:hover .card-badge { background: var(--attend-gradient); color: white; }
+            .attendance-card.primary:hover .card-icon { background: var(--gradient-accent); color: white; }
+            .attendance-card.secondary:hover .card-icon { background: var(--secondary-gradient); color: white; }
+            .attendance-card.secondary:hover .card-badge { background: var(--secondary-gradient); color: white; }
+            .card-icon { width: 60px; height: 60px; font-size: 1.8rem; margin: 0 auto 0.8rem; }
+            .card-title { font-size: 1.1rem; }
+            .card-description { font-size: 0.75rem; display: block; }
+            .card-badge { font-size: 0.6rem; padding: 4px 14px; }
+            .admin-badge { font-size: 0.72rem; }
+            .btn-my-account { font-size: 0.78rem; padding: 7px 16px; }
+        }
+
+        @media (max-width: 380px) {
+            .main-content { padding: 0.6rem 0.5rem 0 0.5rem; }
+            .page-title h1 { font-size: 1.1rem; }
+            .page-title h1 i { font-size: 1rem; padding: 6px; }
+            .academic-year { font-size: 0.6rem; padding: 3px 10px; }
+            .admin-badge { font-size: 0.58rem; padding: 3px 8px; }
+            .btn-my-account { font-size: 0.58rem; padding: 3px 8px; }
+            .section-header { padding: 10px 12px; margin: 1.2rem 0 0.8rem 0; border-radius: 12px; gap: 8px; }
+            .section-header .section-icon { width: 32px; height: 32px; font-size: 0.9rem; border-radius: 10px; }
+            .section-header .section-title { font-size: 0.85rem; }
+            .section-header .section-sub { font-size: 0.55rem; }
+            .section-header .section-badge { font-size: 0.5rem; padding: 2px 8px; }
+            .attendance-grid { gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+            .attendance-card { padding: 0.8rem 0.5rem; min-height: 100px; border-radius: 12px; }
+            .card-icon { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 10px; margin-bottom: 0.4rem; }
+            .card-title { font-size: 0.7rem; }
+            .card-description { display: none; }
+            .card-badge { font-size: 0.45rem; padding: 1px 8px; margin-top: 0.2rem; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content { padding: 0.5rem 0.8rem 0 0.8rem; }
+            .page-title { margin-bottom: 0.6rem; padding: 0.4rem 0; }
+            .page-title h1 { font-size: 1.1rem; }
+            .section-header { padding: 8px 12px; margin: 1rem 0 0.6rem 0; }
+            .attendance-grid { gap: 0.5rem; grid-template-columns: repeat(5, 1fr); }
+            .attendance-card { padding: 0.6rem 0.4rem; min-height: 80px; }
+            .card-icon { width: 32px; height: 32px; font-size: 0.9rem; margin-bottom: 0.2rem; }
+            .card-title { font-size: 0.65rem; }
+            .card-description { display: none; }
+            .card-badge { font-size: 0.4rem; padding: 1px 6px; }
+        }
+
+        @media (hover: none) {
+            .attendance-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+            .attendance-card:hover::before { opacity: 0; }
+            .attendance-card:active { transform: scale(0.97); }
+            .attendance-card:active::before { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING OVERLAY -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="mainContent">
+
+        <main class="main-content">
+
+            <!-- PAGE TITLE -->
+            <div class="page-title">
+                <div class="page-title-row-1">
+                    <h1>
+                        <i class="fas fa-clipboard-check"></i> Attendance Dashboard
+                    </h1>
+                </div>
+                <div class="page-meta-row">
+                    <span class="academic-year" id="academicYearDisplay">
+                        <i class="far fa-calendar-alt"></i> 2026-27
+                    </span>
+                    <span class="admin-badge" id="adminBadge">
+                        <i class="fas fa-user-shield"></i>
+                        <span id="adminNameDisplay">Admin</span>
+                        <span class="session-pill" id="sessionIndicator">Session</span>
+                    </span>
+                    <a href="../../Study Material/My Account/myaccount.html" class="btn-my-account">
+                        <i class="fas fa-user-circle"></i> My Account
+                    </a>
+                </div>
+            </div>
+			
+			<!-- ============================================================
+             SECTION A — PRE - PRIMARY SECTION (JR KG and SR KG)
+             ============================================================ -->
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-child"></i></div>
+            <div class="section-info">
+                <div class="section-title">Pre - Primary Section</div>
+                <span class="section-sub">Standards JR KG & SR KG</span>
+            </div>
+            <span class="section-badge">7</span>
+        </div>
+
+        <div class="attendance-grid">
+                <a href="Atten_JR_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">JR KG</h3>
+                        <p class="card-description">Attendance for JR KG</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_SR_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">SR KG</h3>
+                        <p class="card-description">Attendance for SR KG</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+			</div>
+
+            <!-- ============================================================
+                 SECTION A: PRIMARY SECTION (1st – 7th Std)
+                 ============================================================ -->
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-child"></i></div>
+                <div class="section-info">
+                    <div class="section-title">Primary Section</div>
+                    <span class="section-sub">Standards 1st to 7th</span>
+                </div>
+                <span class="section-badge">7</span>
+            </div>
+
+            <div class="attendance-grid">
+                <a href="Atten_1_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">1st Std</h3>
+                        <p class="card-description">Attendance for 1st Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_2_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">2nd Std</h3>
+                        <p class="card-description">Attendance for 2nd Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_3_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">3rd Std</h3>
+                        <p class="card-description">Attendance for 3rd Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_4_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-child"></i></div>
+                        <h3 class="card-title">4th Std</h3>
+                        <p class="card-description">Attendance for 4th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_5_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                        <h3 class="card-title">5th Std</h3>
+                        <p class="card-description">Attendance for 5th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_6_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                        <h3 class="card-title">6th Std</h3>
+                        <p class="card-description">Attendance for 6th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_7_STD.html" class="card-link">
+                    <div class="attendance-card primary">
+                        <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                        <h3 class="card-title">7th Std</h3>
+                        <p class="card-description">Attendance for 7th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- ============================================================
+                 SECTION B: SECONDARY SECTION (8th – 10th Std)
+                 ============================================================ -->
+            <div class="section-header section-secondary">
+                <div class="section-icon"><i class="fas fa-book-reader"></i></div>
+                <div class="section-info">
+                    <div class="section-title">Secondary Section</div>
+                    <span class="section-sub">Standards 8th to 10th</span>
+                </div>
+                <span class="section-badge">3</span>
+            </div>
+
+            <div class="attendance-grid">
+                <a href="Atten_8_STD.html" class="card-link">
+                    <div class="attendance-card secondary">
+                        <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+                        <h3 class="card-title">8th Std</h3>
+                        <p class="card-description">Attendance for 8th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_9_STD.html" class="card-link">
+                    <div class="attendance-card secondary">
+                        <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+                        <h3 class="card-title">9th Std</h3>
+                        <p class="card-description">Attendance for 9th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+
+                <a href="Atten_10_STD.html" class="card-link">
+                    <div class="attendance-card secondary">
+                        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h3 class="card-title">10th Std</h3>
+                        <p class="card-description">Attendance for 10th Standard</p>
+                        <span class="card-badge">View</span>
+                    </div>
+                </a>
+            </div>
+
+        </main>
+
+    </div>
+
+<script>
+/* =====================================================================
+   AttenDashboard.html — Enhanced Script
+   ---------------------------------------------------------------------
+   ✅ Unified Admin Auth (reads myaccount.html session keys)
+   ✅ Session expiry check (10-day Remember Me)
+   ✅ Failsafe redirect to myaccount.html
+   ✅ Admin badge + My Account link
+   ✅ Theme sync (storage + postMessage, no polling)
+   ✅ Primary Section (1st–7th) + Secondary Section (8th–10th)
+   ===================================================================== */
+
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTHENTICATION GUARD
+   ===================================================================== */
+
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k);
+            sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function updateAdminBadge() {
+    const userData = readMyAccountSession('Universal_user_data');
+    const user = readMyAccountSession('Universal_user');
+    const expiry = readMyAccountSession('Universal_session_expiry');
+
+    const badge = document.getElementById('adminBadge');
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) {
+        displayName = user;
+    }
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+    if (badge) badge.classList.add('visible');
+
+    if (indicator) {
+        const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = expiry - Date.now();
+            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+function revealMainContent() {
+    const main = document.getElementById('mainContent');
+    const loading = document.getElementById('authLoading');
+    if (loading) loading.classList.add('hidden');
+    if (main) {
+        main.style.display = 'block';
+        main.classList.add('visible');
+    }
+}
+
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+    const alreadyRevealed = mainEl &&
+        (mainEl.style.display === 'block' || mainEl.classList.contains('visible'));
+    const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+    if (alreadyRevealed || loadingHidden) {
+        console.log('✅ loginadmin.js already authorized this session');
+        onAuthorized();
+        return;
+    }
+
+    const auth = checkAdminAuth();
+    if (auth.ok) {
+        console.log('✅ Admin auth verified via session keys:', auth.user);
+        revealMainContent();
+        onAuthorized();
+    } else {
+        showAccessDeniedAndRedirect(auth.reason);
+    }
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+});
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — ACADEMIC YEAR DISPLAY
+   ===================================================================== */
+
+function updateAcademicYear() {
+    function getAcademicYear() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+    }
+    const display = document.getElementById('academicYearDisplay');
+    if (display) {
+        const academicYear = getAcademicYear();
+        display.innerHTML = `<i class="far fa-calendar-alt"></i> ${academicYear}`;
+        document.title = `Attendance Dashboard | ${academicYear}`;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 4 — INITIALIZATION
+   ===================================================================== */
+
+function initApp() {
+    updateAdminBadge();
+    updateAcademicYear();
+    console.log('✅ Attendance Dashboard ready');
+}
+
+
+/* =====================================================================
+   SECTION 5 — BOOTSTRAP WITH AUTH GATE
+   ===================================================================== */
+
+(function bootstrap() {
+    syncThemeWithParent();
+
+    const startWhenReady = () => {
+        setTimeout(() => {
+            gateAdminAccess(() => initApp());
+        }, 800);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    // Failsafe redirect
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 6 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+window.syncThemeWithParent = syncThemeWithParent;
+
+console.log('✅ Attendance Dashboard script initialised (auth-gated)');
+</script>
+</body>
+</html>

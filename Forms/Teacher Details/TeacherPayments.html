@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Universal School · Teacher Payments</title>
+
+<!-- ⚡ OPTIMIZATION 1: DNS prefetch + preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      media="print" onload="this.media='all';this.onload=null;">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+<!-- ⚡ OPTIMIZATION 4: Inline critical theme init -->
+<script>
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<!-- ⚡ OPTIMIZATION 5: Inline critical CSS -->
+<style id="critical-css">
+:root {
+    --bg-body: #eef7f5; --bg-card: #ffffff; --bg-soft: #f6faf9;
+    --text-main: #0f172a; --text-muted: #5b6e8c; --text-light: #94a3b8;
+    --border-light: #d9e8e5; --accent: #0d9488; --accent-2: #14b8a6;
+    --accent-soft: rgba(13, 148, 136, 0.10); --accent-glow: rgba(13, 148, 136, 0.35);
+    --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+    --navy: #0d4f47; --yellow: #fbbf24;
+    --input-bg: #f6faf9; --backdrop: rgba(15, 23, 42, 0.55);
+    --chip-bg: rgba(13, 148, 136, 0.08);
+    --grad-hero: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-hover: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+}
+[data-theme="dark"] {
+    --bg-body: #061714; --bg-card: #0f2624; --bg-elevated: #143531; --bg-soft: #0b1f1d;
+    --text-main: #f1f5f9; --text-muted: #9ca3af; --text-light: #64748b;
+    --border-light: #1e3b38; --accent: #14b8a6; --accent-2: #2dd4bf;
+    --accent-soft: rgba(20, 184, 166, 0.18); --accent-glow: rgba(20, 184, 166, 0.45);
+    --input-bg: #143531; --backdrop: rgba(0, 0, 0, 0.75);
+    --chip-bg: rgba(20, 184, 166, 0.15);
+    --grad-hero: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    --navy: #5eead4;
+    --shadow-sm: 0 10px 30px -12px rgba(0,0,0,0.55);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body); color: var(--text-main);
+    min-height: 100dvh; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased; font-size: 15px; line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+.app-shell {
+    width: 100%; max-width: 1100px; margin: 0 auto;
+    padding: 1rem; padding-top: calc(1rem + var(--safe-top));
+    padding-bottom: calc(1rem + var(--safe-bottom));
+    display: grid; grid-template-columns: 1fr; gap: 1rem;
+    align-content: start; min-height: 100dvh;
+}
+.topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; background: var(--bg-card); border-radius: 999px;
+    padding: 0.5rem 1.4rem; border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm); position: sticky;
+    top: calc(var(--safe-top) + 6px); z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.brand img { height: 40px; width: auto; object-fit: contain; }
+.brand-name {
+    font-size: 1.15rem; font-weight: 800; letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.back-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--chip-bg); border: 1px solid var(--border-light);
+    border-radius: 999px; padding: 6px 14px; font-size: 0.82rem;
+    font-weight: 700; color: var(--text-main); cursor: pointer;
+    transition: transform 200ms ease, background 200ms ease, color 200ms ease;
+    flex-shrink: 0; text-decoration: none;
+}
+.back-pill:hover {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    transform: translateY(-2px);
+}
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-soft) 0%, var(--border-light) 50%, var(--bg-soft) 100%);
+    background-size: 500px 100%; animation: shimmer 1.4s infinite linear;
+    border-radius: 6px;
+}
+@keyframes shimmer { 0% { background-position: -500px 0; } 100% { background-position: 500px 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+    display: inline-block; width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+</style>
+
+<!-- ⚡ OPTIMIZATION 6: Non-critical CSS (deferred) -->
+<style id="non-critical-css" media="all">
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes modalPop { from { transform: scale(0.92) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+.card {
+    background: var(--bg-card); border-radius: 24px;
+    border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
+    overflow: hidden; animation: fadeUp 0.35s ease;
+}
+.card-header {
+    padding: 1.4rem 1.6rem;
+    background: linear-gradient(135deg, var(--accent-soft), rgba(20,184,166,0.04));
+    border-bottom: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; position: relative;
+}
+.card-header::before {
+    content: ''; position: absolute; inset: 0 0 auto 0;
+    height: 4px; background: var(--grad-hero);
+}
+.card-header h2 {
+    font-size: 1.25rem; font-weight: 800; letter-spacing: -0.015em;
+    display: flex; align-items: center; gap: 10px; min-width: 0;
+}
+.card-header h2 i { color: var(--accent); }
+.card-header .sub {
+    font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;
+}
+.search-wrap {
+    padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border-light);
+}
+.search-wrap input {
+    width: 100%; padding: 12px 18px;
+    border: 1.5px solid var(--border-light); border-radius: 999px;
+    background: var(--input-bg); color: var(--text-main);
+    font-size: 0.92rem; transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.search-wrap input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.table-wrap { width: 100%; overflow-x: auto; }
+.data-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 0.9rem; min-width: 720px;
+}
+.data-table th {
+    text-align: left; padding: 14px 18px; background: var(--bg-soft);
+    color: var(--accent); font-weight: 800; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    border-bottom: 2px solid var(--accent); white-space: nowrap;
+}
+.data-table td {
+    padding: 14px 18px; border-bottom: 1px solid var(--border-light);
+    color: var(--text-main); vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--bg-soft); }
+.data-table td.sr { font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.data-table td.name { font-weight: 700; }
+.data-table td.amount { font-weight: 800; color: var(--success); font-variant-numeric: tabular-nums; }
+.data-table td.muted { color: var(--text-muted); }
+
+.view-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+    border: 1.5px solid var(--accent); font-weight: 800;
+    font-size: 0.78rem; cursor: pointer; font-family: inherit;
+    transition: transform 200ms ease, background 200ms ease, color 200ms ease;
+}
+.view-btn:hover {
+    background: var(--accent); color: #fff; transform: translateY(-2px);
+}
+
+.state-box {
+    background: var(--bg-card); border-radius: 28px; padding: 3rem 1.5rem;
+    text-align: center; border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm); display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+.state-box h3 { font-size: 1.15rem; margin-bottom: 0.4rem; font-weight: 700; }
+.state-box p { color: var(--text-muted); font-size: 0.9rem; max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+.modal-overlay {
+    position: fixed; inset: 0; background: var(--backdrop);
+    z-index: 1000; display: none; align-items: center; justify-content: center;
+    padding: 1.4rem; opacity: 0; visibility: hidden;
+    transition: opacity 260ms ease, visibility 260ms ease;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.active { display: flex; opacity: 1; visibility: visible; }
+.modal-box {
+    background: var(--bg-elevated, var(--bg-card)); border-radius: 28px;
+    max-width: 720px; width: 100%; max-height: 92vh;
+    overflow-y: auto; border: 1px solid var(--border-light);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-header {
+    background: var(--grad-hero); padding: 1.25rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-radius: 28px 28px 0 0; color: #fff;
+    gap: 0.75rem; position: sticky; top: 0; z-index: 3;
+}
+.modal-header h3 {
+    font-size: 1.1rem; font-weight: 800;
+    display: flex; align-items: center; gap: 9px; min-width: 0;
+}
+.modal-close {
+    background: rgba(255,255,255,0.15); border: none; color: #fff;
+    width: 34px; height: 34px; min-width: 34px; border-radius: 50%;
+    cursor: pointer; font-size: 1.15rem; line-height: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform 260ms ease, background 260ms ease;
+}
+.modal-close:hover { transform: rotate(90deg); background: rgba(255,255,255,0.3); }
+.modal-body { padding: 1.5rem; }
+
+/* ⭐ Payment detail modal — attractive layout */
+.payment-hero {
+    background: linear-gradient(135deg, var(--accent-soft), rgba(20,184,166,0.08));
+    border: 1.5px solid var(--accent); border-radius: 20px;
+    padding: 20px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.payment-hero .avatar-wrap {
+    position: relative; width: 84px; height: 84px; flex-shrink: 0;
+    border-radius: 50%; background: var(--bg-card); padding: 4px;
+    box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+.payment-hero .avatar {
+    width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+    background: var(--grad-hero); display: block;
+}
+.payment-hero .avatar-fallback {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: var(--grad-hero); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem; font-weight: 900;
+}
+.payment-hero .info { min-width: 0; flex: 1; }
+.payment-hero .info h4 {
+    font-size: 1.2rem; font-weight: 900; margin-bottom: 6px;
+    word-break: break-word;
+}
+.payment-hero .info .meta {
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    font-size: 0.85rem; color: var(--text-muted); font-weight: 600;
+}
+.payment-hero .info .meta i { color: var(--accent); font-size: 0.9em; }
+
+.amount-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 0.35rem 0.9rem; border-radius: 999px;
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #fff; font-weight: 900; font-size: 1rem;
+    box-shadow: 0 8px 20px -8px rgba(16,185,129,0.6);
+    margin-top: 8px;
+}
+.amount-badge i { font-size: 0.9em; }
+
+.detail-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin-bottom: 16px;
+}
+.detail-cell {
+    background: var(--bg-soft); border: 1px solid var(--border-light);
+    border-radius: 12px; padding: 10px 14px;
+    display: flex; flex-direction: column; gap: 3px; min-width: 0;
+}
+.detail-cell .lbl {
+    font-size: 0.66rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--text-light);
+    display: inline-flex; align-items: center; gap: 5px;
+}
+.detail-cell .lbl i { color: var(--accent); }
+.detail-cell .val { font-size: 0.95rem; font-weight: 800; word-break: break-word; }
+.detail-cell.wide { grid-column: 1 / -1; }
+.detail-cell.highlight-amount { background: rgba(16,185,129,0.10); border-color: var(--success); }
+.detail-cell.highlight-amount .lbl, .detail-cell.highlight-amount .val { color: var(--success); }
+
+.btn {
+    border: none; padding: 0.8rem 1.4rem; border-radius: 999px;
+    font-weight: 800; font-size: 0.92rem; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; font-family: inherit; text-decoration: none; white-space: nowrap;
+    transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; filter: grayscale(0.3); }
+.btn-primary { background: var(--grad-hero); color: #fff; box-shadow: 0 8px 22px -8px var(--accent-glow); }
+.btn-primary:not(:disabled):hover { transform: translateY(-2px); }
+.btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+.btn-outline:not(:disabled):hover { background: var(--accent); color: #fff; }
+
+.toast {
+    position: fixed; bottom: calc(20px + var(--safe-bottom)); right: 20px;
+    background: var(--bg-card); border-left: 5px solid var(--accent);
+    padding: 0.9rem 1.2rem; border-radius: 0 16px 16px 0;
+    box-shadow: var(--shadow-hover); font-weight: 600; font-size: 0.88rem;
+    z-index: 2000; display: none; animation: slideIn 0.3s ease-out;
+    max-width: 360px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+.refresh-badge {
+    position: fixed; top: calc(var(--safe-top) + 60px); right: 16px;
+    background: var(--accent); color: #fff; padding: 6px 12px;
+    border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+    box-shadow: 0 8px 20px -8px var(--accent-glow);
+    opacity: 0; pointer-events: none; z-index: 100;
+    transition: opacity 300ms ease, transform 300ms ease;
+    transform: translateY(-10px);
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.refresh-badge.show { opacity: 1; transform: translateY(0); }
+.refresh-badge .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #fff;
+    animation: softPulse 1.2s ease-in-out infinite;
+}
+
+.skeleton-row td { padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
+.skeleton-bar {
+    height: 14px; border-radius: 6px;
+    background: linear-gradient(90deg, var(--bg-soft) 0%, var(--border-light) 50%, var(--bg-soft) 100%);
+    background-size: 500px 100%; animation: shimmer 1.4s infinite linear;
+}
+
+/* Summary chips */
+.summary-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px; padding: 1rem 1.4rem;
+    border-bottom: 1px solid var(--border-light);
+    background: linear-gradient(180deg, var(--bg-soft), transparent);
+}
+.summary-chip {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 14px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    transition: transform 200ms ease, border-color 200ms ease;
+}
+.summary-chip:hover { transform: translateY(-2px); border-color: var(--accent-soft); }
+.summary-chip .s-ico {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.95rem;
+}
+.summary-chip .s-meta { min-width: 0; flex: 1; }
+.summary-chip .s-lbl {
+    font-size: 0.62rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--text-light); display: block;
+}
+.summary-chip .s-val {
+    font-size: 1.05rem; font-weight: 900; color: var(--text-main);
+    font-variant-numeric: tabular-nums; word-break: break-word;
+}
+.summary-chip.total .s-ico { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.summary-chip.paid .s-ico { background: linear-gradient(135deg, #10b981, #059669); }
+.summary-chip.count .s-ico { background: linear-gradient(135deg, #8b5cf6, #d946ef); }
+.summary-chip.total .s-val { color: var(--accent); }
+.summary-chip.paid .s-val { color: var(--success); }
+
+@media (max-width: 720px) {
+    body { background: radial-gradient(1200px 500px at 50% -10%, var(--accent-soft), transparent 60%), var(--bg-body); }
+    .app-shell { padding: 0.65rem 0.75rem; padding-top: calc(0.65rem + var(--safe-top)); padding-bottom: calc(0.65rem + var(--safe-bottom)); gap: 0.85rem; }
+    .topbar { border-radius: 18px; padding: 0.5rem 0.75rem; }
+    .brand-name { font-size: 0.95rem; }
+    .back-pill { padding: 6px 11px; font-size: 0.72rem; }
+    .data-table { min-width: 100%; font-size: 0.82rem; }
+    .data-table th, .data-table td { padding: 10px 12px; }
+    .data-table th { font-size: 0.7rem; }
+    .view-btn { padding: 6px 11px; font-size: 0.72rem; }
+    .payment-hero { padding: 14px; gap: 12px; }
+    .payment-hero .avatar-wrap { width: 64px; height: 64px; }
+    .payment-hero .info h4 { font-size: 1rem; }
+    .detail-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-box { border-radius: 26px 26px 0 0; max-width: 100%; max-height: 94dvh; }
+    .toast { left: 12px; right: 12px; bottom: calc(12px + var(--safe-bottom)); max-width: none; border-radius: 14px; border-left: none; border-top: 4px solid var(--accent); }
+    .refresh-badge { top: auto; bottom: calc(70px + var(--safe-bottom)); right: 12px; left: 12px; justify-content: center; }
+}
+@media (max-width: 480px) {
+    .detail-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School" width="40" height="40"
+                 decoding="async" fetchpriority="high">
+            <span class="brand-name">Teacher · Payments</span>
+        </div>
+        <a href="TeacherDashboard.html" class="back-pill">
+            <i class="fas fa-arrow-left"></i> <span>Dashboard</span>
+        </a>
+    </header>
+
+    <div class="refresh-badge" id="refreshBadge" aria-hidden="true">
+        <span class="dot"></span>
+        <span id="refreshBadgeText">Data updated</span>
+    </div>
+
+    <div id="page1" class="page active-page">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2><i class="fas fa-indian-rupee-sign"></i> My Payments</h2>
+                    <div class="sub" id="teacherSubtitle">Payment history &amp; salary records</div>
+                </div>
+                <button class="btn btn-primary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <!-- ⭐ Summary bar -->
+            <div class="summary-bar" id="summaryBar" style="display: none;">
+                <div class="summary-chip count">
+                    <div class="s-ico"><i class="fas fa-receipt"></i></div>
+                    <div class="s-meta">
+                        <span class="s-lbl">Transactions</span>
+                        <span class="s-val" id="summaryCount">0</span>
+                    </div>
+                </div>
+                <div class="summary-chip total">
+                    <div class="s-ico"><i class="fas fa-wallet"></i></div>
+                    <div class="s-meta">
+                        <span class="s-lbl">Total Amount</span>
+                        <span class="s-val" id="summaryTotal">₹0</span>
+                    </div>
+                </div>
+                <div class="summary-chip paid">
+                    <div class="s-ico"><i class="fas fa-calendar-check"></i></div>
+                    <div class="s-meta">
+                        <span class="s-lbl">Last Payment</span>
+                        <span class="s-val" id="summaryLast">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-wrap">
+                <input type="text" id="searchInput"
+                       placeholder="🔍 Search by date, payment for, transaction, or amount…"
+                       inputmode="search" autocomplete="off" autocapitalize="off">
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sr. No</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="skeleton-row"><td colspan="4"><div class="skeleton-bar" style="width: 40px;"></div></td></tr>
+                        <tr class="skeleton-row"><td colspan="4"><div class="skeleton-bar" style="width: 120px;"></div></td></tr>
+                        <tr class="skeleton-row"><td colspan="4"><div class="skeleton-bar" style="width: 90px;"></div></td></tr>
+                        <tr class="skeleton-row"><td colspan="4"><div class="skeleton-bar" style="width: 100px;"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="state-box" id="emptyState">
+            <div class="state-ico" style="color: var(--text-light);"><i class="fas fa-receipt"></i></div>
+            <h3 id="emptyTitle">No payments found</h3>
+            <p id="emptyMsg">No payment records have been added for you yet.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ⭐ Payment Detail Modal -->
+<div class="modal-overlay" id="detailModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-receipt"></i> Payment Details</h3>
+            <button class="modal-close" id="detailClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="payment-hero" id="detailHero"></div>
+            <div class="detail-grid" id="detailGrid"></div>
+
+            <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+                <button class="btn btn-outline" type="button" id="detailCancelBtn" style="flex: 1; min-width: 120px;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Message…</div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+
+/* Payment data sources */
+const TEACHER_PAYMENT_SS_ID    = "19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4";
+const TEACHER_PAYMENT_SHEET    = "Teacher Payment";
+const STAFF_PAYMENT_SHEET      = "Staff Payment";
+
+/* Teacher/Staff details (for profile image) */
+const TEACHER_DETAILS_SS_ID    = "19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4";
+const TEACHER_DETAILS_SHEET    = "Teacher Details";
+const STAFF_DETAILS_SHEET      = "Staff Details";
+
+/* Login sheet */
+const TEACHER_LOGIN_SS_ID      = "1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA";
+const TEACHER_LOGIN_SHEET      = "Teacher_Login";
+
+/* ⚡ Auto-refresh + cache config */
+const AUTO_REFRESH_INTERVAL = 30 * 1000;
+const CACHE_TTL             = 5 * 60 * 1000;
+
+const CACHE_KEYS = {
+    TEACHER_PAYMENT:  'pay_teacher_v1',
+    STAFF_PAYMENT:    'pay_staff_v1',
+    TEACHER_DETAILS:  'pay_teacher_details_v1',
+    STAFF_DETAILS:    'pay_staff_details_v1',
+    TEACHER_LOGIN:    'pay_teacher_login_v1',
+    TEACHER_NAME:     'pay_teacher_name_v1'
+};
+
+const SESSION_KEYS = { USER: 'Universal_user', USER_TYPE: 'Universal_user_type' };
+const THEME_KEY    = 'user-theme-preference';
+
+/* Column map for payment sheets */
+const PAY_COL = {
+    SR_NO:       'Sr. No',
+    DATE:        'Date',
+    TEACHER:     'Teacher Name',
+    STAFF:       'Staff Name',
+    PAY_FOR:     'Payment For',
+    TRANSACTION: 'Transaction',
+    UPI_NO:      'UPI Trans No',
+    BANK_NO:     'Bank Trans No',
+    AMOUNT:      'Amount',
+    NOTE:        'Note'
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentTeacher     = null;
+let matchedTeacherName = null;
+let currentRecordType  = null;   // 'teacher' or 'staff'
+let payments           = [];
+let teacherDetails     = null;
+let autoRefreshTimer   = null;
+let lastChecksum       = null;
+let isRefreshing       = false;
+let visibilityPaused   = false;
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.tableBody       = $('tableBody');
+    dom.searchInput     = $('searchInput');
+    dom.refreshBtn      = $('refreshBtn');
+    dom.emptyState      = $('emptyState');
+    dom.emptyTitle      = $('emptyTitle');
+    dom.emptyMsg        = $('emptyMsg');
+    dom.teacherSubtitle = $('teacherSubtitle');
+    dom.toast           = $('toast');
+    dom.refreshBadge    = $('refreshBadge');
+    dom.refreshBadgeText= $('refreshBadgeText');
+    dom.summaryBar      = $('summaryBar');
+    dom.summaryCount    = $('summaryCount');
+    dom.summaryTotal    = $('summaryTotal');
+    dom.summaryLast     = $('summaryLast');
+
+    dom.detailModal     = $('detailModal');
+    dom.detailClose     = $('detailClose');
+    dom.detailHero      = $('detailHero');
+    dom.detailGrid      = $('detailGrid');
+    dom.detailCancelBtn = $('detailCancelBtn');
+}
+
+/* ============================================================
+   CACHE UTILITIES
+   ============================================================ */
+function cacheGet(key, ttl) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const { ts, data } = JSON.parse(raw);
+        if (ttl && Date.now() - ts > ttl) { localStorage.removeItem(key); return null; }
+        return data;
+    } catch (e) { return null; }
+}
+function cacheSet(key, data) {
+    try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); }
+    catch (e) { /* quota */ }
+}
+function cacheClear(key) {
+    try { localStorage.removeItem(key); } catch (e) {}
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function hasValue(v) { return v !== null && v !== undefined && v.toString().trim() !== ''; }
+function num(v) {
+    if (v === null || v === undefined) return 0;
+    const n = Number(v.toString().replace(/[₹,\s]/g, '').trim());
+    return isNaN(n) ? 0 : n;
+}
+function debounce(fn, wait) {
+    let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+}
+
+/* ⚡ Format amount as INR */
+function formatINR(amount) {
+    const n = num(amount);
+    if (n === 0) return '₹0';
+    return '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+/* ⚡ Get initials */
+function getInitials(name) {
+    if (!name) return '?';
+    return name.toString().trim().split(/\s+/).slice(0, 2)
+        .map(w => w[0] || '').join('').toUpperCase() || '?';
+}
+
+/* ⭐ Robust Sr. No lookup — handles trailing spaces, casing, common variants */
+function findSrNoInRow(row) {
+    if (!row) return '';
+    /* 1. Exact match to PAY_COL.SR_NO */
+    if (hasValue(row[PAY_COL.SR_NO])) return row[PAY_COL.SR_NO];
+    /* 2. Try normalized aliases */
+    const aliases = ['srno', 'sno', 'serialno', 'serialnumber', 'srnumber', 'sr'];
+    for (const key of Object.keys(row)) {
+        const norm = key.toString().trim().toLowerCase().replace(/[\s._-]/g, '');
+        if (aliases.includes(norm) && hasValue(row[key])) {
+            return row[key];
+        }
+    }
+    return '';
+}
+
+/* ⭐ Robust name normalization */
+function normalizeName(v) {
+    if (v == null) return '';
+    return v.toString().trim().toLowerCase()
+        .replace(/^(mr\.?|mrs\.?|ms\.?|miss|dr\.?|prof\.?|shri\.?|smt\.?|sir|madam)\s+/i, '')
+        .replace(/[.,'`"()\[\]]/g, '')
+        .replace(/[\s\-_]+/g, ' ').trim();
+}
+function nameTokens(v) { const n = normalizeName(v); return n ? n.split(' ').filter(Boolean) : []; }
+function nameSimilarity(a, b) {
+    const ta = nameTokens(a); const tb = nameTokens(b);
+    if (!ta.length || !tb.length) return 0;
+    if (normalizeName(a) === normalizeName(b)) return 1;
+    const setA = new Set(ta); const setB = new Set(tb);
+    let inter = 0;
+    setA.forEach(t => { if (setB.has(t)) inter++; });
+    const union = new Set([...setA, ...setB]).size;
+    const jaccard = union > 0 ? inter / union : 0;
+    const firstBonus = (ta[0] === tb[0]) ? 0.15 : 0;
+    const lastBonus  = (ta[ta.length - 1] === tb[tb.length - 1]) ? 0.10 : 0;
+    let containsBonus = 0;
+    const shorter = ta.length <= tb.length ? normalizeName(a) : normalizeName(b);
+    const longer  = ta.length <= tb.length ? normalizeName(b) : normalizeName(a);
+    if (shorter && longer && longer.includes(shorter)) containsBonus = 0.10;
+    return Math.min(1, jaccard + firstBonus + lastBonus + containsBonus);
+}
+function pickBestMatchingName(loggedInName, candidates) {
+    if (!loggedInName || !Array.isArray(candidates) || !candidates.length) return null;
+    const target = normalizeName(loggedInName);
+    for (const c of candidates) if (normalizeName(c) === target) return c;
+    const scored = candidates.map(c => ({ name: c, score: nameSimilarity(loggedInName, c) }))
+        .sort((a, b) => b.score - a.score);
+    const best = scored[0]; const second = scored[1];
+    if (!best) return null;
+    if (best.score >= 0.85) return best.name;
+    if (best.score >= 0.55) {
+        const margin = best.score - (second ? second.score : 0);
+        if (margin >= 0.10 || !second) return best.name;
+    }
+    const targetTokens = nameTokens(loggedInName);
+    if (targetTokens.length >= 1) {
+        const firstName = targetTokens[0];
+        const substringMatches = candidates.filter(c => {
+            const t = nameTokens(c);
+            return t.length >= 1 && t[0] === firstName;
+        });
+        if (substringMatches.length === 1) return substringMatches[0];
+    }
+    return null;
+}
+
+/* ⚡ Checksum for change detection */
+function computeChecksum(rows) {
+    if (!Array.isArray(rows) || !rows.length) return '0';
+    const sample = [...rows.slice(0, 3), ...rows.slice(-3)];
+    const sig = sample.map(r =>
+        `${findSrNoInRow(r)}|${r['Date'] || ''}|${r['Amount'] || ''}|${r['Transaction'] || ''}`
+    ).join('##');
+    let h = 0;
+    for (let i = 0; i < sig.length; i++) h = ((h << 5) - h + sig.charCodeAt(i)) | 0;
+    return `${rows.length}_${h}`;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg, type = 'info', ms = 3600) {
+    const t = dom.toast; if (!t) return;
+    t.textContent = msg; t.className = `toast ${type}`;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, ms);
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+function applyTheme(theme) {
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    document.body.setAttribute('data-theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#061714' : '#0d9488');
+}
+function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    applyTheme(saved || 'light');
+    window.addEventListener('storage', (e) => {
+        if (e.key === THEME_KEY && e.newValue) applyTheme(e.newValue);
+    });
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'themeChange' && e.data.theme) applyTheme(e.data.theme);
+    });
+}
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+function readSessionValue(key) {
+    const localRaw = localStorage.getItem(key);
+    if (localRaw) {
+        try {
+            const parsed = JSON.parse(localRaw);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        } catch (e) { return localRaw; }
+    }
+    const s = sessionStorage.getItem(key);
+    if (s) { try { return JSON.parse(s); } catch (e) { return s; } }
+    return null;
+}
+
+async function resolveTeacherName() {
+    const cached = cacheGet(CACHE_KEYS.TEACHER_NAME, CACHE_TTL);
+    if (cached) return cached;
+
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    if (userType !== 'teacher') return null;
+    const email = readSessionValue(SESSION_KEYS.USER);
+    if (!email) return null;
+    const normEmail = (email || '').toString().trim().toLowerCase();
+
+    /* Tier 1: cached profile from TeacherDashboard */
+    const PROFILE_KEY = `Universal_teacher_dash_v1_profile_${normEmail}`;
+    try {
+        const cached2 = localStorage.getItem(PROFILE_KEY);
+        if (cached2) {
+            const parsed = JSON.parse(cached2);
+            const row = parsed.row || {};
+            const name = row['Teacher Name'] || row['Staff Name'] || row['Name'] || row['Full Name'] || '';
+            if (name && name.toString().trim()) {
+                cacheSet(CACHE_KEYS.TEACHER_NAME, name.toString().trim());
+                return name.toString().trim();
+            }
+        }
+    } catch (e) {}
+
+    /* Tier 2: Teacher_Login sheet */
+    try {
+        const rows = await fetchSheetRows(TEACHER_LOGIN_SS_ID, TEACHER_LOGIN_SHEET, CACHE_KEYS.TEACHER_LOGIN);
+        const row = rows.find(r => (r['Email Id'] || '').toString().trim().toLowerCase() === normEmail);
+        if (row) {
+            const name = row['Teacher Name'] || row['Name'] || row['Full Name'] || row['Staff Name'] || '';
+            if (name && name.toString().trim()) {
+                cacheSet(CACHE_KEYS.TEACHER_NAME, name.toString().trim());
+                return name.toString().trim();
+            }
+        }
+    } catch (e) {}
+
+    /* Tier 3: derive from email */
+    const local = (email || '').split('@')[0] || '';
+    if (!local) return null;
+    const derived = local.replace(/[._\-]+/g, ' ')
+        .replace(/\d+/g, '')
+        .replace(/\b\w/g, c => c.toUpperCase()).trim();
+    cacheSet(CACHE_KEYS.TEACHER_NAME, derived);
+    return derived;
+}
+
+/* ============================================================
+   NETWORK
+   ============================================================ */
+async function fetchSheetRows(spreadsheetId, sheetName, cacheKey, { bypassCache = false } = {}) {
+    if (!bypassCache && cacheKey) {
+        const cached = cacheGet(cacheKey, CACHE_TTL);
+        if (cached && Array.isArray(cached)) {
+            console.log(`[Cache HIT] ${sheetName}`);
+            return cached;
+        }
+    }
+    const url = `${SCRIPT_URL}?spreadsheetId=${spreadsheetId}&sheetName=${encodeURIComponent(sheetName)}&action=getData&_=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Invalid response');
+    }
+    if (cacheKey) cacheSet(cacheKey, json.data);
+    return json.data;
+}
+
+/* ⭐ Extract Drive file ID from URL */
+function getFileId(url) {
+    if (!url) return '';
+    const m = url.toString().match(/\/d\/([-\w]{25,})|id=([-\w]{25,})/);
+    if (m) return m[1] || m[2] || '';
+    const bare = url.toString().match(/^([-\w]{25,})$/);
+    return bare ? bare[1] : '';
+}
+function driveThumb(url, size = 400) {
+    const id = getFileId(url);
+    if (!id) return '';
+    return `https://lh3.googleusercontent.com/d/${id}=w${size}`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LOAD PAYMENTS
+   ══════════════════════════════════════════════════════════════ */
+async function loadPayments({ bypassCache = false } = {}) {
+    if (!currentTeacher) {
+        dom.tableBody.innerHTML = '';
+        dom.emptyState.classList.add('show');
+        dom.emptyTitle.textContent = 'Teacher not identified';
+        dom.emptyMsg.textContent = 'Please log in as a teacher to view your payments.';
+        return;
+    }
+
+    try {
+        /* ⚡ Fetch all 4 sheets in parallel */
+        const [teacherPayRows, staffPayRows, teacherDetRows, staffDetRows] = await Promise.all([
+            fetchSheetRows(TEACHER_PAYMENT_SS_ID, TEACHER_PAYMENT_SHEET, CACHE_KEYS.TEACHER_PAYMENT, { bypassCache })
+                .catch(e => { console.warn('Teacher Payment fetch failed:', e); return []; }),
+            fetchSheetRows(TEACHER_PAYMENT_SS_ID, STAFF_PAYMENT_SHEET, CACHE_KEYS.STAFF_PAYMENT, { bypassCache })
+                .catch(e => { console.warn('Staff Payment fetch failed:', e); return []; }),
+            fetchSheetRows(TEACHER_DETAILS_SS_ID, TEACHER_DETAILS_SHEET, CACHE_KEYS.TEACHER_DETAILS, { bypassCache })
+                .catch(e => { console.warn('Teacher Details fetch failed:', e); return []; }),
+            fetchSheetRows(TEACHER_DETAILS_SS_ID, STAFF_DETAILS_SHEET, CACHE_KEYS.STAFF_DETAILS, { bypassCache })
+                .catch(e => { console.warn('Staff Details fetch failed:', e); return []; })
+        ]);
+
+        console.log('[Payments] teacher rows:', teacherPayRows.length,
+                    '| staff rows:', staffPayRows.length,
+                    '| teacher details:', teacherDetRows.length,
+                    '| staff details:', staffDetRows.length);
+
+        /* ⚡ Change detection */
+        const combinedChecksum = computeChecksum(teacherPayRows) + '||' + computeChecksum(staffPayRows);
+        if (!bypassCache && lastChecksum === combinedChecksum && payments.length) {
+            console.log('[Auto-refresh] No changes detected');
+            return;
+        }
+        lastChecksum = combinedChecksum;
+
+        /* ⭐ Try TEACHER match first */
+        const uniqueTeacherNames = [...new Set(
+            teacherPayRows.map(r => (r[PAY_COL.TEACHER] || '').toString().trim()).filter(Boolean)
+        )];
+        console.log('[Payments] Unique teacher names:', uniqueTeacherNames);
+
+        const matchedTeacher = pickBestMatchingName(currentTeacher, uniqueTeacherNames);
+
+        if (matchedTeacher) {
+            console.log('[Payments] ✅ Matched as TEACHER:', matchedTeacher);
+            matchedTeacherName = matchedTeacher;
+            currentRecordType = 'teacher';
+            const targetNorm = normalizeName(matchedTeacher);
+
+            payments = teacherPayRows
+                .filter(r => normalizeName(r[PAY_COL.TEACHER]) === targetNorm);
+
+            const detailsNorm = normalizeName(matchedTeacher);
+            teacherDetails = teacherDetRows.find(r =>
+                normalizeName(r['Teacher Name'] || r['Name']) === detailsNorm
+            ) || null;
+
+            dom.teacherSubtitle.textContent = `Payment history for ${matchedTeacher}`;
+        } else {
+            /* ⭐ Fallback to STAFF */
+            const uniqueStaffNames = [...new Set(
+                staffPayRows.map(r => (r[PAY_COL.STAFF] || '').toString().trim()).filter(Boolean)
+            )];
+            console.log('[Payments] No teacher match, trying staff:', uniqueStaffNames);
+
+            const matchedStaff = pickBestMatchingName(currentTeacher, uniqueStaffNames);
+
+            if (matchedStaff) {
+                console.log('[Payments] ✅ Matched as STAFF:', matchedStaff);
+                matchedTeacherName = matchedStaff;
+                currentRecordType = 'staff';
+                const targetNorm = normalizeName(matchedStaff);
+
+                payments = staffPayRows
+                    .filter(r => normalizeName(r[PAY_COL.STAFF]) === targetNorm);
+
+                const detailsNorm = normalizeName(matchedStaff);
+                teacherDetails = staffDetRows.find(r =>
+                    normalizeName(r['Staff Name'] || r['Name']) === detailsNorm
+                ) || null;
+
+                dom.teacherSubtitle.textContent = `Payment history for ${matchedStaff}`;
+            } else {
+                console.warn('[Payments] ❌ No matching teacher or staff name');
+                dom.tableBody.innerHTML = '';
+                dom.emptyState.classList.add('show');
+                dom.emptyTitle.textContent = 'No matching record';
+                dom.emptyMsg.textContent =
+                    `We couldn't find any payment records for "${currentTeacher}". ` +
+                    `Please contact the academy if you believe this is a mistake.`;
+                dom.teacherSubtitle.textContent = `Signed in as ${currentTeacher}`;
+                dom.summaryBar.style.display = 'none';
+                return;
+            }
+        }
+
+        /* ⭐ SORT: Latest entry (highest Sr. No) on TOP */
+        payments.sort((a, b) => {
+            const sa = num(findSrNoInRow(a));
+            const sb = num(findSrNoInRow(b));
+            if (sa !== sb) return sb - sa;   // descending — highest first
+
+            /* Fallback: date descending */
+            const da = new Date(a[PAY_COL.DATE]);
+            const db = new Date(b[PAY_COL.DATE]);
+            if (!isNaN(da) && !isNaN(db) && da.getTime() !== db.getTime()) {
+                return db - da;
+            }
+            return 0;
+        });
+
+        console.log('[Payments] Final rows:', payments.length,
+                    '| top Sr. No:', findSrNoInRow(payments[0]) || '(none)');
+        console.log('[Payments] Sr. No order:',
+                    payments.map(p => findSrNoInRow(p)));
+
+        updateSummary();
+        renderTable();
+
+    } catch (err) {
+        console.error('[Load payments]', err);
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="4" style="text-align:center; padding: 40px;">
+                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 8px;">⚠️</div>
+                <p style="color: var(--danger); font-weight: 700;">Failed to load payments</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">${escapeHtml(err.message)}</p>
+                <button class="btn btn-primary" style="margin-top: 14px;" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Retry
+                </button>
+            </td></tr>
+        `;
+    }
+}
+
+/* ⭐ Update summary bar */
+function updateSummary() {
+    if (!payments.length) {
+        dom.summaryBar.style.display = 'none';
+        return;
+    }
+    dom.summaryBar.style.display = 'grid';
+
+    const totalAmount = payments.reduce((sum, p) => sum + num(p[PAY_COL.AMOUNT]), 0);
+    const count = payments.length;
+
+    /* ⭐ Latest = top of sorted list (highest Sr. No) */
+    const latest = payments[0];
+    const latestDate = latest ? (latest[PAY_COL.DATE] || '—') : '—';
+
+    dom.summaryCount.textContent = count;
+    dom.summaryTotal.textContent = formatINR(totalAmount);
+    dom.summaryLast.textContent = latestDate;
+}
+
+/* ============================================================
+   RENDER TABLE — with sequential Sr. No (1, 2, 3, ...)
+   ============================================================ */
+function renderTable(filter = '') {
+    if (!payments.length) {
+        dom.tableBody.innerHTML = '';
+        dom.emptyState.classList.add('show');
+        dom.emptyTitle.textContent = 'No payments found';
+        dom.emptyMsg.textContent = matchedTeacherName
+            ? `No payment records are available for ${matchedTeacherName} yet.`
+            : 'No payment records have been added yet.';
+        return;
+    }
+    dom.emptyState.classList.remove('show');
+
+    const q = filter.toLowerCase().trim();
+    const filtered = !q ? payments : payments.filter(p => {
+        return (
+            (p[PAY_COL.DATE] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.PAY_FOR] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.TRANSACTION] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.AMOUNT] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.UPI_NO] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.BANK_NO] || '').toString().toLowerCase().includes(q) ||
+            (p[PAY_COL.NOTE] || '').toString().toLowerCase().includes(q)
+        );
+    });
+
+    if (!filtered.length) {
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="4" style="text-align:center; padding: 40px;">
+                <div style="font-size: 2rem; color: var(--text-light); margin-bottom: 8px;">🔍</div>
+                <p style="color: var(--text-muted); font-weight: 600;">No matching payments</p>
+            </td></tr>
+        `;
+        return;
+    }
+
+    /* ⭐ Build rows with SEQUENTIAL Sr. No (1, 2, 3, ...) */
+    const rows = filtered.map((p, index) => {
+        const realIdx = payments.indexOf(p);
+        /* ⭐ Display: sequential 1-based index based on row position */
+        const displaySrNo = index + 1;
+        const date = p[PAY_COL.DATE] || '—';
+        const amount = formatINR(p[PAY_COL.AMOUNT]);
+
+        return `<tr>
+            <td class="sr">${displaySrNo}</td>
+            <td class="muted">${escapeHtml(date)}</td>
+            <td class="amount">${escapeHtml(amount)}</td>
+            <td>
+                <button class="view-btn" data-idx="${realIdx}" data-action="view-payment">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    dom.tableBody.innerHTML = rows.join('');
+
+    /* ⚡ Event delegation */
+    if (!dom.tableBody._bound) {
+        dom.tableBody._bound = true;
+        dom.tableBody.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-action="view-payment"]');
+            if (!btn) return;
+            const idx = parseInt(btn.getAttribute('data-idx'), 10);
+            openPaymentDetail(idx);
+        });
+    }
+}
+
+/* ============================================================
+   PAYMENT DETAIL MODAL
+   ============================================================ */
+function openPaymentDetail(idx) {
+    const p = payments[idx];
+    if (!p) return;
+
+    renderDetailHero(p);
+    renderDetailGrid(p);
+    dom.detailModal.classList.add('active');
+}
+
+function renderDetailHero(p) {
+    const details = teacherDetails || {};
+    const profileImage = details['Image'] || details['Profile Image'] || '';
+    const name = currentRecordType === 'staff'
+        ? (details['Staff Name'] || details['Name'] || matchedTeacherName)
+        : (details['Teacher Name'] || details['Name'] || matchedTeacherName);
+
+    const thumb = driveThumb(profileImage, 400);
+    const initials = getInitials(name);
+
+    const avatarHtml = thumb
+        ? `<img class="avatar" src="${escapeHtml(thumb)}" alt="${escapeHtml(name)}"
+                loading="lazy" decoding="async"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+           <div class="avatar-fallback" style="display:none;">${escapeHtml(initials)}</div>`
+        : `<div class="avatar-fallback">${escapeHtml(initials)}</div>`;
+
+    const roleLabel = currentRecordType === 'staff' ? 'Staff' : 'Teacher';
+    const roleIcon = currentRecordType === 'staff' ? 'fa-user-tie' : 'fa-chalkboard-teacher';
+
+    const mobile = details['Mobile No'] || '';
+    const email = details['Email Id'] || '';
+    const subject = details['Specility in Subject 1'] || details['Specility in Work'] || '';
+
+    const amount = num(p[PAY_COL.AMOUNT]);
+
+    dom.detailHero.innerHTML = `
+        <div class="avatar-wrap">${avatarHtml}</div>
+        <div class="info">
+            <h4>${escapeHtml(name)}</h4>
+            <div class="meta">
+                <span><i class="fas ${roleIcon}"></i> ${escapeHtml(roleLabel)}</span>
+                ${mobile ? `<span><i class="fas fa-mobile-screen"></i> ${escapeHtml(mobile)}</span>` : ''}
+                ${email ? `<span><i class="fas fa-envelope"></i> ${escapeHtml(email)}</span>` : ''}
+                ${subject ? `<span><i class="fas fa-book"></i> ${escapeHtml(subject)}</span>` : ''}
+            </div>
+            <div class="amount-badge">
+                <i class="fas fa-indian-rupee-sign"></i> ${escapeHtml(formatINR(amount))}
+            </div>
+        </div>
+    `;
+}
+
+function renderDetailGrid(p) {
+    const get = (key) => p[key] || '';
+    const details = teacherDetails || {};
+
+    const cells = [
+        { lbl: 'Sr. No',        val: findSrNoInRow(p) || '—',           icon: 'fa-hashtag' },
+        { lbl: 'Date',          val: get(PAY_COL.DATE) || '—',           icon: 'fa-calendar' },
+        { lbl: 'Payment For',   val: get(PAY_COL.PAY_FOR) || '—',        icon: 'fa-file-invoice-dollar' },
+        { lbl: 'Transaction',   val: get(PAY_COL.TRANSACTION) || '—',    icon: 'fa-money-check-dollar' },
+        { lbl: 'UPI Trans No',  val: get(PAY_COL.UPI_NO) || '—',         icon: 'fa-mobile-screen-button' },
+        { lbl: 'Bank Trans No', val: get(PAY_COL.BANK_NO) || '—',        icon: 'fa-building-columns' },
+        { lbl: 'Amount',        val: formatINR(get(PAY_COL.AMOUNT)),     icon: 'fa-indian-rupee-sign', highlight: 'highlight-amount' }
+    ];
+
+    if (hasValue(p[PAY_COL.NOTE])) {
+        cells.push({ lbl: 'Note', val: p[PAY_COL.NOTE], icon: 'fa-sticky-note', wide: true });
+    }
+    if (hasValue(details['Date of Joining'])) {
+        cells.push({ lbl: 'Date of Joining', val: details['Date of Joining'], icon: 'fa-calendar-check' });
+    }
+    if (hasValue(details['Status'])) {
+        cells.push({ lbl: 'Status', val: details['Status'], icon: 'fa-circle-check' });
+    }
+
+    dom.detailGrid.innerHTML = cells.map(c => `
+        <div class="detail-cell ${c.wide ? 'wide' : ''} ${c.highlight || ''}">
+            <span class="lbl"><i class="fas ${c.icon}"></i> ${escapeHtml(c.lbl)}</span>
+            <span class="val">${escapeHtml(String(c.val))}</span>
+        </div>
+    `).join('');
+}
+
+function closeDetailModal() {
+    dom.detailModal.classList.remove('active');
+}
+
+/* ============================================================
+   AUTO-REFRESH
+   ============================================================ */
+function startAutoRefresh() {
+    stopAutoRefresh();
+    autoRefreshTimer = setInterval(async () => {
+        if (document.hidden || visibilityPaused || isRefreshing) return;
+        if (dom.detailModal.classList.contains('active')) return;
+
+        try {
+            const sheet = currentRecordType === 'staff' ? STAFF_PAYMENT_SHEET : TEACHER_PAYMENT_SHEET;
+            const cacheKey = currentRecordType === 'staff' ? CACHE_KEYS.STAFF_PAYMENT : CACHE_KEYS.TEACHER_PAYMENT;
+            const fresh = await fetchSheetRows(TEACHER_PAYMENT_SS_ID, sheet, cacheKey, { bypassCache: true });
+            const newChecksum = computeChecksum(fresh);
+            const lastPart = lastChecksum ? lastChecksum.split('||')[currentRecordType === 'staff' ? 1 : 0] : '';
+            if (newChecksum !== lastPart) {
+                console.log('[Auto-refresh] Change detected');
+                showRefreshBadge('Payments updated');
+                await loadPayments({ bypassCache: true });
+            }
+        } catch (e) {
+            console.warn('[Auto-refresh] failed:', e.message);
+        }
+    }, AUTO_REFRESH_INTERVAL);
+}
+function stopAutoRefresh() {
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+}
+function showRefreshBadge(text) {
+    if (!dom.refreshBadge) return;
+    dom.refreshBadgeText.textContent = text || 'Data updated';
+    dom.refreshBadge.classList.add('show');
+    setTimeout(() => dom.refreshBadge.classList.remove('show'), 2500);
+}
+
+document.addEventListener('visibilitychange', () => {
+    visibilityPaused = document.hidden;
+    if (!document.hidden && currentTeacher) {
+        setTimeout(async () => {
+            try { await loadPayments({ bypassCache: true }); } catch (e) {}
+        }, 300);
+    }
+});
+
+window.addEventListener('online', () => {
+    if (currentTeacher) setTimeout(() => loadPayments({ bypassCache: true }), 500);
+});
+
+/* ============================================================
+   SPINNER HELPER
+   ============================================================ */
+function setButtonLoading(btn, loadingText) {
+    if (!btn || btn.dataset.loading === '1') return;
+    btn.dataset.loading = '1';
+    btn.dataset.originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="spinner"></span> ${loadingText || 'Loading…'}`;
+}
+function resetButton(btn) {
+    if (!btn) return;
+    btn.dataset.loading = '0';
+    if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
+    btn.disabled = false;
+    delete btn.dataset.originalHtml;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+    cacheDom();
+    initTheme();
+
+    /* Auth check */
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    if (userType !== 'teacher') {
+        dom.tableBody.innerHTML = '';
+        dom.emptyState.classList.add('show');
+        dom.emptyTitle.textContent = 'Please log in as teacher';
+        dom.emptyMsg.textContent = 'You need to be logged in as a teacher to view your payments.';
+        return;
+    }
+
+    dom.teacherSubtitle.textContent = 'Identifying teacher…';
+    currentTeacher = await resolveTeacherName();
+    console.log('[Payments] currentTeacher:', currentTeacher);
+
+    if (!currentTeacher) {
+        dom.tableBody.innerHTML = '';
+        dom.emptyState.classList.add('show');
+        dom.emptyTitle.textContent = 'Cannot identify teacher';
+        dom.emptyMsg.textContent = 'We could not resolve your teacher name. Please log in again.';
+        return;
+    }
+
+    /* Wire events */
+    dom.refreshBtn.addEventListener('click', async () => {
+        setButtonLoading(dom.refreshBtn, 'Refreshing…');
+        isRefreshing = true;
+        try {
+            cacheClear(CACHE_KEYS.TEACHER_PAYMENT);
+            cacheClear(CACHE_KEYS.STAFF_PAYMENT);
+            cacheClear(CACHE_KEYS.TEACHER_DETAILS);
+            cacheClear(CACHE_KEYS.STAFF_DETAILS);
+            await loadPayments({ bypassCache: true });
+            showRefreshBadge('Refreshed');
+        } finally {
+            resetButton(dom.refreshBtn);
+            dom.refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+            isRefreshing = false;
+        }
+    });
+
+    /* Debounced search */
+    dom.searchInput.addEventListener('input', debounce((e) => renderTable(e.target.value), 200));
+
+    /* Modal close */
+    dom.detailClose.addEventListener('click', closeDetailModal);
+    dom.detailCancelBtn.addEventListener('click', closeDetailModal);
+    dom.detailModal.addEventListener('click', (e) => {
+        if (e.target === dom.detailModal) closeDetailModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dom.detailModal.classList.contains('active')) closeDetailModal();
+    });
+
+    /* Initial load */
+    await loadPayments();
+
+    /* Start auto-refresh */
+    startAutoRefresh();
+    console.log('[Payments] Auto-refresh started (every 30s)');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+    init();
+}
+
+window.addEventListener('beforeunload', stopAutoRefresh);
+
+})();
+</script>
+</body>
+</html>

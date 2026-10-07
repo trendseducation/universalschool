@@ -1,0 +1,2246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Universal School Academy · Test Paper</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+<script>
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<style>
+/* ============================================================
+   THEME
+   ============================================================ */
+:root {
+    --bg-body: #eef2f9;
+    --bg-card: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #e2e8f0;
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-hover: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+    --accent: #2563eb;
+    --accent-2: #7c3aed;
+    --accent-soft: rgba(37, 99, 235, 0.10);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+    --success: #10b981;
+    --success-soft: rgba(16, 185, 129, 0.10);
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.10);
+    --warning: #f59e0b;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    --navy: #0d2c54;
+    --yellow: #ffd54a;
+    --input-bg: #f8fafc;
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --grad-hero: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+}
+[data-theme="dark"] {
+    --bg-body: #070d1c;
+    --bg-card: #111a2e;
+    --bg-elevated: #16213a;
+    --bg-soft: #0f1830;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1e2a44;
+    --shadow-xs: 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
+    --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    --shadow-hover: 0 26px 52px -22px rgba(0, 0, 0, 0.85);
+    --accent: #3b82f6;
+    --accent-2: #a78bfa;
+    --accent-soft: rgba(59, 130, 246, 0.18);
+    --accent-glow: rgba(59, 130, 246, 0.45);
+    --success: #34d399;
+    --success-soft: rgba(16, 185, 129, 0.18);
+    --danger: #f87171;
+    --danger-soft: rgba(239, 68, 68, 0.18);
+    --warning: #fbbf24;
+    --warning-soft: rgba(245, 158, 11, 0.20);
+    --navy: #1e40af;
+    --yellow: #fbbf24;
+    --input-bg: #16213a;
+    --backdrop: rgba(0, 0, 0, 0.75);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background 300ms ease, color 300ms ease;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes modalPop { from { transform: scale(0.92) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.55); }
+    70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+    100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+@keyframes pasteWarn {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-4px); }
+    75%      { transform: translateX(4px); }
+}
+
+.spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.app-shell {
+    width: 100%;
+    max-width: 940px;
+    margin: 0 auto;
+    padding: clamp(0.75rem, 2vw, 1.4rem);
+    padding-top: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-top));
+    padding-bottom: calc(clamp(5rem, 12vw, 6.5rem) + var(--safe-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+    min-height: 100dvh;
+    align-content: start;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════════ */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background: var(--bg-card);
+    border-radius: 999px;
+    padding: 0.5rem clamp(0.85rem, 2vw, 1.2rem);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: calc(var(--safe-top) + 6px);
+    z-index: 60;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.brand img { height: clamp(30px, 3.4vw, 40px); object-fit: contain; flex-shrink: 0; }
+.brand-name {
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.timer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--grad-hero);
+    color: #fff;
+    font-weight: 900;
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    box-shadow: 0 8px 20px -8px var(--accent-glow);
+    flex-shrink: 0;
+    transition: background 260ms ease;
+}
+.timer-pill.warning { background: linear-gradient(135deg, var(--warning), #f97316); }
+.timer-pill.danger {
+    background: linear-gradient(135deg, var(--danger), #ec4899);
+    animation: livePulse 1.4s ease-in-out infinite;
+}
+.timer-pill i { font-size: 0.9em; }
+
+/* ══════════════════════════════════════════════════════════════
+   PAPER
+   ══════════════════════════════════════════════════════════════ */
+.paper {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 3vw, 24px);
+    border: 2px solid var(--navy);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    position: relative;
+    animation: fadeUp 0.4s ease;
+}
+[data-theme="dark"] .paper { border-color: var(--accent); }
+.paper::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, var(--navy) 0%, #1e4b8a 40%, var(--yellow) 100%);
+}
+[data-theme="dark"] .paper::before {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 40%, var(--yellow) 100%);
+}
+.paper-header {
+    padding: clamp(1rem, 2.5vw, 1.6rem) clamp(1rem, 3vw, 2rem) 0.85rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: clamp(0.75rem, 2vw, 1.4rem);
+    align-items: center;
+    border-bottom: 2px solid var(--navy);
+}
+[data-theme="dark"] .paper-header { border-bottom-color: var(--accent); }
+.paper-logo {
+    width: clamp(56px, 8.5vw, 78px);
+    height: clamp(56px, 8.5vw, 78px);
+    border-radius: 14px;
+    background: #fff;
+    padding: 6px;
+    object-fit: contain;
+    border: 1.5px solid var(--border-light);
+    flex-shrink: 0;
+}
+.paper-title { text-align: center; min-width: 0; }
+.paper-title h1 {
+    font-size: clamp(1.1rem, 2.6vw, 1.7rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+[data-theme="dark"] .paper-title h1 { color: var(--accent); }
+.paper-title .tagline {
+    font-size: clamp(0.68rem, 1.1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--accent-2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+.paper-title .paper-pill {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--navy);
+    font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-top: 8px;
+    border: 1.5px solid var(--navy);
+    text-transform: uppercase;
+}
+[data-theme="dark"] .paper-title .paper-pill { color: #0d2c54; border-color: var(--accent); }
+.paper-spacer { width: clamp(56px, 8.5vw, 78px); }
+
+.meta-strip {
+    margin: clamp(0.9rem, 2vw, 1.2rem) clamp(0.75rem, 2vw, 1.2rem);
+    border: 1.5px solid var(--navy);
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background: var(--bg-card);
+}
+[data-theme="dark"] .meta-strip { border-color: var(--accent); }
+.meta-strip .meta-cell {
+    padding: 8px 6px;
+    border-right: 1px solid var(--border-light);
+    text-align: center;
+}
+.meta-strip .meta-cell:last-child { border-right: none; }
+.meta-strip .meta-cell .lbl {
+    display: block;
+    font-size: clamp(0.55rem, 0.85vw, 0.66rem);
+    font-weight: 800;
+    color: var(--navy);
+    background: var(--yellow);
+    margin: -8px -6px 6px -6px;
+    padding: 4px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+[data-theme="dark"] .meta-strip .meta-cell .lbl { color: #0d2c54; }
+.meta-strip .meta-cell .val {
+    display: block;
+    font-size: clamp(0.72rem, 1vw, 0.88rem);
+    font-weight: 800;
+    color: var(--navy);
+    word-break: break-word;
+}
+[data-theme="dark"] .meta-strip .meta-cell .val { color: var(--accent); }
+
+.student-band {
+    margin: 0 clamp(0.75rem, 2vw, 1.2rem) clamp(0.9rem, 2vw, 1.2rem);
+    padding: 10px 16px;
+    border: 1.5px dashed var(--accent);
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-soft), rgba(124,58,237,0.08));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.student-band .sb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.78rem, 1.05vw, 0.9rem);
+    font-weight: 700;
+    color: var(--text-main);
+    min-width: 0;
+}
+.student-band .sb-item i { color: var(--accent); }
+.student-band .sb-item .sb-lbl {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    font-weight: 800;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   QUESTION BLOCKS
+   ══════════════════════════════════════════════════════════════ */
+.paper-body {
+    padding: 0 clamp(0.9rem, 2.5vw, 1.4rem) clamp(1rem, 2.5vw, 1.4rem);
+    display: grid;
+    gap: clamp(0.9rem, 2vw, 1.2rem);
+}
+.q-block {
+    border: 1.5px solid var(--border-light);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-card);
+    transition: border-color 260ms ease, box-shadow 260ms ease;
+}
+.q-block:hover { border-color: var(--accent); box-shadow: var(--shadow-xs); }
+.q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 70%);
+    border-left: 4px solid var(--accent);
+    border-bottom: 1px solid var(--border-light);
+}
+.q-title {
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.q-title i { color: var(--accent); flex-shrink: 0; }
+.q-marks {
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    font-weight: 900;
+    color: var(--navy);
+    background: var(--yellow);
+    border: 1px solid var(--navy);
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+[data-theme="dark"] .q-marks { color: #0d2c54; }
+.q-body { padding: 12px 14px 14px; }
+
+.q-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-light);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: flex-start;
+}
+.q-item:last-child { border-bottom: none; padding-bottom: 0; }
+.q-item:first-child { padding-top: 0; }
+.q-item-content { min-width: 0; }
+.q-item-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.72rem;
+    margin-right: 8px;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+.q-item-text {
+    display: inline;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.5;
+    word-break: break-word;
+}
+.q-item-opts {
+    margin-top: 8px;
+    padding-left: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: clamp(0.78rem, 1.05vw, 0.88rem);
+    color: var(--text-muted);
+}
+.q-item-opts .opt { display: inline-flex; align-items: center; gap: 4px; }
+.q-item-opts .opt b { color: var(--accent); font-weight: 800; margin-right: 2px; }
+
+.match-print {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+.match-print th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1.5px solid var(--border-light);
+}
+.match-print td {
+    padding: 8px 12px;
+    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: top;
+}
+.match-print tr:last-child td { border-bottom: none; }
+.match-print td:first-child { border-right: 1px solid var(--border-light); width: 50%; }
+
+.odd-line {
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    line-height: 1.6;
+    word-break: break-word;
+}
+.odd-item { font-weight: 700; color: var(--text-main); }
+.odd-sep { color: var(--accent); font-weight: 800; margin: 0 6px; }
+.odd-dbl {
+    color: var(--navy);
+    font-weight: 900;
+    background: var(--yellow);
+    padding: 1px 8px;
+    border-radius: 8px;
+    margin: 0 8px;
+}
+[data-theme="dark"] .odd-dbl { color: #0d2c54; }
+
+.answer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 260ms ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family: inherit;
+}
+.answer-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -8px var(--accent-glow);
+}
+.answer-btn.answered {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+}
+.answer-btn.answered:hover { transform: translateY(-2px); }
+.answer-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.saved-answer {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: var(--success-soft);
+    border-left: 3px solid var(--success);
+    border-radius: 8px;
+    font-size: clamp(0.78rem, 1.05vw, 0.86rem);
+    color: var(--text-main);
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
+    max-height: 140px;
+    overflow-y: auto;
+}
+.saved-answer .lbl {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--success);
+    margin-bottom: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STICKY SUBMIT BAR
+   ══════════════════════════════════════════════════════════════ */
+.submit-bar {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-light);
+    box-shadow: 0 -8px 30px -10px rgba(15, 23, 42, 0.15);
+    padding: 12px clamp(0.75rem, 2vw, 1.4rem);
+    padding-bottom: calc(12px + var(--safe-bottom));
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.submit-progress {
+    font-size: clamp(0.75rem, 1.1vw, 0.85rem);
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 0;
+}
+.submit-progress b { color: var(--accent); font-weight: 900; }
+.btn-submit {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+    cursor: pointer;
+    transition: all 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 22px -8px rgba(16, 185, 129, 0.55);
+    font-family: inherit;
+    flex-shrink: 0;
+}
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -10px rgba(16, 185, 129, 0.7);
+}
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════════════════════
+   MODALS
+   ══════════════════════════════════════════════════════════════ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--backdrop);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.8rem, 2vw, 1.4rem);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 260ms ease, visibility 260ms ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.active { display: flex; opacity: 1; visibility: visible; }
+.modal-box {
+    background: var(--bg-elevated);
+    border-radius: clamp(18px, 3vw, 28px);
+    max-width: 720px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-header {
+    background: var(--grad-hero);
+    padding: clamp(0.9rem, 2vw, 1.1rem) clamp(1rem, 2.5vw, 1.4rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: clamp(18px, 3vw, 28px) clamp(18px, 3vw, 28px) 0 0;
+    color: #fff;
+    gap: 0.6rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.modal-header h3 {
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.modal-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 260ms ease, background 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close:hover { transform: rotate(90deg); background: rgba(255,255,255,0.3); }
+.modal-body { padding: clamp(1rem, 2.5vw, 1.4rem); }
+
+.ans-q-text {
+    background: var(--bg-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+    color: var(--text-main);
+    line-height: 1.55;
+    font-weight: 600;
+}
+.ans-q-text .lbl {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    margin-bottom: 3px;
+}
+
+.ans-input {
+    width: 100%;
+    min-height: 220px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-light);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: clamp(0.85rem, 1.15vw, 0.95rem);
+    line-height: 1.55;
+    resize: vertical;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.ans-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+/* Paste warning shake */
+.ans-input.paste-blocked,
+.dist-table textarea.paste-blocked {
+    animation: pasteWarn 0.4s ease;
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 4px var(--danger-soft) !important;
+}
+
+.ans-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.ans-meta .char-count { font-variant-numeric: tabular-nums; }
+.ans-meta .saved-hint { color: var(--success); font-weight: 800; display: none; }
+.ans-meta .saved-hint.show { display: inline; }
+.ans-meta .paste-hint {
+    color: var(--danger);
+    font-weight: 800;
+    display: none;
+}
+.ans-meta .paste-hint.show { display: inline; }
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+.modal-actions .btn { flex: 1; min-width: 120px; }
+
+.btn {
+    border: none;
+    padding: 0.75rem 1.3rem;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+    cursor: pointer;
+    transition: all 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+    text-decoration: none;
+}
+.btn-primary {
+    background: var(--grad-hero);
+    color: #fff;
+    box-shadow: 0 6px 18px -6px var(--accent-glow);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -8px var(--accent-glow); }
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+.btn-outline:hover { background: var(--accent); color: #fff; }
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #fff;
+}
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -8px rgba(16,185,129,0.55); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   DISTINGUISHING TABLE
+   ══════════════════════════════════════════════════════════════ */
+.dist-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1.5px solid var(--navy);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+[data-theme="dark"] .dist-table { border-color: var(--accent); }
+.dist-table th {
+    background: var(--navy);
+    color: var(--yellow);
+    padding: 8px 12px;
+    font-size: clamp(0.68rem, 1vw, 0.8rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    text-align: left;
+    width: 50%;
+}
+[data-theme="dark"] .dist-table th { background: var(--accent); color: #0d2c54; }
+.dist-table th:first-child { border-right: 1.5px solid var(--yellow); }
+.dist-table td {
+    padding: 8px;
+    vertical-align: top;
+    width: 50%;
+}
+.dist-table td:first-child {
+    border-right: 1.5px solid var(--border-light);
+    background: var(--bg-soft);
+}
+.dist-table td:last-child { background: var(--bg-card); }
+.dist-table textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-light);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.dist-table textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STATE BOXES
+   ══════════════════════════════════════════════════════════════ */
+.state-box {
+    background: var(--bg-card);
+    border-radius: clamp(20px, 3vw, 28px);
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico { font-size: clamp(2rem, 5vw, 3rem); color: var(--accent); margin-bottom: 1rem; }
+.state-box h3 { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 0.4rem; font-weight: 800; }
+.state-box p { color: var(--text-muted); font-size: clamp(0.82rem, 1.4vw, 0.9rem); max-width: 440px; margin: 0 auto; line-height: 1.6; }
+
+.loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    gap: 1rem;
+    background: var(--bg-card);
+    border-radius: clamp(18px, 3vw, 24px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+.loading-box .spinner { width: 40px; height: 40px; border-width: 4px; border-color: var(--border-light); border-top-color: var(--accent); }
+.loading-box p { color: var(--text-muted); font-weight: 600; font-size: 0.9rem; }
+
+.toast {
+    position: fixed;
+    bottom: calc(90px + var(--safe-bottom));
+    right: 20px;
+    background: var(--bg-card);
+    border-left: 5px solid var(--accent);
+    padding: 0.85rem 1.15rem;
+    border-radius: 0 16px 16px 0;
+    box-shadow: var(--shadow-hover);
+    font-weight: 600;
+    font-size: 0.85rem;
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    color: var(--text-main);
+    max-width: 360px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+    body { background: radial-gradient(1200px 500px at 50% -10%, var(--accent-soft), transparent 60%), var(--bg-body); }
+    .app-shell {
+        padding: 0.65rem 0.75rem;
+        padding-top: calc(0.65rem + var(--safe-top));
+        padding-bottom: calc(6rem + var(--safe-bottom));
+        gap: 0.85rem;
+    }
+    .topbar { border-radius: 18px; padding: 0.5rem 0.75rem; }
+    .brand-name { font-size: 0.88rem; }
+    .timer-pill { padding: 7px 11px; font-size: 0.82rem; gap: 6px; }
+
+    .paper-header { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
+    .paper-header .paper-logo,
+    .paper-header .paper-spacer { display: none; }
+    .paper-title h1 { font-size: 1.25rem; }
+
+    .meta-strip { grid-template-columns: repeat(3, 1fr); margin: 0.75rem; }
+    .meta-strip .meta-cell:nth-child(3n) { border-right: none; }
+    .meta-strip .meta-cell:nth-child(-n+3) { border-bottom: 1px solid var(--border-light); }
+
+    .student-band { padding: 10px 12px; flex-direction: column; align-items: flex-start; }
+
+    .q-item { grid-template-columns: 1fr; }
+    .q-item .answer-btn { align-self: flex-start; }
+
+    .dist-table th, .dist-table td { padding: 6px; }
+    .dist-table textarea { min-height: 110px; }
+
+    .submit-bar { padding: 10px 12px; padding-bottom: calc(10px + var(--safe-bottom)); }
+    .submit-progress { font-size: 0.78rem; }
+    .btn-submit { padding: 10px 16px; font-size: 0.82rem; }
+
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-box { border-radius: 26px 26px 0 0; max-width: 100%; max-height: 94dvh; }
+    .modal-header { border-radius: 26px 26px 0 0; }
+
+    .toast {
+        left: 12px; right: 12px; bottom: calc(100px + var(--safe-bottom));
+        max-width: none; border-radius: 14px; border-left: none;
+        border-top: 4px solid var(--accent);
+    }
+    .toast.success { border-top-color: var(--success); border-left-color: transparent; }
+    .toast.error { border-top-color: var(--danger); border-left-color: transparent; }
+}
+
+@media (max-width: 480px) {
+    .meta-strip { grid-template-columns: repeat(2, 1fr); }
+    .meta-strip .meta-cell:nth-child(2n) { border-right: none; }
+    .meta-strip .meta-cell:nth-child(-n+4) { border-bottom: 1px solid var(--border-light); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School Academy" width="40" height="40" decoding="async">
+            <span class="brand-name" id="brandTestName">Test Paper</span>
+        </div>
+        <div class="timer-pill" id="timerPill" title="Time remaining">
+            <i class="fas fa-stopwatch"></i>
+            <span id="timerText">--:--</span>
+        </div>
+    </header>
+
+    <div id="loadingBox" class="loading-box">
+        <div class="spinner"></div>
+        <p>Loading your question paper…</p>
+    </div>
+
+    <div class="state-box" id="errorState">
+        <div class="state-ico" style="color: var(--danger);"><i class="fas fa-triangle-exclamation"></i></div>
+        <h3 id="errorTitle">Unable to load test</h3>
+        <p id="errorMsg">Please try again or contact your teacher.</p>
+        <a href="Answer.html" class="btn btn-outline" style="margin-top:1.2rem;display:inline-flex;">
+            <i class="fas fa-arrow-left"></i> Back to Test Series
+        </a>
+    </div>
+
+    <article class="paper" id="paper" style="display: none;">
+        <div class="paper-header">
+            <img class="paper-logo" id="paperLogo" alt="Universal School"
+                 src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_" decoding="async">
+            <div class="paper-title">
+                <h1>Universal School</h1>
+                <div class="tagline">Excellence in Education</div>
+                <div class="paper-pill">Question Paper</div>
+            </div>
+            <div class="paper-spacer"></div>
+        </div>
+
+        <div class="meta-strip" id="metaStrip"></div>
+
+        <div class="student-band" id="studentBand">
+            <span class="sb-item"><i class="fas fa-user-graduate"></i>
+                <span class="sb-lbl">Name:</span> <span id="sbName">—</span>
+            </span>
+            <span class="sb-item"><i class="fas fa-graduation-cap"></i>
+                <span class="sb-lbl">Std:</span> <span id="sbStd">—</span>
+            </span>
+        </div>
+
+        <div class="paper-body" id="paperBody"></div>
+    </article>
+
+    <div class="submit-bar" id="submitBar" style="display: none;">
+        <div class="submit-progress" id="submitProgress">
+            <b id="answeredCount">0</b> of <span id="totalCount">0</span> answered
+        </div>
+        <button class="btn-submit" id="submitBtn" type="button">
+            <i class="fas fa-paper-plane"></i> Submit Test
+        </button>
+    </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ANSWER MODAL (text)
+     ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="answerModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="answerModalTitle"><i class="fas fa-pen"></i> Your Answer</h3>
+            <button class="modal-close" id="answerModalClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="ans-q-text" id="ansQuestionText">
+                <span class="lbl">Question</span>
+                <span id="ansQuestionBody">—</span>
+            </div>
+            <textarea class="ans-input" id="ansInput" placeholder="Type your answer here…" spellcheck="true"></textarea>
+            <div class="ans-meta">
+                <span class="char-count"><span id="charCount">0</span> characters</span>
+                <span class="paste-hint" id="pasteHint"><i class="fas fa-ban"></i> Paste is disabled</span>
+                <span class="saved-hint" id="savedHint"><i class="fas fa-check-circle"></i> Saved</span>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="ansCancelBtn">Cancel</button>
+                <button class="btn btn-primary" type="button" id="ansSaveDraftBtn">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button class="btn btn-success" type="button" id="ansSubmitBtn">
+                    <i class="fas fa-check"></i> Save Answer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     DISTINGUISHING MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="distModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="distModalTitle"><i class="fas fa-not-equal"></i> Distinguish</h3>
+            <button class="modal-close" id="distModalClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="ans-q-text" id="distQuestionText">
+                <span class="lbl">Question</span>
+                <span id="distQuestionBody">—</span>
+            </div>
+
+            <table class="dist-table">
+                <thead>
+                    <tr>
+                        <th>Column A</th>
+                        <th>Column B</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><textarea id="distInputA" placeholder="Type Column A answer…"></textarea></td>
+                        <td><textarea id="distInputB" placeholder="Type Column B answer…"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="ans-meta">
+                <span class="char-count"><span id="distCharCount">0</span> characters</span>
+                <span class="paste-hint" id="distPasteHint"><i class="fas fa-ban"></i> Paste is disabled</span>
+                <span class="saved-hint" id="distSavedHint"><i class="fas fa-check-circle"></i> Saved</span>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="distCancelBtn">Cancel</button>
+                <button class="btn btn-primary" type="button" id="distSaveDraftBtn">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button class="btn btn-success" type="button" id="distSubmitBtn">
+                    <i class="fas fa-check"></i> Save Answer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SUBMIT CONFIRM MODAL
+     ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="submitModal" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:480px;">
+        <div class="modal-header">
+            <h3><i class="fas fa-paper-plane"></i> Submit Test</h3>
+            <button class="modal-close" id="submitModalClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body" style="text-align:center;">
+            <div style="width:68px;height:68px;border-radius:50%;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:#fff;background:var(--grad-hero);">
+                <i class="fas fa-question"></i>
+            </div>
+            <h4 style="font-size:1.05rem;font-weight:800;margin-bottom:0.5rem;">Submit your test?</h4>
+            <p style="color:var(--text-muted);font-size:0.88rem;line-height:1.6;margin-bottom:1.2rem;" id="submitModalMsg">
+                Once submitted, your answers will be saved and you won't be able to change them.
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="submitCancelBtn">Cancel</button>
+                <button class="btn btn-success" type="button" id="submitConfirmBtn">
+                    <i class="fas fa-check"></i> Confirm Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Message…</div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL       = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const QUESTIONS_SS_ID  = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const QUESTIONS_SHEET  = "Questions";
+const QA_SS_ID         = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const QA_SHEET         = "Q_A";
+const LOGO_URL         = "https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_";
+
+/* Submitted-tests key — used by Answer.html */
+const SUBMITTED_KEY = 'Universal_submitted_tests_v1';
+
+/* ══════════════════════════════════════════════════════════════
+   Q_A HEADER SCHEMA
+   ══════════════════════════════════════════════════════════════
+   NEW: "Time Taken" column inserted right after "Timing".
+   Update the header row of the Q_A sheet accordingly.
+   ══════════════════════════════════════════════════════════════ */
+const QA_HEADERS = [
+    /* A */
+    "Sr. No","Student Name","Date","Status","Std","Subject Name","Test Name","Total Marks","Timing","Time Taken",
+
+    /* B — Fill */
+    "Fill in the Blanks","Marks 1",
+    "Fill Questions 1","Fill Answer 1",
+    "Fill Questions 2","Fill Answer 2",
+    "Fill Questions 3","Fill Answer 3",
+    "Fill Questions 4","Fill Answer 4",
+    "Fill Questions 5","Fill Answer 5",
+    "Fill Questions 6","Fill Answer 6",
+
+    /* C — Match */
+    "Match the Columns","Marks 2","Obtain Marks 2",
+    "Match Pair 1","Match Pair A","Match Ans 1",
+    "Match Pair 2","Match Pair B","Match Ans 2",
+    "Match Pair 3","Match Pair C","Match Ans 3",
+    "Match Pair 4","Match Pair D","Match Ans 4",
+    "Match Pair 5","Match Pair E","Match Ans 5",
+    "Match Pair 6","Match Pair F","Match Ans 6",
+
+    /* D — True/False */
+    "True or False","Marks 3","Obtain Marks 3",
+    "TF Question 1","TF Ans 1","TF Reason 1",
+    "TF Question 2","TF Ans 2","TF Reason 2",
+    "TF Question 3","TF Ans 3","TF Reason 3",
+    "TF Question 4","TF Ans 4","TF Reason 4",
+    "TF Question 5","TF Ans 5","TF Reason 5",
+    "TF Question 6","TF Ans 6","TF Reason 6",
+
+    /* E — Odd man out */
+    "Find odd man out","Marks 4","Obtain Marks 4",
+    "Find Ans 1","Find Ans 2","Find Ans 3","Find Ans 4","Find Ans 5","Find Ans 6",
+
+    /* F — One sentence */
+    "Answer in One Sentence","Marks 5","Obtain Marks 5",
+    "OS Questions 1","OS Ans 1",
+    "OS Questions 2","OS Ans 2",
+    "OS Questions 3","OS Ans 3",
+    "OS Questions 4","OS Ans 4",
+    "OS Questions 5","OS Ans 5",
+    "OS Questions 6","OS Ans 6",
+
+    /* G — Distinguishing */
+    "Distinguishing between","Marks 6","Obtain Marks 6",
+    "Dis Question 1","Dis Ans A","Dis Ans B",
+    "Dis Question 2","Dis Ans C","Dis Ans D",
+    "Dis Question 3","Dis Ans E","Dis Ans F",
+    "Dis Question 4","Dis Ans G","Dis Ans H",
+    "Dis Question 5","Dis Ans I","Dis Ans J",
+    "Dis Question 6","Dis Ans K","Dis Ans L",
+
+    /* H — Answer following */
+    "Answer the Following Question","Marks 7","Obtain Marks 7",
+    "AQ 1","AQ Ans 1",
+    "AQ 2","AQ Ans 2",
+    "AQ 3","AQ Ans 3",
+    "AQ 4","AQ Ans 4",
+    "AQ 5","AQ Ans 5",
+    "AQ 6","AQ Ans 6",
+
+    /* I — Brief answer */
+    "Brief Answer","Marks 8","Obtain Marks 8",
+    "BQ 1","BQ Ans 1",
+    "BQ 2","BQ Ans 2",
+    "BQ 3","BQ Ans 3",
+    "BQ 4","BQ Ans 4",
+    "BQ 5","BQ Ans 5",
+    "BQ 6","BQ Ans 6"
+];
+
+const DIS_LETTERS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let testMeta         = null;
+let questionRow      = null;
+let answers          = {};
+let totalSeconds     = 0;
+let remainingSec     = 0;
+let timerHandle      = null;
+let submitted        = false;
+let currentAnswerKey = null;
+let currentDistKey   = null;
+
+/* Time tracking — condition #2 */
+let startedAtMs      = 0;     // page load / paper reveal timestamp
+let finishedAtMs     = 0;     // submit timestamp
+let elapsedSeconds   = 0;     // computed on submit
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.brandTestName = $('brandTestName');
+    dom.timerPill     = $('timerPill');
+    dom.timerText     = $('timerText');
+    dom.loadingBox    = $('loadingBox');
+    dom.errorState    = $('errorState');
+    dom.errorTitle    = $('errorTitle');
+    dom.errorMsg      = $('errorMsg');
+    dom.paper         = $('paper');
+    dom.paperLogo     = $('paperLogo');
+    dom.metaStrip     = $('metaStrip');
+    dom.paperBody     = $('paperBody');
+    dom.sbName        = $('sbName');
+    dom.sbStd         = $('sbStd');
+    dom.submitBar     = $('submitBar');
+    dom.answeredCount = $('answeredCount');
+    dom.totalCount    = $('totalCount');
+    dom.submitBtn     = $('submitBtn');
+    dom.toast         = $('toast');
+
+    dom.answerModal     = $('answerModal');
+    dom.answerModalClose= $('answerModalClose');
+    dom.ansQuestionBody = $('ansQuestionBody');
+    dom.ansInput        = $('ansInput');
+    dom.charCount       = $('charCount');
+    dom.savedHint       = $('savedHint');
+    dom.pasteHint       = $('pasteHint');
+    dom.ansCancelBtn    = $('ansCancelBtn');
+    dom.ansSaveDraftBtn = $('ansSaveDraftBtn');
+    dom.ansSubmitBtn    = $('ansSubmitBtn');
+
+    dom.distModal       = $('distModal');
+    dom.distModalClose  = $('distModalClose');
+    dom.distQuestionBody= $('distQuestionBody');
+    dom.distInputA      = $('distInputA');
+    dom.distInputB      = $('distInputB');
+    dom.distCharCount   = $('distCharCount');
+    dom.distSavedHint   = $('distSavedHint');
+    dom.distPasteHint   = $('distPasteHint');
+    dom.distCancelBtn   = $('distCancelBtn');
+    dom.distSaveDraftBtn= $('distSaveDraftBtn');
+    dom.distSubmitBtn   = $('distSubmitBtn');
+
+    dom.submitModal      = $('submitModal');
+    dom.submitModalClose = $('submitModalClose');
+    dom.submitModalMsg   = $('submitModalMsg');
+    dom.submitCancelBtn  = $('submitCancelBtn');
+    dom.submitConfirmBtn = $('submitConfirmBtn');
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function hasValue(v) { return v !== null && v !== undefined && v.toString().trim() !== ''; }
+function debounce(fn, wait) {
+    let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+}
+function formatHMS(sec) {
+    if (sec < 0) sec = 0;
+    const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+function parseTimingToSeconds(str) {
+    if (!str) return 0;
+    const s = str.toString().trim().toLowerCase();
+    let total = 0;
+    const h = s.match(/(\d+(?:\.\d+)?)\s*(?:h|hr|hour|hours)/);
+    const m = s.match(/(\d+(?:\.\d+)?)\s*(?:m|min|mins|minute|minutes)/);
+    const sc = s.match(/(\d+(?:\.\d+)?)\s*(?:s|sec|secs|second|seconds)/);
+    if (h) total += parseFloat(h[1]) * 3600;
+    if (m) total += parseFloat(m[1]) * 60;
+    if (sc) total += parseFloat(sc[1]);
+    if (!total) { const n = parseFloat(s); if (!isNaN(n)) total = n * 60; }
+    return Math.floor(total);
+}
+function todayDDMMYYYY() {
+    const d = new Date();
+    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+}
+function fmtDuration(seconds) {
+    if (seconds < 0) seconds = 0;
+    return formatHMS(seconds);
+}
+
+/* Submitted-tests localStorage helpers */
+function getSubmittedMap() {
+    try { return JSON.parse(localStorage.getItem(SUBMITTED_KEY) || '{}') || {}; }
+    catch (e) { return {}; }
+}
+function makeTestKey(t) {
+    return `${(t.std || '').toString().trim().toLowerCase()}::${(t.testName || '').toString().trim().toLowerCase()}`;
+}
+function markTestSubmitted(t) {
+    if (!t) return;
+    const map = getSubmittedMap();
+    map[makeTestKey(t)] = {
+        submitted: true,
+        submittedAt: Date.now(),
+        testName: t.testName,
+        std: t.std,
+        studentName: t.studentName || ''
+    };
+    try { localStorage.setItem(SUBMITTED_KEY, JSON.stringify(map)); } catch (e) {}
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg, type = 'info', ms = 3600) {
+    const t = dom.toast; if (!t) return;
+    t.textContent = msg; t.className = `toast ${type}`;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, ms);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FETCH QUESTION ROW  (FIX #1)
+   ══════════════════════════════════════════════════════════════
+   Now matches on Test Name + Std + Subject Name so the correct
+   row is picked even when multiple subjects share a test name.
+   ══════════════════════════════════════════════════════════════ */
+async function fetchQuestionRow(meta) {
+    const url = `${SCRIPT_URL}?spreadsheetId=${QUESTIONS_SS_ID}&sheetName=${encodeURIComponent(QUESTIONS_SHEET)}&action=getData&_=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Failed to fetch questions');
+    }
+
+    const targetName    = (meta.testName || '').toString().trim().toLowerCase();
+    const targetStd     = (meta.std || '').toString().trim().toLowerCase();
+    const targetSubject = (meta.subject || '').toString().trim().toLowerCase();
+
+    /* Prefer the strict triple match */
+    let found = json.data.find(r => {
+        const t = (r['Test Name'] || '').toString().trim().toLowerCase();
+        const s = (r['Std'] || '').toString().trim().toLowerCase();
+        const b = (r['Subject Name'] || '').toString().trim().toLowerCase();
+        return t === targetName && s === targetStd && b === targetSubject;
+    });
+
+    /* Fallback — if subject isn't stored, try Test Name + Std only */
+    if (!found && targetSubject) {
+        found = json.data.find(r => {
+            const t = (r['Test Name'] || '').toString().trim().toLowerCase();
+            const s = (r['Std'] || '').toString().trim().toLowerCase();
+            return t === targetName && s === targetStd;
+        });
+    }
+
+    if (!found) throw new Error('Test not found in Questions sheet');
+    return found;
+}
+
+/* ============================================================
+   RENDER META STRIP
+   ============================================================ */
+function renderMetaStrip(row, meta) {
+    const items = [
+        { lbl: 'Date',        val: meta.date || todayDDMMYYYY() },
+        { lbl: 'Std',         val: row['Std'] || meta.std || '—' },
+        { lbl: 'Subject',     val: row['Subject Name'] || meta.subject || '—' },
+        { lbl: 'Test',        val: row['Test Name'] || meta.testName || '—' },
+        { lbl: 'Total Marks', val: row['Total Marks'] || meta.totalMarks || 0 },
+        { lbl: 'Timing',      val: row['Timing'] || meta.timing || '—' }
+    ];
+    dom.metaStrip.innerHTML = items.map(m => `
+        <div class="meta-cell">
+            <span class="lbl">${escapeHtml(m.lbl)}</span>
+            <span class="val">${escapeHtml(String(m.val))}</span>
+        </div>
+    `).join('');
+}
+
+/* ============================================================
+   ANSWER BUTTON HELPERS
+   ============================================================ */
+function answerButtonHtml(key, label = 'Answer') {
+    const a = answers[key];
+    const answered = a && (hasValue(a.answer) || hasValue(a.columnA) || hasValue(a.columnB));
+    return `
+        <button class="answer-btn ${answered ? 'answered' : ''}"
+                type="button"
+                data-answer-key="${escapeHtml(key)}">
+            <i class="fas ${answered ? 'fa-edit' : 'fa-pen'}"></i>
+            ${answered ? 'Edit Answer' : label}
+        </button>
+    `;
+}
+function savedAnswerHtml(key, label = 'Your answer') {
+    const a = answers[key];
+    if (!a) return '';
+    if (hasValue(a.answer)) {
+        return `<div class="saved-answer"><span class="lbl">${escapeHtml(label)}</span>${escapeHtml(a.answer)}</div>`;
+    }
+    if (hasValue(a.columnA) || hasValue(a.columnB)) {
+        return `
+            <div class="saved-answer">
+                <span class="lbl">Your answer</span>
+                <b>Column A:</b> ${escapeHtml(a.columnA || '—')}<br>
+                <b>Column B:</b> ${escapeHtml(a.columnB || '—')}
+            </div>
+        `;
+    }
+    return '';
+}
+
+/* ============================================================
+   SECTION RENDERERS
+   ============================================================ */
+function renderFillBlock(row) {
+    const marks = row['Marks 1'] || 0;
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const qText = row[`Fill Questions ${i}`];
+        if (!hasValue(qText)) continue;
+        const optStart = (i - 1) * 4;
+        const optKeys = [0,1,2,3].map(idx => {
+            const letter = String.fromCharCode(65 + optStart + idx);
+            return { label: letter, text: row[`Fill Option ${letter}`] };
+        }).filter(o => hasValue(o.text));
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(qText)}</span>
+                    ${optKeys.length ? `<div class="q-item-opts">${optKeys.map(o => `<span class="opt"><b>(${escapeHtml(o.label)})</b> ${escapeHtml(o.text)}</span>`).join('')}</div>` : ''}
+                    ${savedAnswerHtml(`fill_${i}`)}
+                </div>
+                ${answerButtonHtml(`fill_${i}`)}
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block" data-section="fill">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-keyboard"></i> ${escapeHtml(row['Fill in the Blanks'] || 'B. Fill in the Blanks')}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderMatchBlock(row) {
+    const marks = row['Marks 2'] || 0;
+    const pairs = [];
+    for (let i = 1; i <= 6; i++) {
+        const letter = String.fromCharCode(64 + i);
+        const l = row[`Match Pair ${i}`];
+        const r = row[`Match Pair ${letter}`];
+        if (!hasValue(l) && !hasValue(r)) continue;
+        pairs.push({ i, left: l || '', right: r || '' });
+    }
+    if (!pairs.length) return '';
+    const tableRows = pairs.map(p => `<tr><td>${escapeHtml(p.left)}</td><td>${escapeHtml(p.right)}</td></tr>`).join('');
+    const answerItems = pairs.map(p => `
+        <div class="q-item">
+            <div class="q-item-content">
+                <span class="q-item-num">${p.i}</span>
+                <span class="q-item-text"><b>${escapeHtml(p.left || '—')}</b> &nbsp;↔&nbsp; <b>${escapeHtml(p.right || '—')}</b></span>
+                ${savedAnswerHtml(`match_${p.i}`)}
+            </div>
+            ${answerButtonHtml(`match_${p.i}`, 'Match')}
+        </div>
+    `).join('');
+    return `
+        <section class="q-block" data-section="match">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-link"></i> ${escapeHtml(row['Match the Columns'] || 'C. Match the Columns')}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">
+                <table class="match-print">
+                    <thead><tr><th>Column A</th><th>Column B</th></tr></thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+                <div style="margin-top:14px;">${answerItems}</div>
+            </div>
+        </section>
+    `;
+}
+function renderTFBlock(row) {
+    const marks = row['Marks 3'] || 0;
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const qText = row[`TF Question ${i}`];
+        if (!hasValue(qText)) continue;
+        const a = answers[`tf_${i}`] || {};
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(qText)}</span>
+                    ${hasValue(a.answer) ? `
+                        <div class="saved-answer">
+                            <span class="lbl">Your answer</span>
+                            <b>${escapeHtml(a.answer)}</b>
+                            ${hasValue(a.reason) ? `<br><em style="color:var(--text-muted);font-size:0.9em;">Reason: ${escapeHtml(a.reason)}</em>` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+                ${answerButtonHtml(`tf_${i}`, 'True / False')}
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block" data-section="tf">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-check-double"></i> ${escapeHtml(row['True or False'] || 'D. True or False')}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderOddBlock(row) {
+    const marks = row['Marks 4'] || 0;
+    const sets = [];
+    for (let s = 0; s < 6; s++) {
+        const opts = [0,1,2,3].map(k => row[`Option ${s*4 + k + 1}`]);
+        if (!opts.some(hasValue)) continue;
+        sets.push({ opts });
+    }
+    if (!sets.length) return '';
+    const items = sets.map((set, idx) => {
+        const o = set.opts;
+        const line = `
+            ${hasValue(o[0]) ? `<span class="odd-item">${escapeHtml(o[0])}</span>` : '____'}
+            <span class="odd-sep">:</span>
+            ${hasValue(o[1]) ? `<span class="odd-item">${escapeHtml(o[1])}</span>` : '____'}
+            <span class="odd-dbl">::</span>
+            ${hasValue(o[2]) ? `<span class="odd-item">${escapeHtml(o[2])}</span>` : '____'}
+            <span class="odd-sep">:</span>
+            ${hasValue(o[3]) ? `<span class="odd-item">${escapeHtml(o[3])}</span>` : '____'}
+        `;
+        return `
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${idx + 1}</span>
+                    <span class="odd-line">${line}</span>
+                    ${savedAnswerHtml(`odd_${idx + 1}`)}
+                </div>
+                ${answerButtonHtml(`odd_${idx + 1}`, 'Answer')}
+            </div>
+        `;
+    }).join('');
+    return `
+        <section class="q-block" data-section="odd">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-search"></i> ${escapeHtml(row['Find odd man out'] || 'E. Find Odd Man Out')}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">${items}</div>
+        </section>
+    `;
+}
+function renderSimpleBlock(row, cfg) {
+    const { sectionKey, marksKey, qPrefix, qCount, icon, defaultTitle, answerKeyPrefix } = cfg;
+    const marks = row[marksKey] || 0;
+    const items = [];
+    for (let i = 1; i <= qCount; i++) {
+        const qText = row[`${qPrefix} ${i}`];
+        if (!hasValue(qText)) continue;
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(qText)}</span>
+                    ${savedAnswerHtml(`${answerKeyPrefix}_${i}`)}
+                </div>
+                ${answerButtonHtml(`${answerKeyPrefix}_${i}`)}
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block" data-section="${answerKeyPrefix}">
+            <div class="q-header">
+                <div class="q-title"><i class="fas ${icon}"></i> ${escapeHtml(row[sectionKey] || defaultTitle)}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderDistBlock(row) {
+    const marks = row['Marks 6'] || 0;
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const qText = row[`Dis Question ${i}`];
+        if (!hasValue(qText)) continue;
+        const a = answers[`dis_${i}`] || {};
+        const preview = (hasValue(a.columnA) || hasValue(a.columnB)) ? `
+            <div class="saved-answer">
+                <span class="lbl">Your answer</span>
+                <b>Column A:</b> ${escapeHtml(a.columnA || '—')}<br>
+                <b>Column B:</b> ${escapeHtml(a.columnB || '—')}
+            </div>
+        ` : '';
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(qText)}</span>
+                    ${preview}
+                </div>
+                ${answerButtonHtml(`dis_${i}`, 'Answer')}
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block" data-section="dis">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-not-equal"></i> ${escapeHtml(row['Distinguishing between'] || 'G. Distinguishing between')}</div>
+                <span class="q-marks">${escapeHtml(String(marks))} M</span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+
+function renderPaper(row) {
+    const html = [
+        renderFillBlock(row),
+        renderMatchBlock(row),
+        renderTFBlock(row),
+        renderOddBlock(row),
+        renderSimpleBlock(row, {
+            sectionKey: 'Answer in One Sentence', marksKey: 'Marks 5',
+            qPrefix: 'OS Questions', qCount: 6, icon: 'fa-pen-fancy',
+            defaultTitle: 'F. Answer in One Sentence', answerKeyPrefix: 'os'
+        }),
+        renderDistBlock(row),
+        renderSimpleBlock(row, {
+            sectionKey: 'Answer the Following Question', marksKey: 'Marks 7',
+            qPrefix: 'AQ', qCount: 6, icon: 'fa-comments',
+            defaultTitle: 'H. Answer the Following Question', answerKeyPrefix: 'aq'
+        }),
+        renderSimpleBlock(row, {
+            sectionKey: 'Brief Answer', marksKey: 'Marks 8',
+            qPrefix: 'BQ', qCount: 6, icon: 'fa-align-left',
+            defaultTitle: 'I. Brief Answer', answerKeyPrefix: 'bq'
+        })
+    ].filter(Boolean).join('');
+
+    dom.paperBody.innerHTML = html;
+
+    dom.paperBody.querySelectorAll('.answer-btn[data-answer-key]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const key = btn.getAttribute('data-answer-key');
+            if (key.startsWith('dis_')) openDistModal(key);
+            else openAnswerModal(key);
+        });
+    });
+
+    updateProgress();
+}
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+function isAnswered(a) {
+    if (!a) return false;
+    return hasValue(a.answer) || hasValue(a.columnA) || hasValue(a.columnB);
+}
+function countTotalAnswerable() {
+    return dom.paperBody.querySelectorAll('.answer-btn[data-answer-key]').length;
+}
+function countAnswered() {
+    let n = 0;
+    dom.paperBody.querySelectorAll('.answer-btn[data-answer-key]').forEach(btn => {
+        const key = btn.getAttribute('data-answer-key');
+        if (isAnswered(answers[key])) n++;
+    });
+    return n;
+}
+function updateProgress() {
+    dom.answeredCount.textContent = countAnswered();
+    dom.totalCount.textContent = countTotalAnswerable();
+}
+
+/* ============================================================
+   ANSWER MODAL
+   ============================================================ */
+function getQuestionContext(key) {
+    const row = questionRow;
+    const [prefix, idxStr] = key.split('_');
+    const idx = parseInt(idxStr, 10);
+    if (prefix === 'fill')  return { questionText: row[`Fill Questions ${idx}`] || '', mode: 'text' };
+    if (prefix === 'match') return { questionText: `Match: "${row[`Match Pair ${idx}`] || ''}" ↔ Column B`, mode: 'text' };
+    if (prefix === 'tf')    return { questionText: row[`TF Question ${idx}`] || '', mode: 'tf', needsReason: true };
+    if (prefix === 'odd') {
+        const setIdx = idx - 1;
+        const opts = [0,1,2,3].map(k => row[`Option ${setIdx*4 + k + 1}`] || '');
+        return { questionText: `Find the odd one out: ${opts.filter(hasValue).join(', ')}`, mode: 'text' };
+    }
+    if (prefix === 'os')  return { questionText: row[`OS Questions ${idx}`] || '', mode: 'text' };
+    if (prefix === 'aq')  return { questionText: row[`AQ ${idx}`] || '', mode: 'text' };
+    if (prefix === 'bq')  return { questionText: row[`BQ ${idx}`] || '', mode: 'text' };
+    return { questionText: '', mode: 'text' };
+}
+
+function openAnswerModal(key) {
+    if (submitted) { showToast('Test already submitted', 'warning'); return; }
+    currentAnswerKey = key;
+    const ctx = getQuestionContext(key);
+    const a = answers[key] || {};
+    dom.ansQuestionBody.textContent = ctx.questionText || '—';
+    dom.ansInput.value = a.answer || '';
+    dom.ansInput.placeholder = ctx.needsReason ? 'Type True or False…' : 'Type your answer here…';
+    dom.charCount.textContent = (a.answer || '').length;
+    dom.savedHint.classList.toggle('show', !!a.draft);
+    dom.pasteHint.classList.remove('show');
+    dom.answerModal.classList.add('active');
+    setTimeout(() => dom.ansInput.focus(), 120);
+}
+function closeAnswerModal() {
+    dom.answerModal.classList.remove('active');
+    currentAnswerKey = null;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SAVE ANSWER (FIX #3)
+   Both Save Draft and Save Answer now swap the button.
+   ══════════════════════════════════════════════════════════════ */
+function saveAnswerFromModal(isSubmit) {
+    if (!currentAnswerKey) return;
+    const val = dom.ansInput.value.trim();
+    if (!val) { showToast('Please type an answer before saving', 'warning'); return; }
+
+    const existing = answers[currentAnswerKey] || {};
+    answers[currentAnswerKey] = {
+        ...existing,
+        answer: val,
+        draft: !isSubmit,
+        answeredAt: Date.now()
+    };
+
+    /* Replace the Answer button with Edit Answer — for BOTH draft and final saves */
+    rerenderItem(currentAnswerKey);
+    updateProgress();
+
+    if (isSubmit) {
+        showToast('✅ Answer saved', 'success', 1800);
+        closeAnswerModal();
+    } else {
+        /* Save Draft keeps the modal open so the user can keep editing */
+        dom.savedHint.classList.add('show');
+        showToast('💾 Draft saved', 'info', 1500);
+    }
+}
+
+/* ============================================================
+   DISTINGUISHING MODAL
+   ============================================================ */
+function openDistModal(key) {
+    if (submitted) { showToast('Test already submitted', 'warning'); return; }
+    currentDistKey = key;
+    const idx = parseInt(key.split('_')[1], 10);
+    const qText = questionRow[`Dis Question ${idx}`] || '';
+    const a = answers[key] || {};
+    dom.distQuestionBody.textContent = qText || '—';
+    dom.distInputA.value = a.columnA || '';
+    dom.distInputB.value = a.columnB || '';
+    dom.distCharCount.textContent = (a.columnA || '').length + (a.columnB || '').length;
+    dom.distSavedHint.classList.toggle('show', !!a.draft);
+    dom.distPasteHint.classList.remove('show');
+    dom.distModal.classList.add('active');
+    setTimeout(() => dom.distInputA.focus(), 120);
+}
+function closeDistModal() {
+    dom.distModal.classList.remove('active');
+    currentDistKey = null;
+}
+function saveDistFromModal(isSubmit) {
+    if (!currentDistKey) return;
+    const aVal = dom.distInputA.value.trim();
+    const bVal = dom.distInputB.value.trim();
+    if (!aVal && !bVal) {
+        showToast('Please fill Column A or Column B before saving', 'warning');
+        return;
+    }
+    const existing = answers[currentDistKey] || {};
+    answers[currentDistKey] = {
+        ...existing,
+        columnA: aVal,
+        columnB: bVal,
+        answer: '',
+        draft: !isSubmit,
+        answeredAt: Date.now()
+    };
+
+    /* Replace the Answer button with Edit Answer */
+    rerenderItem(currentDistKey);
+    updateProgress();
+
+    if (isSubmit) {
+        showToast('✅ Answer saved', 'success', 1800);
+        closeDistModal();
+    } else {
+        dom.distSavedHint.classList.add('show');
+        showToast('💾 Draft saved', 'info', 1500);
+    }
+}
+
+/* ============================================================
+   RE-RENDER SINGLE ITEM
+   ============================================================ */
+function rerenderItem(key) {
+    const btn = dom.paperBody.querySelector(`.answer-btn[data-answer-key="${CSS.escape(key)}"]`);
+    if (!btn) return;
+    const item = btn.closest('.q-item');
+    if (!item) return;
+    const a = answers[key];
+    const answered = isAnswered(a);
+    btn.className = `answer-btn ${answered ? 'answered' : ''}`;
+    btn.innerHTML = `<i class="fas ${answered ? 'fa-edit' : 'fa-pen'}"></i> ${answered ? 'Edit Answer' : 'Answer'}`;
+
+    const contentEl = item.querySelector('.q-item-content');
+    if (!contentEl) return;
+    const oldPreview = item.querySelector('.saved-answer');
+
+    if (answered) {
+        const newPreview = document.createElement('div');
+        newPreview.className = 'saved-answer';
+        if (key.startsWith('dis_')) {
+            newPreview.innerHTML = `
+                <span class="lbl">Your answer</span>
+                <b>Column A:</b> ${escapeHtml(a.columnA || '—')}<br>
+                <b>Column B:</b> ${escapeHtml(a.columnB || '—')}
+            `;
+        } else {
+            newPreview.innerHTML = `<span class="lbl">Your answer</span>${escapeHtml(a.answer || '—')}`;
+        }
+        if (oldPreview) oldPreview.replaceWith(newPreview);
+        else contentEl.appendChild(newPreview);
+    } else if (oldPreview) {
+        oldPreview.remove();
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PASTE PREVENTION  (FIX #5)
+   ══════════════════════════════════════════════════════════════
+   Blocks paste, drag-drop, and Ctrl/Cmd+V on answer textareas.
+   Typing and copy (Ctrl+C) remain allowed.
+   ══════════════════════════════════════════════════════════════ */
+function applyPasteBlock(el, hintEl) {
+    if (!el) return;
+
+    const warn = () => {
+        el.classList.remove('paste-blocked');
+        void el.offsetWidth;
+        el.classList.add('paste-blocked');
+        setTimeout(() => el.classList.remove('paste-blocked'), 500);
+        if (hintEl) {
+            hintEl.classList.add('show');
+            setTimeout(() => hintEl.classList.remove('show'), 2200);
+        }
+        showToast('🚫 Paste is disabled for this test', 'warning', 1800);
+    };
+
+    el.addEventListener('paste', (e) => {
+        e.preventDefault();
+        warn();
+    });
+
+    el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        warn();
+    });
+
+    el.addEventListener('dragover', (e) => e.preventDefault());
+
+    /* Belt and braces: intercept Ctrl/Cmd+V at keydown too */
+    el.addEventListener('keydown', (e) => {
+        const isPasteCombo = (e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V');
+        if (isPasteCombo) {
+            e.preventDefault();
+            warn();
+        }
+    });
+
+    /* Mobile: long-press context menu is disabled to prevent paste */
+    el.addEventListener('contextmenu', (e) => {
+        /* Only block on the textarea itself, not on regular page content */
+        if (e.target === el) e.preventDefault();
+    });
+}
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+function startTimer(seconds) {
+    totalSeconds = seconds;
+    remainingSec = seconds;
+    updateTimerDisplay();
+    timerHandle = setInterval(() => {
+        remainingSec--;
+        updateTimerDisplay();
+        if (remainingSec <= 0) {
+            clearInterval(timerHandle); timerHandle = null;
+            handleTimeUp();
+        }
+    }, 1000);
+}
+function updateTimerDisplay() {
+    dom.timerText.textContent = formatHMS(remainingSec);
+    dom.timerPill.classList.remove('warning', 'danger');
+    if (remainingSec <= 60) dom.timerPill.classList.add('danger');
+    else if (remainingSec <= 5 * 60) dom.timerPill.classList.add('warning');
+    document.title = `(${formatHMS(remainingSec)}) Test Paper`;
+}
+function handleTimeUp() {
+    if (submitted) return;
+    showToast('⏰ Time is up! Auto-submitting…', 'warning', 4000);
+    doSubmit(true);
+}
+
+/* ============================================================
+   SUBMIT
+   ============================================================ */
+function openSubmitModal() {
+    if (submitted) { showToast('Test already submitted', 'warning'); return; }
+    const total = countTotalAnswerable();
+    const done = countAnswered();
+    dom.submitModalMsg.textContent =
+        `You have answered ${done} of ${total} questions. Once submitted, your answers will be saved and you won't be able to change them.`;
+    dom.submitModal.classList.add('active');
+}
+function closeSubmitModal() { dom.submitModal.classList.remove('active'); }
+
+async function doSubmit(auto) {
+    if (submitted) return;
+    submitted = true;
+    if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
+
+    /* Capture final time-taken (condition #2) */
+    finishedAtMs = Date.now();
+    elapsedSeconds = Math.max(0, Math.floor((finishedAtMs - startedAtMs) / 1000));
+
+    dom.submitBtn.disabled = true;
+    dom.submitBtn.innerHTML = '<span class="spinner"></span> Saving…';
+    dom.paperBody.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+
+    try {
+        await saveToQA();
+        markTestSubmitted({
+            testName: testMeta.testName,
+            std: testMeta.std,
+            studentName: testMeta.studentName
+        });
+        showToast(auto ? '⏰ Time up — test submitted' : '✅ Test submitted successfully', 'success', 4500);
+        setTimeout(() => { window.location.href = 'Answer.html'; }, 1800);
+    } catch (err) {
+        console.error('[Submit] failed:', err);
+        submitted = false;
+        dom.submitBtn.disabled = false;
+        dom.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Test';
+        dom.paperBody.querySelectorAll('.answer-btn').forEach(b => b.disabled = false);
+        showToast('❌ ' + err.message, 'error', 5000);
+    }
+}
+
+/* ============================================================
+   BUILD Q_A ROW
+   ══════════════════════════════════════════════════════════════
+   FIX #1 continued: Std and Subject Name come from the matched
+   question row (which is now selected with subject-aware
+   matching), so the submitted record always carries the same
+   Std + Subject + Test Name the student actually attempted.
+
+   FIX #2: "Time Taken" is added right after "Timing".
+   ============================================================ */
+function buildQARow() {
+    const row = questionRow || {};
+    const meta = testMeta || {};
+    const val = (v) => (v === undefined || v === null) ? '' : v;
+    const record = {};
+
+    /* A — header */
+    record['Sr. No']       = '';
+    record['Student Name'] = meta.studentName || 'Student';
+    record['Date']         = meta.date || todayDDMMYYYY();
+    record['Status']       = 'Submitted';
+    record['Std']          = row['Std'] || meta.std || '';
+    record['Subject Name'] = row['Subject Name'] || meta.subject || '';
+    record['Test Name']    = row['Test Name'] || meta.testName || '';
+    record['Total Marks']  = row['Total Marks'] || meta.totalMarks || 0;
+    record['Timing']       = row['Timing'] || meta.timing || '';
+    record['Time Taken']   = fmtDuration(elapsedSeconds);   /* ← condition #2 */
+
+    /* B */
+    record['Fill in the Blanks'] = row['Fill in the Blanks'] || '';
+    record['Marks 1'] = row['Marks 1'] || 0;
+    for (let i = 1; i <= 6; i++) {
+        record[`Fill Questions ${i}`] = val(row[`Fill Questions ${i}`]);
+        record[`Fill Answer ${i}`]    = val(answers[`fill_${i}`]?.answer);
+    }
+
+    /* C */
+    record['Match the Columns'] = row['Match the Columns'] || '';
+    record['Marks 2']           = row['Marks 2'] || 0;
+    record['Obtain Marks 2']    = '';
+    for (let i = 1; i <= 6; i++) {
+        const letter = String.fromCharCode(64 + i);
+        record[`Match Pair ${i}`]        = val(row[`Match Pair ${i}`]);
+        record[`Match Pair ${letter}`]   = val(row[`Match Pair ${letter}`]);
+        record[`Match Ans ${i}`]         = val(answers[`match_${i}`]?.answer);
+    }
+
+    /* D */
+    record['True or False']  = row['True or False'] || '';
+    record['Marks 3']        = row['Marks 3'] || 0;
+    record['Obtain Marks 3'] = '';
+    for (let i = 1; i <= 6; i++) {
+        record[`TF Question ${i}`] = val(row[`TF Question ${i}`]);
+        record[`TF Ans ${i}`]      = val(answers[`tf_${i}`]?.answer);
+        record[`TF Reason ${i}`]   = val(answers[`tf_${i}`]?.reason);
+    }
+
+    /* E */
+    record['Find odd man out'] = row['Find odd man out'] || '';
+    record['Marks 4']          = row['Marks 4'] || 0;
+    record['Obtain Marks 4']   = '';
+    for (let i = 1; i <= 6; i++) record[`Find Ans ${i}`] = val(answers[`odd_${i}`]?.answer);
+
+    /* F */
+    record['Answer in One Sentence'] = row['Answer in One Sentence'] || '';
+    record['Marks 5']                = row['Marks 5'] || 0;
+    record['Obtain Marks 5']         = '';
+    for (let i = 1; i <= 6; i++) {
+        record[`OS Questions ${i}`] = val(row[`OS Questions ${i}`]);
+        record[`OS Ans ${i}`]       = val(answers[`os_${i}`]?.answer);
+    }
+
+    /* G */
+    record['Distinguishing between'] = row['Distinguishing between'] || '';
+    record['Marks 6']                = row['Marks 6'] || 0;
+    record['Obtain Marks 6']         = '';
+    for (let i = 1; i <= 6; i++) {
+        record[`Dis Question ${i}`] = val(row[`Dis Question ${i}`]);
+        const aIdx = (i - 1) * 2;
+        const bIdx = aIdx + 1;
+        record[`Dis Ans ${DIS_LETTERS[aIdx]}`] = val(answers[`dis_${i}`]?.columnA);
+        record[`Dis Ans ${DIS_LETTERS[bIdx]}`] = val(answers[`dis_${i}`]?.columnB);
+    }
+
+    /* H */
+    record['Answer the Following Question'] = row['Answer the Following Question'] || '';
+    record['Marks 7']                        = row['Marks 7'] || 0;
+    record['Obtain Marks 7']                 = '';
+    for (let i = 1; i <= 6; i++) {
+        record[`AQ ${i}`]     = val(row[`AQ ${i}`]);
+        record[`AQ Ans ${i}`] = val(answers[`aq_${i}`]?.answer);
+    }
+
+    /* I */
+    record['Brief Answer']  = row['Brief Answer'] || '';
+    record['Marks 8']       = row['Marks 8'] || 0;
+    record['Obtain Marks 8']= '';
+    for (let i = 1; i <= 6; i++) {
+        record[`BQ ${i}`]     = val(row[`BQ ${i}`]);
+        record[`BQ Ans ${i}`] = val(answers[`bq_${i}`]?.answer);
+    }
+
+    return QA_HEADERS.map(h => record[h] !== undefined ? record[h] : '');
+}
+
+/* ============================================================
+   SAVE TO Q_A
+   ============================================================ */
+async function saveToQA() {
+    const rowArr = buildQARow();
+    const params = new URLSearchParams();
+    params.append('action', 'insert');
+    params.append('spreadsheetId', QA_SS_ID);
+    params.append('sheetName', QA_SHEET);
+    QA_HEADERS.forEach((header, i) => {
+        params.append(header, rowArr[i] == null ? '' : String(rowArr[i]));
+    });
+    const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success') throw new Error(json.message || 'Save failed');
+    return json;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+    cacheDom();
+
+    /* Wire answer modal */
+    dom.answerModalClose.addEventListener('click', closeAnswerModal);
+    dom.ansCancelBtn.addEventListener('click', closeAnswerModal);
+    /* NOTE: outside-click close removed (condition #4) */
+    dom.ansSaveDraftBtn.addEventListener('click', () => saveAnswerFromModal(false));
+    dom.ansSubmitBtn.addEventListener('click', () => saveAnswerFromModal(true));
+    dom.ansInput.addEventListener('input', debounce(() => { dom.charCount.textContent = dom.ansInput.value.length; }, 120));
+
+    /* Wire dist modal */
+    dom.distModalClose.addEventListener('click', closeDistModal);
+    dom.distCancelBtn.addEventListener('click', closeDistModal);
+    /* NOTE: outside-click close removed (condition #4) */
+    dom.distSaveDraftBtn.addEventListener('click', () => saveDistFromModal(false));
+    dom.distSubmitBtn.addEventListener('click', () => saveDistFromModal(true));
+    const updateDistCount = debounce(() => {
+        dom.distCharCount.textContent = (dom.distInputA.value.length + dom.distInputB.value.length);
+    }, 120);
+    dom.distInputA.addEventListener('input', updateDistCount);
+    dom.distInputB.addEventListener('input', updateDistCount);
+
+    /* Wire submit modal — outside-click still allowed here (utility modal) */
+    dom.submitModalClose.addEventListener('click', closeSubmitModal);
+    dom.submitCancelBtn.addEventListener('click', closeSubmitModal);
+    dom.submitModal.addEventListener('click', (e) => { if (e.target === dom.submitModal) closeSubmitModal(); });
+    dom.submitBtn.addEventListener('click', openSubmitModal);
+    dom.submitConfirmBtn.addEventListener('click', () => { closeSubmitModal(); doSubmit(false); });
+
+    /* NOTE: Escape no longer closes answer/dist modals (condition #4) */
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            /* Only submit modal can be closed with Escape */
+            closeSubmitModal();
+        }
+    });
+
+    window.addEventListener('beforeunload', (e) => {
+        if (!submitted && Object.keys(answers).length > 0) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    /* Apply paste-block to every answer textarea (condition #5) */
+    applyPasteBlock(dom.ansInput, dom.pasteHint);
+    applyPasteBlock(dom.distInputA, dom.distPasteHint);
+    applyPasteBlock(dom.distInputB, dom.distPasteHint);
+
+    /* Load meta */
+    try {
+        const raw = sessionStorage.getItem('Universal_active_test');
+        if (!raw) throw new Error('No active test found. Please start again from Test Series.');
+        testMeta = JSON.parse(raw);
+    } catch (err) {
+        return showError('Test not found', err.message);
+    }
+    dom.brandTestName.textContent = testMeta.testName || 'Test Paper';
+    dom.sbName.textContent = testMeta.studentName || '—';
+    dom.sbStd.textContent  = testMeta.std || '—';
+
+    try {
+        /* Fetch the correct row — subject-aware (condition #1) */
+        questionRow = await fetchQuestionRow(testMeta);
+
+        /* Start the clock (condition #2) — set BEFORE the timer starts so
+           the elapsed count includes the time from paper reveal to submit. */
+        startedAtMs = Date.now();
+
+        totalSeconds = parseTimingToSeconds(questionRow['Timing'] || testMeta.timing);
+        if (totalSeconds <= 0) totalSeconds = 30 * 60;
+
+        renderMetaStrip(questionRow, testMeta);
+        renderPaper(questionRow);
+
+        dom.loadingBox.style.display = 'none';
+        dom.paper.style.display = 'block';
+        dom.submitBar.style.display = 'flex';
+
+        startTimer(totalSeconds);
+        showToast(`⏱️ You have ${formatHMS(totalSeconds)} to complete the test`, 'info', 4500);
+    } catch (err) {
+        console.error('[Init] failed:', err);
+        showError('Unable to load test', err.message);
+    }
+}
+
+function showError(title, msg) {
+    dom.loadingBox.style.display = 'none';
+    dom.paper.style.display = 'none';
+    dom.submitBar.style.display = 'none';
+    dom.errorTitle.textContent = title;
+    dom.errorMsg.textContent = msg;
+    dom.errorState.classList.add('show');
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+else init();
+
+window.addEventListener('beforeunload', () => { if (timerHandle) clearInterval(timerHandle); });
+
+})();
+</script>
+</body>
+</html>

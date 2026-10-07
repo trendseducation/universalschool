@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Universal School Academy — Test Series">
+
+<title>Universal School Academy · Test Series</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+<script>
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<style>
+/* ============================================================
+   THEME VARIABLES
+   ============================================================ */
+:root {
+    --bg-body: #eef2f9;
+    --bg-card: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #e2e8f0;
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-hover: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+    --accent: #2563eb;
+    --accent-2: #7c3aed;
+    --accent-soft: rgba(37, 99, 235, 0.10);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+    --success: #10b981;
+    --success-soft: rgba(16, 185, 129, 0.10);
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.10);
+    --warning: #f59e0b;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    --input-bg: #f8fafc;
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --chip-bg: rgba(37, 99, 235, 0.08);
+    --grad-hero: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+}
+[data-theme="dark"] {
+    --bg-body: #070d1c;
+    --bg-card: #111a2e;
+    --bg-elevated: #16213a;
+    --bg-soft: #0f1830;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1e2a44;
+    --shadow-xs: 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
+    --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    --shadow-hover: 0 26px 52px -22px rgba(0, 0, 0, 0.85);
+    --accent: #3b82f6;
+    --accent-2: #a78bfa;
+    --accent-soft: rgba(59, 130, 246, 0.18);
+    --accent-glow: rgba(59, 130, 246, 0.45);
+    --success: #34d399;
+    --success-soft: rgba(16, 185, 129, 0.18);
+    --danger: #f87171;
+    --danger-soft: rgba(239, 68, 68, 0.18);
+    --warning: #fbbf24;
+    --warning-soft: rgba(245, 158, 11, 0.20);
+    --input-bg: #16213a;
+    --backdrop: rgba(0, 0, 0, 0.75);
+    --chip-bg: rgba(59, 130, 246, 0.15);
+    --grad-hero: linear-gradient(135deg, #1e40af 0%, #6d28d9 100%);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background 300ms ease, color 300ms ease;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes modalPop { from { transform: scale(0.92) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+@keyframes shimmer { 0% { background-position: -500px 0; } 100% { background-position: 500px 0; } }
+@keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+@keyframes countdownPop { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.55); }
+    70% { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+
+.spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    will-change: transform;
+}
+
+.app-shell {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: clamp(0.75rem, 2vw, 1.4rem);
+    padding-top: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-top));
+    padding-bottom: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+    min-height: 100dvh;
+    align-content: start;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════════ */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-card);
+    border-radius: 999px;
+    padding: 0.5rem clamp(0.85rem, 2vw, 1.4rem);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: calc(var(--safe-top) + 6px);
+    z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.brand img { height: clamp(30px, 3.5vw, 40px); width: auto; object-fit: contain; flex-shrink: 0; }
+.brand-name {
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.back-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--chip-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 260ms ease;
+    flex-shrink: 0;
+}
+.back-pill:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE HEADER
+   ══════════════════════════════════════════════════════════════ */
+.page-head {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 3vw, 24px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    padding: clamp(1rem, 2.5vw, 1.4rem) clamp(1.1rem, 3vw, 1.6rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.85rem, 2vw, 1.2rem);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.45s ease;
+}
+.page-head::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--grad-hero);
+}
+.page-head .head-avatar {
+    width: clamp(56px, 8vw, 72px);
+    height: clamp(56px, 8vw, 72px);
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--bg-soft);
+    border: 3px solid var(--bg-card);
+    box-shadow: var(--shadow-xs);
+    flex-shrink: 0;
+}
+.page-head .head-meta { min-width: 0; flex: 1; }
+.page-head .head-meta h1 {
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    word-break: break-word;
+}
+.page-head .head-meta .sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.7rem;
+    font-size: clamp(0.7rem, 1.05vw, 0.82rem);
+    color: var(--text-muted);
+    margin-top: 4px;
+    align-items: center;
+}
+.page-head .head-meta .sub > span { display: inline-flex; align-items: center; gap: 5px; }
+.page-head .head-meta .sub i { color: var(--accent); font-size: 0.85em; }
+
+.badge-std, .badge-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: clamp(0.66rem, 1vw, 0.76rem);
+    border: 1px solid var(--accent-soft);
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+.badge-live {
+    background: var(--success-soft);
+    color: var(--success);
+    border-color: var(--success-soft);
+}
+.badge-live::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: livePulse 1.6s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STATE BOXES
+   ══════════════════════════════════════════════════════════════ */
+.state-box {
+    background: var(--bg-card);
+    border-radius: clamp(20px, 3vw, 28px);
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico { font-size: clamp(2rem, 5vw, 3rem); color: var(--accent); margin-bottom: 1rem; }
+.state-box h3 { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 0.4rem; font-weight: 700; }
+.state-box p { color: var(--text-muted); font-size: clamp(0.82rem, 1.4vw, 0.9rem); max-width: 460px; margin: 0 auto; line-height: 1.6; }
+.state-box .btn { margin-top: 1.2rem; }
+
+/* Section labels between groups of cards */
+.section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.35rem 0 0.2rem;
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+}
+.section-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.section-label.warn::before { background: var(--warning); }
+.section-label .count {
+    margin-left: auto;
+    background: var(--chip-bg);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    border: 1px solid var(--accent-soft);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TEST CARDS
+   ══════════════════════════════════════════════════════════════ */
+.tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: clamp(0.85rem, 2vw, 1.15rem);
+}
+
+.test-card {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 2.5vw, 24px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+    position: relative;
+    transition: transform 300ms cubic-bezier(0.2, 0.9, 0.3, 1.1),
+                box-shadow 300ms ease,
+                border-color 300ms ease,
+                opacity 300ms ease;
+    animation: fadeUp 0.45s ease backwards;
+    display: flex;
+    flex-direction: column;
+}
+.test-card:nth-child(1) { animation-delay: 0.02s; }
+.test-card:nth-child(2) { animation-delay: 0.06s; }
+.test-card:nth-child(3) { animation-delay: 0.10s; }
+.test-card:nth-child(4) { animation-delay: 0.14s; }
+.test-card:nth-child(5) { animation-delay: 0.18s; }
+.test-card:nth-child(6) { animation-delay: 0.22s; }
+
+.test-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    z-index: 3;
+}
+.test-card.active-status::before { background: linear-gradient(90deg, var(--success), #14b8a6); }
+.test-card.expired-status::before { background: linear-gradient(90deg, var(--danger), #ec4899); }
+.test-card.result-status::before { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.test-card.date-locked::before { background: linear-gradient(90deg, var(--text-light), var(--border-light)); }
+.test-card.incomplete-status::before { background: linear-gradient(90deg, var(--warning), #f97316); }
+
+.test-card:not(.expired-status):not(.date-locked):not(.incomplete-status):hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: transparent;
+}
+.test-card.date-locked { opacity: 0.72; cursor: pointer; }
+.test-card.date-locked:hover { opacity: 0.88; transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.test-card.incomplete-status {
+    opacity: 0.78;
+    cursor: pointer;
+    border-style: dashed;
+    border-color: var(--warning);
+}
+.test-card.incomplete-status:hover {
+    opacity: 0.95;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.test-head {
+    padding: clamp(1rem, 2.2vw, 1.3rem) clamp(1rem, 2.4vw, 1.4rem) 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-bottom: 1px dashed var(--border-light);
+}
+.test-title { min-width: 0; flex: 1; }
+.test-title h3 {
+    font-size: clamp(0.98rem, 1.5vw, 1.15rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    word-break: break-word;
+    margin-bottom: 4px;
+}
+.test-title .subject {
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+.test-title .subject i { color: var(--accent); }
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    font-size: clamp(0.62rem, 0.9vw, 0.72rem);
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid;
+}
+.status-pill.active { background: var(--success-soft); color: var(--success); border-color: rgba(16, 185, 129, 0.28); }
+.status-pill.deactive { background: var(--danger-soft); color: var(--danger); border-color: rgba(239, 68, 68, 0.28); }
+.status-pill.waiting { background: var(--warning-soft); color: var(--warning); border-color: rgba(245, 158, 11, 0.32); }
+.status-pill.date-locked { background: var(--bg-soft); color: var(--text-light); border-color: var(--border-light); }
+.status-pill.result {
+    background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(124,58,237,0.15));
+    color: var(--accent);
+    border-color: rgba(37, 99, 235, 0.28);
+}
+.status-pill.incomplete {
+    background: var(--warning-soft);
+    color: var(--warning);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.test-body {
+    padding: clamp(1rem, 2.2vw, 1.3rem) clamp(1rem, 2.4vw, 1.4rem);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem 1.2rem;
+    flex: 1;
+}
+.info-cell { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.info-cell .lbl {
+    font-size: clamp(0.6rem, 0.85vw, 0.68rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-light);
+}
+.info-cell .val {
+    font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+    font-weight: 700;
+    color: var(--text-main);
+    word-break: break-word;
+}
+.info-cell .val.marks-val {
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    color: var(--accent);
+    font-weight: 800;
+}
+.info-cell .val.missing {
+    color: var(--warning);
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* Integrity row — shows which columns (if any) are missing */
+.integrity-row {
+    margin: 0 clamp(1rem, 2.4vw, 1.4rem) 0.95rem;
+    padding: 8px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.7rem, 0.95vw, 0.78rem);
+    font-weight: 700;
+    border: 1px dashed;
+    line-height: 1.4;
+}
+.integrity-row.complete {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+}
+.integrity-row.incomplete {
+    background: var(--warning-soft);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+.integrity-row i { font-size: 0.95rem; flex-shrink: 0; }
+.integrity-row .missing-list {
+    font-weight: 800;
+    color: var(--warning);
+}
+
+/* Countdown */
+.countdown-wrap {
+    margin: 0 clamp(1rem, 2.4vw, 1.4rem) 0.95rem;
+    background: linear-gradient(135deg, var(--accent-soft), rgba(124, 58, 237, 0.08));
+    border: 1.5px dashed var(--accent);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+.countdown-wrap .cd-icon {
+    width: 38px; height: 38px;
+    border-radius: 12px;
+    background: var(--grad-hero);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px -6px var(--accent-glow);
+}
+.countdown-wrap .cd-info { min-width: 0; flex: 1; }
+.countdown-wrap .cd-label {
+    font-size: clamp(0.62rem, 0.9vw, 0.7rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 2px;
+}
+.countdown-wrap .cd-timer {
+    font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: var(--text-main);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
+.countdown-wrap .cd-timer.urgent { color: var(--danger); }
+.countdown-wrap .cd-timer.soon   { color: var(--warning); }
+.countdown-wrap .cd-timer.pop    { animation: countdownPop 0.5s ease; }
+.countdown-wrap .cd-sub {
+    display: block;
+    font-size: clamp(0.68rem, 0.95vw, 0.76rem);
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+/* Instruction strip */
+.instruction-strip {
+    margin: 0 clamp(1rem, 2.4vw, 1.4rem) 0.95rem;
+    padding: 0.75rem 1rem;
+    background: var(--warning-soft);
+    border-left: 4px solid var(--warning);
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    color: var(--text-main);
+    line-height: 1.5;
+}
+.instruction-strip i { color: var(--warning); font-size: 0.95rem; flex-shrink: 0; margin-top: 2px; }
+.instruction-strip .ins-text { flex: 1; min-width: 0; }
+.instruction-strip .ins-text strong { color: var(--warning); font-weight: 800; }
+.instruction-strip.success { background: var(--success-soft); border-left-color: var(--success); }
+.instruction-strip.success i { color: var(--success); }
+.instruction-strip.success .ins-text strong { color: var(--success); }
+.instruction-strip.danger { background: var(--danger-soft); border-left-color: var(--danger); }
+.instruction-strip.danger i { color: var(--danger); }
+.instruction-strip.danger .ins-text strong { color: var(--danger); }
+.instruction-strip.locked { background: var(--bg-soft); border-left-color: var(--text-light); }
+.instruction-strip.locked i { color: var(--text-light); }
+.instruction-strip.locked .ins-text strong { color: var(--text-light); }
+
+/* Actions */
+.test-actions {
+    padding: 0 clamp(1rem, 2.4vw, 1.4rem) clamp(1rem, 2.2vw, 1.3rem);
+    margin-top: auto;
+}
+.btn {
+    border: none;
+    padding: 0.85rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+    cursor: pointer;
+    transition: transform 260ms ease, box-shadow 260ms ease, background 260ms ease, color 260ms ease, opacity 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: inherit;
+    width: 100%;
+    letter-spacing: 0.2px;
+    position: relative;
+    overflow: hidden;
+}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none !important; }
+.btn-start {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #fff;
+    box-shadow: 0 8px 22px -8px rgba(16, 185, 129, 0.55);
+}
+.btn-start:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(16, 185, 129, 0.7); }
+.btn-locked { background: var(--bg-soft); color: var(--text-light); border: 1.5px solid var(--border-light); }
+.btn-completed {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    box-shadow: 0 8px 22px -8px var(--accent-glow);
+}
+.btn-completed:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px var(--accent-glow); }
+.btn-result {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 8px 22px -8px rgba(245, 158, 11, 0.55);
+}
+.btn-result:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(245, 158, 11, 0.7); }
+.btn-incomplete {
+    background: transparent;
+    color: var(--warning);
+    border: 2px dashed var(--warning);
+}
+.btn-incomplete:hover { background: var(--warning-soft); }
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+.btn-outline:hover { background: var(--accent); color: #fff; }
+
+/* Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-soft) 0%, var(--border-light) 50%, var(--bg-soft) 100%);
+    background-size: 500px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 6px;
+}
+.skeleton-card {
+    height: 260px;
+    border-radius: clamp(18px, 2.5vw, 24px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════════════════════ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--backdrop);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.8rem, 2vw, 1.4rem);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 260ms ease, visibility 260ms ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.active { display: flex; opacity: 1; visibility: visible; }
+.modal-box {
+    background: var(--bg-elevated);
+    border-radius: clamp(18px, 3vw, 28px);
+    max-width: 480px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-header {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    padding: clamp(0.9rem, 2vw, 1.1rem) clamp(1rem, 2.5vw, 1.4rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: clamp(18px, 3vw, 28px) clamp(18px, 3vw, 28px) 0 0;
+    color: #fff;
+    gap: 0.6rem;
+}
+.modal-header h3 {
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.modal-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 260ms ease, background 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close:hover { transform: rotate(90deg); background: rgba(255,255,255,0.3); }
+.modal-body { padding: clamp(1.1rem, 2.6vw, 1.5rem); text-align: center; }
+.modal-body .modal-ico {
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    color: #fff;
+    background: var(--grad-hero);
+    box-shadow: 0 12px 28px -10px var(--accent-glow);
+}
+.modal-body .modal-ico.danger { background: linear-gradient(135deg, var(--danger), #ec4899); box-shadow: 0 12px 28px -10px rgba(239, 68, 68, 0.5); }
+.modal-body .modal-ico.warning { background: linear-gradient(135deg, var(--warning), #f97316); box-shadow: 0 12px 28px -10px rgba(245, 158, 11, 0.5); }
+.modal-body .modal-ico.success { background: linear-gradient(135deg, var(--success), #14b8a6); box-shadow: 0 12px 28px -10px rgba(16, 185, 129, 0.5); }
+.modal-body .modal-ico.result { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 12px 28px -10px rgba(245, 158, 11, 0.5); }
+.modal-body h4 {
+    font-size: clamp(1rem, 1.7vw, 1.15rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+.modal-body p {
+    color: var(--text-muted);
+    font-size: clamp(0.82rem, 1.2vw, 0.9rem);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+.modal-body .modal-actions { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+.modal-body .modal-actions .btn { flex: 1; min-width: 130px; width: auto; }
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 20px;
+    background: var(--bg-card);
+    border-left: 5px solid var(--accent);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 16px 16px 0;
+    box-shadow: var(--shadow-hover);
+    font-weight: 600;
+    font-size: 0.88rem;
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    color: var(--text-main);
+    max-width: 360px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error   { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.info    { border-left-color: var(--accent); }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+    body { background: radial-gradient(1200px 500px at 50% -10%, var(--accent-soft), transparent 60%), var(--bg-body); }
+    .app-shell {
+        padding: 0.65rem 0.75rem;
+        padding-top: calc(0.65rem + var(--safe-top));
+        padding-bottom: calc(1rem + var(--safe-bottom));
+        gap: 0.85rem;
+    }
+    .topbar { border-radius: 18px; padding: 0.5rem 0.75rem; }
+    .brand-name { font-size: 0.95rem; }
+    .back-pill { padding: 6px 11px; font-size: 0.72rem; }
+
+    .page-head { border-radius: 20px; padding: 1rem 1.1rem; flex-direction: column; text-align: center; }
+    .page-head .head-meta { align-items: center; }
+    .page-head .head-meta .sub { justify-content: center; }
+
+    .tests-grid { grid-template-columns: 1fr; }
+    .test-body { grid-template-columns: 1fr 1fr; }
+
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-box { border-radius: 26px 26px 0 0; max-width: 100%; max-height: 94dvh; }
+    .modal-header { border-radius: 26px 26px 0 0; }
+
+    .toast {
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + var(--safe-bottom));
+        max-width: none;
+        border-radius: 14px;
+        border-left: none;
+        border-top: 4px solid var(--accent);
+    }
+    .toast.success { border-top-color: var(--success); border-left-color: transparent; }
+    .toast.error   { border-top-color: var(--danger); border-left-color: transparent; }
+    .toast.warning { border-top-color: var(--warning); border-left-color: transparent; }
+}
+
+@media (max-width: 400px) {
+    .test-body { grid-template-columns: 1fr; }
+    .countdown-wrap { padding: 0.7rem 0.8rem; }
+}
+
+@media (min-width: 900px) {
+    .tests-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School Academy" width="40" height="40"
+                 decoding="async" fetchpriority="high">
+            <span class="brand-name">Test Series</span>
+        </div>
+        <button class="back-pill" type="button" id="backBtn" aria-label="Back to dashboard">
+            <i class="fas fa-arrow-left"></i> <span>Back</span>
+        </button>
+    </header>
+
+    <section class="page-head" id="pageHead" style="display: none;">
+        <img class="head-avatar" id="headAvatar" alt="Student" width="72" height="72"
+             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%232563eb'/%3E%3Ccircle cx='60' cy='48' r='21' fill='%23fff' opacity='0.85'/%3E%3Cellipse cx='60' cy='100' rx='35' ry='27' fill='%23fff' opacity='0.85'/%3E%3C/svg%3E">
+        <div class="head-meta">
+            <h1 id="headName">Student</h1>
+            <div class="sub">
+                <span class="badge-std" id="headStd"><i class="fas fa-graduation-cap"></i> Std —</span>
+                <span class="badge-live" id="liveBadge"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Live</span>
+                <span><i class="fas fa-clock"></i> <span id="liveClock">—</span></span>
+            </div>
+        </div>
+    </section>
+
+    <div id="skeletonWrap" class="tests-grid">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+    </div>
+
+    <div class="state-box" id="emptyState">
+        <div class="state-ico" style="color: var(--text-light);"><i class="fas fa-inbox"></i></div>
+        <h3 id="emptyTitle">No tests available</h3>
+        <p id="emptyMsg">There are no test series for your class right now. Please check back later.</p>
+        <a href="StudentDashboard.html" class="btn btn-outline" style="width:auto;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <main id="testsGrid" class="tests-grid" style="display: none;"></main>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL — Test completed (Status = Deactive)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="completedModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-flag-checkered"></i> Test Completed</h3>
+            <button class="modal-close" id="completedClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-ico danger"><i class="fas fa-check-double"></i></div>
+            <h4 id="completedTestName">The test was completed!</h4>
+            <p id="completedTestMsg">If you want to see your marks, click the button below.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="completedCancelBtn">Close</button>
+                <a class="btn btn-completed" href="../Student Details/StudentExam.html">
+                    <i class="fas fa-chart-bar"></i> Marks
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL — Start test
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="startModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-play-circle"></i> Start Test</h3>
+            <button class="modal-close" id="startClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-ico"><i class="fas fa-pen-fancy"></i></div>
+            <h4 id="startTestName">Start your test?</h4>
+            <p id="startTestMsg">Once you begin, make sure you have a stable internet connection and enough time to finish.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="startCancelBtn">Cancel</button>
+                <button class="btn btn-start" type="button" id="startConfirmBtn">
+                    <i class="fas fa-play"></i> Start Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL — Result ready (submitted test)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="resultModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-trophy"></i> Result Available</h3>
+            <button class="modal-close" id="resultClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-ico result"><i class="fas fa-star"></i></div>
+            <h4>Your Result is waiting!</h4>
+            <p>Click below to see your Result.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="resultCancelBtn">Close</button>
+                <a class="btn btn-result" href="../Student Details/StudentExam.html">
+                    <i class="fas fa-chart-line"></i> Result
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL — Date locked (not today)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="dateLockedModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-calendar-xmark"></i> Test Not Available Today</h3>
+            <button class="modal-close" id="dateLockedClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-ico warning"><i class="fas fa-calendar-day"></i></div>
+            <h4 id="dateLockedTestName">This test is not scheduled for today</h4>
+            <p id="dateLockedMsg">Please check back on the scheduled date.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="dateLockedCancelBtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL — Incomplete test (missing Std / Subject / Test Name in Questions)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="incompleteModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-triangle-exclamation"></i> Test Not Ready</h3>
+            <button class="modal-close" id="incompleteClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-ico warning"><i class="fas fa-file-circle-exclamation"></i></div>
+            <h4 id="incompleteTestName">This test isn't fully set up</h4>
+            <p id="incompleteMsg">
+                Some details of this test are missing in the Questions sheet.
+                Please try again later or contact your teacher.
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" type="button" id="incompleteCancelBtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Message…</div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL      = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const QUESTIONS_SS_ID = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const QUESTIONS_SHEET = "Questions";
+const QA_SS_ID        = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const QA_SHEET        = "Q_A";
+
+const ADMISSION_SS_ID = "1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8";
+const LOGIN_SS_ID     = "1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA";
+const LOGIN_SHEET     = "Student_Login";
+
+const STUDENT_SHEETS = [
+    'JR_KG','SR_KG','STD_1','STD_2','STD_3','STD_4',
+    'STD_5','STD_6','STD_7','STD_8','STD_9','STD_10'
+];
+
+const COL = {
+    STD:        'Std',
+    STATUS:     'Status',
+    TEST_NAME:  'Test Name',
+    SUBJECT:    'Subject Name',
+    TOTAL:      'Total Marks',
+    TIMING:     'Timing',
+    TEST_START: 'Test Start',
+    DATE:       'Date'
+};
+
+const QA_COL = {
+    STD:          'Std',
+    SUBJECT:      'Subject Name',
+    TEST_NAME:    'Test Name',
+    STUDENT_NAME: 'Student Name'
+};
+
+const STU_COL = {
+    EMAIL: 'Email Id',
+    STD:   'Adm In',
+    IMAGE: 'Image'
+};
+
+const SESSION_KEYS = {
+    USER: 'Universal_user',
+    USER_TYPE: 'Universal_user_type'
+};
+
+const THEME_KEY = 'user-theme-preference';
+const SUBMITTED_KEY = 'Universal_submitted_tests_v1';
+
+const CACHE_PREFIX       = 'Universal_tests_v3_';   /* bumped for relaxed matching */
+const SHEET_KEY_PREFIX   = CACHE_PREFIX + 'sheet_';
+const PROFILE_KEY_PREFIX = CACHE_PREFIX + 'profile_';
+const SHEET_CACHE_TTL    = 3 * 60 * 1000;
+const PROFILE_CACHE_TTL  = 30 * 60 * 1000;
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentEmail    = null;
+let currentStudent  = null;
+let tests           = [];
+let tickHandles     = {};
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.toast               = $('toast');
+    dom.pageHead            = $('pageHead');
+    dom.headAvatar          = $('headAvatar');
+    dom.headName            = $('headName');
+    dom.headStd             = $('headStd');
+    dom.liveClock           = $('liveClock');
+    dom.skeletonWrap        = $('skeletonWrap');
+    dom.emptyState          = $('emptyState');
+    dom.emptyTitle          = $('emptyTitle');
+    dom.emptyMsg            = $('emptyMsg');
+    dom.testsGrid           = $('testsGrid');
+    dom.backBtn             = $('backBtn');
+
+    dom.completedModal      = $('completedModal');
+    dom.completedClose      = $('completedClose');
+    dom.completedCancelBtn  = $('completedCancelBtn');
+    dom.completedTestName   = $('completedTestName');
+    dom.completedTestMsg    = $('completedTestMsg');
+
+    dom.startModal          = $('startModal');
+    dom.startClose          = $('startClose');
+    dom.startCancelBtn      = $('startCancelBtn');
+    dom.startConfirmBtn     = $('startConfirmBtn');
+    dom.startTestName       = $('startTestName');
+    dom.startTestMsg        = $('startTestMsg');
+
+    dom.resultModal         = $('resultModal');
+    dom.resultClose         = $('resultClose');
+    dom.resultCancelBtn     = $('resultCancelBtn');
+
+    dom.dateLockedModal     = $('dateLockedModal');
+    dom.dateLockedClose     = $('dateLockedClose');
+    dom.dateLockedCancelBtn = $('dateLockedCancelBtn');
+    dom.dateLockedTestName  = $('dateLockedTestName');
+    dom.dateLockedMsg       = $('dateLockedMsg');
+
+    dom.incompleteModal     = $('incompleteModal');
+    dom.incompleteClose     = $('incompleteClose');
+    dom.incompleteCancelBtn = $('incompleteCancelBtn');
+    dom.incompleteTestName  = $('incompleteTestName');
+    dom.incompleteMsg       = $('incompleteMsg');
+}
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+function lsGet(key) {
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
+}
+function lsSet(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch (e) { return false; }
+}
+function lsRemove(key) { try { localStorage.removeItem(key); } catch (e) {} }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function normalizeEmail(v) { return (v || '').toString().trim().toLowerCase(); }
+function normalizeStd(v) {
+    if (v == null) return '';
+    return v.toString().trim().replace(/\s+/g, ' ').toLowerCase();
+}
+function normalizeName(v) {
+    if (v == null) return '';
+    return v.toString()
+        .trim()
+        .replace(/^(mr\.?|mrs\.?|ms\.?|miss|dr\.?|prof\.?)\s+/i, '')
+        .replace(/\s+/g, ' ')
+        .toLowerCase();
+}
+function namesMatch(a, b) {
+    const na = normalizeName(a);
+    const nb = normalizeName(b);
+    if (!na || !nb) return false;
+    if (na === nb) return true;
+    const ta = na.split(' ').filter(Boolean).sort().join(' ');
+    const tb = nb.split(' ').filter(Boolean).sort().join(' ');
+    return ta === tb;
+}
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function debounce(fn, wait = 200) {
+    let t = null;
+    return function debounced(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
+function getFileId(url) {
+    if (!url) return '';
+    const m = url.toString().match(/\/d\/([-\w]{25,})|id=([-\w]{25,})/);
+    if (m) return m[1] || m[2] || '';
+    const bare = url.toString().match(/^([-\w]{25,})$/);
+    return bare ? bare[1] : '';
+}
+function driveThumb(url, size = 400) {
+    const id = getFileId(url);
+    if (!id) return '';
+    return `https://lh3.googleusercontent.com/d/${id}=w${size}`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DATE HELPERS
+   ══════════════════════════════════════════════════════════════ */
+function toDayKey(raw) {
+    if (raw == null || raw === '') return '';
+    if (raw instanceof Date) {
+        if (isNaN(raw.getTime())) return '';
+        return dateToDayKey(raw);
+    }
+    const s = raw.toString().trim();
+    if (!s) return '';
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+        const d = new Date(s);
+        return isNaN(d.getTime()) ? '' : dateToDayKey(d);
+    }
+    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
+    m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+    if (m) return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
+    const d = new Date(s);
+    return isNaN(d.getTime()) ? '' : dateToDayKey(d);
+}
+function dateToDayKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function todayDayKey() { return dateToDayKey(new Date()); }
+function isToday(dateRaw) {
+    const k = toDayKey(dateRaw);
+    return !!k && k === todayDayKey();
+}
+function prettyDate(dateRaw) {
+    const k = toDayKey(dateRaw);
+    if (!k) return dateRaw != null ? dateRaw.toString() : '—';
+    const [y, m, d] = k.split('-');
+    return `${d}/${m}/${y}`;
+}
+function parseTestStart(raw) {
+    if (raw == null || raw === '') return null;
+    if (raw instanceof Date) return isNaN(raw.getTime()) ? null : raw;
+    const s = raw.toString().trim();
+    if (!s) return null;
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+        const d = new Date(s); return isNaN(d.getTime()) ? null : d;
+    }
+    let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (m) {
+        const d = new Date(+m[3], +m[2]-1, +m[1], +(m[4]||0), +(m[5]||0), +(m[6]||0));
+        return isNaN(d.getTime()) ? null : d;
+    }
+    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)/i);
+    if (m) {
+        let hh = +m[4];
+        const ap = m[7].toUpperCase();
+        if (ap === 'PM' && hh !== 12) hh += 12;
+        if (ap === 'AM' && hh === 12) hh = 0;
+        const d = new Date(+m[3], +m[2]-1, +m[1], hh, +m[5], +(m[6]||0));
+        return isNaN(d.getTime()) ? null : d;
+    }
+    m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) {
+        const d = new Date(+m[1], +m[2]-1, +m[3]);
+        return isNaN(d.getTime()) ? null : d;
+    }
+    const d = new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+}
+function formatCountdown(ms) {
+    if (ms <= 0) return { text: '00:00:00' };
+    const totalSec = Math.floor(ms / 1000);
+    const d = Math.floor(totalSec / 86400);
+    const h = Math.floor((totalSec % 86400) / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    return { text: d > 0 ? `${d}d ${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(h)}:${pad(m)}:${pad(s)}` };
+}
+function formatTime12h(date) {
+    if (!(date instanceof Date)) return '—';
+    let h = date.getHours();
+    const m = String(date.getMinutes()).padStart(2, '0');
+    const ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return `${h}:${m} ${ap}`;
+}
+function formatDateNice(date) {
+    if (!(date instanceof Date)) return '—';
+    return `${String(date.getDate()).padStart(2,'0')}/${String(date.getMonth()+1).padStart(2,'0')}/${date.getFullYear()}`;
+}
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+function readSessionValue(key) {
+    const localRaw = localStorage.getItem(key);
+    if (localRaw) {
+        try {
+            const parsed = JSON.parse(localRaw);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        } catch (e) { return localRaw; }
+    }
+    const s = sessionStorage.getItem(key);
+    if (s) {
+        try {
+            const parsed = JSON.parse(s);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) return parsed.value;
+            return parsed;
+        } catch (e) { return s; }
+    }
+    return null;
+}
+function getLoggedInEmail() {
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    if (userType !== 'student') return null;
+    const email = readSessionValue(SESSION_KEYS.USER);
+    if (!email) return null;
+    return normalizeEmail(email);
+}
+
+/* ============================================================
+   THEME
+   ============================================================ */
+function applyTheme(theme) {
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    document.body.setAttribute('data-theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#070d1c' : '#2563eb');
+}
+const applyThemeDebounced = debounce(applyTheme, 50);
+function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    applyTheme(saved || 'light');
+    window.addEventListener('storage', (e) => {
+        if (e.key === THEME_KEY && e.newValue) applyThemeDebounced(e.newValue);
+    });
+    window.addEventListener('message', (e) => {
+        if (e.data && e.data.type === 'themeChange' && e.data.theme) {
+            applyThemeDebounced(e.data.theme);
+        }
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            const latest = localStorage.getItem(THEME_KEY);
+            if (latest) applyTheme(latest);
+        }
+    });
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg, type = 'info', ms = 3600) {
+    const t = dom.toast;
+    if (!t) return;
+    t.textContent = msg;
+    t.className = `toast ${type}`;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, ms);
+}
+
+/* ============================================================
+   NETWORK + CACHE
+   ============================================================ */
+async function fetchSheetFromNetwork(spreadsheetId, sheetName) {
+    const url = `${SCRIPT_URL}?spreadsheetId=${spreadsheetId}&sheetName=${encodeURIComponent(sheetName)}&action=getData&_=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Invalid response');
+    }
+    return json.data;
+}
+const memSheet = new Map();
+function sheetCacheKey(ssId, sheetName) { return `${SHEET_KEY_PREFIX}${ssId}::${sheetName}`; }
+function getCachedSheet(ssId, sheetName, { allowStale = false } = {}) {
+    const key = sheetCacheKey(ssId, sheetName);
+    const mem = memSheet.get(key);
+    if (mem && (allowStale || (Date.now() - mem.ts) < SHEET_CACHE_TTL)) return mem.rows;
+    const stored = lsGet(key);
+    if (stored && Array.isArray(stored.rows)) {
+        memSheet.set(key, { ts: stored.ts, rows: stored.rows });
+        if (allowStale || (Date.now() - stored.ts) < SHEET_CACHE_TTL) return stored.rows;
+    }
+    return null;
+}
+function setCachedSheet(ssId, sheetName, rows) {
+    const key = sheetCacheKey(ssId, sheetName);
+    const payload = { ts: Date.now(), rows };
+    memSheet.set(key, payload);
+    lsSet(key, payload);
+}
+async function fetchSheet(ssId, sheetName, { allowStale = false, force = false } = {}) {
+    if (!force) {
+        const cached = getCachedSheet(ssId, sheetName, { allowStale });
+        if (cached) return cached;
+    }
+    const rows = await fetchSheetFromNetwork(ssId, sheetName);
+    setCachedSheet(ssId, sheetName, rows);
+    return rows;
+}
+function profileCacheKey(email) { return `${PROFILE_KEY_PREFIX}${normalizeEmail(email)}`; }
+function getCachedProfile(email) {
+    const key = profileCacheKey(email);
+    const mem = memSheet.get(key);
+    if (mem) return mem;
+    const stored = lsGet(key);
+    if (stored && stored.row) { memSheet.set(key, stored); return stored; }
+    return null;
+}
+function setCachedProfile(email, payload) {
+    const key = profileCacheKey(email);
+    const wrapped = { ts: Date.now(), ...payload };
+    memSheet.set(key, wrapped);
+    lsSet(key, wrapped);
+}
+
+/* ============================================================
+   STUDENT LOOKUP
+   ============================================================ */
+async function findStudentByEmail(email) {
+    const target = normalizeEmail(email);
+    const tasks = STUDENT_SHEETS.map(async (sheet) => {
+        try {
+            const rows = await fetchSheet(ADMISSION_SS_ID, sheet, { allowStale: true });
+            const idx = rows.findIndex(r => normalizeEmail(r[STU_COL.EMAIL]) === target);
+            if (idx !== -1) return { sheet, row: rows[idx], rowIndex: idx + 2 };
+        } catch (e) {}
+        return null;
+    });
+    const results = await Promise.all(tasks);
+    return results.find(r => r !== null) || null;
+}
+function extractFullName(row) {
+    if (!row) return '';
+    const direct = row['Full Name'] || row['full name'] || row['Name'] || row['name'];
+    if (direct != null && direct.toString().trim() !== '') return direct.toString().trim();
+    return '';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INTEGRITY CHECK  (CONDITION #1 — relaxed)
+   ══════════════════════════════════════════════════════════════
+   We no longer require a cross-sheet match. Instead we simply
+   verify that the three key fields are present in the Questions
+   row itself. If ANY of them is empty, we flag the row as
+   "incomplete" and render it in a separate group.
+
+   This catches admin typos / partial data entry without hiding
+   valid tests.
+   ══════════════════════════════════════════════════════════════ */
+function getMissingFields(row) {
+    const missing = [];
+    if (!hasText(row[COL.STD]))        missing.push('Std');
+    if (!hasText(row[COL.SUBJECT]))    missing.push('Subject Name');
+    if (!hasText(row[COL.TEST_NAME]))  missing.push('Test Name');
+    return missing;
+}
+function hasText(v) {
+    return v !== null && v !== undefined && v.toString().trim() !== '';
+}
+
+/* Submission check — still uses the Q_A sheet (condition #2). */
+function isSubmittedInQA(qaRows, { std, subject, testName }, studentName) {
+    if (!studentName) return false;
+    if (!hasText(std) || !hasText(subject) || !hasText(testName)) return false;
+    const targetStd = normalizeStd(std);
+    const targetSub = subject.toString().trim().toLowerCase();
+    const targetTst = testName.toString().trim().toLowerCase();
+    return qaRows.some(r => {
+        const rs = normalizeStd(r[QA_COL.STD]);
+        const rb = (r[QA_COL.SUBJECT] || '').toString().trim().toLowerCase();
+        const rt = (r[QA_COL.TEST_NAME] || '').toString().trim().toLowerCase();
+        if (rs !== targetStd || rb !== targetSub || rt !== targetTst) return false;
+        return namesMatch(r[QA_COL.STUDENT_NAME], studentName);
+    });
+}
+
+/* ============================================================
+   LOAD TESTS
+   ══════════════════════════════════════════════════════════════
+   Pipeline:
+     1. Fetch Questions rows for the student's Std
+     2. Fetch ALL Q_A rows (used only for submission check)
+     3. For each Questions row:
+          • missing = getMissingFields(row)  ← relaxed integrity
+          • submitted = isSubmittedInQA(...)
+          • dateMatch, status, testStart → derive liveState
+   ══════════════════════════════════════════════════════════════ */
+async function loadTestsForStudent(student) {
+    const studentStd  = (student.row[STU_COL.STD] || '').toString().trim();
+    const studentName = student.fullName || '';
+    if (!studentStd) return [];
+
+    /* Fetch Questions */
+    let questionRows;
+    try {
+        questionRows = await fetchSheet(QUESTIONS_SS_ID, QUESTIONS_SHEET, { allowStale: true, force: true });
+    } catch (err) {
+        questionRows = getCachedSheet(QUESTIONS_SS_ID, QUESTIONS_SHEET, { allowStale: true }) || [];
+        if (!questionRows.length) throw err;
+    }
+
+    /* Fetch Q_A (non-fatal if it fails) */
+    let qaRows = [];
+    try {
+        qaRows = await fetchSheet(QA_SS_ID, QA_SHEET, { allowStale: true, force: true });
+    } catch (err) {
+        qaRows = getCachedSheet(QA_SS_ID, QA_SHEET, { allowStale: true }) || [];
+    }
+
+    const targetStd = normalizeStd(studentStd);
+    const matchedRows = questionRows.filter(r => normalizeStd(r[COL.STD]) === targetStd);
+
+    return matchedRows.map((r, i) => {
+        const status     = (r[COL.STATUS] || '').toString().trim();
+        const testStart  = parseTestStart(r[COL.TEST_START]);
+        const rawDate    = r[COL.DATE];
+        const totalMarks = Number(r[COL.TOTAL]) || 0;
+        const timing     = (r[COL.TIMING] || '').toString().trim();
+        const testName   = (r[COL.TEST_NAME] || '').toString().trim();
+        const subject    = (r[COL.SUBJECT] || '').toString().trim();
+        const stdRaw     = r[COL.STD];
+
+        /* Relaxed integrity */
+        const missing  = getMissingFields(r);
+        const complete = missing.length === 0;
+
+        /* Submission (only meaningful for complete rows) */
+        const submitted = complete && isSubmittedInQA(
+            qaRows,
+            { std: stdRaw, subject, testName },
+            studentName
+        );
+
+        const dateMatch = isToday(rawDate);
+        const isActive  = status.toLowerCase() === 'active';
+        const now       = Date.now();
+        const startMs   = testStart ? testStart.getTime() : 0;
+        const hasStarted = testStart ? (now >= startMs) : false;
+
+        /* State resolution:
+             1. submitted      (result ready)
+             2. !complete      (incomplete)
+             3. !dateMatch     (not today)
+             4. !isActive      (completed)
+             5. waiting        (countdown)
+             6. active         (start)
+        */
+        let liveState;
+        if (submitted)         liveState = 'submitted';
+        else if (!complete)    liveState = 'incomplete';
+        else if (!dateMatch)   liveState = 'dateLocked';
+        else if (!isActive)    liveState = 'deactive';
+        else if (!testStart)   liveState = 'active';
+        else if (!hasStarted)  liveState = 'waiting';
+        else                   liveState = 'active';
+
+        return {
+            id: `test_${i}_${targetStd}_${testName || i}`,
+            rowIndex: i + 2,
+            std: stdRaw,
+            status,
+            isActive,
+            complete,
+            missing,
+            submitted,
+            testName,
+            subject,
+            totalMarks,
+            timing,
+            rawDate,
+            prettyDateStr: prettyDate(rawDate),
+            dateMatch,
+            testStart,
+            liveState,
+            raw: r
+        };
+    });
+}
+
+/* ============================================================
+   LIVE CLOCK
+   ============================================================ */
+function tickClock() {
+    if (!dom.liveClock) return;
+    dom.liveClock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+/* ============================================================
+   COUNTDOWN TICK LOOP
+   ============================================================ */
+function startCountdowns() {
+    Object.values(tickHandles).forEach(clearInterval);
+    tickHandles = {};
+
+    tests.forEach(t => {
+        if (t.liveState !== 'waiting') return;
+        const rowIndex = t.rowIndex;
+
+        const tick = () => {
+            const timerEl = document.querySelector(`[data-cd-timer="${rowIndex}"]`);
+            const wrapEl  = document.querySelector(`[data-cd-wrap="${rowIndex}"]`);
+            const btn     = document.querySelector(`[data-btn="${rowIndex}"]`);
+            const insEl   = document.querySelector(`[data-ins="${rowIndex}"]`);
+
+            if (!timerEl) return;
+            const diff = t.testStart.getTime() - Date.now();
+
+            if (diff <= 0) {
+                t.liveState = 'active';
+                if (wrapEl) wrapEl.style.display = 'none';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.className = 'btn btn-start';
+                    btn.innerHTML = '<i class="fas fa-play"></i> Start Your Test';
+                    btn.setAttribute('data-action', 'start');
+                }
+                if (insEl) {
+                    insEl.className = 'instruction-strip success';
+                    insEl.innerHTML = '<i class="fas fa-circle-check"></i><div class="ins-text"><strong>Test is live.</strong> Click <em>Start Your Test</em> to begin.</div>';
+                }
+                const pill = document.querySelector(`[data-pill="${rowIndex}"]`);
+                if (pill) {
+                    pill.className = 'status-pill active';
+                    pill.innerHTML = '<i class="fas fa-circle" style="font-size:0.5rem;"></i> Active';
+                }
+                clearInterval(tickHandles[rowIndex]);
+                delete tickHandles[rowIndex];
+                return;
+            }
+
+            const c = formatCountdown(diff);
+            timerEl.textContent = c.text;
+            timerEl.classList.remove('urgent', 'soon');
+            if (diff <= 60 * 1000)           timerEl.classList.add('urgent');
+            else if (diff <= 10 * 60 * 1000) timerEl.classList.add('soon');
+
+            if (diff <= 10 * 1000) {
+                timerEl.classList.remove('pop');
+                void timerEl.offsetWidth;
+                timerEl.classList.add('pop');
+            }
+        };
+        tick();
+        tickHandles[rowIndex] = setInterval(tick, 1000);
+    });
+}
+
+/* ============================================================
+   CARD RENDER
+   ============================================================ */
+function buildCardHtml(t) {
+    const safeName    = escapeHtml(t.testName || 'Untitled Test');
+    const safeSubject = escapeHtml(t.subject || '—');
+    const safeTotal   = escapeHtml(String(t.totalMarks || 0));
+    const safeTiming  = escapeHtml(t.timing || '—');
+
+    let startNice = '—';
+    if (t.testStart) startNice = `${formatDateNice(t.testStart)} · ${formatTime12h(t.testStart)}`;
+    else if (t.rawDate) startNice = t.prettyDateStr;
+
+    /* Pill */
+    let pillClass, pillLabel, pillIcon;
+    if (t.liveState === 'submitted') {
+        pillClass = 'result'; pillLabel = 'Result Ready';
+        pillIcon = '<i class="fas fa-trophy" style="font-size:0.6rem;"></i>';
+    } else if (t.liveState === 'incomplete') {
+        pillClass = 'incomplete'; pillLabel = 'Incomplete';
+        pillIcon = '<i class="fas fa-triangle-exclamation" style="font-size:0.6rem;"></i>';
+    } else if (t.liveState === 'dateLocked') {
+        pillClass = 'date-locked'; pillLabel = 'Not Today';
+        pillIcon = '<i class="fas fa-calendar-xmark" style="font-size:0.6rem;"></i>';
+    } else if (t.liveState === 'deactive') {
+        pillClass = 'deactive'; pillLabel = 'Completed';
+        pillIcon = '<i class="fas fa-lock" style="font-size:0.6rem;"></i>';
+    } else if (t.liveState === 'waiting') {
+        pillClass = 'waiting'; pillLabel = 'Starts Soon';
+        pillIcon = '<i class="fas fa-hourglass-half" style="font-size:0.6rem;"></i>';
+    } else {
+        pillClass = 'active'; pillLabel = 'Active';
+        pillIcon = '<i class="fas fa-circle" style="font-size:0.5rem;"></i>';
+    }
+
+    /* Integrity row — always visible; shows what's complete / missing */
+    const integrityRow = t.complete
+        ? `<div class="integrity-row complete">
+               <i class="fas fa-circle-check"></i>
+               <span>All details present (Std, Subject, Test Name)</span>
+           </div>`
+        : `<div class="integrity-row incomplete">
+               <i class="fas fa-triangle-exclamation"></i>
+               <span>Missing in Questions sheet:
+                   <span class="missing-list">${escapeHtml(t.missing.join(', '))}</span>
+               </span>
+           </div>`;
+
+    /* Countdown */
+    const countdownHtml = (t.liveState === 'waiting') ? `
+        <div class="countdown-wrap" data-cd-wrap="${t.rowIndex}">
+            <div class="cd-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div class="cd-info">
+                <span class="cd-label">Test starts in</span>
+                <div class="cd-timer" data-cd-timer="${t.rowIndex}">--:--:--</div>
+                <span class="cd-sub">Scheduled: ${escapeHtml(startNice)}</span>
+            </div>
+        </div>` : '';
+
+    /* Instruction strip */
+    let insHtml = '';
+    if (t.liveState === 'submitted') {
+        insHtml = `<div class="instruction-strip success" data-ins="${t.rowIndex}">
+            <i class="fas fa-trophy"></i>
+            <div class="ins-text"><strong>Result available.</strong> Click below to view your Result.</div>
+        </div>`;
+    } else if (t.liveState === 'incomplete') {
+        insHtml = `<div class="instruction-strip" data-ins="${t.rowIndex}">
+            <i class="fas fa-file-circle-exclamation"></i>
+            <div class="ins-text"><strong>Test not ready.</strong> Some required details are missing in the Questions sheet.</div>
+        </div>`;
+    } else if (t.liveState === 'dateLocked') {
+        insHtml = `<div class="instruction-strip locked" data-ins="${t.rowIndex}">
+            <i class="fas fa-calendar-xmark"></i>
+            <div class="ins-text">
+                <strong>Not available today.</strong>
+                ${t.prettyDateStr && t.prettyDateStr !== '—'
+                    ? `This test is scheduled for <b>${escapeHtml(t.prettyDateStr)}</b>.`
+                    : 'Please check back on the scheduled date.'}
+            </div>
+        </div>`;
+    } else if (t.liveState === 'waiting') {
+        insHtml = `<div class="instruction-strip" data-ins="${t.rowIndex}">
+            <i class="fas fa-info-circle"></i>
+            <div class="ins-text"><strong>Please wait.</strong> The test will unlock automatically when the countdown reaches zero. Do not close this page.</div>
+        </div>`;
+    } else if (t.liveState === 'deactive') {
+        insHtml = `<div class="instruction-strip danger" data-ins="${t.rowIndex}">
+            <i class="fas fa-flag-checkered"></i>
+            <div class="ins-text"><strong>Test completed.</strong> Click below to view your marks.</div>
+        </div>`;
+    } else {
+        insHtml = `<div class="instruction-strip success" data-ins="${t.rowIndex}">
+            <i class="fas fa-circle-check"></i>
+            <div class="ins-text"><strong>Test is live.</strong> Click <em>Start Your Test</em> to begin.</div>
+        </div>`;
+    }
+
+    /* Action button */
+    let btnHtml = '';
+    if (t.liveState === 'submitted') {
+        btnHtml = `<button class="btn btn-result" data-btn="${t.rowIndex}" data-action="show-result">
+            <i class="fas fa-trophy"></i> View Result
+        </button>`;
+    } else if (t.liveState === 'incomplete') {
+        btnHtml = `<button class="btn btn-incomplete" data-btn="${t.rowIndex}" data-action="show-incomplete">
+            <i class="fas fa-triangle-exclamation"></i> Test Not Ready
+        </button>`;
+    } else if (t.liveState === 'dateLocked') {
+        btnHtml = `<button class="btn btn-locked" data-btn="${t.rowIndex}" data-action="show-date-locked">
+            <i class="fas fa-calendar-xmark"></i> Not Available Today
+        </button>`;
+    } else if (t.liveState === 'deactive') {
+        btnHtml = `<button class="btn btn-completed" data-btn="${t.rowIndex}" data-action="show-completed">
+            <i class="fas fa-chart-bar"></i> View Marks
+        </button>`;
+    } else if (t.liveState === 'waiting') {
+        btnHtml = `<button class="btn btn-locked" data-btn="${t.rowIndex}" disabled>
+            <i class="fas fa-lock"></i> Locked until start
+        </button>`;
+    } else {
+        btnHtml = `<button class="btn btn-start" data-btn="${t.rowIndex}" data-action="start">
+            <i class="fas fa-play"></i> Start Your Test
+        </button>`;
+    }
+
+    const cardClasses = [
+        'test-card',
+        t.liveState === 'active' ? 'active-status' : '',
+        t.liveState === 'deactive' ? 'expired-status' : '',
+        t.liveState === 'submitted' ? 'result-status' : '',
+        t.liveState === 'dateLocked' ? 'date-locked' : '',
+        t.liveState === 'incomplete' ? 'incomplete-status' : ''
+    ].filter(Boolean).join(' ');
+
+    /* Missing value badges in the info cells */
+    const stdVal   = hasText(t.std) ? escapeHtml(t.std) : '<span class="missing">Not set</span>';
+    const subjVal  = hasText(t.subject) ? escapeHtml(t.subject) : '<span class="missing">Not set</span>';
+
+    return `
+        <article class="${cardClasses}" data-row="${t.rowIndex}" data-test-id="${escapeHtml(t.id)}">
+            <div class="test-head">
+                <div class="test-title">
+                    <h3>${safeName}</h3>
+                    <span class="subject"><i class="fas fa-book"></i> ${subjVal}</span>
+                </div>
+                <span class="status-pill ${pillClass}" data-pill="${t.rowIndex}">
+                    ${pillIcon} ${pillLabel}
+                </span>
+            </div>
+
+            <div class="test-body">
+                <div class="info-cell">
+                    <span class="lbl"><i class="fas fa-calendar"></i> Date</span>
+                    <span class="val">${escapeHtml(t.prettyDateStr || '—')}</span>
+                </div>
+                <div class="info-cell">
+                    <span class="lbl"><i class="fas fa-clock"></i> Timing</span>
+                    <span class="val">${safeTiming}</span>
+                </div>
+                <div class="info-cell">
+                    <span class="lbl"><i class="fas fa-star"></i> Total Marks</span>
+                    <span class="val marks-val">${safeTotal}</span>
+                </div>
+                <div class="info-cell">
+                    <span class="lbl"><i class="fas fa-graduation-cap"></i> Std</span>
+                    <span class="val">${stdVal}</span>
+                </div>
+            </div>
+
+            ${integrityRow}
+            ${countdownHtml}
+            ${insHtml}
+
+            <div class="test-actions">${btnHtml}</div>
+        </article>
+    `;
+}
+
+function renderTests() {
+    if (!dom.testsGrid) return;
+
+    if (!tests.length) {
+        dom.skeletonWrap.style.display = 'none';
+        dom.testsGrid.style.display = 'none';
+        dom.emptyState.classList.add('show');
+        return;
+    }
+
+    /* Split into two groups: complete (participating) and incomplete (flagged) */
+    const complete   = tests.filter(t => t.complete);
+    const incomplete = tests.filter(t => !t.complete);
+
+    const parts = [];
+
+    if (complete.length) {
+        parts.push(`<div class="section-label">
+            <i class="fas fa-circle-check" style="color:var(--success);"></i>
+            Active Test Series
+            <span class="count">${complete.length}</span>
+        </div>`);
+        parts.push(complete.map(buildCardHtml).join(''));
+    }
+
+    if (incomplete.length) {
+        parts.push(`<div class="section-label warn">
+            <i class="fas fa-triangle-exclamation" style="color:var(--warning);"></i>
+            Incomplete Test Series
+            <span class="count">${incomplete.length}</span>
+        </div>`);
+        parts.push(incomplete.map(buildCardHtml).join(''));
+    }
+
+    dom.emptyState.classList.remove('show');
+    dom.skeletonWrap.style.display = 'none';
+    dom.testsGrid.style.display = 'grid';
+    dom.testsGrid.innerHTML = parts.join('');
+
+    dom.testsGrid.querySelectorAll('button[data-btn]').forEach(btn => {
+        btn.addEventListener('click', handleCardButtonClick);
+    });
+
+    startCountdowns();
+}
+
+function renderStudentInfo(student) {
+    if (!student) return;
+    dom.pageHead.style.display = 'flex';
+    dom.headName.textContent = student.fullName || 'Student';
+    dom.headStd.innerHTML = `<i class="fas fa-graduation-cap"></i> Std ${escapeHtml(student.row[STU_COL.STD] || '—')}`;
+    const img = driveThumb(student.row[STU_COL.IMAGE], 200);
+    if (img) {
+        const pre = new Image();
+        pre.decoding = 'async';
+        pre.onload  = () => { dom.headAvatar.src = img; };
+        pre.onerror = () => {};
+        pre.src = img;
+    }
+}
+
+/* ============================================================
+   CARD CLICK HANDLERS
+   ============================================================ */
+function handleCardButtonClick(e) {
+    const btn = e.currentTarget;
+    const action = btn.getAttribute('data-action');
+    const rowIndex = parseInt(btn.getAttribute('data-btn'), 10);
+    const test = tests.find(t => t.rowIndex === rowIndex);
+    if (!test) return;
+
+    switch (action) {
+        case 'show-completed':    return openCompletedModal(test);
+        case 'start':             return openStartModal(test);
+        case 'show-result':       return openResultModal(test);
+        case 'show-date-locked':  return openDateLockedModal(test);
+        case 'show-incomplete':   return openIncompleteModal(test);
+    }
+}
+
+function openCompletedModal(test) {
+    dom.completedTestName.textContent = `${test.testName || 'The test'} was completed!`;
+    dom.completedTestMsg.textContent = `If you want to see your marks for "${test.testName || 'this test'}", click the button below.`;
+    dom.completedModal.classList.add('active');
+}
+function closeCompletedModal() { dom.completedModal.classList.remove('active'); }
+
+function openStartModal(test) {
+    dom.startTestName.textContent = `Start "${test.testName || 'Test'}"?`;
+    dom.startTestMsg.textContent =
+        `Timing: ${test.timing || '—'} · Total Marks: ${test.totalMarks || 0}. ` +
+        `Make sure you have a stable connection before you begin.`;
+    dom.startModal.classList.add('active');
+
+    dom.startConfirmBtn.onclick = () => {
+        closeStartModal();
+        try {
+            sessionStorage.setItem('Universal_active_test', JSON.stringify({
+                testName:     test.testName,
+                subject:      test.subject,
+                std:          test.std,
+                totalMarks:   test.totalMarks,
+                timing:       test.timing,
+                date:         test.prettyDateStr || '',
+                rowIndex:     test.rowIndex,
+                studentName:  currentStudent?.fullName || 'Student',
+                studentStd:   currentStudent?.row?.[STU_COL.STD] || test.std,
+                studentEmail: currentEmail
+            }));
+        } catch (e) {}
+        window.location.href = 'StudentTestSeries.html';
+    };
+}
+function closeStartModal() { dom.startModal.classList.remove('active'); }
+
+function openResultModal(test) { dom.resultModal.classList.add('active'); }
+function closeResultModal() { dom.resultModal.classList.remove('active'); }
+
+function openDateLockedModal(test) {
+    const title = test.testName || 'This test';
+    dom.dateLockedTestName.textContent = `${title} is not scheduled for today`;
+    const scheduled = test.prettyDateStr && test.prettyDateStr !== '—' ? test.prettyDateStr : '';
+    dom.dateLockedMsg.innerHTML = scheduled
+        ? `This test will be available on <b>${escapeHtml(scheduled)}</b>. Please come back on the scheduled date.`
+        : `This test is not available today. Please check back on the scheduled date.`;
+    dom.dateLockedModal.classList.add('active');
+}
+function closeDateLockedModal() { dom.dateLockedModal.classList.remove('active'); }
+
+function openIncompleteModal(test) {
+    const missingStr = (test.missing || []).join(', ') || 'some required fields';
+    dom.incompleteTestName.textContent = `${test.testName || 'This test'} isn't fully set up`;
+    dom.incompleteMsg.innerHTML =
+        `The Questions sheet is missing: <b>${escapeHtml(missingStr)}</b> for this test row. ` +
+        `Please ask your teacher to complete the details, then refresh this page.`;
+    dom.incompleteModal.classList.add('active');
+}
+function closeIncompleteModal() { dom.incompleteModal.classList.remove('active'); }
+
+/* ============================================================
+   BACK NAV
+   ============================================================ */
+function goBack() {
+    if (window.history.length > 1) window.history.back();
+    else window.location.href = 'StudentDashboard.html';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+    cacheDom();
+    initTheme();
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    dom.backBtn?.addEventListener('click', goBack);
+
+    dom.completedClose?.addEventListener('click', closeCompletedModal);
+    dom.completedCancelBtn?.addEventListener('click', closeCompletedModal);
+    dom.completedModal?.addEventListener('click', (e) => { if (e.target === dom.completedModal) closeCompletedModal(); });
+
+    dom.startClose?.addEventListener('click', closeStartModal);
+    dom.startCancelBtn?.addEventListener('click', closeStartModal);
+    dom.startModal?.addEventListener('click', (e) => { if (e.target === dom.startModal) closeStartModal(); });
+
+    dom.resultClose?.addEventListener('click', closeResultModal);
+    dom.resultCancelBtn?.addEventListener('click', closeResultModal);
+    dom.resultModal?.addEventListener('click', (e) => { if (e.target === dom.resultModal) closeResultModal(); });
+
+    dom.dateLockedClose?.addEventListener('click', closeDateLockedModal);
+    dom.dateLockedCancelBtn?.addEventListener('click', closeDateLockedModal);
+    dom.dateLockedModal?.addEventListener('click', (e) => { if (e.target === dom.dateLockedModal) closeDateLockedModal(); });
+
+    dom.incompleteClose?.addEventListener('click', closeIncompleteModal);
+    dom.incompleteCancelBtn?.addEventListener('click', closeIncompleteModal);
+    dom.incompleteModal?.addEventListener('click', (e) => { if (e.target === dom.incompleteModal) closeIncompleteModal(); });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeCompletedModal();
+            closeStartModal();
+            closeResultModal();
+            closeDateLockedModal();
+            closeIncompleteModal();
+        }
+    });
+
+    currentEmail = getLoggedInEmail();
+    if (!currentEmail) {
+        dom.skeletonWrap.style.display = 'none';
+        dom.emptyTitle.textContent = 'Please log in';
+        dom.emptyMsg.textContent = 'You need to be logged in as a student to view your tests.';
+        dom.emptyState.classList.add('show');
+        return;
+    }
+
+    try {
+        const cached = getCachedProfile(currentEmail);
+        let student = null;
+        if (cached && cached.row) {
+            student = {
+                row: cached.row,
+                sheetName: cached.sheetName,
+                rowIndex: cached.rowIndex,
+                fullName: cached.fullName || extractFullName(cached.row)
+            };
+            renderStudentInfo(student);
+        }
+
+        const found = await findStudentByEmail(currentEmail);
+        if (!found) {
+            dom.skeletonWrap.style.display = 'none';
+            dom.emptyTitle.textContent = 'Student record not found';
+            dom.emptyMsg.textContent = `We couldn't find a record for ${currentEmail}. Please contact the academy.`;
+            dom.emptyState.classList.add('show');
+            return;
+        }
+
+        const fullName = extractFullName(found.row) || (cached && cached.fullName) || 'Student';
+        student = { row: found.row, sheetName: found.sheet, rowIndex: found.rowIndex, fullName };
+        currentStudent = student;
+        setCachedProfile(currentEmail, {
+            row: found.row,
+            sheetName: found.sheet,
+            rowIndex: found.rowIndex,
+            fullName
+        });
+        renderStudentInfo(student);
+
+        tests = await loadTestsForStudent(student);
+        renderTests();
+
+        if (tests.length === 0) {
+            dom.emptyTitle.textContent = 'No tests for your class';
+            dom.emptyMsg.textContent = `No test series are currently published for ${student.row[STU_COL.STD] || 'your class'}.`;
+            dom.emptyState.classList.add('show');
+        }
+    } catch (err) {
+        console.error('[Answer] init failed:', err);
+        dom.skeletonWrap.style.display = 'none';
+        dom.emptyTitle.textContent = 'Failed to load';
+        dom.emptyMsg.textContent = err.message || 'Something went wrong. Please try again.';
+        dom.emptyState.classList.add('show');
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+    init();
+}
+
+window.addEventListener('beforeunload', () => {
+    Object.values(tickHandles).forEach(clearInterval);
+});
+
+})();
+</script>
+</body>
+</html>

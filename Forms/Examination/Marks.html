@@ -1,0 +1,2875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Universal School Academy · Marks</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://script.google.com">
+<link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+
+<script>
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<style>
+/* ============================================================
+   THEME
+   ============================================================ */
+:root {
+    --bg-body: #eef2f9;
+    --bg-card: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-soft: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #e2e8f0;
+    --shadow-xs: 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+    --shadow-sm: 0 10px 30px -12px rgba(15, 23, 42, 0.12);
+    --shadow-md: 0 18px 40px -18px rgba(15, 23, 42, 0.18);
+    --shadow-hover: 0 26px 52px -22px rgba(15, 23, 42, 0.26);
+    --accent: #2563eb;
+    --accent-2: #7c3aed;
+    --accent-soft: rgba(37, 99, 235, 0.10);
+    --accent-glow: rgba(37, 99, 235, 0.35);
+    --success: #10b981;
+    --success-soft: rgba(16, 185, 129, 0.10);
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.10);
+    --warning: #f59e0b;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+    --navy: #0d2c54;
+    --yellow: #ffd54a;
+    --input-bg: #f8fafc;
+    --backdrop: rgba(15, 23, 42, 0.55);
+    --chip-bg: rgba(37, 99, 235, 0.08);
+    --grad-hero: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-top: env(safe-area-inset-top, 0px);
+}
+[data-theme="dark"] {
+    --bg-body: #070d1c;
+    --bg-card: #111a2e;
+    --bg-elevated: #16213a;
+    --bg-soft: #0f1830;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1e2a44;
+    --shadow-xs: 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 10px 30px -12px rgba(0, 0, 0, 0.55);
+    --shadow-md: 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    --shadow-hover: 0 26px 52px -22px rgba(0, 0, 0, 0.85);
+    --accent: #3b82f6;
+    --accent-2: #a78bfa;
+    --accent-soft: rgba(59, 130, 246, 0.18);
+    --accent-glow: rgba(59, 130, 246, 0.45);
+    --success: #34d399;
+    --success-soft: rgba(16, 185, 129, 0.18);
+    --danger: #f87171;
+    --danger-soft: rgba(239, 68, 68, 0.18);
+    --warning: #fbbf24;
+    --warning-soft: rgba(245, 158, 11, 0.20);
+    --navy: #1e40af;
+    --yellow: #fbbf24;
+    --input-bg: #16213a;
+    --backdrop: rgba(0, 0, 0, 0.75);
+    --chip-bg: rgba(59, 130, 246, 0.15);
+    --grad-hero: linear-gradient(135deg, #1e40af 0%, #6d28d9 100%);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+/* Hide scrollbars globally */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
+*::-webkit-scrollbar-thumb, *::-webkit-scrollbar-track { background: transparent !important; display: none !important; }
+html, body { scrollbar-width: none; -ms-overflow-style: none; overflow-y: auto; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none !important; width: 0 !important; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background 300ms ease, color 300ms ease;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes modalPop { from { transform: scale(0.92) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+.spinner {
+    display: inline-block;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.app-shell {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(0.75rem, 2vw, 1.4rem);
+    padding-top: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-top));
+    padding-bottom: calc(clamp(0.75rem, 2vw, 1.4rem) + var(--safe-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.85rem, 2vw, 1.3rem);
+    min-height: 100dvh;
+    align-content: start;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: var(--bg-card);
+    border-radius: 999px;
+    padding: 0.5rem clamp(0.85rem, 2vw, 1.4rem);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: calc(var(--safe-top) + 6px);
+    z-index: 50;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.brand img { height: clamp(30px, 3.5vw, 40px); width: auto; object-fit: contain; flex-shrink: 0; }
+.brand-name {
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.back-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--chip-bg);
+    border: 1px solid var(--border-light);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: clamp(0.72rem, 1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 260ms ease;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+.back-pill:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+
+.card {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 3vw, 24px);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    animation: fadeUp 0.4s ease;
+}
+.card-header {
+    padding: clamp(1rem, 2.4vw, 1.4rem) clamp(1.1rem, 2.6vw, 1.6rem);
+    background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(124,58,237,0.04));
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: relative;
+}
+.card-header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--grad-hero);
+}
+.card-header h2 {
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.card-header h2 i { color: var(--accent); }
+.card-header .sub {
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.search-wrap {
+    padding: clamp(0.85rem, 2vw, 1.2rem) clamp(1rem, 2.4vw, 1.4rem);
+    border-bottom: 1px solid var(--border-light);
+}
+.search-wrap input {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1.5px solid var(--border-light);
+    border-radius: 999px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-size: 0.92rem;
+    transition: all 200ms ease;
+}
+.search-wrap input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9rem;
+    min-width: 720px;
+}
+.data-table th {
+    text-align: left;
+    padding: 14px 18px;
+    background: var(--bg-soft);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 2px solid var(--accent);
+    white-space: nowrap;
+}
+.data-table th:first-child { border-top-left-radius: 10px; }
+.data-table th:last-child { border-top-right-radius: 10px; }
+.data-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-main);
+    transition: background 200ms ease;
+    vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--bg-soft); }
+.data-table td.sr { font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.data-table td.name { font-weight: 700; }
+.data-table td.muted { color: var(--text-muted); }
+
+.view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    font-weight: 800;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 200ms ease;
+    font-family: inherit;
+}
+.view-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -8px var(--accent-glow);
+}
+.view-btn.checked {
+    background: var(--success-soft);
+    color: var(--success);
+    border-color: var(--success);
+}
+.view-btn.checked:hover {
+    background: var(--success);
+    color: #fff;
+    box-shadow: 0 8px 18px -8px rgba(16,185,129,0.55);
+}
+
+.state-box {
+    background: var(--bg-card);
+    border-radius: clamp(20px, 3vw, 28px);
+    padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+    display: none;
+}
+.state-box.show { display: block; animation: fadeUp 0.4s ease; }
+.state-box .state-ico { font-size: clamp(2rem, 5vw, 3rem); color: var(--accent); margin-bottom: 1rem; }
+.state-box h3 { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 0.4rem; font-weight: 700; }
+.state-box p { color: var(--text-muted); font-size: clamp(0.82rem, 1.4vw, 0.9rem); max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--backdrop);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.8rem, 2vw, 1.4rem);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 260ms ease, visibility 260ms ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.modal-overlay.active { display: flex; opacity: 1; visibility: visible; }
+.modal-box {
+    background: var(--bg-elevated);
+    border-radius: clamp(18px, 3vw, 28px);
+    max-width: 780px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+.modal-header {
+    background: var(--grad-hero);
+    padding: clamp(1rem, 2.2vw, 1.25rem) clamp(1.1rem, 2.6vw, 1.5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: clamp(18px, 3vw, 28px) clamp(18px, 3vw, 28px) 0 0;
+    color: #fff;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+.modal-header h3 {
+    font-size: clamp(0.98rem, 1.6vw, 1.1rem);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+}
+.modal-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 34px; height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.15rem;
+    line-height: 1;
+    transition: transform 260ms ease, background 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close:hover { transform: rotate(90deg); background: rgba(255,255,255,0.3); }
+.modal-body { padding: clamp(1.1rem, 2.6vw, 1.5rem); }
+
+.student-hero {
+    background: linear-gradient(135deg, var(--accent-soft), rgba(124,58,237,0.08));
+    border: 1.5px solid var(--accent);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.student-hero .avatar {
+    width: 66px; height: 66px;
+    border-radius: 50%;
+    background: var(--grad-hero);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 10px 22px -10px var(--accent-glow);
+}
+.student-hero .info { min-width: 0; flex: 1; }
+.student-hero .info h4 {
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    font-weight: 900;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+.student-hero .info .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    font-size: clamp(0.75rem, 1.05vw, 0.85rem);
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.student-hero .info .meta span { display: inline-flex; align-items: center; gap: 5px; }
+.student-hero .info .meta i { color: var(--accent); font-size: 0.9em; }
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.detail-cell {
+    background: var(--bg-soft);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+.detail-cell .lbl {
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.detail-cell .lbl i { color: var(--accent); }
+.detail-cell .val {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text-main);
+    word-break: break-word;
+}
+.detail-cell.highlight-pass { background: var(--success-soft); border-color: var(--success); }
+.detail-cell.highlight-pass .lbl { color: var(--success); }
+.detail-cell.highlight-pass .val { color: var(--success); }
+.detail-cell.highlight-fail { background: var(--danger-soft); border-color: var(--danger); }
+.detail-cell.highlight-fail .lbl { color: var(--danger); }
+.detail-cell.highlight-fail .val { color: var(--danger); }
+.detail-cell.highlight-assign { background: var(--accent-soft); border-color: var(--accent); }
+
+.assign-box {
+    border: 2px dashed var(--accent);
+    border-radius: 14px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.04), transparent);
+    margin-top: 8px;
+}
+.assign-box .assign-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+.assign-box .assign-head i { font-size: 1rem; }
+.assign-box.locked {
+    border-color: var(--success);
+    background: linear-gradient(135deg, var(--success-soft), transparent);
+}
+.assign-box.locked .assign-head { color: var(--success); }
+
+.select-wrap { position: relative; }
+.select-wrap select {
+    width: 100%;
+    padding: 12px 42px 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-light);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 200ms ease;
+}
+.select-wrap select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.select-wrap select:disabled {
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+.select-wrap::after {
+    content: '\f107';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    pointer-events: none;
+    font-size: 0.95rem;
+}
+.select-wrap.locked::after { content: '\f023'; color: var(--success); }
+
+.assign-hint {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.4;
+}
+.assign-hint.show { display: flex; }
+.assign-hint.info { background: var(--accent-soft); color: var(--accent); }
+.assign-hint.warn { background: var(--warning-soft); color: var(--warning); }
+.assign-hint.ok   { background: var(--success-soft); color: var(--success); }
+.assign-hint.danger { background: var(--danger-soft); color: var(--danger); }
+.assign-hint i { flex-shrink: 0; }
+
+.btn {
+    border: none;
+    padding: 0.8rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: clamp(0.82rem, 1.1vw, 0.92rem);
+    cursor: pointer;
+    transition: all 260ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; filter: grayscale(0.3); }
+.btn-primary {
+    background: var(--grad-hero);
+    color: #fff;
+    box-shadow: 0 8px 22px -8px var(--accent-glow);
+}
+.btn-primary:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px var(--accent-glow); }
+.btn-success {
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: #fff;
+    box-shadow: 0 8px 22px -8px rgba(16,185,129,0.55);
+}
+.btn-success:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(16,185,129,0.7); }
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+.btn-outline:not(:disabled):hover { background: var(--accent); color: #fff; }
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning), #f97316);
+    color: #fff;
+    box-shadow: 0 8px 22px -8px rgba(245,158,11,0.55);
+}
+.btn-warning:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(245,158,11,0.7); }
+.btn-danger {
+    background: transparent;
+    border: 2px solid var(--danger);
+    color: var(--danger);
+}
+.btn-danger:hover { background: var(--danger); color: #fff; }
+
+.page { display: none; animation: fadeUp 0.35s ease; }
+.page.active-page { display: block; }
+
+/* ══════════════════════════════════════════════════════════════
+   PAPER
+   ══════════════════════════════════════════════════════════════ */
+.paper {
+    background: var(--bg-card);
+    border-radius: clamp(18px, 3vw, 24px);
+    border: 2px solid var(--navy);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 24px;
+}
+[data-theme="dark"] .paper { border-color: var(--accent); }
+.paper::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, var(--navy) 0%, #1e4b8a 40%, var(--yellow) 100%);
+}
+[data-theme="dark"] .paper::before {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 40%, var(--yellow) 100%);
+}
+.paper.editing { border-color: var(--warning); }
+.paper.editing::before {
+    background: linear-gradient(90deg, var(--warning) 0%, #f97316 40%, var(--yellow) 100%);
+}
+.paper-header {
+    padding: clamp(1rem, 2.5vw, 1.6rem) clamp(1rem, 3vw, 2rem) 0.85rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: clamp(0.75rem, 2vw, 1.4rem);
+    align-items: center;
+    border-bottom: 2px solid var(--navy);
+}
+[data-theme="dark"] .paper-header { border-bottom-color: var(--accent); }
+.paper-logo {
+    width: clamp(56px, 8.5vw, 78px);
+    height: clamp(56px, 8.5vw, 78px);
+    border-radius: 14px;
+    background: #fff;
+    padding: 6px;
+    object-fit: contain;
+    border: 1.5px solid var(--border-light);
+    flex-shrink: 0;
+}
+.paper-title { text-align: center; min-width: 0; }
+.paper-title h1 {
+    font-size: clamp(1.1rem, 2.6vw, 1.7rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+[data-theme="dark"] .paper-title h1 { color: var(--accent); }
+.paper-title .tagline {
+    font-size: clamp(0.68rem, 1.1vw, 0.82rem);
+    font-weight: 700;
+    color: var(--accent-2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+.paper-title .paper-pill {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--navy);
+    font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-top: 8px;
+    border: 1.5px solid var(--navy);
+    text-transform: uppercase;
+}
+[data-theme="dark"] .paper-title .paper-pill { color: #0d2c54; border-color: var(--accent); }
+.paper-spacer { width: clamp(56px, 8.5vw, 78px); }
+
+.meta-strip {
+    margin: clamp(0.9rem, 2vw, 1.2rem) clamp(0.75rem, 2vw, 1.2rem);
+    border: 1.5px solid var(--navy);
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    background: var(--bg-card);
+}
+[data-theme="dark"] .meta-strip { border-color: var(--accent); }
+.meta-strip .meta-cell {
+    padding: 8px 6px;
+    border-right: 1px solid var(--border-light);
+    text-align: center;
+}
+.meta-strip .meta-cell:last-child { border-right: none; }
+.meta-strip .meta-cell .lbl {
+    display: block;
+    font-size: clamp(0.55rem, 0.85vw, 0.66rem);
+    font-weight: 800;
+    color: var(--navy);
+    background: var(--yellow);
+    margin: -8px -6px 6px -6px;
+    padding: 4px 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+[data-theme="dark"] .meta-strip .meta-cell .lbl { color: #0d2c54; }
+.meta-strip .meta-cell .val {
+    display: block;
+    font-size: clamp(0.72rem, 1vw, 0.88rem);
+    font-weight: 800;
+    color: var(--navy);
+    word-break: break-word;
+}
+[data-theme="dark"] .meta-strip .meta-cell .val { color: var(--accent); }
+
+.paper-body {
+    padding: 0 clamp(0.9rem, 2.5vw, 1.4rem) clamp(1rem, 2.5vw, 1.4rem);
+    display: grid;
+    gap: clamp(0.9rem, 2vw, 1.2rem);
+}
+.q-block {
+    border: 1.5px solid var(--border-light);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+.q-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, var(--accent-soft) 0%, transparent 70%);
+    border-left: 4px solid var(--accent);
+    border-bottom: 1px solid var(--border-light);
+}
+.q-title {
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.q-title i { color: var(--accent); }
+.q-marks {
+    font-size: clamp(0.7rem, 1vw, 0.82rem);
+    font-weight: 900;
+    color: var(--navy);
+    background: var(--yellow);
+    border: 1px solid var(--navy);
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}
+[data-theme="dark"] .q-marks { color: #0d2c54; }
+.q-body { padding: 12px 14px 14px; }
+
+.q-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-light);
+}
+.q-item:last-child { border-bottom: none; padding-bottom: 0; }
+.q-item:first-child { padding-top: 0; }
+.q-item-content { min-width: 0; }
+.q-item-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.72rem;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.q-item-text {
+    display: inline;
+    font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+    font-weight: 600;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.student-answer {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--bg-soft);
+    border-left: 4px solid var(--success);
+    border-radius: 10px;
+    font-size: clamp(0.82rem, 1.1vw, 0.9rem);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text-main);
+}
+.student-answer .lbl {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--success);
+    margin-bottom: 4px;
+}
+.student-answer.empty {
+    border-left-color: var(--warning);
+    color: var(--text-muted);
+    font-style: italic;
+}
+.student-answer.empty .lbl { color: var(--warning); }
+
+.mark-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+.mark-row label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.mark-row input {
+    width: 90px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-light);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 200ms ease;
+}
+.mark-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.mark-row .max-hint {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.grading-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    border-radius: 18px;
+    padding: 16px 20px;
+    box-shadow: 0 -10px 40px -12px rgba(15,23,42,0.15);
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+}
+.grading-footer.editing { border-color: var(--warning); }
+.grading-footer .total-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.grading-footer .total-block .obtain-lbl {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+.grading-footer .total-block input.obtain-input {
+    width: 130px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid var(--accent);
+    background: var(--input-bg);
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 1.15rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    transition: all 200ms ease;
+}
+.grading-footer .total-block input.obtain-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.grading-footer .total-block .max-lbl {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+.grading-footer .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.result-bar {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.result-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 2px solid;
+    background: var(--bg-soft);
+    transition: all 250ms ease;
+}
+.result-chip .ico {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    color: #fff;
+}
+.result-chip .meta { min-width: 0; flex: 1; }
+.result-chip .meta .lbl {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: block;
+    margin-bottom: 2px;
+}
+.result-chip .meta .val {
+    font-size: 1.15rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    word-break: break-word;
+}
+.result-chip.pass { border-color: var(--success); background: var(--success-soft); }
+.result-chip.pass .ico { background: linear-gradient(135deg, var(--success), #14b8a6); }
+.result-chip.pass .meta .lbl { color: var(--success); }
+.result-chip.pass .meta .val { color: var(--success); }
+.result-chip.fail { border-color: var(--danger); background: var(--danger-soft); }
+.result-chip.fail .ico { background: linear-gradient(135deg, var(--danger), #ec4899); }
+.result-chip.fail .meta .lbl { color: var(--danger); }
+.result-chip.fail .meta .val { color: var(--danger); }
+.result-chip.neutral { border-color: var(--border-light); background: var(--bg-soft); }
+.result-chip.neutral .ico { background: var(--grad-hero); }
+.result-chip.neutral .meta .lbl { color: var(--text-light); }
+.result-chip.neutral .meta .val { color: var(--text-main); }
+
+.remarks-wrap {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1.5px dashed var(--accent);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.04), transparent);
+}
+.remarks-wrap label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+}
+.remarks-wrap label i { margin-right: 5px; }
+.remarks-wrap .optional {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 4px;
+}
+.remarks-wrap textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border-light);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    resize: vertical;
+    transition: all 200ms ease;
+}
+.remarks-wrap textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.edit-banner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: var(--warning-soft);
+    border: 2px solid var(--warning);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    font-weight: 800;
+    color: var(--warning);
+    font-size: 0.85rem;
+    animation: fadeUp 0.35s ease;
+}
+.edit-banner.show { display: flex; }
+.edit-banner i { font-size: 1.1rem; }
+.edit-banner .remaining {
+    margin-left: auto;
+    background: var(--warning);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.toast {
+    position: fixed;
+    bottom: calc(20px + var(--safe-bottom));
+    right: 20px;
+    background: var(--bg-card);
+    border-left: 5px solid var(--accent);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 16px 16px 0;
+    box-shadow: var(--shadow-hover);
+    font-weight: 600;
+    font-size: 0.88rem;
+    z-index: 2000;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    color: var(--text-main);
+    max-width: 360px;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+@media (max-width: 720px) {
+    body { background: radial-gradient(1200px 500px at 50% -10%, var(--accent-soft), transparent 60%), var(--bg-body); }
+    .app-shell {
+        padding: 0.65rem 0.75rem;
+        padding-top: calc(0.65rem + var(--safe-top));
+        padding-bottom: calc(0.65rem + var(--safe-bottom));
+        gap: 0.85rem;
+    }
+    .topbar { border-radius: 18px; padding: 0.5rem 0.75rem; }
+    .brand-name { font-size: 0.95rem; }
+    .back-pill { padding: 6px 11px; font-size: 0.72rem; }
+
+    .data-table { min-width: 100%; font-size: 0.82rem; }
+    .data-table th, .data-table td { padding: 10px 12px; }
+    .data-table th { font-size: 0.7rem; }
+    .view-btn { padding: 6px 11px; font-size: 0.72rem; }
+
+    .student-hero { padding: 14px; gap: 12px; }
+    .student-hero .avatar { width: 56px; height: 56px; font-size: 1.4rem; }
+
+    .detail-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .detail-cell { padding: 8px 10px; }
+    .detail-cell .val { font-size: 0.85rem; }
+
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .modal-box { border-radius: 26px 26px 0 0; max-width: 100%; max-height: 94dvh; }
+    .modal-header { border-radius: 26px 26px 0 0; }
+
+    .paper-header { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
+    .paper-header .paper-logo,
+    .paper-header .paper-spacer { display: none; }
+    .paper-title h1 { font-size: 1.25rem; }
+
+    .meta-strip { grid-template-columns: repeat(3, 1fr); margin: 0.75rem; }
+    .meta-strip .meta-cell:nth-child(3n) { border-right: none; }
+    .meta-strip .meta-cell:nth-child(-n+3) { border-bottom: 1px solid var(--border-light); }
+
+    .grading-footer { padding: 12px 14px; grid-template-columns: 1fr; }
+    .grading-footer .actions { width: 100%; }
+    .grading-footer .actions .btn { flex: 1; }
+    .mark-row input { width: 80px; }
+    .grading-footer .total-block input.obtain-input { width: 100px; font-size: 1rem; }
+
+    .toast {
+        left: 12px; right: 12px;
+        bottom: calc(12px + var(--safe-bottom));
+        max-width: none; border-radius: 14px;
+        border-left: none; border-top: 4px solid var(--accent);
+    }
+    .toast.success { border-top-color: var(--success); border-left-color: transparent; }
+    .toast.error { border-top-color: var(--danger); border-left-color: transparent; }
+    .toast.warning { border-top-color: var(--warning); border-left-color: transparent; }
+}
+
+@media (max-width: 480px) {
+    .meta-strip { grid-template-columns: repeat(2, 1fr); }
+    .meta-strip .meta-cell:nth-child(2n) { border-right: none; }
+    .meta-strip .meta-cell:nth-child(-n+4) { border-bottom: 1px solid var(--border-light); }
+    .detail-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School Academy" width="40" height="40"
+                 decoding="async" fetchpriority="high">
+            <span class="brand-name">Marks · Grading Panel</span>
+        </div>
+        <a href="ExamDashboard.html" class="back-pill">
+            <i class="fas fa-arrow-left"></i> <span>Back</span>
+        </a>
+    </header>
+
+    <div id="page1" class="page active-page">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2><i class="fas fa-clipboard-check"></i> Submissions</h2>
+                    <div class="sub">All test submissions from the Q_A sheet</div>
+                </div>
+                <button class="btn btn-primary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <div class="search-wrap">
+                <input type="text" id="searchInput" placeholder="🔍 Search by student name, subject, test name, or std…">
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Sr. No</th>
+                            <th>Date</th>
+                            <th>Student Name</th>
+                            <th>Std</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="5" style="text-align:center; padding: 40px;">
+                            <div style="display:inline-block; width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                            <p style="margin-top: 12px; color: var(--text-muted); font-weight: 600;">Loading submissions…</p>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="state-box" id="emptyState">
+            <div class="state-ico" style="color: var(--text-light);"><i class="fas fa-inbox"></i></div>
+            <h3 id="emptyTitle">No submissions found</h3>
+            <p id="emptyMsg">There are no test submissions in the Q_A sheet yet.</p>
+        </div>
+    </div>
+
+    <div id="page2" class="page">
+        <div class="card" style="margin-bottom: 16px;">
+            <div class="card-header">
+                <div>
+                    <h2 id="gradingTitle"><i class="fas fa-graduation-cap"></i> Grading Paper</h2>
+                    <div class="sub" id="gradingSubtitle">—</div>
+                </div>
+                <button class="btn btn-outline" id="backToListBtn">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+            </div>
+        </div>
+
+        <div class="edit-banner" id="editBanner">
+            <i class="fas fa-pen-to-square"></i>
+            <span id="editBannerText">Editing Mode — changes will be saved when you click Update</span>
+            <span class="remaining" id="editRemaining">2 edits remaining</span>
+        </div>
+
+        <article class="paper" id="paper">
+            <div class="paper-header">
+                <img class="paper-logo" alt="Universal School"
+                     src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_" decoding="async">
+                <div class="paper-title">
+                    <h1>Universal School</h1>
+                    <div class="tagline">Excellence in Education</div>
+                    <div class="paper-pill" id="paperPill">Answer Sheet</div>
+                </div>
+                <div class="paper-spacer"></div>
+            </div>
+
+            <div class="meta-strip" id="metaStrip"></div>
+
+            <div class="paper-body" id="paperBody"></div>
+        </article>
+
+        <div class="remarks-wrap">
+            <label for="remarksInput">
+                <i class="fas fa-comment-dots"></i> Remarks
+                <span class="optional">(Optional)</span>
+            </label>
+            <textarea id="remarksInput" placeholder="Write overall remarks or feedback for the student…"></textarea>
+        </div>
+
+        <div class="grading-footer" id="gradingFooter">
+            <div>
+                <div class="total-block">
+                    <span class="obtain-lbl"><i class="fas fa-star"></i> Obtain Marks</span>
+                    <input type="number" class="obtain-input" id="obtainMarksInput"
+                           min="0" step="0.5" placeholder="0" inputmode="decimal">
+                    <span class="max-lbl">/ <span id="maxMarksDisplay">0</span></span>
+                </div>
+
+                <div class="result-bar">
+                    <div class="result-chip neutral" id="percentChip">
+                        <div class="ico"><i class="fas fa-percent"></i></div>
+                        <div class="meta">
+                            <span class="lbl">Percentage</span>
+                            <span class="val" id="percentValue">—</span>
+                        </div>
+                    </div>
+                    <div class="result-chip neutral" id="statusChip">
+                        <div class="ico"><i class="fas fa-flag"></i></div>
+                        <div class="meta">
+                            <span class="lbl">Status</span>
+                            <span class="val" id="statusValue">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-outline" id="autoCalcBtn" type="button" title="Recalculate from per-question marks">
+                    <i class="fas fa-calculator"></i> Auto
+                </button>
+                <button class="btn btn-success" id="saveMarksBtn" type="button">
+                    <i class="fas fa-save"></i> Submit Marks
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-overlay" id="detailModal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-graduate"></i> Submission Details</h3>
+            <button class="modal-close" id="detailClose" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="student-hero" id="detailHero"></div>
+            <div class="detail-grid" id="detailGrid"></div>
+
+            <div class="assign-box" id="assignBox">
+                <div class="assign-head" id="assignHead">
+                    <i class="fas fa-user-tie"></i> Assign Teacher
+                </div>
+                <div class="select-wrap" id="selectWrap">
+                    <select id="teacherSelect">
+                        <option value="">Loading teachers…</option>
+                    </select>
+                </div>
+
+                <div class="assign-hint info" id="assignHint">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="assignHintText">Select a teacher to enable grading.</span>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" type="button" id="detailCancelBtn" style="flex: 1; min-width: 120px;">Cancel</button>
+                    <button class="btn btn-primary" type="button" id="assignSaveBtn" style="flex: 1; min-width: 140px;">
+                        <i class="fas fa-save"></i> Save & Assign
+                    </button>
+                    <button class="btn btn-success" type="button" id="openGradingBtn" style="flex: 1; min-width: 160px;" disabled>
+                        <i class="fas fa-clipboard-check"></i> Check & Grade
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Message…</div>
+
+<script>
+'use strict';
+(function () {
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SCRIPT_URL       = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const QA_SS_ID         = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const QA_SHEET         = "Q_A";
+const MARKS_SS_ID      = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const MARKS_SHEET      = "Marks";
+const TEACHER_SS_ID    = "19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4";
+const TEACHER_SHEET    = "Teacher Details";
+const TEACHER_COL      = "Teacher Name";
+
+const PASS_THRESHOLD = 40;
+const MAX_EDITS      = 3;
+
+/* ══════════════════════════════════════════════════════════════
+   MARKS SHEET HEADER SCHEMA
+   ══════════════════════════════════════════════════════════════ */
+const MARKS_HEADERS = [
+    "Sr. No","Student Name","Date","Assign Teacher","Std","Subject Name","Test Name","Obtain Marks","Total Marks",
+    "Fill in the Blanks","Marks 1","Obtain Marks 1",
+    "Fill Q1 Mark","Fill Q2 Mark","Fill Q3 Mark","Fill Q4 Mark","Fill Q5 Mark","Fill Q6 Mark",
+    "Match the Columns","Marks 2","Obtain Marks 2",
+    "Match Q1 Mark","Match Q2 Mark","Match Q3 Mark","Match Q4 Mark","Match Q5 Mark","Match Q6 Mark",
+    "True or False","Marks 3","Obtain Marks 3",
+    "TF Q1 Mark","TF Q2 Mark","TF Q3 Mark","TF Q4 Mark","TF Q5 Mark","TF Q6 Mark",
+    "Find odd man out","Marks 4","Obtain Marks 4",
+    "Find Q1 Mark","Find Q2 Mark","Find Q3 Mark","Find Q4 Mark","Find Q5 Mark","Find Q6 Mark",
+    "Answer in One Sentence","Marks 5","Obtain Marks 5",
+    "OS Q1 Mark","OS Q2 Mark","OS Q3 Mark","OS Q4 Mark","OS Q5 Mark","OS Q6 Mark",
+    "Distinguishing between","Marks 6","Obtain Marks 6",
+    "Dis Q1 Mark","Dis Q2 Mark","Dis Q3 Mark","Dis Q4 Mark","Dis Q5 Mark","Dis Q6 Mark",
+    "Answer the Following Question","Marks 7","Obtain Marks 7",
+    "AQ Q1 Mark","AQ Q2 Mark","AQ Q3 Mark","AQ Q4 Mark","AQ Q5 Mark","AQ Q6 Mark",
+    "Brief Answer","Marks 8","Obtain Marks 8",
+    "BQ Q1 Mark","BQ Q2 Mark","BQ Q3 Mark","BQ Q4 Mark","BQ Q5 Mark","BQ Q6 Mark",
+    "Percentage","Status",
+    "Edit Count",
+    "Remarks"
+];
+
+const SECTION_PREFIX_MAP = {
+    '1': { perQ: 'Fill Q',  obtain: 'Obtain Marks 1' },
+    '2': { perQ: 'Match Q', obtain: 'Obtain Marks 2' },
+    '3': { perQ: 'TF Q',    obtain: 'Obtain Marks 3' },
+    '4': { perQ: 'Find Q',  obtain: 'Obtain Marks 4' },
+    '5': { perQ: 'OS Q',    obtain: 'Obtain Marks 5' },
+    '6': { perQ: 'Dis Q',   obtain: 'Obtain Marks 6' },
+    '7': { perQ: 'AQ Q',    obtain: 'Obtain Marks 7' },
+    '8': { perQ: 'BQ Q',    obtain: 'Obtain Marks 8' }
+};
+
+/* Identity columns used to detect whether a save is UPDATE vs INSERT */
+const IDENTITY_COLS = [
+    'Student Name',
+    'Date',
+    'Subject Name',
+    'Test Name'
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let submissions          = [];
+let teachers             = [];
+let currentEntry         = null;
+let currentEntryIdx      = null;
+let gradingRow           = null;
+let perQuestionMarks     = {};
+let currentAssignMarkRow = null;
+let originalAssignTeacher = '';
+let isEditMode           = false;
+let detailRefreshHandle  = null;
+
+/* ============================================================
+   DOM
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const dom = {};
+function cacheDom() {
+    dom.page1          = $('page1');
+    dom.page2          = $('page2');
+    dom.tableBody      = $('tableBody');
+    dom.searchInput    = $('searchInput');
+    dom.refreshBtn     = $('refreshBtn');
+    dom.emptyState     = $('emptyState');
+    dom.emptyTitle     = $('emptyTitle');
+    dom.emptyMsg       = $('emptyMsg');
+    dom.toast          = $('toast');
+
+    dom.detailModal    = $('detailModal');
+    dom.detailClose    = $('detailClose');
+    dom.detailHero     = $('detailHero');
+    dom.detailGrid     = $('detailGrid');
+    dom.teacherSelect  = $('teacherSelect');
+    dom.detailCancelBtn= $('detailCancelBtn');
+    dom.assignSaveBtn  = $('assignSaveBtn');
+    dom.openGradingBtn = $('openGradingBtn');
+    dom.assignHint     = $('assignHint');
+    dom.assignHintText = $('assignHintText');
+    dom.assignBox      = $('assignBox');
+    dom.assignHead     = $('assignHead');
+    dom.selectWrap     = $('selectWrap');
+
+    dom.gradingTitle   = $('gradingTitle');
+    dom.gradingSubtitle= $('gradingSubtitle');
+    dom.backToListBtn  = $('backToListBtn');
+    dom.editBanner     = $('editBanner');
+    dom.editBannerText = $('editBannerText');
+    dom.editRemaining  = $('editRemaining');
+    dom.paperPill      = $('paperPill');
+    dom.paper          = $('paper');
+    dom.gradingFooter  = $('gradingFooter');
+    dom.metaStrip      = $('metaStrip');
+    dom.paperBody      = $('paperBody');
+    dom.remarksInput   = $('remarksInput');
+    dom.obtainMarksInput = $('obtainMarksInput');
+    dom.maxMarksDisplay  = $('maxMarksDisplay');
+    dom.autoCalcBtn    = $('autoCalcBtn');
+    dom.saveMarksBtn   = $('saveMarksBtn');
+
+    dom.percentChip    = $('percentChip');
+    dom.percentValue   = $('percentValue');
+    dom.statusChip     = $('statusChip');
+    dom.statusValue    = $('statusValue');
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function escapeHtml(v) {
+    return (v == null ? '' : v.toString())
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function hasValue(v) { return v !== null && v !== undefined && v.toString().trim() !== ''; }
+function debounce(fn, wait) {
+    let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+}
+function num(v) { const n = Number(v); return isNaN(n) ? 0 : n; }
+
+function computeResult(obtain, total) {
+    const o = num(obtain);
+    const t = num(total);
+    if (t <= 0) return { percent: 0, percentStr: '—', status: '—', statusClass: 'neutral' };
+    const pct = Math.round((o / t) * 1000) / 10;
+    const pass = pct >= PASS_THRESHOLD;
+    return {
+        percent: pct,
+        percentStr: `${pct.toFixed(1)}%`,
+        status: pass ? 'Pass' : 'Fail',
+        statusClass: pass ? 'pass' : 'fail'
+    };
+}
+
+/* 3-part key — kept for backwards compatibility */
+function makeKey(name, test, std) {
+    if (!name && !test && !std) return '';
+    return [
+        (name || '').toString().trim().toLowerCase(),
+        (test || '').toString().trim().toLowerCase(),
+        (std  || '').toString().trim().toLowerCase()
+    ].join('||');
+}
+
+/* 4-part key — used everywhere now */
+function makeKeyExact(name, test, std, subject) {
+    return [
+        (name    || '').toString().trim().toLowerCase(),
+        (test    || '').toString().trim().toLowerCase(),
+        (std     || '').toString().trim().toLowerCase(),
+        (subject || '').toString().trim().toLowerCase()
+    ].join('||');
+}
+
+/* Compare the identity columns between sheet row and popup row */
+function rowsMatchIdentity(sheetRow, popupRow) {
+    if (!sheetRow) return false;
+    return IDENTITY_COLS.every(col => {
+        const a = (sheetRow[col] == null ? '' : sheetRow[col].toString().trim());
+        const b = (popupRow[col]  == null ? '' : popupRow[col].toString().trim());
+        return a === b;
+    });
+}
+
+/* Compute next serial number for a new Marks row */
+function computeNextSrNo(markRows) {
+    let maxSr = 0;
+    (markRows || []).forEach(r => {
+        const n = num(r['Sr. No']);
+        if (n > maxSr) maxSr = n;
+    });
+    return maxSr + 1;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer = null;
+function showToast(msg, type = 'info', ms = 3600) {
+    const t = dom.toast; if (!t) return;
+    t.textContent = msg; t.className = `toast ${type}`;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, ms);
+}
+
+/* ============================================================
+   NETWORK
+   ============================================================ */
+async function fetchSheetRows(spreadsheetId, sheetName) {
+    const url = `${SCRIPT_URL}?spreadsheetId=${spreadsheetId}&sheetName=${encodeURIComponent(sheetName)}&action=getData&_=${Date.now()}`;
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Invalid response');
+    }
+    return json.data;
+}
+async function postInsert(spreadsheetId, sheetName, headerList, record) {
+    const params = new URLSearchParams();
+    params.append('action', 'insert');
+    params.append('spreadsheetId', spreadsheetId);
+    params.append('sheetName', sheetName);
+    headerList.forEach(h => {
+        params.append(h, record[h] == null ? '' : String(record[h]));
+    });
+    const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success') throw new Error(json.message || 'Save failed');
+    return json;
+}
+async function postUpdate(spreadsheetId, sheetName, rowIndex, record) {
+    const params = new URLSearchParams();
+    params.append('action', 'update');
+    params.append('spreadsheetId', spreadsheetId);
+    params.append('sheetName', sheetName);
+    params.append('rowIndex', rowIndex);
+    Object.keys(record).forEach(h => {
+        params.append(h, record[h] == null ? '' : String(record[h]));
+    });
+    const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (json.status !== 'success') throw new Error(json.message || 'Update failed');
+    return json;
+}
+
+/* ============================================================
+   LOAD SUBMISSIONS
+   ============================================================ */
+async function loadSubmissions() {
+    dom.tableBody.innerHTML = `
+        <tr><td colspan="5" style="text-align:center; padding: 40px;">
+            <div style="display:inline-block; width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            <p style="margin-top: 12px; color: var(--text-muted); font-weight: 600;">Loading submissions…</p>
+        </td></tr>
+    `;
+    try {
+        const [qaRows, markRows] = await Promise.all([
+            fetchSheetRows(QA_SS_ID, QA_SHEET),
+            fetchSheetRows(MARKS_SS_ID, MARKS_SHEET).catch(() => [])
+        ]);
+
+        const marksIndex = new Map();
+        markRows.forEach((r, i) => {
+            const k = makeKeyExact(
+                r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+            );
+            if (k !== '||||') marksIndex.set(k, { row: r, rowIndex: i + 2 });
+        });
+
+        submissions = qaRows.map((r, i) => {
+            const k = makeKeyExact(
+                r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+            );
+            const markEntry = marksIndex.get(k);
+
+            const assignedTeacher = markEntry
+                ? (markEntry.row['Assign Teacher'] || '').toString().trim()
+                : '';
+
+            const isChecked = !!(markEntry && (
+                hasValue(markEntry.row['Obtain Marks']) ||
+                hasValue(markEntry.row['Percentage']) ||
+                hasValue(markEntry.row['Status'])
+            ));
+
+            const editCount = markEntry ? num(markEntry.row['Edit Count']) : 0;
+            const canEdit   = isChecked && editCount < MAX_EDITS;
+
+            return {
+                ...r,
+                _rowIndex: i + 2,
+                _markRowIndex: markEntry ? markEntry.rowIndex : null,
+                _marksData: markEntry ? markEntry.row : null,
+                _assignedTeacher: assignedTeacher,
+                _isChecked: isChecked,
+                _editCount: editCount,
+                _canEdit: canEdit
+            };
+        });
+
+        renderTable();
+    } catch (err) {
+        console.error('[Load submissions]', err);
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="5" style="text-align:center; padding: 40px;">
+                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 8px;">⚠️</div>
+                <p style="color: var(--danger); font-weight: 700;">Failed to load submissions</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">${escapeHtml(err.message)}</p>
+                <button class="btn btn-primary" style="margin-top: 14px;" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Retry
+                </button>
+            </td></tr>
+        `;
+    }
+}
+async function loadTeachers() {
+    try {
+        const rows = await fetchSheetRows(TEACHER_SS_ID, TEACHER_SHEET);
+        teachers = rows
+            .map(r => (r[TEACHER_COL] || '').toString().trim())
+            .filter(Boolean);
+        teachers = [...new Set(teachers)];
+    } catch (err) {
+        console.warn('[Teachers] failed:', err);
+        teachers = [];
+    }
+}
+
+/* ============================================================
+   RENDER TABLE
+   ============================================================ */
+function renderTable(filter = '') {
+    if (!submissions.length) {
+        dom.tableBody.innerHTML = '';
+        dom.emptyState.classList.add('show');
+        dom.emptyTitle.textContent = 'No submissions found';
+        dom.emptyMsg.textContent = 'There are no test submissions in the Q_A sheet yet.';
+        return;
+    }
+    dom.emptyState.classList.remove('show');
+
+    const q = filter.toLowerCase().trim();
+    const filtered = !q ? submissions : submissions.filter(s => {
+        return (
+            (s['Student Name'] || '').toString().toLowerCase().includes(q) ||
+            (s['Subject Name'] || '').toString().toLowerCase().includes(q) ||
+            (s['Test Name'] || '').toString().toLowerCase().includes(q) ||
+            (s['Std'] || '').toString().toLowerCase().includes(q) ||
+            (s['Date'] || '').toString().toLowerCase().includes(q)
+        );
+    });
+
+    if (!filtered.length) {
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="5" style="text-align:center; padding: 40px;">
+                <div style="font-size: 2rem; color: var(--text-light); margin-bottom: 8px;">🔍</div>
+                <p style="color: var(--text-muted); font-weight: 600;">No matching submissions</p>
+            </td></tr>
+        `;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach((s) => {
+        const realIdx = submissions.indexOf(s);
+        const srNo  = s['Sr. No'] || (realIdx + 1);
+        const date  = s['Date'] || '—';
+        const name  = s['Student Name'] || '—';
+        const std   = s['Std'] || '—';
+        const checked = !!s._isChecked;
+
+        html += `
+            <tr>
+                <td class="sr">${escapeHtml(srNo)}</td>
+                <td class="muted">${escapeHtml(date)}</td>
+                <td class="name">${escapeHtml(name)}</td>
+                <td>${escapeHtml(std)}</td>
+                <td>
+                    <button class="view-btn ${checked ? 'checked' : ''}"
+                            data-idx="${realIdx}"
+                            data-action="open-detail">
+                        <i class="fas fa-${checked ? 'check-circle' : 'search'}"></i>
+                        ${checked ? 'Checked' : 'Check'}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    dom.tableBody.innerHTML = html;
+
+    dom.tableBody.querySelectorAll('button[data-action="open-detail"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-idx'), 10);
+            openDetailModal(idx);
+        });
+    });
+}
+
+/* ============================================================
+   DETAIL MODAL
+   ============================================================ */
+async function openDetailModal(idx) {
+    const s = submissions[idx];
+    if (!s) return;
+
+    currentEntry = s;
+    currentEntryIdx = idx;
+    currentAssignMarkRow = s._markRowIndex || null;
+    originalAssignTeacher = (s._assignedTeacher || '').trim();
+    isEditMode = false;
+
+    renderDetailHero(s);
+    renderDetailGrid(s);
+    renderTeacherSelect(originalAssignTeacher);
+    applyCheckedState();
+    dom.detailModal.classList.add('active');
+
+    await fetchFreshDetailData(s);
+    startDetailAutoRefresh();
+}
+
+async function fetchFreshDetailData(s) {
+    if (!s) return;
+
+    try {
+        const [qaRows, markRows] = await Promise.all([
+            fetchSheetRows(QA_SS_ID, QA_SHEET).catch(() => null),
+            fetchSheetRows(MARKS_SS_ID, MARKS_SHEET).catch(() => null)
+        ]);
+
+        /* --- Q_A row lookup --- */
+        let freshQA = null;
+
+        if (Array.isArray(qaRows) && Number.isInteger(s._rowIndex)) {
+            const idx = s._rowIndex - 2;
+            if (idx >= 0 && idx < qaRows.length) freshQA = qaRows[idx];
+        }
+        if (!freshQA && Array.isArray(qaRows)) {
+            const k = makeKeyExact(
+                s['Student Name'], s['Test Name'], s['Std'], s['Subject Name']
+            );
+            freshQA = qaRows.find(r => makeKeyExact(
+                r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+            ) === k) || null;
+        }
+
+        /* --- Marks row lookup --- */
+        let freshMark = null;
+        let markRowIndex = null;
+
+        if (Array.isArray(markRows) && Number.isInteger(s._markRowIndex)) {
+            const idx = s._markRowIndex - 2;
+            if (idx >= 0 && idx < markRows.length) {
+                freshMark = markRows[idx];
+                markRowIndex = s._markRowIndex;
+            }
+        }
+        if (!freshMark && Array.isArray(markRows)) {
+            const k = makeKeyExact(
+                s['Student Name'], s['Test Name'], s['Std'], s['Subject Name']
+            );
+            markRows.forEach((r, i) => {
+                if (makeKeyExact(
+                    r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+                ) === k) {
+                    freshMark = r;
+                    markRowIndex = i + 2;
+                }
+            });
+        }
+
+        /* --- Merge --- */
+        const merged = {
+            'Sr. No':         freshQA?.['Sr. No']       ?? s['Sr. No']       ?? '',
+            'Student Name':   freshQA?.['Student Name'] ?? s['Student Name'] ?? '',
+            'Date':           freshQA?.['Date']         ?? s['Date']         ?? '',
+            'Status':         freshQA?.['Status']       ?? s['Status']       ?? '',
+            'Std':            freshQA?.['Std']          ?? s['Std']          ?? '',
+            'Subject Name':   freshQA?.['Subject Name'] ?? s['Subject Name'] ?? '',
+            'Test Name':      freshQA?.['Test Name']    ?? s['Test Name']    ?? '',
+            'Timing':         freshQA?.['Timing']       ?? s['Timing']       ?? '',
+            'Time Taken':     freshQA?.['Time Taken']   ?? s['Time Taken']   ?? '',
+
+            'Assign Teacher': freshMark?.['Assign Teacher'] ?? s._assignedTeacher ?? '',
+            'Obtain Marks':   freshMark?.['Obtain Marks']   ?? freshQA?.['Obtain Marks'] ?? s['Obtain Marks'] ?? '',
+            'Total Marks':    freshMark?.['Total Marks']    ?? freshQA?.['Total Marks']  ?? s['Total Marks']  ?? '',
+            'Percentage':     freshMark?.['Percentage']     ?? '',
+            'Status (Marks)': freshMark?.['Status']         ?? '',
+            'Edit Count':     freshMark?.['Edit Count']     ?? 0
+        };
+
+        s._fresh = merged;
+        s._marksData = freshMark || s._marksData;
+        s._markRowIndex = markRowIndex;
+        s._assignedTeacher = (merged['Assign Teacher'] || '').toString().trim();
+        s._isChecked = !!(freshMark && (
+            hasValue(freshMark['Obtain Marks']) ||
+            hasValue(freshMark['Percentage']) ||
+            hasValue(freshMark['Status'])
+        ));
+        s._editCount = num(freshMark?.['Edit Count']);
+
+        originalAssignTeacher = s._assignedTeacher;
+        currentAssignMarkRow = s._markRowIndex;
+
+        renderDetailHero(s);
+        renderDetailGrid(s);
+        renderTeacherSelect(originalAssignTeacher);
+        applyCheckedState();
+
+        if (currentEntryIdx !== null && submissions[currentEntryIdx]) {
+            Object.assign(submissions[currentEntryIdx], {
+                _assignedTeacher: s._assignedTeacher,
+                _isChecked: s._isChecked,
+                _editCount: s._editCount,
+                _markRowIndex: s._markRowIndex,
+                _marksData: s._marksData,
+                _fresh: merged
+            });
+            renderTable(dom.searchInput.value);
+        }
+    } catch (err) {
+        console.warn('[Detail fetch] failed:', err);
+    }
+}
+
+function renderDetailHero(s) {
+    const name = (s._fresh && s._fresh['Student Name']) || s['Student Name'] || '—';
+    const std  = (s._fresh && s._fresh['Std']) || s['Std'] || '—';
+    const subj = (s._fresh && s._fresh['Subject Name']) || s['Subject Name'] || '—';
+
+    const initials = name.toString().trim().split(/\s+/).slice(0, 2)
+        .map(w => w[0] || '').join('').toUpperCase() || 'S';
+
+    dom.detailHero.innerHTML = `
+        <div class="avatar">${escapeHtml(initials)}</div>
+        <div class="info">
+            <h4>${escapeHtml(name)}</h4>
+            <div class="meta">
+                <span><i class="fas fa-graduation-cap"></i> Std ${escapeHtml(std)}</span>
+                <span><i class="fas fa-book"></i> ${escapeHtml(subj)}</span>
+            </div>
+        </div>
+    `;
+}
+
+function renderDetailGrid(s) {
+    const fresh = s._fresh || {};
+    const marks = s._marksData || {};
+
+    const pick = (key, fallback) => {
+        if (hasValue(fresh[key]))   return fresh[key];
+        if (hasValue(marks[key]))   return marks[key];
+        if (hasValue(s[key]))       return s[key];
+        return fallback || '—';
+    };
+
+    const assign = fresh['Assign Teacher'] || marks['Assign Teacher'] || s._assignedTeacher || '';
+    const stat   = fresh['Status (Marks)'] || marks['Status'] || '';
+    const pct    = fresh['Percentage']     || marks['Percentage'] || '';
+
+    let statusClass = '';
+    if (stat === 'Pass' || stat === 'Fail') statusClass = stat === 'Pass' ? 'highlight-pass' : 'highlight-fail';
+
+    const details = [
+        { lbl: 'Sr. No',         val: pick('Sr. No', '—'),         icon: 'fa-hashtag' },
+        { lbl: 'Student Name',   val: pick('Student Name', '—'),   icon: 'fa-user' },
+        { lbl: 'Date',           val: pick('Date', '—'),           icon: 'fa-calendar' },
+        { lbl: 'Status',         val: pick('Status', 'Submitted'), icon: 'fa-info-circle' },
+        { lbl: 'Std',            val: pick('Std', '—'),            icon: 'fa-graduation-cap' },
+        { lbl: 'Subject Name',   val: pick('Subject Name', '—'),   icon: 'fa-book' },
+        { lbl: 'Test Name',      val: pick('Test Name', '—'),      icon: 'fa-file-alt' },
+        { lbl: 'Timing',         val: pick('Timing', '—'),         icon: 'fa-clock' },
+        { lbl: 'Obtain Marks',   val: pick('Obtain Marks', '—'),   icon: 'fa-check-circle' },
+        { lbl: 'Total Marks',    val: pick('Total Marks', '—'),    icon: 'fa-star' },
+        { lbl: 'Assign Teacher', val: assign || '—',               icon: 'fa-user-tie', cls: assign ? 'highlight-assign' : '' },
+        { lbl: 'Percentage',     val: pct || '—',                  icon: 'fa-percent',  cls: statusClass },
+        { lbl: 'Status (Marks)', val: stat || '—',                 icon: 'fa-flag',     cls: statusClass }
+    ];
+
+    dom.detailGrid.innerHTML = details.map(d => `
+        <div class="detail-cell ${d.cls || ''}">
+            <span class="lbl"><i class="fas ${d.icon}"></i> ${escapeHtml(d.lbl)}</span>
+            <span class="val">${escapeHtml(String(d.val))}</span>
+        </div>
+    `).join('');
+}
+
+function startDetailAutoRefresh() {
+    stopDetailAutoRefresh();
+    detailRefreshHandle = setInterval(() => {
+        if (!dom.detailModal.classList.contains('active')) { stopDetailAutoRefresh(); return; }
+        if (!currentEntry) { stopDetailAutoRefresh(); return; }
+        if (document.activeElement === dom.teacherSelect) return;
+        fetchFreshDetailData(currentEntry);
+    }, 5000);
+}
+function stopDetailAutoRefresh() {
+    if (detailRefreshHandle) {
+        clearInterval(detailRefreshHandle);
+        detailRefreshHandle = null;
+    }
+}
+
+function applyCheckedState() {
+    const checked = !!currentEntry?._isChecked;
+    const hasAssignment = !!originalAssignTeacher;
+
+    if (!checked) {
+        dom.teacherSelect.disabled = false;
+        dom.selectWrap.classList.remove('locked');
+        dom.assignBox.classList.remove('locked');
+        dom.assignHead.innerHTML = '<i class="fas fa-user-tie"></i> Assign Teacher';
+
+        dom.assignSaveBtn.style.display = '';
+        dom.assignSaveBtn.innerHTML = '<i class="fas fa-save"></i> Save & Assign';
+        dom.assignSaveBtn.disabled = false;
+
+        dom.openGradingBtn.style.display = '';
+        dom.openGradingBtn.innerHTML = '<i class="fas fa-clipboard-check"></i> Check & Grade';
+
+        /* Condition: enable when teacher NOT assigned */
+        dom.openGradingBtn.disabled = hasAssignment;
+
+        if (hasAssignment) {
+            dom.assignHint.className = 'assign-hint danger show';
+            dom.assignHintText.innerHTML =
+                `Assigned to <b>${escapeHtml(originalAssignTeacher)}</b>. The paper is locked for grading.`;
+        } else {
+            dom.assignHint.className = 'assign-hint ok show';
+            dom.assignHintText.innerHTML = 'No teacher assigned. You may open the paper for grading.';
+        }
+    } else {
+        dom.teacherSelect.disabled = true;
+        dom.selectWrap.classList.add('locked');
+        dom.assignBox.classList.add('locked');
+        dom.assignHead.innerHTML = '<i class="fas fa-lock"></i> Paper Checked & Locked';
+
+        dom.assignSaveBtn.style.display = 'none';
+
+        dom.openGradingBtn.style.display = '';
+        const remaining = MAX_EDITS - num(currentEntry._editCount);
+        const canEdit = remaining > 0;
+
+        if (canEdit) {
+            dom.openGradingBtn.innerHTML = `<i class="fas fa-pen-to-square"></i> Edit Paper (${remaining} left)`;
+            dom.openGradingBtn.disabled = false;
+        } else {
+            dom.openGradingBtn.innerHTML = `<i class="fas fa-lock"></i> Edit Limit Reached`;
+            dom.openGradingBtn.disabled = true;
+        }
+
+        const teacher = originalAssignTeacher || '—';
+        dom.assignHint.className = 'assign-hint ok show';
+        dom.assignHintText.innerHTML =
+            `Paper already checked and assigned to <b>${escapeHtml(teacher)}</b>. ` +
+            (canEdit
+                ? `You can still edit the marks <b>${remaining}</b> more time(s).`
+                : `Edit limit of <b>${MAX_EDITS}</b> has been reached.`);
+    }
+}
+
+function closeDetailModal() {
+    stopDetailAutoRefresh();
+    dom.detailModal.classList.remove('active');
+    currentEntry = null;
+    currentEntryIdx = null;
+    currentAssignMarkRow = null;
+    originalAssignTeacher = '';
+    isEditMode = false;
+}
+
+function renderTeacherSelect(selected) {
+    if (!teachers.length) {
+        dom.teacherSelect.innerHTML = `<option value="">No teachers found in Teacher Details sheet</option>`;
+        return;
+    }
+    const opts = ['<option value="">— Select Teacher —</option>']
+        .concat(teachers.map(t => {
+            const sel = (t.toLowerCase() === (selected || '').toLowerCase()) ? 'selected' : '';
+            return `<option value="${escapeHtml(t)}" ${sel}>${escapeHtml(t)}</option>`;
+        }));
+    dom.teacherSelect.innerHTML = opts.join('');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SAVE ASSIGNMENT
+   ══════════════════════════════════════════════════════════════
+   UPDATE vs INSERT decision:
+     • All identity columns match (Student Name, Date, Subject,
+       Test Name)  → UPDATE the existing row in place
+     • Any mismatch → INSERT a new row with a fresh Sr. No
+
+   Assign Teacher and Std are NOT part of the identity check.
+   Changing only the teacher updates the same row.
+   ══════════════════════════════════════════════════════════════ */
+async function saveAssignment() {
+    if (!currentEntry) return;
+
+    if (currentEntry._isChecked) {
+        showToast('Paper is already checked. Use Edit Paper to modify marks.', 'info');
+        return;
+    }
+
+    const teacher = (dom.teacherSelect.value || '').trim();
+    const s = currentEntry;
+
+    /* Popup identity row — only the 4 identity fields */
+    const popupRow = {
+        'Student Name': s['Student Name'] || '',
+        'Date':         s['Date'] || '',
+        'Subject Name': s['Subject Name'] || '',
+        'Test Name':    s['Test Name'] || ''
+    };
+
+    dom.assignSaveBtn.disabled = true;
+    dom.assignSaveBtn.innerHTML = '<span class="spinner"></span> Checking…';
+
+    try {
+        let markRows = [];
+        try { markRows = await fetchSheetRows(MARKS_SS_ID, MARKS_SHEET); }
+        catch (err) { console.warn('[Assign] Marks fetch failed', err); }
+
+        /* Locate the intended target row (row index first, then 4-field key) */
+        let targetRowIndex = null;
+        let targetRow = null;
+
+        if (Number.isInteger(currentAssignMarkRow)) {
+            const idx = currentAssignMarkRow - 2;
+            if (idx >= 0 && idx < markRows.length) {
+                targetRowIndex = currentAssignMarkRow;
+                targetRow = markRows[idx];
+            }
+        }
+        if (!targetRow) {
+            const k = makeKeyExact(
+                s['Student Name'], s['Test Name'], s['Std'], s['Subject Name']
+            );
+            markRows.forEach((r, i) => {
+                if (targetRow) return;
+                if (makeKeyExact(
+                    r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+                ) === k) {
+                    targetRow = r;
+                    targetRowIndex = i + 2;
+                }
+            });
+        }
+
+        /* Identity comparison — only the 4 columns */
+        const isSameEntry = targetRow ? rowsMatchIdentity(targetRow, popupRow) : false;
+
+        if (targetRowIndex && isSameEntry) {
+            /* ─────────── UPDATE IN PLACE ─────────── */
+            /* Preserve existing Sr. No when present; otherwise use popup's */
+            const existingSr = hasValue(targetRow['Sr. No'])
+                ? targetRow['Sr. No']
+                : (s['Sr. No'] || '');
+
+            const updateRecord = {
+                'Sr. No':         existingSr,
+                'Student Name':   popupRow['Student Name'],
+                'Date':           popupRow['Date'],
+                'Std':            s['Std'] || '',
+                'Subject Name':   popupRow['Subject Name'],
+                'Test Name':      popupRow['Test Name'],
+                'Total Marks':    s['Total Marks'] || '',
+                'Obtain Marks':   s['Obtain Marks'] || '',
+                /* ' ' placeholder forces the backend to write empty */
+                'Assign Teacher': teacher || ' '
+            };
+            await postUpdate(MARKS_SS_ID, MARKS_SHEET, targetRowIndex, updateRecord);
+
+            if (teacher) {
+                showToast(`✅ Updated assignment for ${teacher}`, 'success');
+                originalAssignTeacher = teacher;
+                s._assignedTeacher = teacher;
+            } else {
+                showToast(`🗑️ Assignment cleared — Check & Grade is now enabled`, 'info', 3200);
+                originalAssignTeacher = '';
+                s._assignedTeacher = '';
+            }
+        } else if (targetRowIndex && !isSameEntry) {
+            /* ─────────── IDENTITY MISMATCH → INSERT NEW ─────────── */
+            const nextSr = computeNextSrNo(markRows);
+            const record = {};
+            MARKS_HEADERS.forEach(h => record[h] = '');
+            record['Sr. No']         = nextSr;
+            record['Student Name']   = popupRow['Student Name'];
+            record['Date']           = popupRow['Date'];
+            record['Assign Teacher'] = teacher;
+            record['Std']            = s['Std'] || '';
+            record['Subject Name']   = popupRow['Subject Name'];
+            record['Test Name']      = popupRow['Test Name'];
+            record['Total Marks']    = s['Total Marks'] || '';
+            record['Obtain Marks']   = s['Obtain Marks'] || '';
+            record['Edit Count']     = 0;
+
+            await postInsert(MARKS_SS_ID, MARKS_SHEET, MARKS_HEADERS, record);
+            showToast(
+                teacher
+                    ? `✅ New entry created (Sr. ${nextSr}) — assigned to ${teacher}`
+                    : `✅ New entry created (Sr. ${nextSr})`,
+                'success', 3800
+            );
+            originalAssignTeacher = teacher;
+            s._assignedTeacher = teacher;
+            await refreshAssignmentFromMarks();
+        } else {
+            /* ─────────── NO EXISTING ROW → INSERT ─────────── */
+            if (!teacher) {
+                showToast('Nothing to save — select a teacher first.', 'warning');
+                return;
+            }
+            const nextSr = computeNextSrNo(markRows);
+            const record = {};
+            MARKS_HEADERS.forEach(h => record[h] = '');
+            record['Sr. No']         = nextSr;
+            record['Student Name']   = popupRow['Student Name'];
+            record['Date']           = popupRow['Date'];
+            record['Assign Teacher'] = teacher;
+            record['Std']            = s['Std'] || '';
+            record['Subject Name']   = popupRow['Subject Name'];
+            record['Test Name']      = popupRow['Test Name'];
+            record['Total Marks']    = s['Total Marks'] || '';
+            record['Obtain Marks']   = s['Obtain Marks'] || '';
+            record['Edit Count']     = 0;
+
+            await postInsert(MARKS_SS_ID, MARKS_SHEET, MARKS_HEADERS, record);
+            showToast(`✅ Assigned to ${teacher} (Sr. ${nextSr})`, 'success');
+            originalAssignTeacher = teacher;
+            s._assignedTeacher = teacher;
+            await refreshAssignmentFromMarks();
+            s._markRowIndex = currentAssignMarkRow;
+        }
+
+        /* Verify */
+        await refreshAssignmentFromMarks();
+        renderTeacherSelect(originalAssignTeacher);
+        applyCheckedState();
+        renderTable(dom.searchInput.value);
+    } catch (err) {
+        console.error('[Assign]', err);
+        showToast('❌ ' + err.message, 'error', 4500);
+    } finally {
+        dom.assignSaveBtn.disabled = false;
+        dom.assignSaveBtn.innerHTML = '<i class="fas fa-save"></i> Save & Assign';
+    }
+}
+
+async function refreshAssignmentFromMarks() {
+    if (!currentEntry) return false;
+    try {
+        const markRows = await fetchSheetRows(MARKS_SS_ID, MARKS_SHEET);
+
+        /* Prefer row index; fallback to quadruple key */
+        let found = null;
+        let idx = null;
+
+        if (Number.isInteger(currentAssignMarkRow)) {
+            const i = currentAssignMarkRow - 2;
+            if (i >= 0 && i < markRows.length) {
+                found = markRows[i];
+                idx = currentAssignMarkRow;
+            }
+        }
+        if (!found) {
+            const k = makeKeyExact(
+                currentEntry['Student Name'], currentEntry['Test Name'],
+                currentEntry['Std'], currentEntry['Subject Name']
+            );
+            markRows.forEach((r, i) => {
+                if (found) return;
+                if (makeKeyExact(
+                    r['Student Name'], r['Test Name'], r['Std'], r['Subject Name']
+                ) === k) {
+                    found = r;
+                    idx = i + 2;
+                }
+            });
+        }
+
+        if (found) {
+            currentAssignMarkRow = idx;
+            currentEntry._markRowIndex = idx;
+            currentEntry._marksData = found;
+            currentEntry._assignedTeacher = (found['Assign Teacher'] || '').toString().trim();
+            currentEntry._isChecked =
+                hasValue(found['Obtain Marks']) ||
+                hasValue(found['Percentage']) ||
+                hasValue(found['Status']);
+            currentEntry._editCount = num(found['Edit Count']);
+            currentEntry._canEdit = currentEntry._isChecked && currentEntry._editCount < MAX_EDITS;
+            originalAssignTeacher = currentEntry._assignedTeacher;
+            renderTeacherSelect(originalAssignTeacher);
+            return true;
+        } else {
+            currentAssignMarkRow = null;
+            originalAssignTeacher = '';
+            currentEntry._markRowIndex = null;
+            currentEntry._assignedTeacher = '';
+            currentEntry._isChecked = false;
+            currentEntry._editCount = 0;
+            return false;
+        }
+    } catch (err) {
+        console.warn('[Assignment refresh] failed:', err);
+        return false;
+    }
+}
+
+/* ============================================================
+   OPEN GRADING PAGE
+   ============================================================ */
+function openGradingPage() {
+    if (!currentEntry) return;
+
+    if (currentEntry._isChecked) {
+        const remaining = MAX_EDITS - num(currentEntry._editCount);
+        if (remaining <= 0) {
+            showToast(`Edit limit of ${MAX_EDITS} reached for this paper.`, 'warning', 3200);
+            return;
+        }
+        isEditMode = true;
+        gradingRow = currentEntry;
+        closeDetailModal();
+        dom.page1.classList.remove('active-page');
+        dom.page2.classList.add('active-page');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        dom.editBanner.classList.add('show');
+        dom.paper.classList.add('editing');
+        dom.gradingFooter.classList.add('editing');
+        dom.paperPill.textContent = 'Edit Answer Sheet';
+        dom.gradingTitle.innerHTML = '<i class="fas fa-pen-to-square"></i> Edit Paper';
+        dom.editBannerText.textContent = `Editing Mode — changes will be saved when you click Update`;
+        dom.editRemaining.textContent = `${remaining} edit${remaining === 1 ? '' : 's'} remaining`;
+
+        renderGradingPaper(gradingRow, { editMode: true });
+        dom.gradingSubtitle.textContent = `${gradingRow['Student Name'] || '—'} · ${gradingRow['Subject Name'] || ''} · ${gradingRow['Test Name'] || ''}`;
+        updateResultBar();
+        return;
+    }
+
+    /* Unchecked flow — block when teacher already assigned */
+    if (originalAssignTeacher) {
+        showToast('You have already assigned to the teacher.', 'warning', 3200);
+        return;
+    }
+
+    isEditMode = false;
+    gradingRow = currentEntry;
+    gradingRow['Assign Teacher'] = originalAssignTeacher;
+
+    closeDetailModal();
+    dom.page1.classList.remove('active-page');
+    dom.page2.classList.add('active-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    dom.editBanner.classList.remove('show');
+    dom.paper.classList.remove('editing');
+    dom.gradingFooter.classList.remove('editing');
+    dom.paperPill.textContent = 'Answer Sheet';
+    dom.gradingTitle.innerHTML = '<i class="fas fa-graduation-cap"></i> Grading Paper';
+
+    renderGradingPaper(gradingRow, { editMode: false });
+    dom.gradingSubtitle.textContent = `${gradingRow['Student Name'] || '—'} · ${gradingRow['Subject Name'] || ''} · ${gradingRow['Test Name'] || ''}`;
+    updateResultBar();
+}
+
+function backToList() {
+    dom.page2.classList.remove('active-page');
+    dom.page1.classList.add('active-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    gradingRow = null;
+    perQuestionMarks = {};
+    isEditMode = false;
+    dom.editBanner.classList.remove('show');
+    dom.paper.classList.remove('editing');
+    dom.gradingFooter.classList.remove('editing');
+    dom.paperPill.textContent = 'Answer Sheet';
+    dom.gradingTitle.innerHTML = '<i class="fas fa-graduation-cap"></i> Grading Paper';
+}
+
+/* ============================================================
+   GRADING PAPER RENDER
+   ============================================================ */
+function renderGradingPaper(s, opts = {}) {
+    const editMode = !!opts.editMode;
+
+    const metaItems = [
+        { lbl: 'Date',        val: s['Date'] || '—' },
+        { lbl: 'Std',         val: s['Std'] || '—' },
+        { lbl: 'Subject',     val: s['Subject Name'] || '—' },
+        { lbl: 'Test',        val: s['Test Name'] || '—' },
+        { lbl: 'Total Marks', val: s['Total Marks'] || '0' },
+        { lbl: 'Time Taken',  val: s['Time Taken'] || '—' }
+    ];
+    dom.metaStrip.innerHTML = metaItems.map(m => `
+        <div class="meta-cell">
+            <span class="lbl">${escapeHtml(m.lbl)}</span>
+            <span class="val">${escapeHtml(String(m.val))}</span>
+        </div>
+    `).join('');
+
+    const perQPrefill = {};
+    const marks = s._marksData || {};
+    Object.entries(SECTION_PREFIX_MAP).forEach(([prefix, cfg]) => {
+        for (let i = 1; i <= 6; i++) {
+            const sheetCol = `${cfg.perQ}${i} Mark`;
+            if (hasValue(marks[sheetCol])) {
+                perQPrefill[`sec_${prefix}_${i}`] = num(marks[sheetCol]);
+            }
+        }
+    });
+
+    const sectionFallback = {};
+    Object.entries(SECTION_PREFIX_MAP).forEach(([prefix, cfg]) => {
+        if (hasValue(marks[cfg.obtain])) sectionFallback[prefix] = num(marks[cfg.obtain]);
+    });
+
+    const ctx = { editMode, perQPrefill, sectionFallback };
+
+    const html = [
+        renderGradeFill(s, ctx),
+        renderGradeMatch(s, ctx),
+        renderGradeTF(s, ctx),
+        renderGradeOdd(s, ctx),
+        renderGradeSimple(s, {
+            sectionKey: 'Answer in One Sentence', marksKey: 'Marks 5',
+            qPrefix: 'OS Questions', ansPrefix: 'OS Ans', count: 6, icon: 'fa-pen-fancy',
+            defaultTitle: 'F. Answer in One Sentence', prefix: 'os'
+        }, ctx),
+        renderGradeDist(s, ctx),
+        renderGradeSimple(s, {
+            sectionKey: 'Answer the Following Question', marksKey: 'Marks 7',
+            qPrefix: 'AQ', ansPrefix: 'AQ Ans', count: 6, icon: 'fa-comments',
+            defaultTitle: 'H. Answer the Following Question', prefix: 'aq'
+        }, ctx),
+        renderGradeSimple(s, {
+            sectionKey: 'Brief Answer', marksKey: 'Marks 8',
+            qPrefix: 'BQ', ansPrefix: 'BQ Ans', count: 6, icon: 'fa-align-left',
+            defaultTitle: 'I. Brief Answer', prefix: 'bq'
+        }, ctx)
+    ].filter(Boolean).join('');
+
+    dom.paperBody.innerHTML = html || `<div style="text-align:center;padding:2rem;color:var(--text-muted);">No questions found for this submission.</div>`;
+
+    dom.maxMarksDisplay.textContent = num(s['Total Marks']) || '0';
+    dom.obtainMarksInput.value = hasValue(s['Obtain Marks']) ? s['Obtain Marks'] : '';
+    dom.remarksInput.value = hasValue(s['Remarks']) ? s['Remarks'] : '';
+
+    perQuestionMarks = {};
+    Object.entries(perQPrefill).forEach(([k, v]) => { perQuestionMarks[k] = v; });
+
+    dom.paperBody.querySelectorAll('input[data-mark-key]').forEach(inp => {
+        const key = inp.getAttribute('data-mark-key');
+        if (perQPrefill[key] !== undefined) inp.value = perQPrefill[key];
+        inp.addEventListener('input', () => {
+            perQuestionMarks[key] = num(inp.value);
+            const sec = inp.getAttribute('data-section-key');
+            if (sec) {
+                const totalInSec = Object.entries(perQuestionMarks)
+                    .filter(([k]) => k.startsWith(`sec_${sec}_`))
+                    .reduce((sum, [, v]) => sum + num(v), 0);
+                const disp = dom.paperBody.querySelector(`[data-section-total="${sec}"]`);
+                if (disp) disp.textContent = totalInSec;
+            }
+        });
+    });
+
+    Object.entries(sectionFallback).forEach(([prefix, val]) => {
+        const disp = dom.paperBody.querySelector(`[data-section-total="${prefix}"]`);
+        if (disp) {
+            const perQSum = Object.entries(perQuestionMarks)
+                .filter(([k]) => k.startsWith(`sec_${prefix}_`))
+                .reduce((sum, [, v]) => sum + num(v), 0);
+            disp.textContent = perQSum > 0 ? perQSum : val;
+        }
+    });
+
+    if (editMode) {
+        dom.saveMarksBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+        dom.saveMarksBtn.classList.remove('btn-success');
+        dom.saveMarksBtn.classList.add('btn-warning');
+    } else {
+        dom.saveMarksBtn.innerHTML = '<i class="fas fa-save"></i> Submit Marks';
+        dom.saveMarksBtn.classList.remove('btn-warning');
+        dom.saveMarksBtn.classList.add('btn-success');
+    }
+
+    dom.obtainMarksInput.addEventListener('input', updateResultBar);
+}
+
+function gradeMarkInput(prefix, idx, max) {
+    return `
+        <div class="mark-row">
+            <label for="mark-${prefix}-${idx}"><i class="fas fa-star"></i> Marks</label>
+            <input type="number" min="0" step="0.5" inputmode="decimal"
+                   data-mark-key="sec_${prefix}_${idx}"
+                   data-section-key="${prefix}"
+                   id="mark-${prefix}-${idx}"
+                   placeholder="0">
+            <span class="max-hint">/ ${escapeHtml(String(max || 0))}</span>
+        </div>
+    `;
+}
+function studentAnswerBlock(text, label = 'Student Answer') {
+    if (!hasValue(text)) {
+        return `<div class="student-answer empty"><span class="lbl">${escapeHtml(label)}</span>(Not answered)</div>`;
+    }
+    return `<div class="student-answer"><span class="lbl">${escapeHtml(label)}</span>${escapeHtml(text)}</div>`;
+}
+function renderGradeFill(s) {
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const q = s[`Fill Questions ${i}`];
+        if (!hasValue(q)) continue;
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(q)}</span>
+                    ${studentAnswerBlock(s[`Fill Answer ${i}`])}
+                    ${gradeMarkInput('1', i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-keyboard"></i> ${escapeHtml(s['Fill in the Blanks'] || 'B. Fill in the Blanks')}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s['Marks 1'] || 0))} · <span data-section-total="1">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderGradeMatch(s) {
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const letter = String.fromCharCode(64 + i);
+        const q = s[`Match Pair ${i}`];
+        const r = s[`Match Pair ${letter}`];
+        if (!hasValue(q) && !hasValue(r)) continue;
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text"><b>${escapeHtml(q || '—')}</b> &nbsp;↔&nbsp; <b>${escapeHtml(r || '—')}</b></span>
+                    ${studentAnswerBlock(s[`Match Ans ${i}`], 'Student Match')}
+                    ${gradeMarkInput('2', i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-link"></i> ${escapeHtml(s['Match the Columns'] || 'C. Match the Columns')}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s['Marks 2'] || 0))} · <span data-section-total="2">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderGradeTF(s) {
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const q = s[`TF Question ${i}`];
+        if (!hasValue(q)) continue;
+        const ans = s[`TF Ans ${i}`];
+        const reason = s[`TF Reason ${i}`];
+        const combined = [ans, reason ? `Reason: ${reason}` : ''].filter(Boolean).join(' — ');
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(q)}</span>
+                    ${studentAnswerBlock(combined || '', 'Student Answer')}
+                    ${gradeMarkInput('3', i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-check-double"></i> ${escapeHtml(s['True or False'] || 'D. True or False')}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s['Marks 3'] || 0))} · <span data-section-total="3">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderGradeOdd(s) {
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const ans = s[`Find Ans ${i}`];
+        const setOpts = [];
+        for (let k = 0; k < 4; k++) {
+            const oi = (i - 1) * 4 + k + 1;
+            const o = s[`Option ${oi}`];
+            if (hasValue(o)) setOpts.push(o);
+        }
+        if (!setOpts.length && !hasValue(ans)) continue;
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">Options: <b>${escapeHtml(setOpts.join(', ') || '—')}</b></span>
+                    ${studentAnswerBlock(ans, 'Student Answer')}
+                    ${gradeMarkInput('4', i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-search"></i> ${escapeHtml(s['Find odd man out'] || 'E. Find Odd Man Out')}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s['Marks 4'] || 0))} · <span data-section-total="4">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderGradeSimple(s, cfg) {
+    const { sectionKey, marksKey, qPrefix, ansPrefix, count, icon, defaultTitle, prefix } = cfg;
+    const prefixMap = { os: '5', aq: '7', bq: '8' };
+    const secPrefix = prefixMap[prefix];
+    const items = [];
+    for (let i = 1; i <= count; i++) {
+        const q = s[`${qPrefix} ${i}`];
+        const ans = s[`${ansPrefix} ${i}`];
+        if (!hasValue(q) && !hasValue(ans)) continue;
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(q || '—')}</span>
+                    ${studentAnswerBlock(ans)}
+                    ${gradeMarkInput(secPrefix, i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas ${icon}"></i> ${escapeHtml(s[sectionKey] || defaultTitle)}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s[marksKey] || 0))} · <span data-section-total="${secPrefix}">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+function renderGradeDist(s) {
+    const items = [];
+    for (let i = 1; i <= 6; i++) {
+        const q = s[`Dis Question ${i}`];
+        if (!hasValue(q)) continue;
+        const aIdx = (i - 1) * 2;
+        const bIdx = aIdx + 1;
+        const letters = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+        const ansA = s[`Dis Ans ${letters[aIdx]}`];
+        const ansB = s[`Dis Ans ${letters[bIdx]}`];
+        items.push(`
+            <div class="q-item">
+                <div class="q-item-content">
+                    <span class="q-item-num">${i}</span>
+                    <span class="q-item-text">${escapeHtml(q)}</span>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+                        ${studentAnswerBlock(ansA, 'Column A')}
+                        ${studentAnswerBlock(ansB, 'Column B')}
+                    </div>
+                    ${gradeMarkInput('6', i, '')}
+                </div>
+            </div>
+        `);
+    }
+    if (!items.length) return '';
+    return `
+        <section class="q-block">
+            <div class="q-header">
+                <div class="q-title"><i class="fas fa-not-equal"></i> ${escapeHtml(s['Distinguishing between'] || 'G. Distinguishing between')}</div>
+                <span class="q-marks">Max ${escapeHtml(String(s['Marks 6'] || 0))} · <span data-section-total="6">0</span></span>
+            </div>
+            <div class="q-body">${items.join('')}</div>
+        </section>
+    `;
+}
+
+/* ============================================================
+   AUTO-CALCULATE + RESULT BAR
+   ============================================================ */
+function autoCalculateObtain() {
+    let total = 0;
+    Object.values(perQuestionMarks).forEach(v => total += num(v));
+    total = Math.round(total * 10) / 10;
+    dom.obtainMarksInput.value = total;
+    updateResultBar();
+    showToast(`🧮 Auto-calculated: ${total}`, 'info', 1800);
+}
+
+function updateResultBar() {
+    const obtain = dom.obtainMarksInput.value;
+    const total = num(gradingRow?.['Total Marks']);
+
+    const hasObtain = obtain !== '' && !isNaN(Number(obtain));
+    if (!hasObtain || total <= 0) {
+        dom.percentChip.className = 'result-chip neutral';
+        dom.percentValue.textContent = '—';
+        dom.statusChip.className = 'result-chip neutral';
+        dom.statusValue.textContent = '—';
+        return;
+    }
+
+    const r = computeResult(obtain, total);
+    dom.percentChip.className = `result-chip ${r.statusClass}`;
+    dom.percentValue.textContent = r.percentStr;
+    dom.statusChip.className = `result-chip ${r.statusClass}`;
+    dom.statusValue.textContent = r.status;
+}
+
+/* ============================================================
+   SAVE MARKS (SUBMIT / UPDATE)
+   ============================================================ */
+async function saveMarks() {
+    if (!gradingRow) return;
+
+    /* Teacher is optional now — submission always proceeds. */
+    const teacher = (gradingRow['Assign Teacher'] || originalAssignTeacher || '').trim();
+
+    const obtainRaw = dom.obtainMarksInput.value.trim();
+    if (obtainRaw === '' || isNaN(Number(obtainRaw))) {
+        showToast('Please enter Obtain Marks (or use Auto)', 'warning');
+        return;
+    }
+
+    const obtainNum = Number(obtainRaw);
+    const totalNum  = num(gradingRow['Total Marks']);
+    const result    = computeResult(obtainNum, totalNum);
+
+    let newEditCount;
+    if (isEditMode) {
+        newEditCount = num(gradingRow._editCount) + 1;
+        if (newEditCount > MAX_EDITS) {
+            showToast(`Edit limit of ${MAX_EDITS} reached. No further edits allowed.`, 'warning', 4000);
+            return;
+        }
+    } else {
+        newEditCount = num(gradingRow._editCount);
+    }
+
+    const record = {};
+    MARKS_HEADERS.forEach(h => record[h] = '');
+
+    record['Sr. No']          = gradingRow['Sr. No'] || '';
+    record['Student Name']    = gradingRow['Student Name'] || '';
+    record['Date']            = gradingRow['Date'] || '';
+    record['Assign Teacher']  = teacher || ' ';
+    record['Std']             = gradingRow['Std'] || '';
+    record['Subject Name']    = gradingRow['Subject Name'] || '';
+    record['Test Name']       = gradingRow['Test Name'] || '';
+    record['Total Marks']     = totalNum;
+    record['Obtain Marks']    = obtainNum;
+
+    const sectionMap = [
+        { secKey: 'Fill in the Blanks',            marksKey: 'Marks 1', obtainKey: 'Obtain Marks 1', prefix: '1', perQKey: 'Fill Q'  },
+        { secKey: 'Match the Columns',             marksKey: 'Marks 2', obtainKey: 'Obtain Marks 2', prefix: '2', perQKey: 'Match Q' },
+        { secKey: 'True or False',                 marksKey: 'Marks 3', obtainKey: 'Obtain Marks 3', prefix: '3', perQKey: 'TF Q'    },
+        { secKey: 'Find odd man out',              marksKey: 'Marks 4', obtainKey: 'Obtain Marks 4', prefix: '4', perQKey: 'Find Q'  },
+        { secKey: 'Answer in One Sentence',        marksKey: 'Marks 5', obtainKey: 'Obtain Marks 5', prefix: '5', perQKey: 'OS Q'    },
+        { secKey: 'Distinguishing between',        marksKey: 'Marks 6', obtainKey: 'Obtain Marks 6', prefix: '6', perQKey: 'Dis Q'   },
+        { secKey: 'Answer the Following Question', marksKey: 'Marks 7', obtainKey: 'Obtain Marks 7', prefix: '7', perQKey: 'AQ Q'    },
+        { secKey: 'Brief Answer',                  marksKey: 'Marks 8', obtainKey: 'Obtain Marks 8', prefix: '8', perQKey: 'BQ Q'    }
+    ];
+
+    sectionMap.forEach(sec => {
+        record[sec.secKey]   = gradingRow[sec.secKey] || '';
+        record[sec.marksKey] = gradingRow[sec.marksKey] || 0;
+        let sum = 0;
+        for (let i = 1; i <= 6; i++) {
+            const key = `sec_${sec.prefix}_${i}`;
+            const v = perQuestionMarks[key];
+            record[`${sec.perQKey}${i} Mark`] = (v === undefined || v === null) ? '' : v;
+            sum += num(v);
+        }
+        if (sum === 0 && hasValue(gradingRow[sec.obtainKey])) {
+            sum = num(gradingRow[sec.obtainKey]);
+        }
+        record[sec.obtainKey] = Math.round(sum * 10) / 10;
+    });
+
+    record['Percentage'] = result.percentStr;
+    record['Status']     = result.status;
+    record['Edit Count'] = newEditCount;
+    record['Remarks']    = dom.remarksInput.value.trim();
+
+    const primaryBtn = dom.saveMarksBtn;
+    primaryBtn.disabled = true;
+    primaryBtn.innerHTML = '<span class="spinner"></span> ' + (isEditMode ? 'Updating…' : 'Saving…');
+
+    try {
+        if (gradingRow._markRowIndex) {
+            await postUpdate(MARKS_SS_ID, MARKS_SHEET, gradingRow._markRowIndex, record);
+            if (isEditMode) {
+                const remaining = MAX_EDITS - newEditCount;
+                showToast(
+                    remaining > 0
+                        ? `✅ Updated. ${remaining} edit${remaining === 1 ? '' : 's'} remaining.`
+                        : `✅ Updated. Edit limit reached — no further edits allowed.`,
+                    'success', 4200
+                );
+            } else {
+                showToast(`✅ Marks updated for ${gradingRow['Student Name'] || 'student'}`, 'success', 4000);
+            }
+        } else {
+            await postInsert(MARKS_SS_ID, MARKS_SHEET, MARKS_HEADERS, record);
+            showToast(`✅ Marks saved for ${gradingRow['Student Name'] || 'student'}`, 'success', 4000);
+        }
+        setTimeout(() => {
+            backToList();
+            loadSubmissions();
+        }, 1400);
+    } catch (err) {
+        console.error('[Save marks]', err);
+        showToast('❌ ' + err.message, 'error', 5000);
+    } finally {
+        primaryBtn.disabled = false;
+        if (isEditMode) {
+            primaryBtn.innerHTML = '<i class="fas fa-check"></i> Update';
+        } else {
+            primaryBtn.innerHTML = '<i class="fas fa-save"></i> Submit Marks';
+        }
+    }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+    cacheDom();
+
+    dom.refreshBtn.addEventListener('click', async () => {
+        dom.refreshBtn.disabled = true;
+        dom.refreshBtn.innerHTML = '<span class="spinner"></span> Loading…';
+        await Promise.all([loadSubmissions(), loadTeachers()]);
+        dom.refreshBtn.disabled = false;
+        dom.refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+    });
+    dom.searchInput.addEventListener('input', debounce((e) => renderTable(e.target.value), 200));
+
+    dom.detailClose.addEventListener('click', closeDetailModal);
+    dom.detailCancelBtn.addEventListener('click', closeDetailModal);
+    dom.detailModal.addEventListener('click', (e) => {
+        if (e.target === dom.detailModal) closeDetailModal();
+    });
+    dom.assignSaveBtn.addEventListener('click', saveAssignment);
+
+    dom.openGradingBtn.addEventListener('click', () => {
+        if (!currentEntry) return;
+
+        if (currentEntry._isChecked) {
+            const remaining = MAX_EDITS - num(currentEntry._editCount);
+            if (remaining <= 0) {
+                showToast(`Edit limit of ${MAX_EDITS} reached for this paper.`, 'warning', 3200);
+                return;
+            }
+            openGradingPage();
+            return;
+        }
+
+        /* Unchecked → block only when a teacher is already assigned */
+        if (originalAssignTeacher) {
+            showToast('You have already assigned to the teacher.', 'warning', 3200);
+            return;
+        }
+
+        openGradingPage();
+    });
+
+    dom.backToListBtn.addEventListener('click', backToList);
+    dom.autoCalcBtn.addEventListener('click', autoCalculateObtain);
+    dom.saveMarksBtn.addEventListener('click', saveMarks);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && dom.detailModal.classList.contains('active')) {
+            closeDetailModal();
+        }
+    });
+
+    await Promise.all([
+        loadSubmissions(),
+        loadTeachers()
+    ]);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+} else {
+    init();
+}
+
+})();
+</script>
+</body>
+</html>

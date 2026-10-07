@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>👤 Staff Registry Management | Smart Dashboard</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Cropper.js for image editing -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- ⭐ loginadmin.js - Handles authentication -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <style>
+        /* ================================================================
+           CSS VARIABLES - Light & Dark Mode
+           ================================================================ */
+        :root {
+            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-secondary: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #fbbf24;
+            --info: #06b6d4;
+
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+            --table-header-bg: #f8fafc;
+            --table-row-hover: #f1f5f9;
+            --table-border: #e2e8f0;
+
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --transition-slow: 500ms ease;
+
+            --admin-gold: #f59e0b;
+            --admin-badge-bg: rgba(245, 158, 11, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
+            --bg-secondary: #1e1e2e;
+            --card-bg: rgba(30, 30, 46, 0.98);
+            --text-main: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-light: #64748b;
+            --border-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+
+            --table-header-bg: #1e293b;
+            --table-row-hover: #334155;
+            --table-border: #334155;
+
+            --admin-badge-bg: rgba(245, 158, 11, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px 16px;
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            position: relative;
+        }
+
+        /* ================================================================
+           LOADING SPINNER (Admin Auth)
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: background var(--transition-normal);
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           MAIN CONTENT - Hidden until authenticated
+           ================================================================ */
+        #mainContent { display: none; }
+        #mainContent.visible {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .page {
+            display: none;
+            animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page.active-page { display: block; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .soft-card {
+            background: var(--card-bg);
+            border-radius: 2rem;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        .soft-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* ================================================================
+           HEADERS
+           ================================================================ */
+        .card-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 14px;
+        }
+        [data-theme="dark"] .card-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Admin badge + My Account */
+        .admin-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: var(--admin-badge-bg);
+            color: var(--admin-gold);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            border: 1px solid var(--admin-gold);
+            white-space: nowrap;
+        }
+        .admin-badge.visible { display: inline-flex; }
+        .admin-badge i { font-size: 0.68rem; }
+        .admin-badge .session-pill {
+            font-size: 0.52rem;
+            padding: 1px 6px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+        .btn-my-account {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 5px 11px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        .btn-my-account:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* ================================================================
+           SEARCH
+           ================================================================ */
+        .search-section {
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .search-wrapper { width: 100%; }
+        .search-wrapper input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 60px;
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+        .search-wrapper input::placeholder { color: var(--text-light); }
+        .search-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* ================================================================
+           BUTTONS
+           ================================================================ */
+        .btn {
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn:active::before { width: 300px; height: 300px; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            filter: brightness(1.05);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-sm { padding: 6px 16px; font-size: 0.75rem; }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ================================================================
+           TABLE
+           ================================================================ */
+        .table-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            scrollbar-width: thin;
+            padding: 0;
+        }
+        .table-wrapper::-webkit-scrollbar { height: 6px; background: transparent; }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.875rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 16px 20px;
+            background: var(--table-header-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 3px solid var(--primary);
+        }
+        .data-table th:first-child { border-top-left-radius: 12px; }
+        .data-table th:last-child { border-top-right-radius: 12px; }
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--text-main);
+            transition: background var(--transition-fast);
+            font-size: 0.9rem;
+        }
+        .data-table tr:hover td { background: var(--table-row-hover); }
+
+        .view-action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .view-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            filter: brightness(1.05);
+        }
+
+        /* ================================================================
+           DETAILS GRID
+           ================================================================ */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+        @media (max-width: 640px) {
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+        }
+        .detail-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(255,255,255,0.05));
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .detail-card.fullwidth { grid-column: 1 / -1; }
+        .detail-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        .detail-value {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 6px;
+            color: var(--text-main);
+            word-break: break-word;
+        }
+
+        /* ================================================================
+           ACTION ROW
+           ================================================================ */
+        .action-row {
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            gap: 14px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* ================================================================
+           PROFILE
+           ================================================================ */
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 2rem 2rem 0;
+            flex-wrap: wrap;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 1.2rem;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: var(--shadow-lg);
+            background: var(--table-header-bg);
+        }
+        .profile-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .profile-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ================================================================
+           MODALS
+           ================================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            width: 92%;
+            max-width: 900px;
+            max-height: 85vh;
+            border-radius: 2rem;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: white;
+        }
+        .modal-header h3 { font-size: 1.3rem; font-weight: 700; }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform var(--transition-fast);
+            line-height: 1;
+        }
+        .close-modal:hover { transform: rotate(90deg); }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(85vh - 70px);
+        }
+
+        /* ================================================================
+           FORM
+           ================================================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .field input:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .fullwidth { grid-column: 1 / -1; }
+
+        /* Image Upload */
+        .image-section {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            border-radius: 1.2rem;
+            text-align: center;
+            margin: 20px 0;
+            background: var(--table-header-bg);
+            transition: all var(--transition-fast);
+        }
+        .image-section:hover { border-color: var(--primary); }
+        .image-section label {
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1rem;
+            display: block;
+        }
+        #preview-container { max-width: 400px; margin: 15px auto; display: none; }
+        #image-to-crop { max-width: 100%; display: block; }
+        .crop-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-tool {
+            background: var(--table-header-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-main);
+        }
+        .btn-tool:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        #image-status {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        #cropped-preview {
+            margin-top: 10px;
+            max-width: 100px;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+        }
+        .current-image-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            background: var(--table-header-bg);
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .current-image-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+        .current-image-container .info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .current-image-container .info strong { color: var(--text-main); }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        /* Status Message */
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+        .status-success { background: var(--success); color: white; }
+        .status-error { background: var(--danger); color: white; }
+
+        /* Alert Popup */
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-xl);
+            border-radius: 0 16px 16px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-main);
+            max-width: 400px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.info { border-left-color: var(--info); }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-badge.active { background: var(--success); color: white; }
+        .status-badge.deactive { background: var(--danger); color: white; }
+
+        /* Upload Icon */
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0; top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Mobile Buttons */
+        .mobile-buttons {
+            display: none;
+            gap: 12px;
+            margin-top: 12px;
+            width: 100%;
+        }
+        .mobile-buttons .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            border-radius: 60px;
+        }
+        .mobile-buttons .btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .mobile-buttons .btn-outline .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+        }
+        .mobile-buttons .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .mobile-buttons .btn.loading .spinner { display: inline-block; }
+        .mobile-buttons .btn.loading .btn-text { display: none; }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .card-header {
+                padding: 1rem 1.2rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .card-header h2 { font-size: 1rem; width: 100%; white-space: normal; }
+            .header-actions { width: 100%; justify-content: flex-start; }
+            .admin-badge { font-size: 0.58rem; padding: 3px 9px; }
+            .btn-my-account { font-size: 0.58rem; padding: 3px 9px; }
+            .desktop-buttons { display: none !important; }
+            .mobile-buttons {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-top: 12px;
+                width: 100%;
+            }
+            .search-section { padding: 1rem 1.2rem; }
+            .data-table th,
+            .data-table td { padding: 12px 12px; font-size: 0.7rem; }
+            .btn { padding: 8px 18px; font-size: 0.8rem; }
+            .modal-box { width: 95%; border-radius: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .profile-wrapper {
+                padding: 1rem;
+                flex-direction: column;
+                text-align: center;
+            }
+            .details-grid { grid-template-columns: 1fr 1fr; }
+            .current-image-container { flex-direction: column; text-align: center; }
+            .action-row { padding: 1rem; justify-content: center; }
+            .action-row .btn {
+                flex: 1; min-width: 100px;
+                justify-content: center;
+                font-size: 0.75rem; padding: 10px 12px;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-buttons { display: none !important; }
+        }
+        @media (max-width: 380px) {
+            body { padding: 8px; }
+            .card-header h2 { font-size: 0.85rem; }
+            .data-table th, .data-table td { padding: 8px 8px; font-size: 0.6rem; }
+            .details-grid { grid-template-columns: 1fr; }
+            .profile-img { width: 80px; height: 80px; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--table-header-bg); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        .table-wrapper::-webkit-scrollbar,
+        .modal-box::-webkit-scrollbar {
+            width: 0px; height: 0px;
+            background: transparent; display: none;
+        }
+        .table-wrapper, .modal-box {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--table-header-bg) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY (Admin Auth) -->
+    <!-- ================================================================ -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT (Hidden until authenticated) -->
+    <!-- ================================================================ -->
+    <div id="mainContent">
+
+        <div class="app-container">
+
+            <!-- ===================== PAGE 1 - LIST VIEW ===================== -->
+            <div id="page1" class="page active-page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2>👤 Staff Registry Management</h2>
+
+                        <div class="header-actions">
+                            <span class="admin-badge" id="adminBadge">
+                                <i class="fas fa-user-shield"></i>
+                                <span id="adminNameDisplay">Admin</span>
+                                <span class="session-pill" id="sessionIndicator">Session</span>
+                            </span>
+                            <a href="../../Study Material/My Account/myaccount.html" class="btn-my-account">
+                                <i class="fas fa-user-circle"></i> My Account
+                            </a>
+                            <div class="desktop-buttons" style="display:flex;gap:8px;">
+                                <button id="refreshBtn" class="btn btn-outline">
+                                    <span>⟳</span> Refresh
+                                </button>
+                                <button id="addNewBtn" class="btn btn-primary">
+                                    <span>+</span> Add Staff
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-section">
+                        <div class="search-wrapper">
+                            <input type="text" id="searchInput"
+                                   placeholder="🔍 Search by Staff Name or Mobile Number...">
+                        </div>
+
+                        <div class="mobile-buttons">
+                            <button id="mobileRefreshBtn" class="btn btn-outline">
+                                <span class="spinner"></span>
+                                <span class="btn-text">⟳ Refresh</span>
+                            </button>
+                            <button id="mobileAddBtn" class="btn btn-primary">
+                                <span class="btn-text">+ Add Staff</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Staff Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;">
+                                        <div class="spinner"></div> Loading staff records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== PAGE 2 - DETAIL VIEW ===================== -->
+            <div id="page2" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2>👤 Staff Profile</h2>
+                        <button id="backToPage1Btn" class="btn btn-outline">← Back</button>
+                    </div>
+
+                    <div class="profile-wrapper">
+                        <img id="profileImage" src="" class="profile-img" alt="Staff Photo">
+                        <div class="profile-info">
+                            <h3 id="profileName">Staff Name</h3>
+                            <p>Staff ID: <span id="profileSrNo"></span></p>
+                            <p>Status: <span id="profileStatus"></span></p>
+                        </div>
+                    </div>
+
+                    <div id="detailsContainer" class="details-grid">
+                        <div class="loading-skeleton" style="height: 200px;"></div>
+                    </div>
+
+                    <div class="action-row">
+                        <button id="editFromDetailBtn" class="btn btn-primary">✏️ Edit</button>
+                        <button id="deleteFromDetailBtn" class="btn btn-danger">🗑 Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== GLOBAL MODAL ===================== -->
+            <div id="globalModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h3 id="modalTitle">Notice</h3>
+                        <button class="close-modal" id="closeGlobalModal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMsg" style="font-size: 1rem; line-height: 1.5;"></p>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                            <button id="confirmModalBtn" class="btn btn-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== FORM MODAL ===================== -->
+            <div id="formModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3 id="formModalTitle">Add New Staff</h3>
+                        <button class="close-modal" id="closeFormModalBtn">×</button>
+                    </div>
+                    <div class="modal-body" id="formModalBody"></div>
+                </div>
+            </div>
+
+            <!-- ===================== ALERT POPUP ===================== -->
+            <div id="alertBox" class="alert-popup">Message...</div>
+
+        </div>
+
+    </div>
+
+<script>
+/* =====================================================================
+   StaffDet.html — Enhanced Script
+   ---------------------------------------------------------------------
+   ✅ Unified Admin Auth (reads myaccount.html session keys)
+   ✅ Session expiry check (10-day Remember Me)
+   ✅ Failsafe redirect to myaccount.html
+   ✅ Admin badge + My Account link
+   ✅ Theme sync (storage + postMessage, no polling)
+   ✅ init() runs only AFTER auth passes
+   ✅ All original staff CRUD logic preserved
+   ===================================================================== */
+
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTHENTICATION GUARD
+   ===================================================================== */
+
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k);
+            sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function updateAdminBadge() {
+    const userData = readMyAccountSession('Universal_user_data');
+    const user = readMyAccountSession('Universal_user');
+    const expiry = readMyAccountSession('Universal_session_expiry');
+
+    const badge = document.getElementById('adminBadge');
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) {
+        displayName = user;
+    }
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+    if (badge) badge.classList.add('visible');
+
+    if (indicator) {
+        const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = expiry - Date.now();
+            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+function revealMainContent() {
+    const main = document.getElementById('mainContent');
+    const loading = document.getElementById('authLoading');
+    if (loading) loading.classList.add('hidden');
+    if (main) {
+        main.style.display = 'block';
+        main.classList.add('visible');
+    }
+}
+
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+    const alreadyRevealed = mainEl &&
+        (mainEl.style.display === 'block' || mainEl.classList.contains('visible'));
+    const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+    if (alreadyRevealed || loadingHidden) {
+        console.log('✅ loginadmin.js already authorized this session');
+        onAuthorized();
+        return;
+    }
+
+    const auth = checkAdminAuth();
+    if (auth.ok) {
+        console.log('✅ Admin auth verified via session keys:', auth.user);
+        revealMainContent();
+        onAuthorized();
+    } else {
+        showAccessDeniedAndRedirect(auth.reason);
+    }
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC (no polling)
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+});
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — CONFIGURATION
+   ===================================================================== */
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const SPREADSHEET_ID = "19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4";
+const SHEET_NAME = "Staff Details";
+const DRIVE_FOLDER_ID = "1IVFoLOI4Zt71wLwhLR4nH8KciAiquE6d";
+const IMAGE_COLUMN_NAME = "Image";
+
+const CACHE_KEY = "staff_cache";
+const CACHE_TTL = 15 * 60 * 1000;
+
+
+/* =====================================================================
+   SECTION 4 — GLOBAL STATE
+   ===================================================================== */
+
+let allStaff = [];
+let currentViewStaff = null;
+let selectedRowIndex = 2;
+let selectedSrNo = null;
+let searchDebounceTimer = null;
+let saveInProgress = false;
+let cropper = null;
+let croppedImageData = null;
+let initDone = false;
+
+
+/* =====================================================================
+   SECTION 5 — DOM REFS
+   ===================================================================== */
+
+const dom = {};
+
+function cacheDomElements() {
+    dom.page1 = document.getElementById('page1');
+    dom.page2 = document.getElementById('page2');
+    dom.tableBody = document.getElementById('tableBody');
+    dom.searchInput = document.getElementById('searchInput');
+    dom.refreshBtn = document.getElementById('refreshBtn');
+    dom.addNewBtn = document.getElementById('addNewBtn');
+    dom.backBtn = document.getElementById('backToPage1Btn');
+    dom.editBtn = document.getElementById('editFromDetailBtn');
+    dom.deleteBtn = document.getElementById('deleteFromDetailBtn');
+    dom.detailsContainer = document.getElementById('detailsContainer');
+    dom.profileImage = document.getElementById('profileImage');
+    dom.profileName = document.getElementById('profileName');
+    dom.profileSrNo = document.getElementById('profileSrNo');
+    dom.profileStatus = document.getElementById('profileStatus');
+    dom.globalModal = document.getElementById('globalModal');
+    dom.formModal = document.getElementById('formModal');
+    dom.modalTitle = document.getElementById('modalTitle');
+    dom.modalMsg = document.getElementById('modalMsg');
+    dom.formModalTitle = document.getElementById('formModalTitle');
+    dom.formModalBody = document.getElementById('formModalBody');
+    dom.alertBox = document.getElementById('alertBox');
+}
+
+
+/* =====================================================================
+   SECTION 6 — IMAGE UTILITIES
+   ===================================================================== */
+
+function extractFileId(driveUrl) {
+    if (!driveUrl) return null;
+    const match = driveUrl.match(/[-\w]{25,}/);
+    return match ? match[0] : null;
+}
+
+function getThumbnailUrl(driveUrl) {
+    const fileId = extractFileId(driveUrl);
+    if (fileId) {
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+    }
+    return driveUrl || 'https://via.placeholder.com/150?text=No+Photo';
+}
+
+
+/* =====================================================================
+   SECTION 7 — CROPPER
+   ===================================================================== */
+
+function rotateLeft() { if (cropper) cropper.rotate(-90); }
+function rotateRight() { if (cropper) cropper.rotate(90); }
+
+function applyCrop() {
+    if (!cropper) {
+        document.getElementById('image-status').textContent = "❌ No image loaded to crop.";
+        return;
+    }
+    try {
+        const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+        if (!canvas) throw new Error("Could not crop image");
+
+        const base64Data = canvas.toDataURL('image/jpeg', 0.9);
+        croppedImageData = {
+            base64Data: base64Data.split(',')[1],
+            fileName: `staff_photo_${Date.now()}.jpg`,
+            mimeType: 'image/jpeg'
+        };
+
+        const statusEl = document.getElementById('image-status');
+        statusEl.textContent = "✅ Image cropped and ready!";
+        statusEl.style.color = "var(--success)";
+
+        const oldPreview = document.getElementById('cropped-preview');
+        if (oldPreview) oldPreview.remove();
+
+        const preview = document.createElement('img');
+        preview.src = base64Data;
+        preview.id = 'cropped-preview';
+        document.getElementById('preview-container').appendChild(preview);
+
+    } catch (error) {
+        document.getElementById('image-status').textContent = "❌ Failed to crop image.";
+        document.getElementById('image-status').style.color = "var(--danger)";
+    }
+}
+
+
+/* =====================================================================
+   SECTION 8 — UTILITIES
+   ===================================================================== */
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+}
+
+function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '—';
+    try {
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return '—';
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    } catch { return '—'; }
+}
+
+function formatDateForSheet(dateStr) {
+    if (!dateStr) return '';
+    try {
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return '';
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    } catch { return ''; }
+}
+
+function formatDateForInput(dateStr) {
+    if (!dateStr) return '';
+    try {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+        if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+            const [day, month, year] = dateStr.split('/');
+            return `${year}-${month}-${day}`;
+        }
+        return '';
+    } catch { return ''; }
+}
+
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4500);
+}
+
+function showModal(msg, title = "Message", isConfirm = false, onConfirm = null) {
+    dom.modalTitle.innerText = title;
+    dom.modalMsg.innerHTML = msg;
+    const confirmBtn = document.getElementById('confirmModalBtn');
+    confirmBtn.onclick = () => {
+        dom.globalModal.classList.remove('active');
+        if (isConfirm && onConfirm) onConfirm();
+    };
+    dom.globalModal.classList.add('active');
+}
+
+function showSpinner(element, show) {
+    if (!element) return;
+    if (show) {
+        element.disabled = true;
+        const originalText = element.innerHTML;
+        element.setAttribute('data-original-text', originalText);
+        element.innerHTML = '<span class="spinner"></span> Loading...';
+    } else {
+        element.disabled = false;
+        const original = element.getAttribute('data-original-text');
+        if (original) element.innerHTML = original;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 9 — DATA MANAGEMENT
+   ===================================================================== */
+
+function getCache() {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < CACHE_TTL) return data;
+        }
+    } catch { }
+    return null;
+}
+
+function setCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch { }
+}
+
+async function loadStaff() {
+    const cached = getCache();
+    if (cached) {
+        allStaff = cached;
+        renderTable();
+        return allStaff;
+    }
+
+    try {
+        const response = await fetch(
+            `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${encodeURIComponent(SHEET_NAME)}&_=${Date.now()}`
+        );
+        const result = await response.json();
+        if (result.status === "success" && Array.isArray(result.data)) {
+            allStaff = result.data.map((item, idx) => ({ ...item, _rowIndex: idx + 2 }));
+            setCache(allStaff);
+            renderTable();
+            return allStaff;
+        }
+        throw new Error(result.message || "Failed to load data");
+    } catch (err) {
+        showToast("❌ Failed to load records: " + err.message, "error");
+        return [];
+    }
+}
+
+async function refreshData() {
+    showSpinner(dom.refreshBtn, true);
+    localStorage.removeItem(CACHE_KEY);
+    showToast("🔄 Syncing with Google Sheets...", "info");
+
+    try {
+        await loadStaff();
+        showToast("✅ Data refreshed successfully!", "success");
+    } catch (err) {
+        showToast("❌ Refresh failed: " + err.message, "error");
+    } finally {
+        showSpinner(dom.refreshBtn, false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 10 — TABLE RENDERING
+   ===================================================================== */
+
+function renderTable(filter = "") {
+    if (!dom.tableBody) return;
+
+    const searchLower = filter.toLowerCase();
+    let filtered = allStaff.filter(s => {
+        const name = String(s['Staff Name'] || '').toLowerCase();
+        const phone = String(s['Mobile No'] || '').toLowerCase();
+        return name.includes(searchLower) || phone.includes(searchLower);
+    });
+
+    if (!filtered.length) {
+        dom.tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px;">✨ No staff records found</td></tr>';
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    filtered.forEach((s, idx) => {
+        const row = document.createElement('tr');
+        const status = s['Status'] || 'Active';
+        const statusClass = status.toLowerCase() === 'active' ? 'active' : 'deactive';
+        row.innerHTML = `
+            <td><strong>${escapeHtml(s['Sr. No'] || idx + 1)}</strong></td>
+            <td>${escapeHtml(s['Staff Name'] || '—')}</td>
+            <td>${escapeHtml(s['Mobile No'] || '—')}</td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(status)}</span></td>
+            <td><button class="view-action-btn" data-srno="${escapeHtml(s['Sr. No'] || '')}">👁️ View</button></td>
+        `;
+        fragment.appendChild(row);
+    });
+
+    dom.tableBody.innerHTML = '';
+    dom.tableBody.appendChild(fragment);
+
+    dom.tableBody.querySelectorAll('.view-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const srNoVal = btn.getAttribute('data-srno');
+            const found = allStaff.find(s => String(s['Sr. No']) === String(srNoVal));
+            if (found) {
+                currentViewStaff = found;
+                showDetailView(found);
+            }
+        });
+    });
+}
+
+
+/* =====================================================================
+   SECTION 11 — DETAIL VIEW
+   ===================================================================== */
+
+function showDetailView(staff) {
+    selectedSrNo = staff['Sr. No'];
+    selectedRowIndex = staff._rowIndex || 2;
+
+    dom.profileName.textContent = staff['Staff Name'] || 'Staff';
+    dom.profileSrNo.textContent = staff['Sr. No'] || 'N/A';
+
+    const status = staff['Status'] || 'Active';
+    dom.profileStatus.innerHTML = `<span class="status-badge ${status.toLowerCase() === 'active' ? 'active' : 'deactive'}">${escapeHtml(status)}</span>`;
+
+    const imgUrl = getThumbnailUrl(staff['Image'] || '');
+    dom.profileImage.src = imgUrl;
+    dom.profileImage.alt = staff['Staff Name'] || 'Staff';
+
+    const fields = [
+        { label: "Sr. No", value: staff['Sr. No'] },
+        { label: "Staff Name", value: staff['Staff Name'] },
+        { label: "Date of Joining", value: formatDateForDisplay(staff['Date of Joining']) },
+        { label: "Mobile No", value: staff['Mobile No'] },
+        { label: "Alter Mobile No", value: staff['Alter Mobile No'] },
+        { label: "Email Id", value: staff['Email Id'] },
+        { label: "Experience 1", value: staff['Experience 1'] },
+        { label: "Experience 2", value: staff['Experience 2'] },
+        { label: "Current Working as", value: staff['Current Working as'] },
+        { label: "Specility in Work", value: staff['Specility in Work'] },
+        { label: "Status", value: staff['Status'] },
+        { label: "Deactive Date", value: formatDateForDisplay(staff['Deactive Date']) },
+        { label: "Address", value: staff['Address'], full: true },
+        { label: "Note", value: staff['Note'], full: true }
+    ];
+
+    const grid = dom.detailsContainer;
+    grid.innerHTML = '';
+    fields.forEach(f => {
+        const card = document.createElement('div');
+        card.className = `detail-card${f.full ? ' fullwidth' : ''}`;
+        card.innerHTML = `
+            <div class="detail-label">${f.label}</div>
+            <div class="detail-value">${escapeHtml(String(f.value || '—'))}</div>
+        `;
+        grid.appendChild(card);
+    });
+
+    dom.page1.classList.remove('active-page');
+    dom.page2.classList.add('active-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+/* =====================================================================
+   SECTION 12 — NAVIGATION
+   ===================================================================== */
+
+function goToListView() {
+    dom.page2.classList.remove('active-page');
+    dom.page1.classList.add('active-page');
+    loadStaff();
+}
+
+
+/* =====================================================================
+   SECTION 13 — CRUD
+   ===================================================================== */
+
+function findRowIndexBySrNo(srNo) {
+    const idx = allStaff.findIndex(s => String(s['Sr. No']) === String(srNo));
+    return idx !== -1 ? allStaff[idx]._rowIndex : null;
+}
+
+async function deleteStaff() {
+    if (!currentViewStaff) return;
+    const srNo = currentViewStaff['Sr. No'];
+    const rowIdx = findRowIndexBySrNo(srNo);
+    if (!rowIdx) {
+        showModal("Row not found", "Error");
+        return;
+    }
+
+    showModal(
+        `⚠️ Are you sure you want to delete staff <strong>${dom.profileName.textContent}</strong> (Sr. No: ${srNo})?<br><br>This action cannot be undone.`,
+        "Confirm Delete",
+        true,
+        async () => {
+            showSpinner(dom.deleteBtn, true);
+            try {
+                const params = new URLSearchParams();
+                params.append("action", "delete");
+                params.append("spreadsheetId", SPREADSHEET_ID);
+                params.append("sheetName", SHEET_NAME);
+                params.append("rowIndex", rowIdx);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: params.toString()
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    showToast("✅ Staff deleted successfully!", "success");
+                    localStorage.removeItem(CACHE_KEY);
+                    goToListView();
+                } else {
+                    showModal("❌ Delete failed: " + result.message, "Error");
+                }
+            } catch (err) {
+                showModal("❌ Error: " + err.message, "Error");
+            } finally {
+                showSpinner(dom.deleteBtn, false);
+            }
+        }
+    );
+}
+
+
+/* =====================================================================
+   SECTION 14 — FORM BUILDER
+   ===================================================================== */
+
+function buildFormHtml(staff = null, isEdit = false) {
+    const def = {
+        "Staff Name": "",
+        "Date of Joining": "",
+        "Mobile No": "",
+        "Alter Mobile No": "",
+        "Email Id": "",
+        "Experience 1": "",
+        "Experience 2": "",
+        "Current Working as": "",
+        "Specility in Work": "",
+        "Status": "Active",
+        "Deactive Date": "",
+        "Address": "",
+        "Note": "",
+        "Image": ""
+    };
+
+    if (staff) {
+        Object.keys(def).forEach(k => {
+            if (staff[k] !== undefined) def[k] = staff[k];
+        });
+    }
+
+    const dateValue = formatDateForInput(def["Date of Joining"]);
+    const deactiveDateValue = formatDateForInput(def["Deactive Date"]);
+    const currentImage = def["Image"] || '';
+
+    let imageSectionHtml = `
+        <div class="image-section" id="imageUploadSection">
+            <i class="fas fa-camera upload-icon"></i>
+            <label class="file-input-wrapper">
+                📷 Click to Upload Staff Image
+                <input type="file" id="imageInput" accept="image/*">
+            </label>
+            <div id="preview-container">
+                <img id="image-to-crop">
+                <div class="crop-controls">
+                    <button type="button" class="btn-tool" onclick="rotateLeft()">↺ Rotate Left</button>
+                    <button type="button" class="btn-tool" onclick="rotateRight()">↻ Rotate Right</button>
+                    <button type="button" class="btn-tool" onclick="applyCrop()">✓ Apply Crop</button>
+                </div>
+            </div>
+            <div id="image-status"></div>
+        </div>
+    `;
+
+    if (isEdit && currentImage) {
+        imageSectionHtml = `
+            <div class="current-image-container">
+                <img src="${getThumbnailUrl(currentImage)}" alt="Current Staff Image">
+                <div class="info">
+                    <strong>Current Image</strong><br>
+                    <span style="font-size: 0.75rem; color: var(--text-light);">Upload a new image to replace it</span>
+                </div>
+            </div>
+            ${imageSectionHtml}
+            <input type="hidden" id="fExistingImage" value="${escapeHtml(currentImage)}">
+        `;
+    }
+
+    return `
+        <form id="staffForm">
+            <div class="form-grid">
+                <div class="field"><label>Staff Name *</label><input type="text" id="fStaffName" value="${escapeHtml(def['Staff Name'])}" required></div>
+                <div class="field"><label>Date of Joining *</label><input type="date" id="fDateOfJoining" value="${dateValue}" max="${getTodayDate()}" required></div>
+
+                <div class="field"><label>Mobile No *</label><input type="tel" id="fMobileNo" pattern="[6-9][0-9]{9}" maxlength="10" value="${escapeHtml(def['Mobile No'])}" required></div>
+                <div class="field"><label>Alter Mobile No</label><input type="tel" id="fAlterMobileNo" pattern="[6-9][0-9]{9}" maxlength="10" value="${escapeHtml(def['Alter Mobile No'])}"></div>
+                <div class="field"><label>Email Id</label><input type="email" id="fEmailId" value="${escapeHtml(def['Email Id'])}"></div>
+
+                <div class="field"><label>Experience 1</label><input type="text" id="fExperience1" value="${escapeHtml(def['Experience 1'])}"></div>
+                <div class="field"><label>Experience 2</label><input type="text" id="fExperience2" value="${escapeHtml(def['Experience 2'])}"></div>
+
+                <div class="field"><label>Current Working as *</label><input type="text" id="fCurrentWorkingAs" value="${escapeHtml(def['Current Working as'])}" required></div>
+                <div class="field"><label>Specility in Work</label><input type="text" id="fSpecilityInWork" value="${escapeHtml(def['Specility in Work'])}"></div>
+
+                <div class="field"><label>Status *</label>
+                    <select id="fStatus" required>
+                        <option value="Active" ${def['Status'] === 'Active' ? 'selected' : ''}>Active</option>
+                        <option value="Deactive" ${def['Status'] === 'Deactive' ? 'selected' : ''}>Deactive</option>
+                    </select>
+                </div>
+                <div class="field"><label>Deactive Date</label><input type="date" id="fDeactiveDate" value="${deactiveDateValue}" max="${getTodayDate()}"></div>
+
+                <div class="field fullwidth"><label>Address *</label><textarea id="fAddress" rows="3" required>${escapeHtml(def['Address'])}</textarea></div>
+                <div class="field fullwidth"><label>Note</label><textarea id="fNote" rows="2">${escapeHtml(def['Note'])}</textarea></div>
+            </div>
+
+            ${imageSectionHtml}
+
+            <div id="formStatus" class="status-message"></div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 1.5rem;">
+                <button type="button" id="cancelFormBtn" class="btn btn-outline">Cancel</button>
+                <button type="submit" id="saveFormBtn" class="btn btn-primary">${isEdit ? "💾 Update Staff" : "💾 Save Staff"}</button>
+            </div>
+        </form>
+    `;
+}
+
+
+/* =====================================================================
+   SECTION 15 — FORM EVENTS
+   ===================================================================== */
+
+function attachFormEvents(isEdit, rowIdx) {
+    const form = document.getElementById('staffForm');
+    if (!form) return;
+
+    const statusSelect = document.getElementById('fStatus');
+    const deactiveDateField = document.getElementById('fDeactiveDate');
+
+    if (statusSelect && deactiveDateField) {
+        function toggleDeactiveDate() {
+            if (statusSelect.value === 'Deactive') {
+                deactiveDateField.required = true;
+                deactiveDateField.style.borderColor = 'var(--danger)';
+            } else {
+                deactiveDateField.required = false;
+                deactiveDateField.value = '';
+                deactiveDateField.style.borderColor = 'var(--border-color)';
+            }
+        }
+        statusSelect.addEventListener('change', toggleDeactiveDate);
+        toggleDeactiveDate();
+    }
+
+    const imageInput = document.getElementById('imageInput');
+    const imageToCrop = document.getElementById('image-to-crop');
+    const previewContainer = document.getElementById('preview-container');
+    const imageStatus = document.getElementById('image-status');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    imageStatus.textContent = "❌ Image too large! Max 5MB.";
+                    imageStatus.style.color = "var(--danger)";
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    imageStatus.textContent = "❌ Please select a valid image.";
+                    imageStatus.style.color = "var(--danger)";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imageToCrop.src = event.target.result;
+                    previewContainer.style.display = 'block';
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(imageToCrop, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        responsive: true
+                    });
+                    imageStatus.textContent = "✅ Image loaded. Crop if needed.";
+                    imageStatus.style.color = "var(--success)";
+                    croppedImageData = null;
+
+                    const oldPreview = document.getElementById('cropped-preview');
+                    if (oldPreview) oldPreview.remove();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    document.getElementById('cancelFormBtn')?.addEventListener('click', () => {
+        dom.formModal.classList.remove('active');
+        if (cropper) { cropper.destroy(); cropper = null; }
+    });
+
+    form.onsubmit = (e) => handleFormSubmit(e, isEdit, rowIdx);
+}
+
+
+/* =====================================================================
+   SECTION 16 — FORM SUBMIT
+   ===================================================================== */
+
+async function handleFormSubmit(e, isEdit, rowIdx) {
+    e.preventDefault();
+    if (saveInProgress) return;
+    saveInProgress = true;
+
+    const saveBtn = document.getElementById('saveFormBtn');
+    showSpinner(saveBtn, true);
+    document.getElementById('formStatus').style.display = 'none';
+
+    try {
+        const formData = {
+            "Staff Name": document.getElementById('fStaffName')?.value || "",
+            "Date of Joining": document.getElementById('fDateOfJoining')?.value || "",
+            "Mobile No": document.getElementById('fMobileNo')?.value || "",
+            "Alter Mobile No": document.getElementById('fAlterMobileNo')?.value || "",
+            "Email Id": document.getElementById('fEmailId')?.value || "",
+            "Experience 1": document.getElementById('fExperience1')?.value || "",
+            "Experience 2": document.getElementById('fExperience2')?.value || "",
+            "Current Working as": document.getElementById('fCurrentWorkingAs')?.value || "",
+            "Specility in Work": document.getElementById('fSpecilityInWork')?.value || "",
+            "Status": document.getElementById('fStatus')?.value || "Active",
+            "Deactive Date": document.getElementById('fDeactiveDate')?.value || "",
+            "Address": document.getElementById('fAddress')?.value || "",
+            "Note": document.getElementById('fNote')?.value || ""
+        };
+
+        const required = ['Staff Name', 'Date of Joining', 'Mobile No', 'Current Working as', 'Address'];
+        for (const field of required) {
+            if (!formData[field] || formData[field].trim() === '') {
+                showToast(`❌ ${field} is required`, "error");
+                saveInProgress = false;
+                showSpinner(saveBtn, false);
+                return;
+            }
+        }
+
+        const phoneRegex = /^[6-9][0-9]{9}$/;
+        if (!phoneRegex.test(formData['Mobile No'])) {
+            showToast("❌ Mobile number must be 10 digits starting with 6-9", "error");
+            saveInProgress = false;
+            showSpinner(saveBtn, false);
+            return;
+        }
+
+        const params = new URLSearchParams();
+        params.append("action", isEdit ? "update" : "insert");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", SHEET_NAME);
+        if (isEdit && rowIdx) params.append("rowIndex", rowIdx);
+        if (DRIVE_FOLDER_ID) params.append("driveFolderId", DRIVE_FOLDER_ID);
+
+        if (!isEdit) {
+            const nextSrNo = allStaff.length + 1;
+            params.append("Sr. No", nextSrNo);
+        }
+
+        for (const [key, value] of Object.entries(formData)) {
+            if (key === "Date of Joining" || key === "Deactive Date") {
+                const formattedDate = formatDateForSheet(value);
+                params.append(key, formattedDate);
+            } else {
+                params.append(key, value);
+            }
+        }
+
+        if (croppedImageData && croppedImageData.base64Data) {
+            params.append("fileCount", "1");
+            params.append("fileData1", croppedImageData.base64Data);
+            params.append("fileName1", croppedImageData.fileName);
+            params.append("fileType1", croppedImageData.mimeType);
+            params.append("fileColumn1", IMAGE_COLUMN_NAME);
+        } else if (isEdit) {
+            const existingImage = document.getElementById('fExistingImage')?.value || '';
+            if (existingImage) {
+                params.append("Image", existingImage);
+            }
+        }
+
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: params.toString()
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+            showToast(`✅ Staff ${isEdit ? 'updated' : 'saved'} successfully!`, "success");
+            localStorage.removeItem(CACHE_KEY);
+            dom.formModal.classList.remove('active');
+            if (cropper) { cropper.destroy(); cropper = null; }
+            await loadStaff();
+            goToListView();
+        } else {
+            showToast("❌ Error: " + result.message, "error");
+        }
+    } catch (err) {
+        console.error("Submission error:", err);
+        showToast("❌ Error: " + err.message, "error");
+    } finally {
+        saveInProgress = false;
+        showSpinner(saveBtn, false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 17 — MODAL OPEN
+   ===================================================================== */
+
+async function openAddModal() {
+    dom.formModalBody.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div><p style="margin-top:12px;">Loading form...</p></div>';
+    dom.formModal.classList.add('active');
+    dom.formModalTitle.textContent = "➕ Add New Staff";
+    dom.formModalBody.innerHTML = buildFormHtml(null, false);
+    setTimeout(() => attachFormEvents(false, null), 50);
+}
+
+async function openEditModal() {
+    if (!currentViewStaff) return;
+    const rowIdx = findRowIndexBySrNo(currentViewStaff['Sr. No']);
+    if (!rowIdx) { showModal("Row error", "Error"); return; }
+
+    dom.formModalBody.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div><p style="margin-top:12px;">Loading edit form...</p></div>';
+    dom.formModal.classList.add('active');
+    dom.formModalTitle.textContent = "✏️ Edit Staff";
+    dom.formModalBody.innerHTML = buildFormHtml(currentViewStaff, true);
+    setTimeout(() => attachFormEvents(true, rowIdx), 50);
+}
+
+
+/* =====================================================================
+   SECTION 18 — INITIALIZATION (only runs AFTER auth passes)
+   ===================================================================== */
+
+function init() {
+    if (initDone) return;
+    initDone = true;
+
+    cacheDomElements();
+    updateAdminBadge();
+
+    dom.tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;"><div class="spinner"></div> Loading staff records...</td></tr>';
+    loadStaff();
+
+    dom.searchInput?.addEventListener('input', (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => renderTable(e.target.value), 300);
+    });
+
+    dom.refreshBtn?.addEventListener('click', refreshData);
+    dom.addNewBtn?.addEventListener('click', openAddModal);
+    dom.backBtn?.addEventListener('click', goToListView);
+    dom.editBtn?.addEventListener('click', openEditModal);
+    dom.deleteBtn?.addEventListener('click', deleteStaff);
+
+    // Mobile buttons
+    const mobileRefreshBtn = document.getElementById('mobileRefreshBtn');
+    const mobileAddBtn = document.getElementById('mobileAddBtn');
+    if (mobileRefreshBtn) {
+        mobileRefreshBtn.addEventListener('click', function() {
+            if (dom.refreshBtn) dom.refreshBtn.click();
+            else refreshData();
+        });
+    }
+    if (mobileAddBtn) {
+        mobileAddBtn.addEventListener('click', function() {
+            if (dom.addNewBtn) dom.addNewBtn.click();
+            else openAddModal();
+        });
+    }
+
+    document.getElementById('closeGlobalModal')?.addEventListener('click', () => dom.globalModal.classList.remove('active'));
+    document.getElementById('closeFormModalBtn')?.addEventListener('click', () => {
+        dom.formModal.classList.remove('active');
+        if (cropper) { cropper.destroy(); cropper = null; }
+    });
+
+    window.onclick = (e) => {
+        if (e.target.classList?.contains('modal-overlay')) {
+            e.target.classList.remove('active');
+            if (cropper) { cropper.destroy(); cropper = null; }
+        }
+    };
+
+    // Background refresh
+    setTimeout(() => {
+        localStorage.removeItem(CACHE_KEY);
+        loadStaff();
+    }, 30000);
+
+    console.log('✅ StaffDet.html initialized');
+}
+
+
+/* =====================================================================
+   SECTION 19 — BOOTSTRAP WITH AUTH GATE
+   ===================================================================== */
+
+(function bootstrap() {
+    syncThemeWithParent();
+
+    const startWhenReady = () => {
+        setTimeout(() => {
+            gateAdminAccess(() => init());
+        }, 800);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    // Failsafe redirect
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 20 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+window.rotateLeft = rotateLeft;
+window.rotateRight = rotateRight;
+window.applyCrop = applyCrop;
+window.openAddModal = openAddModal;
+window.openEditModal = openEditModal;
+window.deleteStaff = deleteStaff;
+window.goToListView = goToListView;
+window.refreshData = refreshData;
+
+console.log('✅ StaffDet.html script initialised (auth-gated)');
+</script>
+</body>
+</html>

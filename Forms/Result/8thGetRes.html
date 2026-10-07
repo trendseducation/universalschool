@@ -1,0 +1,3023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Student Management System - Advanced View & Edit</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .main-container {
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .search-box label {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        /* Table Container */
+        .table-container {
+            overflow-x: auto;
+            padding: 1.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2edf2;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            font-weight: 700;
+            color: #0f172a;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        .view-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .spinner-small {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Collapsible Sections */
+        .details-container {
+            padding: 1.5rem;
+        }
+
+        .collapsible {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #1e40af;
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .collapsible.active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        }
+
+        .collapsible:after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+
+        .collapsible.active:after {
+            content: '▲';
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background: white;
+            border-radius: 0 0 16px 16px;
+            margin-bottom: 16px;
+        }
+
+        .collapsible-content-inner {
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+        }
+
+        /* Scrollable Content */
+        .scrollable-content {
+            max-height: 550px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        /* White Grid Table Format (View mode) */
+        .white-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1px;
+            background: #e2e8f0;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .grid-cell {
+            background: white;
+            padding: 12px 15px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.2s;
+        }
+
+        .grid-cell:hover {
+            background: #f8fafc;
+        }
+
+        .grid-label {
+            font-weight: 700;
+            color: #1e40af;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .grid-value {
+            font-size: 0.9rem;
+            color: #0f172a;
+            word-break: break-word;
+        }
+
+        /* Edit Form Styles - Matching formresult.html exactly */
+        .edit-form-container {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+        }
+        
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .field-group label {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.85rem;
+        }
+        
+        .field-group input,
+        .field-group select,
+        .field-group textarea {
+            padding: 0.7rem 0.9rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            width: 100%;
+            font-family: inherit;
+        }
+        
+        .field-group input:focus,
+        .field-group select:focus,
+        .field-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        
+        /* Marks Table Styles (for semester forms) */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .marks-table th,
+        .marks-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2edf2;
+        }
+        
+        .marks-table th {
+            background: #f1f5f9;
+            font-weight: 700;
+        }
+        
+        .marks-table input {
+            width: 100px;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .marks-table select {
+            width: 100px;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        .total-row {
+            background: #f8fafc;
+            font-weight: bold;
+        }
+        
+        .action-row {
+            background: #fef3c7;
+        }
+        
+        .action-cell {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .small-btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .small-btn:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+        
+        .reopen-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f1f5f9;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .reopen-section label {
+            font-weight: 600;
+        }
+        
+        .reopen-section input {
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+        }
+        
+        /* Stats Card for Percentage and Grade */
+        .stats-card {
+            background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #c7d2fe;
+        }
+        
+        .stats-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .stats-label {
+            font-weight: 800;
+            color: #1e3a8a;
+            background: #dbeafe;
+            padding: 0.25rem 0.75rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+        }
+        
+        .stats-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 1px;
+        }
+        
+        .stats-unit {
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: #475569;
+            margin-left: 4px;
+        }
+        
+        .grade-pill {
+            background: #1e40af;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 70px;
+            text-align: center;
+        }
+        
+        /* Attendance Table Styles */
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            background: white;
+        }
+        
+        .attendance-table th,
+        .attendance-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .attendance-table th {
+            background: #1e40af;
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .attendance-table td input {
+            width: 85px;
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        
+        .attendance-table .row-label {
+            background: #f1f5f9;
+            font-weight: 700;
+            text-align: left;
+            position: sticky;
+            left: 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #0f172a;
+            border-left: 5px solid #2563eb;
+            padding-left: 1rem;
+            margin: 0;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .edit-mode-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .edit-mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+        }
+        
+        .update-section-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .update-section-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+        }
+        
+        .cancel-edit-btn {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .cancel-edit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .back-btn {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .print-progress-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .print-progress-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+        }
+        
+        .delete-main-btn {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .delete-main-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+        }
+        
+        /* Message Area */
+        .message-area {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 16px;
+        }
+        
+        .success-msg {
+            color: #15803d;
+            background: #dcfce7;
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .error-msg {
+            color: #b91c1c;
+            background: #fee2e2;
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .info-msg {
+            color: #1e40af;
+            background: #dbeafe;
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .info-note {
+            background: #fef3c7;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #92400e;
+            margin-top: 0.5rem;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .confirm-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        
+        .cancel-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading-spinner-large {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .result-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .result-pass {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        
+        .result-fail {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        /* =====================================================
+           🎯 FLOATING ACTION BUTTON (FAB) STYLES
+        ===================================================== */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        
+        .fab-button {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: none;
+            color: white;
+        }
+        
+        .fab-button:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(37,99,235,0.5);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .fab-button:active {
+            transform: scale(0.95);
+        }
+        
+        .fab-icon {
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        /* Tooltip for FAB */
+        .fab-tooltip {
+            position: absolute;
+            right: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        
+        .fab-tooltip::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 6px 0 6px 8px;
+            border-style: solid;
+            border-color: transparent transparent transparent #1e293b;
+        }
+        
+        .fab-container:hover .fab-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 90px;
+        }
+        
+        /* Responsive FAB for mobile */
+        @media (max-width: 768px) {
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .fab-button {
+                width: 56px;
+                height: 56px;
+            }
+            
+            .fab-icon {
+                font-size: 28px;
+            }
+            
+            .fab-tooltip {
+                display: none;
+            }
+        }
+        
+        /* Scroll to top button */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 999;
+        }
+        
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-top-btn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+        
+        .scroll-top-icon {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .scroll-top-btn {
+                bottom: 20px;
+                left: 20px;
+                width: 44px;
+                height: 44px;
+            }
+            .scroll-top-icon {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .white-grid, .form-grid { grid-template-columns: 1fr; }
+            .attendance-table { font-size: 0.7rem; }
+            .attendance-table td input { width: 60px; }
+            .stats-value { font-size: 1.2rem; }
+            .grade-pill { font-size: 1rem; }
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-state-text {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state-subtext {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        /* Table row animation */
+        .data-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+        
+        /* Stats value highlight animation */
+        @keyframes highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .stats-value.updated {
+            animation: highlight 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Scroll to Top Button -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <span class="scroll-top-icon">↑</span>
+</button>
+
+<!-- Floating Action Button -->
+<div class="fab-container">
+    <button class="fab-button" id="fabAddButton" onclick="window.location.href='8thResForm.html'">
+        <span class="fab-icon">+</span>
+    </button>
+    <div class="fab-tooltip">Add New Student</div>
+</div>
+
+<div class="main-container" id="mainContainer">
+    <div id="searchPage">
+        <div class="search-section">
+            <h2 style="text-align:center; margin-bottom:1.5rem;">🔍 Search Student Records</h2>
+            <div class="search-box">
+                <label>🔎 Search by Student Name or G.R. No</label>
+                <input type="text" id="searchInput" placeholder="Start typing to search automatically..." autocomplete="off">
+            </div>
+            <!-- Search stats -->
+            <div style="text-align:center; margin-top:12px; font-size:0.8rem; color:#64748b;" id="searchStats"></div>
+        </div>
+        <div class="table-container">
+            <table class="data-table" id="studentTable">
+                <thead>
+                    <tr><th>Sr. No</th><th>Student Name</th><th>FS Result</th><th>SS Result</th><th>Action</th></tr>
+                </thead>
+                <tbody id="studentTableBody"><tr><td colspan="5" style="text-align:center;">Loading data...</td></tr></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="detailsPage" style="display:none;">
+        <div style="padding:1rem; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <button class="back-btn" onclick="goBackToSearch()">← Back to Search</button>
+            <div style="display:flex; gap:12px;">
+                <button class="print-progress-btn" onclick="openPrintProgressCard()">🖨️ Print Progress Card</button>
+                <button class="delete-main-btn" onclick="confirmDeleteRecord()">🗑️ Delete Complete Record</button>
+            </div>
+        </div>
+        <div class="details-container" id="detailsContainer"><div class="loading-container"><div class="loading-spinner-large"></div><p>Loading student details...</p></div></div>
+    </div>
+</div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>⚠️ Confirm Delete</h3>
+        <p>Delete this student's complete record? This cannot be undone.</p>
+        <div class="modal-buttons">
+            <button class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+            <button class="confirm-btn" id="confirmDeleteBtn">Delete Permanently</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  // =====================================================
+// 🔥 COMPLETE JAVASCRIPT FOR GETRESULT.HTML
+// =====================================================
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxA-H3KQdMENKawx1QQtL_XAX1RJTJUITZziK0WVw1MPP1vUPxoY2mvRAAHRp9LR2Dm/exec";
+const SPREADSHEET_ID = "1-T1L6QbnAhkL4woinvGOrlwOoJDofQXiiZNMJLsooTs";
+const SHEET_NAME = "8th_Result";
+
+// Global Variables
+let allStudentsData = [];
+let filteredData = [];
+let currentStudentData = null;
+let currentRowIndex = null;
+let pendingDeleteRow = null;
+let currentEditSection = null;
+
+// Subject configuration
+const subjects = [
+    { name: "English", total: 60, type: "marks" },
+    { name: "Hindi", total: 60, type: "marks" },
+    { name: "Marathi", total: 60, type: "marks" },
+    { name: "Mathematics", total: 60, type: "marks" },
+    { name: "General Science", total: 60, type: "marks" },
+    { name: "Social Science", total: 60, type: "marks" },
+    { name: "Arts", total: null, type: "grade" },
+    { name: "Work Experience", total: null, type: "grade" },
+    { name: "Physical Education", total: null, type: "grade" }
+];
+
+// Semester data arrays
+let fsInputs = [];
+let ssInputs = [];
+let fsGradeInputs = [];
+let ssGradeInputs = [];
+let fsSpecialProgress = '', fsGood = '', fsRemarks = '';
+let ssSpecialProgress = '', ssGood = '', ssRemarks = '';
+
+// =====================================================
+// 📅 DATE FORMATTING FUNCTIONS
+// =====================================================
+
+// Convert YYYY-MM-DD to DD/MM/YYYY for Google Sheet
+function formatDateToDDMMYYYY(dateString) {
+    if (!dateString) return '';
+    // If already in DD/MM/YYYY format, return as is
+    if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        return dateString;
+    }
+    // Convert from YYYY-MM-DD to DD/MM/YYYY
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const parts = dateString.split('-');
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return dateString;
+}
+
+// Convert DD/MM/YYYY to YYYY-MM-DD for HTML date input
+function formatDateToYYYYMMDD(dateString) {
+    if (!dateString) return '';
+    // If already in YYYY-MM-DD format, return as is
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return dateString;
+    }
+    // Convert from DD/MM/YYYY to YYYY-MM-DD
+    if (dateString.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+        const parts = dateString.split('/');
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dateString;
+}
+
+// Format value for display
+function formatValue(value) {
+    if (!value || value === '—') return '—';
+    const str = String(value);
+    // Handle ISO date format
+    if (str.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+        const date = new Date(str);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+    // Already in DD/MM/YYYY format
+    if (str.match(/^\d{2}\/\d{2}\/\d{4}/)) {
+        return str;
+    }
+    return str;
+}
+
+function escapeHtml(str) {
+    if (!str) return '—';
+    return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+}
+
+function getAcademicYear() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    return month >= 3 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+}
+
+function getGradeFromPercentage(percentage) {
+    if (percentage >= 91) return "A1";
+    if (percentage >= 81) return "A2";
+    if (percentage >= 71) return "B1";
+    if (percentage >= 61) return "B2";
+    if (percentage >= 51) return "C1";
+    if (percentage >= 41) return "C2";
+    if (percentage >= 35) return "D";
+    if (percentage >= 25) return "E1";
+    return "E2";
+}
+
+function calculatePassFail(actualTotal, totalMax) {
+    if (totalMax === 0) return 'Pending';
+    const percentage = (actualTotal / totalMax) * 100;
+    return percentage >= 35 ? 'Pass' : 'Fail';
+}
+
+function showToast(message, type = 'success') {
+    let toast = document.getElementById('successToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'successToast';
+        toast.className = 'success-toast';
+        toast.style.cssText = 'position:fixed;top:30px;right:30px;z-index:3000;display:none;';
+        toast.innerHTML = '<div class="success-toast-content"><span>✅</span><span id="toastMessage"></span></div>';
+        document.body.appendChild(toast);
+    }
+    const msgEl = document.getElementById('toastMessage');
+    if (msgEl) msgEl.innerText = message;
+    toast.style.display = 'block';
+    setTimeout(() => {
+        if (toast) toast.style.display = 'none';
+    }, 2500);
+}
+
+ // =====================================================
+    // 🔥 SCROLL TO TOP BUTTON VISIBILITY
+    // =====================================================
+    window.addEventListener('scroll', function() {
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        if (window.scrollY > 300) {
+            scrollBtn.classList.add('show');
+        } else {
+            scrollBtn.classList.remove('show');
+        }
+    });
+	
+	// =====================================================
+    // 📱 TOUCH FRIENDLY FAB FOR MOBILE
+    // =====================================================
+    const fabButton = document.getElementById('fabAddButton');
+    if (fabButton) {
+        fabButton.addEventListener('touchstart', function(e) {
+            // Just to provide touch feedback
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    }
+	
+	// =====================================================
+    // 🎯 KEYBOARD SHORTCUT: Ctrl/Cmd + N to open add form
+    // =====================================================
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+            e.preventDefault();
+            window.location.href = '5_6thResForm.html';
+        }
+        // Escape key to close modal if open
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('deleteModal');
+            if (modal && modal.style.display === 'flex') {
+                closeDeleteModal();
+            }
+        }
+    });
+
+// =====================================================
+// 🔍 DATA LOADING FUNCTIONS
+// =====================================================
+
+async function loadAllStudents() {
+    const tbody = document.getElementById('studentTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading data...</td></tr>';
+    try {
+        const response = await fetch(`${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}`);
+        const result = await response.json();
+        if (result.status === "success" && result.data && Array.isArray(result.data)) {
+            allStudentsData = result.data;
+            filteredData = [...allStudentsData];
+            displayStudentsTable(filteredData);
+        } else {
+            tbody.innerHTML = '<tr><td colspan="5">No records found</td></tr>';
+            allStudentsData = [];
+            filteredData = [];
+        }
+    } catch (err) {
+        console.error('Error loading students:', err);
+        tbody.innerHTML = '<tr><td colspan="5">Error loading data</td></tr>';
+    }
+}
+
+function displayStudentsTable(data) {
+    const tbody = document.getElementById('studentTableBody');
+    if (!tbody) return;
+    if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">No records found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = '';
+    data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${escapeHtml(String(row['Sr. No'] || idx + 1))}</td>
+            <td>${escapeHtml(formatValue(row['Student Name']))}</td>
+            <td>${escapeHtml(formatValue(row['FS Result'] || 'Pending'))}</td>
+            <td>${escapeHtml(formatValue(row['SS Result'] || 'Pending'))}</td>
+            <td><button class="view-btn" data-index="${idx}">👁️ View</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+    
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const index = btn.getAttribute('data-index');
+            if (index !== null) {
+                btn.innerHTML = '<span class="spinner-small"></span> Loading...';
+                btn.disabled = true;
+                await viewStudentDetails(filteredData[parseInt(index)]);
+                btn.innerHTML = '👁️ View';
+                btn.disabled = false;
+            }
+        });
+    });
+}
+
+function setupAutoSearch() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+    let timer;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            const term = e.target.value.trim().toLowerCase();
+            if (term === '') {
+                filteredData = [...allStudentsData];
+            } else {
+                filteredData = allStudentsData.filter(row => 
+                    (row['Student Name'] || '').toLowerCase().includes(term) || 
+                    String(row['G.R. No'] || '').includes(term)
+                );
+            }
+            displayStudentsTable(filteredData);
+        }, 300);
+    });
+}
+
+async function viewStudentDetails(student) {
+    currentStudentData = student;
+    document.getElementById('searchPage').style.display = 'none';
+    document.getElementById('detailsPage').style.display = 'block';
+    document.getElementById('detailsContainer').innerHTML = '<div class="loading-container"><div class="loading-spinner-large"></div><p>Loading details...</p></div>';
+    
+    try {
+        const response = await fetch(`${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}`);
+        const result = await response.json();
+        if (result.status === "success" && result.data) {
+            const index = result.data.findIndex(row => row['Student Name'] === student['Student Name'] && row['G.R. No'] === student['G.R. No']);
+            currentRowIndex = index + 2;
+            currentStudentData = result.data[index];
+            console.log('Loaded student data:', currentStudentData);
+            renderFullDetailsPage(currentStudentData);
+        } else {
+            throw new Error('Not found');
+        }
+    } catch (err) {
+        document.getElementById('detailsContainer').innerHTML = `<div style="padding:20px;">Error: ${err.message}</div>`;
+    }
+}
+
+// =====================================================
+// 🎨 RENDER FUNCTIONS - VIEW MODE
+// =====================================================
+
+function renderFullDetailsPage(student) {
+    const container = document.getElementById('detailsContainer');
+    container.innerHTML = `
+        <button class="collapsible active" data-section="profile" onclick="handleCollapse('profile')">📄 Page 1: Student Profile</button>
+        <div class="collapsible-content" id="content-profile"></div>
+        <button class="collapsible" data-section="fs" onclick="handleCollapse('fs')">📖 Page 2: First Semester</button>
+        <div class="collapsible-content" id="content-fs"></div>
+        <button class="collapsible" data-section="ss" onclick="handleCollapse('ss')">📚 Page 3: Second Semester</button>
+        <div class="collapsible-content" id="content-ss"></div>
+        <button class="collapsible" data-section="attendance" onclick="handleCollapse('attendance')">✅ Page 4: Attendance Details</button>
+        <div class="collapsible-content" id="content-attendance"></div>
+    `;
+    
+    renderProfileView(student);
+    renderFSView(student);
+    renderSSView(student);
+    renderAttendanceView(student);
+    
+    setTimeout(() => {
+        const content = document.getElementById('content-profile');
+        if (content) content.style.maxHeight = content.scrollHeight + "px";
+    }, 100);
+}
+
+function renderProfileView(s) {
+    const profileFields = ['Sr. No', 'Academic Year', 'Student Name', 'G.R. No', 'Std', 'Div', 'Roll No', 
+        'Father Name', 'Occupation', 'Mother Name', 'Medium', 'Birth Date', 'Address', 'Tel No', 'Weight', 'Height'];
+    
+    const section = document.getElementById('content-profile');
+    section.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Student Profile</h3>
+                <div class="action-buttons">
+                    <button class="edit-mode-btn" onclick="openEditForm('profile')">✏️ Edit</button>
+                </div>
+            </div>
+            <div class="scrollable-content">
+                <div class="white-grid" id="profileGrid"></div>
+            </div>
+        </div>
+    `;
+    const grid = document.getElementById('profileGrid');
+    if (grid) {
+        grid.innerHTML = profileFields.map(f => `
+            <div class="grid-cell">
+                <div class="grid-label">${f}</div>
+                <div class="grid-value">${escapeHtml(formatValue(s[f]))}</div>
+            </div>
+        `).join('');
+    }
+}
+
+function renderFSView(s) {
+    const section = document.getElementById('content-fs');
+    
+    const fsResult = s['FS Result'] || 'Pending';
+    const fsPercentage = s['FS Percentage'] || '0.00';
+    const fsGrade = s['FS Grade'] || 'N/A';
+    const fsReopen = formatValue(s['FS Reopen']);
+    
+    section.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">First Semester</h3>
+                <div class="action-buttons">
+                    <button class="edit-mode-btn" onclick="openEditForm('fs')">✏️ Edit</button>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-item"><span class="stats-label">📊 FS Percentage</span><span class="stats-value">${fsPercentage}</span><span class="stats-unit">%</span></div>
+                <div class="stats-item"><span class="stats-label">🏅 FS Grade</span><span class="grade-pill">${fsGrade}</span></div>
+                <div class="stats-item"><span class="stats-label">✅ FS Result</span><span class="result-badge ${fsResult === 'Pass' ? 'result-pass' : 'result-fail'}">${fsResult}</span></div>
+                <div class="stats-item"><span class="stats-label">📅 FS Reopen</span><span class="stats-value" style="font-size:1rem;">${fsReopen}</span></div>
+            </div>
+            <div class="scrollable-content">
+                <div class="white-grid" id="fsGrid"></div>
+            </div>
+        </div>
+    `;
+    
+    const fsFields = [
+        'FS English', 'FS Eng Total Marks', 'FS Eng Actual Marks', 
+        'FS Hindi', 'FS Hindi Total Marks', 'FS Hindi Actual Marks',
+        'FS Marathi', 'FS Mar Total Marks', 'FS Mar Actual Marks', 
+        'FS Mathematics', 'FS Maths Total Marks', 'FS Maths Actual Marks',
+        'FS Social Sci', 'FS SocialSci Total Marks', 'FS SocialSci Actual Marks', 
+        'FS General Science', 'FS GSci Total Marks', 'FS GSci Actual Marks',
+        'FS Arts', 'FS Arts Total Marks', 'FS Arts Actual Marks', 
+        'FS Work Experience', 'FS WE Total Marks', 'FS WE Actual Marks',
+        'FS Physical Education', 'FS PE Total Marks', 'FS PE Actual Marks', 
+        'FS Total Marks', 'FS Actual Marks', 'FS Special Progress',
+        'FS Good', 'FS Remarks', 'FS Result', 'FS Percentage', 'FS Grade', 'FS Reopen'
+    ];
+    
+    const grid = document.getElementById('fsGrid');
+    if (grid) {
+        grid.innerHTML = fsFields.map(f => `
+            <div class="grid-cell">
+                <div class="grid-label">${f}</div>
+                <div class="grid-value">${escapeHtml(formatValue(s[f]))}</div>
+            </div>
+        `).join('');
+    }
+}
+
+function renderSSView(s) {
+    const section = document.getElementById('content-ss');
+    
+    const ssResult = s['SS Result'] || 'Pending';
+    const ssPercentage = s['SS Percentage'] || '0.00';
+    const ssGrade = s['SS Grade'] || 'N/A';
+    const ssReopen = formatValue(s['SS Reopen']);
+    
+    section.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Second Semester</h3>
+                <div class="action-buttons">
+                    <button class="edit-mode-btn" onclick="openEditForm('ss')">✏️ Edit</button>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-item"><span class="stats-label">📊 SS Percentage</span><span class="stats-value">${ssPercentage}</span><span class="stats-unit">%</span></div>
+                <div class="stats-item"><span class="stats-label">🏅 SS Grade</span><span class="grade-pill">${ssGrade}</span></div>
+                <div class="stats-item"><span class="stats-label">✅ SS Result</span><span class="result-badge ${ssResult === 'Pass' ? 'result-pass' : 'result-fail'}">${ssResult}</span></div>
+                <div class="stats-item"><span class="stats-label">📅 SS Reopen</span><span class="stats-value" style="font-size:1rem;">${ssReopen}</span></div>
+            </div>
+            <div class="scrollable-content">
+                <div class="white-grid" id="ssGrid"></div>
+            </div>
+        </div>
+    `;
+    
+    const ssFields = [
+        'SS English', 'SS Eng Total Marks', 'SS Eng Actual Marks',
+        'SS Hindi', 'SS Hindi Total Marks', 'SS Hindi Actual Marks',
+        'SS Marathi', 'SS Mar Total Marks', 'SS Mar Actual Marks',
+        'SS Mathematics', 'SS Maths Total Marks', 'SS Maths Actual Marks',
+        'SS Social Sci', 'SS SocialSci Total Marks', 'SS SocialSci Actual Marks',
+        'SS General Science', 'SS GSci Total Marks', 'SS GSci Actual Marks',
+        'SS Arts', 'SS Arts Total Marks', 'SS Arts Actual Marks',
+        'SS Work Experience', 'SS WE Total Marks', 'SS WE Actual Marks',
+        'SS Physical Education', 'SS PE Total Marks', 'SS PE Actual Marks',
+        'SS Total Marks', 'SS Actual Marks', 'SS Special Progress',
+        'SS Good', 'SS Remarks', 'SS Result', 'SS Percentage', 'SS Grade', 'SS Reopen'
+    ];
+    
+    const grid = document.getElementById('ssGrid');
+    if (grid) {
+        grid.innerHTML = ssFields.map(f => `
+            <div class="grid-cell">
+                <div class="grid-label">${f}</div>
+                <div class="grid-value">${escapeHtml(formatValue(s[f]))}</div>
+            </div>
+        `).join('');
+    }
+}
+
+function renderAttendanceView(s) {
+    const section = document.getElementById('content-attendance');
+    const attendanceFields = [
+        'Working Day 1', 'WD June', 'WD July', 'WD August', 'Present Day 1', 'PD June', 'PD July', 'PD August',
+        'Class T. Sign 1', 'CS June', 'CS July', 'CS August', 'Gr. Sign 1', 'H.M 1', 
+        'Working Day 2', 'WD Sept', 'WD Oct', 'WD Nov', 'Present Day 2', 'PD Sept', 'PD Oct', 'PD Nov',
+        'Class T. Sign 2', 'CS Sept', 'CS Oct', 'CS Nov', 'Gr. Sign 2', 'H.M 2',
+        'Working Day 3', 'WD Dec', 'WD Jan', 'WD Feb', 'WD Mar', 'WD Apr', 'WD May', 
+        'Present Day 3', 'PD Dec', 'PD Jan', 'PD Feb', 'PD Mar', 'PD Apr', 'PD May', 
+        'Class T. Sign 3', 'CS Dec', 'CS Jan', 'CS Feb', 'CS Mar', 'CS Apr', 'CS May', 'Gr. Sign 3', 'H.M 3'
+    ];
+    
+    section.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Attendance Details</h3>
+                <div class="action-buttons">
+                    <button class="edit-mode-btn" onclick="openEditForm('attendance')">✏️ Edit</button>
+                </div>
+            </div>
+            <div class="scrollable-content">
+                <div class="white-grid" id="attendanceGrid"></div>
+            </div>
+        </div>
+    `;
+    
+    const grid = document.getElementById('attendanceGrid');
+    if (grid) {
+        grid.innerHTML = attendanceFields.map(f => `
+            <div class="grid-cell">
+                <div class="grid-label">${f}</div>
+                <div class="grid-value">${escapeHtml(formatValue(s[f]))}</div>
+            </div>
+        `).join('');
+    }
+}
+
+// =====================================================
+// ✏️ EDIT FORM FUNCTIONS
+// =====================================================
+
+function openEditForm(section) {
+    currentEditSection = section;
+    if (section === 'profile') {
+        renderProfileEditForm();
+    } else if (section === 'fs') {
+        renderFSEditForm();
+    } else if (section === 'ss') {
+        renderSSEditForm();
+    } else if (section === 'attendance') {
+        renderAttendanceEditForm();
+    }
+}
+
+function renderProfileEditForm() {
+    const content = document.getElementById(`content-profile`);
+    if (!content) return;
+    
+    content.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Edit Student Profile</h3>
+                <div class="action-buttons">
+                    <button class="update-section-btn" onclick="submitProfileUpdate()">💾 Update Changes</button>
+                    <button class="cancel-edit-btn" onclick="cancelEdit('profile')">Cancel</button>
+                </div>
+            </div>
+            <div class="edit-form-container">
+                <div class="form-grid" id="profileEditGrid"></div>
+            </div>
+            <div id="profileEditMessage" class="message-area"></div>
+        </div>
+    `;
+    
+    const profileFields = [
+        { name: 'Student Name', type: 'text', required: true },
+        { name: 'G.R. No', type: 'text' },
+        { name: 'Std', type: 'select', options: ['8th Std'] },
+        { name: 'Div', type: 'select', options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'] },
+        { name: 'Roll No', type: 'number' },
+        { name: 'Father Name', type: 'text' },
+        { name: 'Occupation', type: 'text' },
+        { name: 'Mother Name', type: 'text' },
+        { name: 'Medium', type: 'select', options: ['English', 'Semi-English', 'Hindi', 'Marathi'] },
+        { name: 'Birth Date', type: 'date' },
+        { name: 'Address', type: 'textarea', rows: 2 },
+        { name: 'Tel No', type: 'tel', maxlength: 10 },
+        { name: 'Weight', type: 'number', step: 'any' },
+        { name: 'Height', type: 'number', step: 'any' }
+    ];
+    
+    const grid = document.getElementById('profileEditGrid');
+    if (grid) {
+        grid.innerHTML = profileFields.map(field => {
+            let value = currentStudentData[field.name] || '';
+            
+            // Convert Birth Date from DD/MM/YYYY to YYYY-MM-DD for date input
+            if (field.name === 'Birth Date' && value && value !== '—') {
+                value = formatDateToYYYYMMDD(value);
+            }
+            
+            if (field.type === 'select') {
+                return `
+                    <div class="field-group">
+                        <label>${field.name} ${field.required ? '*' : ''}</label>
+                        <select id="edit_${field.name.replace(/\s/g, '_')}">
+                            ${field.options.map(opt => `<option value="${opt}" ${value === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            } else if (field.type === 'textarea') {
+                return `
+                    <div class="field-group full-width">
+                        <label>${field.name}</label>
+                        <textarea id="edit_${field.name.replace(/\s/g, '_')}" rows="${field.rows}">${escapeHtml(value)}</textarea>
+                    </div>
+                `;
+            } else {
+                return `
+                    <div class="field-group">
+                        <label>${field.name} ${field.required ? '*' : ''}</label>
+                        <input type="${field.type}" id="edit_${field.name.replace(/\s/g, '_')}" value="${escapeHtml(value)}" ${field.maxlength ? `maxlength="${field.maxlength}"` : ''} ${field.step ? `step="${field.step}"` : ''}>
+                    </div>
+                `;
+            }
+        }).join('');
+    }
+    
+    content.style.maxHeight = content.scrollHeight + "px";
+}
+
+function renderFSEditForm() {
+    const content = document.getElementById('content-fs');
+    if (!content) return;
+    
+    fsInputs = [];
+    fsGradeInputs = [];
+    
+    fsSpecialProgress = currentStudentData['FS Special Progress'] || '';
+    fsGood = currentStudentData['FS Good'] || '';
+    fsRemarks = currentStudentData['FS Remarks'] || '';
+    
+    // Convert FS Reopen Date from DD/MM/YYYY to YYYY-MM-DD for date input
+    let fsReopenDateValue = formatDateToYYYYMMDD(currentStudentData['FS Reopen'] || '');
+    
+    content.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Edit First Semester</h3>
+                <div class="action-buttons">
+                    <button class="update-section-btn" onclick="submitFSUpdate()">💾 Update Changes</button>
+                    <button class="cancel-edit-btn" onclick="cancelEdit('fs')">Cancel</button>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-item"><span class="stats-label">📊 FS Percentage</span><span class="stats-value" id="fsPercentageValue">0.00</span><span class="stats-unit">%</span></div>
+                <div class="stats-item"><span class="stats-label">🏅 FS Grade</span><span class="grade-pill" id="fsGradeValue">N/A</span></div>
+            </div>
+            <div class="table-wrapper">
+                <table class="marks-table" id="fsTable">
+                    <thead><tr><th>#</th><th>Subject</th><th>Total Marks</th><th>Actual Marks/Grade</th></tr></thead>
+                    <tbody id="fsTbody"></tbody>
+                    <tfoot>
+                        <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td id="fsTotalMarksCell">0</td><td id="fsActualTotalCell">0</td></tr>
+                        <tr class="action-row"><td colspan="4">
+                            <div class="action-cell">
+                                <button type="button" class="small-btn" onclick="openModal('FS', 'Special Progress')">⭐ Special Progress</button>
+                                <button type="button" class="small-btn" onclick="openModal('FS', 'Good')">👍 Good</button>
+                                <button type="button" class="small-btn" onclick="openModal('FS', 'Remarks')">📝 Remarks</button>
+                            </div>
+                        </td></tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="reopen-section">
+                <label>📅 Reopen Date (Future date only):</label>
+                <input type="date" id="FSReopenDate" value="${fsReopenDateValue}">
+                <span style="font-size:0.8rem; color:#64748b;">Select a future date for reopening (DD/MM/YYYY format will be saved)</span>
+            </div>
+            <div id="fsEditMessage" class="message-area"></div>
+        </div>
+    `;
+    
+    buildFSTable();
+    content.style.maxHeight = content.scrollHeight + "px";
+}
+
+function buildFSTable() {
+    const tbody = document.getElementById('fsTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    
+    const fsSubjects = [
+        { name: "English", marksField: "FS Eng Actual Marks", type: "marks", total: 60 },
+        { name: "Hindi", marksField: "FS Hindi Actual Marks", type: "marks", total: 60 },
+        { name: "Marathi", marksField: "FS Mar Actual Marks", type: "marks", total: 60 },
+        { name: "Mathematics", marksField: "FS Maths Actual Marks", type: "marks", total: 60 },
+        { name: "General Science", marksField: "FS GSci Actual Marks", type: "marks", total: 60 },
+        { name: "Social Science", marksField: "FS SocialSci Actual Marks", type: "marks", total: 60 },
+        { name: "Arts", marksField: "FS Arts Actual Marks", type: "grade", total: null },
+        { name: "Work Experience", marksField: "FS WE Actual Marks", type: "grade", total: null },
+        { name: "Physical Education", marksField: "FS PE Actual Marks", type: "grade", total: null }
+    ];
+    
+    fsSubjects.forEach((sub, idx) => {
+        const row = tbody.insertRow();
+        row.insertCell(0).innerText = idx + 1;
+        row.insertCell(1).innerText = sub.name;
+        
+        if (sub.type === "marks") {
+            row.insertCell(2).innerText = sub.total;
+            const actualCell = row.insertCell(3);
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = 0;
+            input.max = sub.total;
+            let value = currentStudentData[sub.marksField];
+            if (value === '—' || value === undefined || value === null) value = 0;
+            input.value = value;
+            input.step = 0.5;
+            input.addEventListener('input', () => { updateFSTotal(); });
+            actualCell.appendChild(input);
+            fsInputs.push(input);
+            fsGradeInputs.push(null);
+        } else {
+            row.insertCell(2).innerText = "Grade Only";
+            const actualCell = row.insertCell(3);
+            const select = document.createElement('select');
+            const gradeOptions = ['', 'A+', 'A', 'B+', 'B', 'C+', 'C', 'D', 'E', 'F'];
+            gradeOptions.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.text = grade || 'Select Grade';
+                select.appendChild(option);
+            });
+            let gradeValue = currentStudentData[sub.marksField];
+            if (gradeValue === '—' || gradeValue === undefined || gradeValue === null) gradeValue = '';
+            select.value = gradeValue;
+            select.addEventListener('change', () => { updateFSTotal(); });
+            actualCell.appendChild(select);
+            fsInputs.push(null);
+            fsGradeInputs.push(select);
+        }
+    });
+    
+    updateFSTotal();
+}
+
+function renderSSEditForm() {
+    const content = document.getElementById('content-ss');
+    if (!content) return;
+    
+    ssInputs = [];
+    ssGradeInputs = [];
+    
+    ssSpecialProgress = currentStudentData['SS Special Progress'] || '';
+    ssGood = currentStudentData['SS Good'] || '';
+    ssRemarks = currentStudentData['SS Remarks'] || '';
+    
+    // Convert SS Reopen Date from DD/MM/YYYY to YYYY-MM-DD for date input
+    let ssReopenDateValue = formatDateToYYYYMMDD(currentStudentData['SS Reopen'] || '');
+    
+    content.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Edit Second Semester</h3>
+                <div class="action-buttons">
+                    <button class="update-section-btn" onclick="submitSSUpdate()">💾 Update Changes</button>
+                    <button class="cancel-edit-btn" onclick="cancelEdit('ss')">Cancel</button>
+                </div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-item"><span class="stats-label">📊 SS Percentage</span><span class="stats-value" id="ssPercentageValue">0.00</span><span class="stats-unit">%</span></div>
+                <div class="stats-item"><span class="stats-label">🏅 SS Grade</span><span class="grade-pill" id="ssGradeValue">N/A</span></div>
+            </div>
+            <div class="table-wrapper">
+                <table class="marks-table" id="ssTable">
+                    <thead><tr><th>#</th><th>Subject</th><th>Total Marks</th><th>Actual Marks/Grade</th></tr></thead>
+                    <tbody id="ssTbody"></tbody>
+                    <tfoot>
+                        <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td id="ssTotalMarksCell">0</td><td id="ssActualTotalCell">0</td></tr>
+                        <tr class="action-row"><td colspan="4">
+                            <div class="action-cell">
+                                <button type="button" class="small-btn" onclick="openModal('SS', 'Special Progress')">⭐ Special Progress</button>
+                                <button type="button" class="small-btn" onclick="openModal('SS', 'Good')">👍 Good</button>
+                                <button type="button" class="small-btn" onclick="openModal('SS', 'Remarks')">📝 Remarks</button>
+                            </div>
+                        </td></tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="reopen-section">
+                <label>📅 Reopen Date (Future date only):</label>
+                <input type="date" id="SSReopenDate" value="${ssReopenDateValue}">
+                <span style="font-size:0.8rem; color:#64748b;">Select a future date for reopening (DD/MM/YYYY format will be saved)</span>
+            </div>
+            <div id="ssEditMessage" class="message-area"></div>
+        </div>
+    `;
+    
+    buildSSTable();
+    content.style.maxHeight = content.scrollHeight + "px";
+}
+
+function buildSSTable() {
+    const tbody = document.getElementById('ssTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    
+    const ssSubjects = [
+        { name: "English", marksField: "SS Eng Actual Marks", type: "marks", total: 60 },
+        { name: "Hindi", marksField: "SS Hindi Actual Marks", type: "marks", total: 60 },
+        { name: "Marathi", marksField: "SS Mar Actual Marks", type: "marks", total: 60 },
+        { name: "Mathematics", marksField: "SS Maths Actual Marks", type: "marks", total: 60 },
+        { name: "General Science", marksField: "SS GSci Actual Marks", type: "marks", total: 60 },
+        { name: "Social Science", marksField: "SS SocialSci Actual Marks", type: "marks", total: 60 },
+        { name: "Arts", marksField: "SS Arts Actual Marks", type: "grade", total: null },
+        { name: "Work Experience", marksField: "SS WE Actual Marks", type: "grade", total: null },
+        { name: "Physical Education", marksField: "SS PE Actual Marks", type: "grade", total: null }
+    ];
+    
+    ssSubjects.forEach((sub, idx) => {
+        const row = tbody.insertRow();
+        row.insertCell(0).innerText = idx + 1;
+        row.insertCell(1).innerText = sub.name;
+        
+        if (sub.type === "marks") {
+            row.insertCell(2).innerText = sub.total;
+            const actualCell = row.insertCell(3);
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = 0;
+            input.max = sub.total;
+            let value = currentStudentData[sub.marksField];
+            if (value === '—' || value === undefined || value === null) value = 0;
+            input.value = value;
+            input.step = 0.5;
+            input.addEventListener('input', () => { updateSSTotal(); });
+            actualCell.appendChild(input);
+            ssInputs.push(input);
+            ssGradeInputs.push(null);
+        } else {
+            row.insertCell(2).innerText = "Grade Only";
+            const actualCell = row.insertCell(3);
+            const select = document.createElement('select');
+            const gradeOptions = ['', 'A+', 'A', 'B+', 'B', 'C+', 'C', 'D', 'E', 'F'];
+            gradeOptions.forEach(grade => {
+                const option = document.createElement('option');
+                option.value = grade;
+                option.text = grade || 'Select Grade';
+                select.appendChild(option);
+            });
+            let gradeValue = currentStudentData[sub.marksField];
+            if (gradeValue === '—' || gradeValue === undefined || gradeValue === null) gradeValue = '';
+            select.value = gradeValue;
+            select.addEventListener('change', () => { updateSSTotal(); });
+            actualCell.appendChild(select);
+            ssInputs.push(null);
+            ssGradeInputs.push(select);
+        }
+    });
+    
+    updateSSTotal();
+}
+
+function renderAttendanceEditForm() {
+    const content = document.getElementById('content-attendance');
+    if (!content) return;
+    
+    const months = ['June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+    
+    content.innerHTML = `
+        <div class="collapsible-content-inner">
+            <div class="section-header">
+                <h3 class="section-title">Edit Attendance Details</h3>
+                <div class="action-buttons">
+                    <button class="update-section-btn" onclick="submitAttendanceUpdate()">💾 Update Changes</button>
+                    <button class="cancel-edit-btn" onclick="cancelEdit('attendance')">Cancel</button>
+                </div>
+            </div>
+            <div class="info-note">💡 Note: Working Day, Present Day, Class T. Sign columns store individual month values.</div>
+            <div class="table-wrapper">
+                <table class="attendance-table" id="attendanceEditTable">
+                    <thead>
+                        <tr><th rowspan="2">Category</th><th colspan="3">Term 1</th><th colspan="3">Term 2</th><th colspan="6">Term 3</th></tr>
+                        <tr class="sub-header"><th>June</th><th>July</th><th>August</th><th>September</th><th>October</th><th>November</th><th>December</th><th>January</th><th>February</th><th>March</th><th>April</th><th>May</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="row-label">📆 Working Days</td>
+                            ${months.map(m => { let value = currentStudentData[`WD ${m}`]; if (value === '—' || value === undefined) value = ''; return `<td><input type="number" id="WD_${m}" value="${value}" min="0" max="31"></td>`; }).join('')}
+                        </tr>
+                        <tr><td class="row-label">✅ Present Days</td>
+                            ${months.map(m => { let value = currentStudentData[`PD ${m}`]; if (value === '—' || value === undefined) value = ''; return `<td><input type="number" id="PD_${m}" value="${value}" min="0" max="31"></td>`; }).join('')}
+                        </tr>
+                        <tr><td class="row-label">✍️ Class T. Sign</td>
+                            ${months.map(m => { let value = currentStudentData[`CS ${m}`]; if (value === '—' || value === undefined) value = ''; return `<td><input type="text" id="CS_${m}" value="${escapeHtml(value)}" maxlength="50"></td>`; }).join('')}
+                        </tr>
+                        <tr><td class="row-label">👨‍🏫 Gr. Sign</td>
+                            <td colspan="3"><input type="text" id="GS_1" value="${escapeHtml(currentStudentData['Gr. Sign 1'] || '')}" placeholder="Grade Signatory - Term 1" style="width:95%"></td>
+                            <td colspan="3"><input type="text" id="GS_2" value="${escapeHtml(currentStudentData['Gr. Sign 2'] || '')}" placeholder="Grade Signatory - Term 2" style="width:95%"></td>
+                            <td colspan="6"><input type="text" id="GS_3" value="${escapeHtml(currentStudentData['Gr. Sign 3'] || '')}" placeholder="Grade Signatory - Term 3" style="width:97%"></td>
+                        </tr>
+                        <tr><td class="row-label">🏫 H.M</td>
+                            <td colspan="3"><input type="text" id="HM_1" value="${escapeHtml(currentStudentData['H.M 1'] || '')}" placeholder="Head Master Sign - Term 1" style="width:95%"></td>
+                            <td colspan="3"><input type="text" id="HM_2" value="${escapeHtml(currentStudentData['H.M 2'] || '')}" placeholder="Head Master Sign - Term 2" style="width:95%"></td>
+                            <td colspan="6"><input type="text" id="HM_3" value="${escapeHtml(currentStudentData['H.M 3'] || '')}" placeholder="Head Master Sign - Term 3" style="width:97%"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="attendanceEditMessage" class="message-area"></div>
+        </div>
+    `;
+    
+    content.style.maxHeight = content.scrollHeight + "px";
+}
+
+function updateFSTotal() {
+    let totalActual = 0, totalMax = 0;
+    
+    for (let i = 0; i < 6; i++) {
+        if (fsInputs[i] && fsInputs[i].type === 'number') {
+            totalMax += 50;
+            let val = parseFloat(fsInputs[i]?.value) || 0;
+            if (val > 50) { fsInputs[i].value = 50; val = 50; }
+            if (val < 0) { fsInputs[i].value = 0; val = 0; }
+            totalActual += val;
+        }
+    }
+    
+    const totalMarksCell = document.getElementById('fsTotalMarksCell');
+    const actualTotalCell = document.getElementById('fsActualTotalCell');
+    if (totalMarksCell) totalMarksCell.innerText = totalMax;
+    if (actualTotalCell) actualTotalCell.innerText = totalActual;
+    
+    let percentage = 0;
+    if (totalMax > 0) percentage = (totalActual / totalMax) * 100;
+    const percentageEl = document.getElementById('fsPercentageValue');
+    const gradeEl = document.getElementById('fsGradeValue');
+    if (percentageEl) percentageEl.innerText = percentage.toFixed(2);
+    if (gradeEl) gradeEl.innerText = getGradeFromPercentage(percentage);
+}
+
+function updateSSTotal() {
+    let totalActual = 0, totalMax = 0;
+    
+    for (let i = 0; i < 6; i++) {
+        if (ssInputs[i] && ssInputs[i].type === 'number') {
+            totalMax += 50;
+            let val = parseFloat(ssInputs[i]?.value) || 0;
+            if (val > 50) { ssInputs[i].value = 50; val = 50; }
+            if (val < 0) { ssInputs[i].value = 0; val = 0; }
+            totalActual += val;
+        }
+    }
+    
+    const totalMarksCell = document.getElementById('ssTotalMarksCell');
+    const actualTotalCell = document.getElementById('ssActualTotalCell');
+    if (totalMarksCell) totalMarksCell.innerText = totalMax;
+    if (actualTotalCell) actualTotalCell.innerText = totalActual;
+    
+    let percentage = 0;
+    if (totalMax > 0) percentage = (totalActual / totalMax) * 100;
+    const percentageEl = document.getElementById('ssPercentageValue');
+    const gradeEl = document.getElementById('ssGradeValue');
+    if (percentageEl) percentageEl.innerText = percentage.toFixed(2);
+    if (gradeEl) gradeEl.innerText = getGradeFromPercentage(percentage);
+}
+
+// =====================================================
+// 💾 SUBMIT UPDATE FUNCTIONS
+// =====================================================
+
+async function submitProfileUpdate() {
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('spreadsheetId', SPREADSHEET_ID);
+    formData.append('sheetName', SHEET_NAME);
+    formData.append('rowIndex', currentRowIndex);
+    
+    const fields = ['Student Name', 'G.R. No', 'Std', 'Div', 'Roll No', 'Father Name', 'Occupation', 
+        'Mother Name', 'Medium', 'Address', 'Tel No', 'Weight', 'Height'];
+    
+    let hasError = false;
+    let studentName = '';
+    
+    fields.forEach(field => {
+        const input = document.getElementById(`edit_${field.replace(/\s/g, '_')}`);
+        if (input) {
+            let value = input.value;
+            if (field === 'Tel No' && value && !/^[6-9][0-9]{9}$/.test(value)) {
+                showToast('Invalid phone number format', 'error');
+                hasError = true;
+            }
+            if (field === 'Student Name') studentName = value;
+            formData.append(field, value);
+        }
+    });
+    
+    if (hasError) return;
+    if (!studentName.trim()) {
+        showToast('Student Name is required', 'error');
+        return;
+    }
+    
+    // Handle Birth Date - Convert from YYYY-MM-DD to DD/MM/YYYY for Google Sheet
+    const birthDateInput = document.getElementById('edit_Birth_Date');
+    let birthDateValue = birthDateInput ? birthDateInput.value : '';
+    birthDateValue = formatDateToDDMMYYYY(birthDateValue);
+    formData.append('Birth Date', birthDateValue);
+    
+    formData.append('Academic Year', getAcademicYear());
+    formData.append('Sr. No', currentStudentData['Sr. No'] || '');
+    
+    const btn = document.querySelector('#content-profile .update-section-btn');
+    const msgDiv = document.getElementById('profileEditMessage');
+    
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-small"></span> Updating...'; }
+    if (msgDiv) msgDiv.innerHTML = '<div class="info-msg">⏳ Updating profile...</div>';
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showToast('Profile updated successfully!', 'success');
+            if (msgDiv) msgDiv.innerHTML = '<div class="success-msg">✅ Profile updated successfully!</div>';
+            await refreshStudentData();
+            setTimeout(() => cancelEdit('profile'), 1500);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        if (msgDiv) msgDiv.innerHTML = `<div class="error-msg">❌ Update failed: ${error.message}</div>`;
+        showToast('Update failed: ' + error.message, 'error');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '💾 Update Changes'; }
+    }
+}
+
+async function submitFSUpdate() {
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('spreadsheetId', SPREADSHEET_ID);
+    formData.append('sheetName', SHEET_NAME);
+    formData.append('rowIndex', currentRowIndex);
+    
+    // Preserve ALL existing data
+    const preserveFields = ['Student Name', 'G.R. No', 'Std', 'Div', 'Roll No', 'Father Name', 'Occupation', 
+        'Mother Name', 'Medium', 'Address', 'Tel No', 'Weight', 'Height', 'Academic Year', 'Sr. No'];
+    
+    preserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve Birth Date in DD/MM/YYYY format
+    formData.append('Birth Date', currentStudentData['Birth Date'] || '');
+    
+    // Preserve SS data
+    const ssPreserveFields = [
+        'SS English', 'SS Eng Total Marks', 'SS Eng Actual Marks', 'SS Hindi', 'SS Hindi Total Marks', 'SS Hindi Actual Marks',
+        'SS Marathi', 'SS Mar Total Marks', 'SS Mar Actual Marks', 'SS Mathematics', 'SS Maths Total Marks', 'SS Maths Actual Marks',
+        'SS Social Sci', 'SS SocialSci Total Marks', 'SS SocialSci Actual Marks', 'SS General Science', 'SS GSci Total Marks', 'SS GSci Actual Marks',
+        'SS Arts', 'SS Arts Total Marks', 'SS Arts Actual Marks', 'SS Work Experience', 'SS WE Total Marks', 'SS WE Actual Marks',
+        'SS Physical Education', 'SS PE Total Marks', 'SS PE Actual Marks', 'SS Total Marks', 'SS Actual Marks',
+        'SS Special Progress', 'SS Good', 'SS Remarks', 'SS Result', 'SS Percentage', 'SS Grade', 'SS Reopen'
+    ];
+    
+    ssPreserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve Attendance data
+    const months = ['June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+    months.forEach(month => {
+        formData.append(`WD ${month}`, currentStudentData[`WD ${month}`] || '');
+        formData.append(`PD ${month}`, currentStudentData[`PD ${month}`] || '');
+        formData.append(`CS ${month}`, currentStudentData[`CS ${month}`] || '');
+    });
+    
+    formData.append('Working Day 1', currentStudentData['Working Day 1'] || 'Term 1 (June, July, August)');
+    formData.append('Working Day 2', currentStudentData['Working Day 2'] || 'Term 2 (September, October, November)');
+    formData.append('Working Day 3', currentStudentData['Working Day 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Present Day 1', currentStudentData['Present Day 1'] || 'Term 1 (June, July, August)');
+    formData.append('Present Day 2', currentStudentData['Present Day 2'] || 'Term 2 (September, October, November)');
+    formData.append('Present Day 3', currentStudentData['Present Day 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Class T. Sign 1', currentStudentData['Class T. Sign 1'] || 'Term 1 (June, July, August)');
+    formData.append('Class T. Sign 2', currentStudentData['Class T. Sign 2'] || 'Term 2 (September, October, November)');
+    formData.append('Class T. Sign 3', currentStudentData['Class T. Sign 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Gr. Sign 1', currentStudentData['Gr. Sign 1'] || '');
+    formData.append('Gr. Sign 2', currentStudentData['Gr. Sign 2'] || '');
+    formData.append('Gr. Sign 3', currentStudentData['Gr. Sign 3'] || '');
+    formData.append('H.M 1', currentStudentData['H.M 1'] || '');
+    formData.append('H.M 2', currentStudentData['H.M 2'] || '');
+    formData.append('H.M 3', currentStudentData['H.M 3'] || '');
+    
+    // Update FS data from form
+    const fsFieldMapping = [
+        "FS Eng Actual Marks", "FS Hindi Actual Marks", "FS Mar Actual Marks",
+        "FS Maths Actual Marks", "FS GSci Actual Marks", "FS SocialSci Actual Marks",
+        "FS Arts Actual Marks", "FS WE Actual Marks", "FS PE Actual Marks"
+    ];
+    
+    const fsSubjectNames = ["English", "Hindi", "Marathi", "Mathematics", "General Science", "Social Science", "Arts", "Work Experience", "Physical Education"];
+    
+    for (let i = 0; i < 9; i++) {
+        if (i < 6) {
+            formData.append(fsFieldMapping[i], fsInputs[i]?.value || 0);
+        } else {
+            formData.append(fsFieldMapping[i], fsGradeInputs[i]?.value || '');
+        }
+        formData.append(`FS ${fsSubjectNames[i]} Total Marks`, i < 6 ? 50 : 'Grade');
+        formData.append(`FS ${fsSubjectNames[i]}`, fsSubjectNames[i]);
+    }
+    
+    // Calculate totals
+    let totalActual = 0, totalMax = 0;
+    for (let i = 0; i < 6; i++) {
+        if (fsInputs[i]) {
+            totalMax += 50;
+            totalActual += parseFloat(fsInputs[i]?.value) || 0;
+        }
+    }
+    
+    const percentage = totalMax > 0 ? ((totalActual / totalMax) * 100).toFixed(2) : "0.00";
+    const grade = getGradeFromPercentage(parseFloat(percentage));
+    const result = calculatePassFail(totalActual, totalMax);
+    
+    formData.append('FS Total Marks', totalMax);
+    formData.append('FS Actual Marks', totalActual);
+    formData.append('FS Percentage', percentage);
+    formData.append('FS Grade', grade);
+    formData.append('FS Result', result);
+    formData.append('FS Special Progress', fsSpecialProgress);
+    formData.append('FS Good', fsGood);
+    formData.append('FS Remarks', fsRemarks);
+    
+    // Convert FS Reopen Date from YYYY-MM-DD to DD/MM/YYYY
+    let fsReopenDateRaw = document.getElementById('FSReopenDate')?.value || '';
+    let fsReopenDateFormatted = formatDateToDDMMYYYY(fsReopenDateRaw);
+    formData.append('FS Reopen', fsReopenDateFormatted);
+    
+    const msgDiv = document.getElementById('fsEditMessage');
+    const btn = document.querySelector('#content-fs .update-section-btn');
+    
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-small"></span> Updating...'; }
+    if (msgDiv) msgDiv.innerHTML = '<div class="info-msg">⏳ Updating First Semester...</div>';
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+        const resultData = await response.json();
+        
+        if (resultData.status === 'success') {
+            showToast('First Semester updated successfully!', 'success');
+            if (msgDiv) msgDiv.innerHTML = '<div class="success-msg">✅ First Semester updated successfully!</div>';
+            await refreshStudentData();
+            setTimeout(() => cancelEdit('fs'), 1500);
+        } else {
+            throw new Error(resultData.message);
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        if (msgDiv) msgDiv.innerHTML = `<div class="error-msg">❌ Update failed: ${error.message}</div>`;
+        showToast('Update failed: ' + error.message, 'error');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '💾 Update Changes'; }
+    }
+}
+
+async function submitSSUpdate() {
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('spreadsheetId', SPREADSHEET_ID);
+    formData.append('sheetName', SHEET_NAME);
+    formData.append('rowIndex', currentRowIndex);
+    
+    // Preserve ALL existing data
+    const preserveFields = ['Student Name', 'G.R. No', 'Std', 'Div', 'Roll No', 'Father Name', 'Occupation', 
+        'Mother Name', 'Medium', 'Address', 'Tel No', 'Weight', 'Height', 'Academic Year', 'Sr. No'];
+    
+    preserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve Birth Date in DD/MM/YYYY format
+    formData.append('Birth Date', currentStudentData['Birth Date'] || '');
+    
+    // Preserve FS data
+    const fsPreserveFields = [
+        'FS English', 'FS Eng Total Marks', 'FS Eng Actual Marks', 'FS Hindi', 'FS Hindi Total Marks', 'FS Hindi Actual Marks',
+        'FS Marathi', 'FS Mar Total Marks', 'FS Mar Actual Marks', 'FS Mathematics', 'FS Maths Total Marks', 'FS Maths Actual Marks',
+        'FS Social Sci', 'FS SocialSci Total Marks', 'FS SocialSci Actual Marks', 'FS General Science', 'FS GSci Total Marks', 'FS GSci Actual Marks',
+        'FS Arts', 'FS Arts Total Marks', 'FS Arts Actual Marks', 'FS Work Experience', 'FS WE Total Marks', 'FS WE Actual Marks',
+        'FS Physical Education', 'FS PE Total Marks', 'FS PE Actual Marks', 'FS Total Marks', 'FS Actual Marks',
+        'FS Special Progress', 'FS Good', 'FS Remarks', 'FS Result', 'FS Percentage', 'FS Grade', 'FS Reopen'
+    ];
+    
+    fsPreserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve Attendance data
+    const months = ['June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+    months.forEach(month => {
+        formData.append(`WD ${month}`, currentStudentData[`WD ${month}`] || '');
+        formData.append(`PD ${month}`, currentStudentData[`PD ${month}`] || '');
+        formData.append(`CS ${month}`, currentStudentData[`CS ${month}`] || '');
+    });
+    
+    formData.append('Working Day 1', currentStudentData['Working Day 1'] || 'Term 1 (June, July, August)');
+    formData.append('Working Day 2', currentStudentData['Working Day 2'] || 'Term 2 (September, October, November)');
+    formData.append('Working Day 3', currentStudentData['Working Day 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Present Day 1', currentStudentData['Present Day 1'] || 'Term 1 (June, July, August)');
+    formData.append('Present Day 2', currentStudentData['Present Day 2'] || 'Term 2 (September, October, November)');
+    formData.append('Present Day 3', currentStudentData['Present Day 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Class T. Sign 1', currentStudentData['Class T. Sign 1'] || 'Term 1 (June, July, August)');
+    formData.append('Class T. Sign 2', currentStudentData['Class T. Sign 2'] || 'Term 2 (September, October, November)');
+    formData.append('Class T. Sign 3', currentStudentData['Class T. Sign 3'] || 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Gr. Sign 1', currentStudentData['Gr. Sign 1'] || '');
+    formData.append('Gr. Sign 2', currentStudentData['Gr. Sign 2'] || '');
+    formData.append('Gr. Sign 3', currentStudentData['Gr. Sign 3'] || '');
+    formData.append('H.M 1', currentStudentData['H.M 1'] || '');
+    formData.append('H.M 2', currentStudentData['H.M 2'] || '');
+    formData.append('H.M 3', currentStudentData['H.M 3'] || '');
+    
+    // Update SS data from form
+    const ssFieldMapping = [
+        "SS Eng Actual Marks", "SS Hindi Actual Marks", "SS Mar Actual Marks",
+        "SS Maths Actual Marks", "SS GSci Actual Marks", "SS SocialSci Actual Marks",
+        "SS Arts Actual Marks", "SS WE Actual Marks", "SS PE Actual Marks"
+    ];
+    
+    const ssSubjectNames = ["English", "Hindi", "Marathi", "Mathematics", "General Science", "Social Science", "Arts", "Work Experience", "Physical Education"];
+    
+    for (let i = 0; i < 9; i++) {
+        if (i < 6) {
+            formData.append(ssFieldMapping[i], ssInputs[i]?.value || 0);
+        } else {
+            formData.append(ssFieldMapping[i], ssGradeInputs[i]?.value || '');
+        }
+        formData.append(`SS ${ssSubjectNames[i]} Total Marks`, i < 6 ? 50 : 'Grade');
+        formData.append(`SS ${ssSubjectNames[i]}`, ssSubjectNames[i]);
+    }
+    
+    let totalActual = 0, totalMax = 0;
+    for (let i = 0; i < 6; i++) {
+        if (ssInputs[i]) {
+            totalMax += 50;
+            totalActual += parseFloat(ssInputs[i]?.value) || 0;
+        }
+    }
+    
+    const percentage = totalMax > 0 ? ((totalActual / totalMax) * 100).toFixed(2) : "0.00";
+    const grade = getGradeFromPercentage(parseFloat(percentage));
+    const result = calculatePassFail(totalActual, totalMax);
+    
+    formData.append('SS Total Marks', totalMax);
+    formData.append('SS Actual Marks', totalActual);
+    formData.append('SS Percentage', percentage);
+    formData.append('SS Grade', grade);
+    formData.append('SS Result', result);
+    formData.append('SS Special Progress', ssSpecialProgress);
+    formData.append('SS Good', ssGood);
+    formData.append('SS Remarks', ssRemarks);
+    
+    // Convert SS Reopen Date from YYYY-MM-DD to DD/MM/YYYY
+    let ssReopenDateRaw = document.getElementById('SSReopenDate')?.value || '';
+    let ssReopenDateFormatted = formatDateToDDMMYYYY(ssReopenDateRaw);
+    formData.append('SS Reopen', ssReopenDateFormatted);
+    
+    const msgDiv = document.getElementById('ssEditMessage');
+    const btn = document.querySelector('#content-ss .update-section-btn');
+    
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-small"></span> Updating...'; }
+    if (msgDiv) msgDiv.innerHTML = '<div class="info-msg">⏳ Updating Second Semester...</div>';
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+        const resultData = await response.json();
+        
+        if (resultData.status === 'success') {
+            showToast('Second Semester updated successfully!', 'success');
+            if (msgDiv) msgDiv.innerHTML = '<div class="success-msg">✅ Second Semester updated successfully!</div>';
+            await refreshStudentData();
+            setTimeout(() => cancelEdit('ss'), 1500);
+        } else {
+            throw new Error(resultData.message);
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        if (msgDiv) msgDiv.innerHTML = `<div class="error-msg">❌ Update failed: ${error.message}</div>`;
+        showToast('Update failed: ' + error.message, 'error');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '💾 Update Changes'; }
+    }
+}
+
+async function submitAttendanceUpdate() {
+    const formData = new URLSearchParams();
+    formData.append('action', 'update');
+    formData.append('spreadsheetId', SPREADSHEET_ID);
+    formData.append('sheetName', SHEET_NAME);
+    formData.append('rowIndex', currentRowIndex);
+    
+    // Preserve ALL existing data
+    const preserveFields = ['Student Name', 'G.R. No', 'Std', 'Div', 'Roll No', 'Father Name', 'Occupation', 
+        'Mother Name', 'Medium', 'Birth Date', 'Address', 'Tel No', 'Weight', 'Height', 'Academic Year', 'Sr. No'];
+    
+    preserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve FS data
+    const fsPreserveFields = [
+        'FS English', 'FS Eng Total Marks', 'FS Eng Actual Marks', 'FS Hindi', 'FS Hindi Total Marks', 'FS Hindi Actual Marks',
+        'FS Marathi', 'FS Mar Total Marks', 'FS Mar Actual Marks', 'FS Mathematics', 'FS Maths Total Marks', 'FS Maths Actual Marks',
+        'FS Social Sci', 'FS SocialSci Total Marks', 'FS SocialSci Actual Marks', 'FS General Science', 'FS GSci Total Marks', 'FS GSci Actual Marks',
+        'FS Arts', 'FS Arts Total Marks', 'FS Arts Actual Marks', 'FS Work Experience', 'FS WE Total Marks', 'FS WE Actual Marks',
+        'FS Physical Education', 'FS PE Total Marks', 'FS PE Actual Marks', 'FS Total Marks', 'FS Actual Marks',
+        'FS Special Progress', 'FS Good', 'FS Remarks', 'FS Result', 'FS Percentage', 'FS Grade', 'FS Reopen'
+    ];
+    
+    fsPreserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Preserve SS data
+    const ssPreserveFields = [
+        'SS English', 'SS Eng Total Marks', 'SS Eng Actual Marks', 'SS Hindi', 'SS Hindi Total Marks', 'SS Hindi Actual Marks',
+        'SS Marathi', 'SS Mar Total Marks', 'SS Mar Actual Marks', 'SS Mathematics', 'SS Maths Total Marks', 'SS Maths Actual Marks',
+        'SS Social Sci', 'SS SocialSci Total Marks', 'SS SocialSci Actual Marks', 'SS General Science', 'SS GSci Total Marks', 'SS GSci Actual Marks',
+        'SS Arts', 'SS Arts Total Marks', 'SS Arts Actual Marks', 'SS Work Experience', 'SS WE Total Marks', 'SS WE Actual Marks',
+        'SS Physical Education', 'SS PE Total Marks', 'SS PE Actual Marks', 'SS Total Marks', 'SS Actual Marks',
+        'SS Special Progress', 'SS Good', 'SS Remarks', 'SS Result', 'SS Percentage', 'SS Grade', 'SS Reopen'
+    ];
+    
+    ssPreserveFields.forEach(field => {
+        formData.append(field, currentStudentData[field] || '');
+    });
+    
+    // Update Attendance data from form
+    const months = ['June', 'July', 'August', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+    
+    months.forEach(month => {
+        formData.append(`WD ${month}`, document.getElementById(`WD_${month}`)?.value || '');
+        formData.append(`PD ${month}`, document.getElementById(`PD_${month}`)?.value || '');
+        formData.append(`CS ${month}`, document.getElementById(`CS_${month}`)?.value || '');
+    });
+    
+    formData.append('Gr. Sign 1', document.getElementById('GS_1')?.value || '');
+    formData.append('Gr. Sign 2', document.getElementById('GS_2')?.value || '');
+    formData.append('Gr. Sign 3', document.getElementById('GS_3')?.value || '');
+    formData.append('H.M 1', document.getElementById('HM_1')?.value || '');
+    formData.append('H.M 2', document.getElementById('HM_2')?.value || '');
+    formData.append('H.M 3', document.getElementById('HM_3')?.value || '');
+    
+    formData.append('Working Day 1', 'Term 1 (June, July, August)');
+    formData.append('Working Day 2', 'Term 2 (September, October, November)');
+    formData.append('Working Day 3', 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Present Day 1', 'Term 1 (June, July, August)');
+    formData.append('Present Day 2', 'Term 2 (September, October, November)');
+    formData.append('Present Day 3', 'Term 3 (December, January, February, March, April, May)');
+    formData.append('Class T. Sign 1', 'Term 1 (June, July, August)');
+    formData.append('Class T. Sign 2', 'Term 2 (September, October, November)');
+    formData.append('Class T. Sign 3', 'Term 3 (December, January, February, March, April, May)');
+    
+    const msgDiv = document.getElementById('attendanceEditMessage');
+    const btn = document.querySelector('#content-attendance .update-section-btn');
+    
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner-small"></span> Updating...'; }
+    if (msgDiv) msgDiv.innerHTML = '<div class="info-msg">⏳ Updating Attendance...</div>';
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showToast('Attendance updated successfully!', 'success');
+            if (msgDiv) msgDiv.innerHTML = '<div class="success-msg">✅ Attendance updated successfully!</div>';
+            await refreshStudentData();
+            setTimeout(() => cancelEdit('attendance'), 1500);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        if (msgDiv) msgDiv.innerHTML = `<div class="error-msg">❌ Update failed: ${error.message}</div>`;
+        showToast('Update failed: ' + error.message, 'error');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '💾 Update Changes'; }
+    }
+}
+
+// =====================================================
+// 🔄 HELPER FUNCTIONS
+// =====================================================
+
+async function refreshStudentData() {
+    const response = await fetch(`${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}`);
+    const result = await response.json();
+    if (result.status === "success" && result.data) {
+        const updated = result.data.find(r => r['Student Name'] === currentStudentData['Student Name'] && r['G.R. No'] === currentStudentData['G.R. No']);
+        if (updated) {
+            currentStudentData = updated;
+            allStudentsData = result.data;
+            filteredData = [...allStudentsData];
+        }
+        if (document.getElementById('searchPage').style.display !== 'none') {
+            displayStudentsTable(filteredData);
+        } else {
+            renderFullDetailsPage(currentStudentData);
+        }
+    }
+}
+
+function cancelEdit(section) {
+    if (section === 'profile') renderProfileView(currentStudentData);
+    else if (section === 'fs') renderFSView(currentStudentData);
+    else if (section === 'ss') renderSSView(currentStudentData);
+    else if (section === 'attendance') renderAttendanceView(currentStudentData);
+    
+    const content = document.getElementById(`content-${section}`);
+    if (content) content.style.maxHeight = content.scrollHeight + "px";
+}
+
+function handleCollapse(clicked) {
+    const sections = ['profile', 'fs', 'ss', 'attendance'];
+    sections.forEach(section => {
+        const content = document.getElementById(`content-${section}`);
+        const button = document.querySelector(`.collapsible[data-section="${section}"]`);
+        if (content && button) {
+            if (section === clicked) {
+                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                    content.style.maxHeight = null;
+                    button.classList.remove('active');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    button.classList.add('active');
+                }
+            } else {
+                content.style.maxHeight = null;
+                button.classList.remove('active');
+            }
+        }
+    });
+}
+
+// =====================================================
+// 🔥 MODAL FUNCTIONS
+// =====================================================
+
+function openModal(semester, field) {
+    let modal = document.getElementById('modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3 id="modalTitle">Enter Details</h3>
+                <textarea id="modalInput" rows="4" placeholder="Type your content here..."></textarea>
+                <div class="modal-buttons">
+                    <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button id="modalSaveBtn" style="background:#2563eb; color:white; border:none; padding:10px 20px; border-radius:40px;">Save</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    
+    const modalEl = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalInput = document.getElementById('modalInput');
+    
+    let existingValue = '';
+    if (semester === 'FS') {
+        if (field === 'Special Progress') existingValue = fsSpecialProgress;
+        else if (field === 'Good') existingValue = fsGood;
+        else if (field === 'Remarks') existingValue = fsRemarks;
+    } else {
+        if (field === 'Special Progress') existingValue = ssSpecialProgress;
+        else if (field === 'Good') existingValue = ssGood;
+        else if (field === 'Remarks') existingValue = ssRemarks;
+    }
+    
+    if (modalTitle) modalTitle.innerText = `${semester} Semester - ${field}`;
+    if (modalInput) modalInput.value = existingValue || '';
+    if (modalEl) modalEl.style.display = 'flex';
+    
+    const saveBtn = document.getElementById('modalSaveBtn');
+    if (saveBtn) saveBtn.onclick = () => saveModalData(semester, field);
+}
+
+function saveModalData(semester, field) {
+    const modalInput = document.getElementById('modalInput');
+    const value = modalInput ? modalInput.value : '';
+    
+    if (semester === 'FS') {
+        if (field === 'Special Progress') fsSpecialProgress = value;
+        else if (field === 'Good') fsGood = value;
+        else if (field === 'Remarks') fsRemarks = value;
+    } else {
+        if (field === 'Special Progress') ssSpecialProgress = value;
+        else if (field === 'Good') ssGood = value;
+        else if (field === 'Remarks') ssRemarks = value;
+    }
+    
+    closeModal();
+    showToast(`${field} saved!`, 'success');
+}
+
+function closeModal() {
+    const modal = document.getElementById('modal');
+    if (modal) modal.style.display = 'none';
+    const modalInput = document.getElementById('modalInput');
+    if (modalInput) modalInput.value = '';
+}
+
+// =====================================================
+// 🗑️ DELETE FUNCTIONS
+// =====================================================
+
+function confirmDeleteRecord() {
+    pendingDeleteRow = currentRowIndex;
+    const modal = document.getElementById('deleteModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+async function executeDelete() {
+    if (!pendingDeleteRow) return;
+    
+    const formData = new URLSearchParams();
+    formData.append('action', 'delete');
+    formData.append('spreadsheetId', SPREADSHEET_ID);
+    formData.append('sheetName', SHEET_NAME);
+    formData.append('rowIndex', pendingDeleteRow);
+    
+    try {
+        const response = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            showToast('Record deleted successfully!', 'success');
+            closeDeleteModal();
+            setTimeout(() => goBackToSearch(), 1500);
+        } else {
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        console.error('Delete error:', error);
+        showToast('Delete failed: ' + error.message, 'error');
+        closeDeleteModal();
+    }
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    if (modal) modal.style.display = 'none';
+    pendingDeleteRow = null;
+}
+
+function goBackToSearch() {
+    document.getElementById('searchPage').style.display = 'block';
+    document.getElementById('detailsPage').style.display = 'none';
+    loadAllStudents();
+    currentStudentData = null;
+    currentRowIndex = null;
+}
+  
+// =====================================================
+// 🖨️ PRINT PROGRESS CARD FUNCTION
+// =====================================================
+
+    // PRINT PROGRESS CARD with formatted values
+    window.openPrintProgressCard = function() {
+        if (!currentStudentData) { alert("No student data loaded."); return; }
+        const s = currentStudentData;
+        const months = ['June','July','August','Sept','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'];
+        const workingDays = months.map(m => formatValue(s[`WD ${m}`]));
+        const presentDays = months.map(m => formatValue(s[`PD ${m}`]));
+        const classSign = months.map(m => formatValue(s[`CS ${m}`]));
+        const grSigns = [formatValue(s['Gr. Sign 1']), formatValue(s['Gr. Sign 2']), formatValue(s['Gr. Sign 3'])];
+        const hms = [formatValue(s['H.M 1']), formatValue(s['H.M 2']), formatValue(s['H.M 3'])];
+        const gradeRows = [['91–100','A1'],['81–90','A2'],['71–80','B1'],['61–70','B2'],['51–60','C1'],['41–50','C2'],['33–40','D'],['21–32','E1'],['≤20','E2']];
+        
+        const cardHTML = `
+            <div style="background:#FFF9E8; max-width:1200px; margin:0 auto; font-family:'Segoe UI',Arial; border:2px solid #FACC15; border-radius:20px; overflow:hidden;">
+    <div style="text-align:center; padding:20px 12px 8px; background:#FFF3C9;">
+        <img src="https://lh3.googleusercontent.com/d/1u13dHmgIekeaDo-EL_d60aLMESkdgEds" alt="Logo" style="height:70px;">
+        <div style="font-size:24px; font-weight:800; color:#B45309;">SHARDHA ENGLISH HIGH SCHOOL</div>
+        <div style="font-size:16px; font-weight:600; color:#92400E; border-bottom:2px solid #FBBF24; display:inline-block;">STUDENT'S PROGRESS CARD</div>
+    </div>
+                <div style="display:flex; flex-wrap:wrap; padding:16px 20px; gap:24px; background:#FFFDF5;">
+                    <!-- PRESENTATION SECTION - BLANK INSTEAD OF DASHES -->
+<div style="flex:1; min-width:280px;">
+    <div style="background:#FEF3C7; padding:8px; border-radius:12px; text-align:center; font-weight:800;">PRESENTATION</div>
+    <table style="width:100%; border-collapse:collapse; border:1px solid #FCD34D; font-size:12px;">
+        <thead>
+            <tr style="background:#FDE68A;">
+                <th style="border:1px solid #FCD34D; padding:6px 2px; width:90px;">Description</th>
+                ${months.map(m => `<th style="border:1px solid #FCD34D; padding:6px 2px;">${m}</th>`).join('')}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Working Days Row - Blank instead of dash -->
+            <tr>
+                <td style="border:1px solid #FCD34D; font-weight:700; background:#FEF3C7;">Working Days</td>
+                ${workingDays.map(v => `<td style="border:1px solid #FCD34D; text-align:center;">${(v === null || v === undefined || v === '' || v === '—') ? ' ' : v}</td>`).join('')}
+            </tr>
+            <!-- Present Days Row - Blank instead of dash -->
+            <tr>
+                <td style="border:1px solid #FCD34D; font-weight:700; background:#FEF3C7;">Present Days</td>
+                ${presentDays.map(v => `<td style="border:1px solid #FCD34D; text-align:center;">${(v === null || v === undefined || v === '' || v === '—') ? ' ' : v}</td>`).join('')}
+            </tr>
+            <!-- Class T. Sign Row - Blank instead of dash -->
+            <tr>
+                <td style="border:1px solid #FCD34D; font-weight:700; background:#FEF3C7;">Class T. Sign</td>
+                ${classSign.map(v => `<td style="border:1px solid #FCD34D; text-align:center;">${(v === null || v === undefined || v === '' || v === '—') ? ' ' : v}</td>`).join('')}
+            </tr>
+            <!-- Gr. Sign Row -->
+<tr>
+    <td style="border:1px solid #FCD34D; font-weight:700; background:#FEF3C7;">
+        Gr. Sign
+    </td>
+
+    <td colspan="3" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!grSigns[0] || ['—','-','{-}','–'].includes(String(grSigns[0]).trim())) ? '&nbsp;' : grSigns[0]}
+    </td>
+
+    <td colspan="3" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!grSigns[1] || ['—','-','{-}','–'].includes(String(grSigns[1]).trim())) ? '&nbsp;' : grSigns[1]}
+    </td>
+
+    <td colspan="6" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!grSigns[2] || ['—','-','{-}','–'].includes(String(grSigns[2]).trim())) ? '&nbsp;' : grSigns[2]}
+    </td>
+</tr>
+
+
+<!-- H.M. Row -->
+       <tr>
+    <td style="border:1px solid #FCD34D; font-weight:700; background:#FEF3C7;">
+        H.M.
+    </td>
+
+    <td colspan="3" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!hms[0] || ['—','-','{-}','–'].includes(String(hms[0]).trim())) ? '&nbsp;' : hms[0]}
+    </td>
+
+    <td colspan="3" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!hms[1] || ['—','-','{-}','–'].includes(String(hms[1]).trim())) ? '&nbsp;' : hms[1]}
+    </td>
+
+    <td colspan="6" style="border:1px solid #FCD34D; text-align:center;">
+        ${(!hms[2] || ['—','-','{-}','–'].includes(String(hms[2]).trim())) ? '&nbsp;' : hms[2]}
+    </td>
+</tr>
+        </tbody>
+    </table>
+    
+    <!-- GRADE SCHEME SECTION -->
+    <div style="margin-top:16px;">
+        <div style="background:#FEF3C7; text-align:center; font-weight:700;">GRADE SCHEME</div>
+        <table style="width:100%; border-collapse:collapse; border:1px solid #FCD34D;">
+            ${gradeRows.map(([r, g]) => `
+            <tr>
+                <td style="border:1px solid #FCD34D; padding:6px;">${r}</td>
+                <td style="border:1px solid #FCD34D; text-align:center; padding:6px;">${g}</td>
+            </tr>`).join('')}
+        </table>
+    </div>
+</div>
+                     <!-- RIGHT COLUMN: ENHANCED STUDENT DETAILS WITH GRID -->
+        <div style="flex:1; min-width:380px;">
+            <div style="background:#FEF3C7; padding:8px; border-radius:8px; text-align:center; font-weight:800; margin-bottom: 10px;">STUDENT DETAILS</div>
+            
+            <!-- Academic Year Header -->
+            <div style="background:#FFF9EE; border:1px solid #FDE68A; border-radius:16px; overflow:hidden;">
+                <div style="background:#FEF3C7; padding:10px 16px; border-bottom:2px solid #FDE68A; font-weight:800; color:#B45309; text-align:center;">
+                    📅 ACADEMIC YEAR: ${formatValue(s['Academic Year'])}
+                </div>
+                
+                <!-- GRID LAYOUT FOR STUDENT DETAILS -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0; padding:0;">
+                    
+                    <!-- Student Name (Full Width) -->
+                    <div style="grid-column:1/-1; display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:120px; color:#92400E;">👨‍🎓 Student Name:</strong>
+                        <span style="flex:1;">${formatValue(s['Student Name'])}</span>
+                    </div>
+                    
+                    <!-- G.R. No -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">🆔 G.R. No:</strong>
+                        <span>${formatValue(s['G.R. No'])}</span>
+                    </div>
+                    
+                    <!-- Std -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">📚 Std:</strong> 
+						  <span>${formatValue(s['Std'])}</span>
+                    </div>
+					
+					<!-- Div -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">📌 Div:</strong>
+                        <span>${formatValue(s['Div'])}</span>
+                    </div>
+					
+					<!-- Roll No -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">🔢 Roll:</strong>
+                        <span>${formatValue(s['Roll No'])}</span>
+                    </div>
+                    
+                    <!-- Father Name -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">👨 Father:</strong>
+                        <span>${formatValue(s['Father Name'])}</span>
+                    </div>
+                    
+                    <!-- Occupation -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">💼 Occupation:</strong>
+                        <span>${formatValue(s['Occupation'])}</span>
+                    </div>
+                    
+                    <!-- Mother Name -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">👩 Mother:</strong>
+                        <span>${formatValue(s['Mother Name'])}</span>
+                    </div>
+                    
+                    <!-- Medium -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">🗣️ Medium:</strong>
+                        <span>${formatValue(s['Medium'])}</span>
+                    </div>
+                    
+                    <!-- Birth Date -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">🎂 Birth Date:</strong>
+                        <span>${formatValue(s['Birth Date'])}</span>
+                    </div>
+                    
+                    <!-- Tel No -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">📞 Tel No:</strong>
+                        <span>${formatValue(s['Tel No'])}</span>
+                    </div>
+                    
+                    <!-- Weight -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; border-right:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">⚖️ Weight:</strong>
+                        <span>${formatValue(s['Weight'])} kg</span>
+                    </div>
+                    
+                    <!-- Height -->
+                    <div style="display:flex; padding:10px 12px; border-bottom:1px solid #FDE68A; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:80px; color:#92400E;">📏 Height:</strong>
+                        <span>${formatValue(s['Height'])} cm</span>
+                    </div>
+                    
+                    <!-- Address (Full Width) -->
+                    <div style="grid-column:1/-1; display:flex; padding:10px 12px; background:#FFFDF5; gap:8px;">
+                        <strong style="min-width:120px; color:#92400E;">📍 Address:</strong>
+                        <span style="flex:1;">${formatValue(s['Address'])}</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`;
+
+   const semesterPageHTML = `
+<div style="background:#FFF9E8; width:100%; height:100vh; margin:0 auto; font-family:'Segoe UI',Arial; border:2px solid #FACC15; border-radius:20px; overflow:hidden; display:flex; flex-direction:column;">
+    
+    <!-- HEADER SECTION (Fixed) -->
+    <div style="text-align:center; padding:12px 12px 6px 12px; background:#FFF3C9; flex-shrink:0;">
+        <img src="https://lh3.googleusercontent.com/d/1u13dHmgIekeaDo-EL_d60aLMESkdgEds" alt="Logo" style="height:50px;">
+        <div style="font-size:18px; font-weight:800; color:#B45309;">SHARDHA ENGLISH HIGH SCHOOL</div>
+        <div style="font-size:12px; font-weight:600; color:#92400E; border-bottom:2px solid #FBBF24; display:inline-block;">STUDENT'S PROGRESS CARD - ACADEMIC PERFORMANCE</div>
+    </div>
+    
+    <!-- MAIN CONTENT - FLEX GROW TO FILL FULL HEIGHT -->
+    <div style="display:flex; gap:16px; padding:12px 16px; background:#FFFDF5; flex:1; min-height:0;">
+
+        <!-- ================= FIRST SEMESTER ================= (Full Height) -->
+        <div style="flex:1; border:2px solid #FCD34D; border-radius:12px; padding:0; background:#FFFDF5; overflow:hidden; display:flex; flex-direction:column; height:100%;">
+            
+            <div style="text-align:center; font-weight:800; font-size:16px; background:#FEF3C7; padding:10px; border-bottom:2px solid #FCD34D; color:#B45309; flex-shrink:0;">
+                📖 FIRST SEMESTER
+            </div>
+            
+            <!-- Scrollable/Full Table Container -->
+            <div style="flex:1; overflow-y:auto; padding:8px;">
+                <table style="width:100%; border-collapse:collapse; font-size:15px; table-layout:auto;">
+                    <thead>
+                        <tr style="background:#FEF3C7; position:sticky; top:0;">
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:35px;">Sr. No</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px;">Subject</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:50px;">Total</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:50px;">Actual</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px;">Descriptive Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${[
+                            ['English', 'Eng'],
+                            ['Hindi', 'Hindi'],
+                            ['Marathi', 'Mar'],
+                            ['Mathematics', 'Maths'],
+							['General Science', 'GSci'],
+                            ['Social Science', 'SocialSci'],
+                            ['Arts', 'Arts'],
+                            ['Work Experience', 'WE'],
+                            ['Physical Education', 'PE']
+                        ].map((sub, i) => `
+                        <tr>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${i+1}</td>
+                            <td style="border:1px solid #FCD34D; padding:5px 4px; font-weight:500;">${sub[0]}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${s[`FS ${sub[1]} Total Marks`] && s[`FS ${sub[1]} Total Marks`] !== '—' ? s[`FS ${sub[1]} Total Marks`] : ''}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${s[`FS ${sub[1]} Actual Marks`] && s[`FS ${sub[1]} Actual Marks`] !== '—' ? s[`FS ${sub[1]} Actual Marks`] : ''}</td>
+                            ${i === 0 ? `
+                            <td rowspan="10" style="border:1px solid #FCD34D; vertical-align:top; padding:6px; background:#FFFBF0;">
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">✨ SPECIAL PROGRESS</div>
+                                <div style="margin-bottom:12px; font-size:13px; line-height:1.3;">${s['FS Special Progress'] && s['FS Special Progress'] !== '—' ? s['FS Special Progress'] : '—'}</div>
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">⭐ GOOD</div>
+                                <div style="margin-bottom:12px; font-size:13px; line-height:1.3;">${s['FS Good'] && s['FS Good'] !== '—' ? s['FS Good'] : '—'}</div>
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">📝 REMARKS</div>
+                                <div style="font-size:13px; line-height:1.3;">${s['FS Remarks'] && s['FS Remarks'] !== '—' ? s['FS Remarks'] : '—'}</div>
+                            </td>
+                            ` : ''}
+                        </tr>
+                        `).join('')}
+                        
+                        <!-- TOTAL ROW -->
+                        <tr style="background:#FEF3C7;">
+                            <td style="border:1px solid #FCD34D;" colspan="2"><strong>📊 TOTAL</strong></td>
+                            <td style="border:1px solid #FCD34D; text-align:center; font-weight:700;">${s['FS Total Marks'] && s['FS Total Marks'] !== '—' ? s['FS Total Marks'] : ''}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; font-weight:700;">${s['FS Actual Marks'] && s['FS Actual Marks'] !== '—' ? s['FS Actual Marks'] : ''}</td>
+                            <td style="border:1px solid #FCD34D;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- RESULT SECTION (Sticks to bottom) -->
+                <div style="margin-top:12px; background:#FEF3C7; padding:10px; border-radius:8px;">
+                    <div style="font-weight:700; font-size:15px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                        <span>✅ Result: <strong>${s['FS Result'] && s['FS Result'] !== '—' ? s['FS Result'] : '______'}</strong></span>
+                        <span>📊 Percentage: <strong>${s['FS Percentage'] && s['FS Percentage'] !== '—' ? s['FS Percentage'] : ''}%</strong></span>
+                        <span>🏆 Grade: <strong>${s['FS Grade'] && s['FS Grade'] !== '—' ? s['FS Grade'] : '______'}</strong></span>
+                    </div>
+                    <div style="margin-top:15px; font-size:15px;">
+                        📅 School re-open on: <strong>${s['FS Reopen'] && s['FS Reopen'] !== '—' ? s['FS Reopen'] : '______'}</strong>
+                    </div>
+                </div>
+                
+                <!-- SIGNATURES SECTION -->
+                <div style="margin-top:60px; display:flex; justify-content:space-between; padding-top:10px; font-size:15px;">
+                    <span>👨‍🏫 Class T. Sign: </span>
+                    <span>👩‍🎓 H.M. Sign: </span>
+                    <span>👪 Parents Sign: </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SECOND SEMESTER ================= (Full Height) -->
+        <div style="flex:1; border:2px solid #FCD34D; border-radius:12px; padding:0; background:#FFFDF5; overflow:hidden; display:flex; flex-direction:column; height:100%;">
+            
+            <div style="text-align:center; font-weight:800; font-size:16px; background:#FEF3C7; padding:10px; border-bottom:2px solid #FCD34D; color:#B45309; flex-shrink:0;">
+                📚 SECOND SEMESTER
+            </div>
+            
+            <!-- Scrollable/Full Table Container -->
+            <div style="flex:1; overflow-y:auto; padding:8px;">
+                <table style="width:100%; border-collapse:collapse; font-size:15px; table-layout:auto;">
+                    <thead>
+                        <tr style="background:#FEF3C7; position:sticky; top:0;">
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:35px;">Sr. No</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px;">Subject</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:50px;">Total</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px; width:50px;">Actual</th>
+                            <th style="border:1px solid #FCD34D; padding:6px 2px;">Descriptive Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${[
+                            ['English', 'Eng'],
+                            ['Hindi', 'Hindi'],
+                            ['Marathi', 'Mar'],
+                            ['Mathematics', 'Maths'],
+							['General Science', 'GSci'],
+                            ['Social Science', 'SocialSci'],
+                            ['Arts', 'Arts'],
+                            ['Work Experience', 'WE'],
+                            ['Physical Education', 'PE']
+                        ].map((sub, i) => `
+                        <tr>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${i+1}</td>
+                            <td style="border:1px solid #FCD34D; padding:5px 4px; font-weight:500;">${sub[0]}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${s[`SS ${sub[1]} Total Marks`] && s[`SS ${sub[1]} Total Marks`] !== '—' ? s[`SS ${sub[1]} Total Marks`] : ''}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; padding:5px 2px;">${s[`SS ${sub[1]} Actual Marks`] && s[`SS ${sub[1]} Actual Marks`] !== '—' ? s[`SS ${sub[1]} Actual Marks`] : ''}</td>
+                            ${i === 0 ? `
+                            <td rowspan="10" style="border:1px solid #FCD34D; vertical-align:top; padding:6px; background:#FFFBF0;">
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">✨ SPECIAL PROGRESS</div>
+                                <div style="margin-bottom:12px; font-size:13px; line-height:1.3;">${s['SS Special Progress'] && s['SS Special Progress'] !== '—' ? s['SS Special Progress'] : '—'}</div>
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">⭐ GOOD</div>
+                                <div style="margin-bottom:12px; font-size:13px; line-height:1.3;">${s['SS Good'] && s['SS Good'] !== '—' ? s['SS Good'] : '—'}</div>
+                                <div style="font-weight:700; font-size:15px; color:#92400E; border-bottom:1px solid #FCD34D; margin-bottom:8px;">📝 REMARKS</div>
+                                <div style="font-size:13px; line-height:1.3;">${s['SS Remarks'] && s['SS Remarks'] !== '—' ? s['SS Remarks'] : '—'}</div>
+                            </td>
+                            ` : ''}
+                        </tr>
+                        `).join('')}
+                        
+                        <!-- TOTAL ROW -->
+                        <tr style="background:#FEF3C7;">
+                            <td style="border:1px solid #FCD34D;" colspan="2"><strong>📊 TOTAL</strong></td>
+                            <td style="border:1px solid #FCD34D; text-align:center; font-weight:700;">${s['SS Total Marks'] && s['SS Total Marks'] !== '—' ? s['SS Total Marks'] : ''}</td>
+                            <td style="border:1px solid #FCD34D; text-align:center; font-weight:700;">${s['SS Actual Marks'] && s['SS Actual Marks'] !== '—' ? s['SS Actual Marks'] : ''}</td>
+                            <td style="border:1px solid #FCD34D;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- RESULT SECTION (Sticks to bottom) -->
+                <div style="margin-top:12px; background:#FEF3C7; padding:10px; border-radius:8px;">
+                    <div style="font-weight:700; font-size:15px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                        <span>✅ Result: <strong>${s['SS Result'] && s['SS Result'] !== '—' ? s['SS Result'] : '______'}</strong></span>
+                        <span>📊 Percentage: <strong>${s['SS Percentage'] && s['SS Percentage'] !== '—' ? s['SS Percentage'] : ''}%</strong></span>
+                        <span>🏆 Grade: <strong>${s['SS Grade'] && s['SS Grade'] !== '—' ? s['SS Grade'] : '______'}</strong></span>
+                    </div>
+                    <div style="margin-top:15px; font-size:15px;">
+                        📅 School re-open on: <strong>${s['SS Reopen'] && s['SS Reopen'] !== '—' ? s['SS Reopen'] : '______'}</strong>
+                    </div>
+                </div>
+                
+                <!-- SIGNATURES SECTION -->
+                <div style="margin-top:60px; display:flex; justify-content:space-between; padding-top:10px; font-size:15px;">
+                    <span>👨‍🏫 Class T. Sign:</span>
+                    <span>👩‍🎓 H.M. Sign:</span>
+                    <span>👪 Parents Sign:</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`;
+   
+        const win = window.open('', '_blank', 'width=1100,height=800,toolbar=yes');
+        
+		win.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Progress Card - Complete Academic Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        /* A4 LANDSCAPE - 40px TOP and BOTTOM margins ONLY */
+        @page {
+            size: A4 landscape;
+            margin: 40px 0 40px 0;  /* TOP: 40px, RIGHT: 0, BOTTOM: 40px, LEFT: 0 */
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            .print-wrapper {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin: 0;
+                padding: 0;
+                height: auto;
+            }
+            
+            .print-wrapper:first-of-type {
+                margin-top: 0;
+            }
+            
+            /* Force full height for semester page */
+            .full-height-page {
+                height: 100vh;
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Print wrapper optimized for A4 landscape - FULL WIDTH */
+        .print-wrapper {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        /* Make semester page take full height */
+        .print-wrapper:last-child {
+            height: 100vh;
+        }
+        
+        /* Table cell text handling */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+        
+        th, td {
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+        
+        /* Force exact print colors */
+        div, table, tr, td, th {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE 1: ATTENDANCE + STUDENT DETAILS -->
+    <div class="print-wrapper">
+        ${cardHTML}
+    </div>
+    
+    <!-- PAGE 2: SEMESTER MARKS - FULL HEIGHT -->
+    <div class="print-wrapper full-height-page" style="page-break-before: always;">
+        ${semesterPageHTML}
+    </div>
+</body>
+</html>
+`);
+		
+win.document.close();
+win.focus();
+
+/* Delay ensures styles apply before print */
+setTimeout(() => {
+    win.print();
+}, 700);
+    };
+
+    window.onload = () => { loadAllStudents(); setupAutoSearch(); };
+    document.addEventListener('click', e => { if (e.target && e.target.id === 'confirmDeleteBtn') executeDelete(); });
+	
+	// =====================================================
+// 🚀 INITIALIZATION
+// =====================================================
+
+// Make functions globally available
+window.goBackToSearch = goBackToSearch;
+window.handleCollapse = handleCollapse;
+window.openEditForm = openEditForm;
+window.cancelEdit = cancelEdit;
+window.submitProfileUpdate = submitProfileUpdate;
+window.submitFSUpdate = submitFSUpdate;
+window.submitSSUpdate = submitSSUpdate;
+window.submitAttendanceUpdate = submitAttendanceUpdate;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.confirmDeleteRecord = confirmDeleteRecord;
+window.executeDelete = executeDelete;
+window.closeDeleteModal = closeDeleteModal;
+window.openPrintProgressCard = openPrintProgressCard;
+window.updateFSTotal = updateFSTotal;
+window.updateSSTotal = updateSSTotal;
+</script>
+</body>
+</html>

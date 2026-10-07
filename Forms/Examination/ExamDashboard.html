@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Exam Dashboard | Universal English Medium High School</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ⭐ loginadmin.js — handles authentication -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <style>
+        /* ================================================================
+           CSS VARIABLES - Light & Dark Mode
+           ================================================================ */
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-section: #ffffff;
+            --bg-header: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --accent-hover: #1d4ed8;
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --gradient-accent: linear-gradient(135deg, #2563eb, #7c3aed);
+            --logo-filter: none;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-light: rgba(239, 68, 68, 0.1);
+            --info: #06b6d4;
+            --transition: 0.3s ease;
+
+            /* ⭐ Exam accent = blue → indigo */
+            --exam-accent: #2563eb;
+            --exam-accent-soft: rgba(37, 99, 235, 0.08);
+            --exam-gradient: linear-gradient(135deg, #2563eb, #4f46e5);
+
+            --admin-gold: #f59e0b;
+            --admin-badge-bg: rgba(245, 158, 11, 0.15);
+
+            /* ── Fluid typography ── */
+            --fs-title:    clamp(1.15rem, 1rem + 1.5vw, 2rem);
+            --fs-section:  clamp(0.85rem, 0.75rem + 0.6vw, 1.25rem);
+            --fs-sub:      clamp(0.6rem, 0.55rem + 0.25vw, 0.78rem);
+            --fs-card:     clamp(0.72rem, 0.65rem + 0.4vw, 1.05rem);
+            --fs-desc:     clamp(0.58rem, 0.55rem + 0.2vw, 0.75rem);
+            --fs-badge:    clamp(0.45rem, 0.42rem + 0.15vw, 0.62rem);
+            --fs-chip:     clamp(0.6rem, 0.55rem + 0.25vw, 0.78rem);
+
+            /* ── Fluid icons ── */
+            --icon-page:    clamp(0.9rem, 0.8rem + 0.6vw, 1.5rem);
+            --icon-section: clamp(0.95rem, 0.85rem + 0.6vw, 1.5rem);
+            --icon-card:    clamp(1rem, 0.9rem + 0.8vw, 1.8rem);
+
+            /* ── Fluid spacing ── */
+            --pad-page:     clamp(0.5rem, 0.4rem + 1vw, 2rem);
+            --gap-grid:     clamp(0.5rem, 0.4rem + 0.8vw, 1.5rem);
+
+            /* ── Fluid card sizing ── */
+            --icon-box-size: clamp(34px, 28px + 3.5vw, 60px);
+            --icon-box-radius: clamp(9px, 7px + 0.8vw, 16px);
+            --card-radius:  clamp(11px, 8px + 1.2vw, 20px);
+            --card-min-h:   clamp(100px, 80px + 8vw, 180px);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-section: #111827;
+            --bg-header: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-hover: #60a5fa;
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --logo-filter: none;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --danger-light: rgba(239, 68, 68, 0.2);
+            --info: #22d3ee;
+
+            --exam-accent: #60a5fa;
+            --exam-accent-soft: rgba(96, 165, 250, 0.15);
+            --exam-gradient: linear-gradient(135deg, #3b82f6, #818cf8);
+
+            --admin-badge-bg: rgba(245, 158, 11, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background-color var(--transition), color var(--transition);
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+        }
+
+        /* ================================================================
+           LOADING OVERLAY
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--exam-accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           MAIN CONTENT
+           ================================================================ */
+        #mainContent { display: none; }
+        #mainContent.visible {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto 1.5rem auto;
+            padding: var(--pad-page);
+        }
+
+        /* ================================================================
+           PAGE TITLE ROW
+           ================================================================ */
+        .page-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: clamp(0.8rem, 0.6rem + 0.6vw, 1.5rem);
+            padding: clamp(0.5rem, 0.4rem + 0.5vw, 1rem) 0;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .page-title-row-1 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .page-title h1 {
+            font-size: var(--fs-title);
+            font-weight: 800;
+            background: var(--exam-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+            line-height: 1.15;
+        }
+
+        .page-title h1 i {
+            font-size: var(--icon-page);
+            color: var(--exam-accent);
+            background: var(--exam-accent-soft);
+            padding: clamp(5px, 0.4rem + 0.4vw, 9px);
+            border-radius: clamp(8px, 0.5rem + 0.3vw, 12px);
+            flex-shrink: 0;
+        }
+
+        .page-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .academic-year {
+            font-size: var(--fs-chip);
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 16px);
+            border-radius: 30px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        .admin-badge {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            background: var(--admin-badge-bg);
+            color: var(--admin-gold);
+            padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 12px);
+            border-radius: 30px;
+            font-size: var(--fs-chip);
+            font-weight: 700;
+            border: 1px solid var(--admin-gold);
+            white-space: nowrap;
+        }
+        .admin-badge.visible { display: inline-flex; }
+        .admin-badge i { font-size: var(--fs-chip); }
+        .admin-badge .session-pill {
+            font-size: calc(var(--fs-chip) * 0.8);
+            padding: 1px 5px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+
+        .btn-my-account {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 12px);
+            border-radius: 30px;
+            font-size: var(--fs-chip);
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn-my-account:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .btn-my-account i { font-size: var(--fs-chip); }
+
+        /* ================================================================
+           SECTION HEADERS
+           ================================================================ */
+        .section-header {
+            background: var(--bg-section);
+            border-radius: clamp(11px, 8px + 1vw, 18px);
+            padding: clamp(0.55rem, 0.4rem + 0.5vw, 1rem) clamp(0.7rem, 0.5rem + 0.6vw, 1.5rem);
+            margin: clamp(1rem, 0.8rem + 0.8vw, 2rem) 0 clamp(0.6rem, 0.5rem + 0.4vw, 1rem) 0;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 0.4rem + 0.4vw, 0.9rem);
+        }
+        .section-header .section-icon {
+            font-size: var(--icon-section);
+            color: var(--exam-accent);
+            background: var(--exam-accent-soft);
+            width: clamp(30px, 26px + 2vw, 46px);
+            height: clamp(30px, 26px + 2vw, 46px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: clamp(8px, 6px + 0.5vw, 12px);
+            flex-shrink: 0;
+        }
+        .section-header .section-info { flex: 1; min-width: 0; }
+        .section-header .section-title {
+            font-size: var(--fs-section);
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        .section-header .section-sub {
+            font-size: var(--fs-sub);
+            color: var(--text-muted);
+            font-weight: 500;
+            display: block;
+            margin-top: 1px;
+        }
+        .section-header .section-badge {
+            background: var(--exam-accent-soft);
+            color: var(--exam-accent);
+            padding: 2px clamp(8px, 0.6rem + 0.4vw, 12px);
+            border-radius: 30px;
+            font-size: var(--fs-badge);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ================================================================
+           EXAM GRID
+           ================================================================ */
+        .exam-grid {
+            display: grid;
+            gap: var(--gap-grid);
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        }
+
+        .card-link { text-decoration: none; display: block; height: 100%; }
+
+        .exam-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--card-radius);
+            padding: clamp(0.7rem, 0.5rem + 0.8vw, 1.75rem) clamp(0.5rem, 0.4rem + 0.4vw, 1.2rem);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            height: 100%;
+            min-height: var(--card-min-h);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--exam-gradient);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .exam-card:active::before { opacity: 1; }
+        .exam-card:active { transform: scale(0.97); }
+
+        .card-icon {
+            font-size: var(--icon-card);
+            color: var(--exam-accent);
+            background: var(--exam-accent-soft);
+            width: var(--icon-box-size);
+            height: var(--icon-box-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--icon-box-radius);
+            margin: 0 auto clamp(0.3rem, 0.25rem + 0.3vw, 0.8rem);
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+        .card-title {
+            font-size: var(--fs-card);
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.15rem;
+            line-height: 1.2;
+        }
+        .card-description {
+            font-size: var(--fs-desc);
+            color: var(--text-muted);
+            line-height: 1.3;
+            display: block;
+        }
+        .card-badge {
+            display: inline-block;
+            margin-top: clamp(0.25rem, 0.2rem + 0.2vw, 0.5rem);
+            font-size: var(--fs-badge);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px clamp(8px, 0.6rem + 0.4vw, 12px);
+            border-radius: 30px;
+            background: var(--exam-accent-soft);
+            color: var(--exam-accent);
+            transition: all var(--transition);
+        }
+        .exam-card:active .card-badge {
+            background: var(--exam-gradient);
+            color: white;
+        }
+
+        /* ── Card color variants ── */
+        .exam-card.generator .card-icon {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+        .exam-card.generator:active .card-icon {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .exam-card.assign .card-icon {
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.12);
+        }
+        .exam-card.assign:active .card-icon {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+        }
+
+        /* ================================================================
+           DESKTOP HOVER
+           ================================================================ */
+        @media (min-width: 1024px) {
+            .exam-grid { grid-template-columns: repeat(3, 1fr); }
+            .exam-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+            .exam-card:hover::before { opacity: 1; }
+            .exam-card:hover .card-icon { background: var(--exam-gradient); color: white; transform: scale(1.05); }
+            .exam-card:hover .card-badge { background: var(--exam-gradient); color: white; }
+            .exam-card.generator:hover .card-icon { background: var(--gradient-accent); color: white; }
+            .exam-card.assign:hover .card-icon { background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; }
+        }
+
+        /* ── Responsive grid ── */
+        @media (max-width: 400px) {
+            .exam-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.45rem;
+            }
+            .main-content { padding: 0.6rem; }
+        }
+
+        @media (max-width: 600px) {
+            .exam-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (min-width: 601px) and (max-width: 1023px) {
+            .exam-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .exam-grid { grid-template-columns: repeat(4, 1fr); }
+            .section-header { margin: 0.6rem 0 0.4rem 0; }
+        }
+
+        @media (hover: none) {
+            .exam-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+            .exam-card:hover::before { opacity: 0; }
+            .exam-card:active { transform: scale(0.97); }
+            .exam-card:active::before { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY (Admin Auth) -->
+    <!-- ================================================================ -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT (Hidden until authenticated) -->
+    <!-- ================================================================ -->
+    <div id="mainContent">
+
+        <main class="main-content">
+
+            <!-- PAGE TITLE + META ROW -->
+            <div class="page-title">
+                <div class="page-title-row-1">
+                    <h1>
+                        <i class="fas fa-file-pen"></i> Exam Dashboard
+                    </h1>
+                </div>
+                <div class="page-meta-row">
+                    <span class="academic-year" id="academicYearDisplay">
+                        <i class="far fa-calendar-alt"></i> 2026-27
+                    </span>
+                    <span class="admin-badge" id="adminBadge">
+                        <i class="fas fa-user-shield"></i>
+                        <span id="adminNameDisplay">Admin</span>
+                        <span class="session-pill" id="sessionIndicator">Session</span>
+                    </span>
+                    <a href="../../Study Material/My Account/myaccount.html" class="btn-my-account">
+                        <i class="fas fa-user-circle"></i> My Account
+                    </a>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SECTION: EXAM RECORD
+                 ============================================================ -->
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-file-signature"></i></div>
+                <div class="section-info">
+                    <div class="section-title">Exam Record</div>
+                    <span class="section-sub">Manage Question Papers &amp; Assignments</span>
+                </div>
+                <span class="section-badge">2</span>
+            </div>
+
+            <div class="exam-grid">
+                <a href="QuestionGenerator.html" class="card-link">
+                    <div class="exam-card generator">
+                        <div class="card-icon"><i class="fas fa-file-circle-plus"></i></div>
+                        <h3 class="card-title">Question Paper Generator</h3>
+                        <p class="card-description">Create new question papers</p>
+                        <span class="card-badge">Generate</span>
+                    </div>
+                </a>
+
+                <a href="Marks.html" class="card-link">
+                    <div class="exam-card assign">
+                        <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <h3 class="card-title">Assign Paper</h3>
+                        <p class="card-description">Assign papers to students</p>
+                        <span class="card-badge">Assign</span>
+                    </div>
+                </a>
+				<a href="8_9_10th_Std_Result.html" class="card-link">
+                    <div class="exam-card assign">
+                        <div class="card-icon"><i class="fas fa-list-alt"></i></div>
+                        <h3 class="card-title">Add Marks</h3>
+                        <p class="card-description">8th 9th and 10th Student Marks Entry</p>
+                        <span class="card-badge">Assign</span>
+                    </div>
+                </a>
+            </div>
+
+        </main>
+    </div>
+
+<script>
+/* =====================================================================
+   ExamDashboard.html — Same auth gate as Staffdashboard.html
+   ===================================================================== */
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTHENTICATION GUARD
+   ===================================================================== */
+
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k);
+            sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function updateAdminBadge() {
+    const userData = readMyAccountSession('Universal_user_data');
+    const user = readMyAccountSession('Universal_user');
+    const expiry = readMyAccountSession('Universal_session_expiry');
+
+    const badge = document.getElementById('adminBadge');
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) {
+        displayName = user;
+    }
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+    if (badge) badge.classList.add('visible');
+
+    if (indicator) {
+        const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = expiry - Date.now();
+            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+function revealMainContent() {
+    const main = document.getElementById('mainContent');
+    const loading = document.getElementById('authLoading');
+    if (loading) loading.classList.add('hidden');
+    if (main) {
+        main.style.display = 'block';
+        main.classList.add('visible');
+    }
+}
+
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+    const alreadyRevealed = mainEl &&
+        (mainEl.style.display === 'block' || mainEl.classList.contains('visible'));
+    const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+    if (alreadyRevealed || loadingHidden) {
+        console.log('✅ loginadmin.js already authorized this session');
+        onAuthorized();
+        return;
+    }
+
+    const auth = checkAdminAuth();
+    if (auth.ok) {
+        console.log('✅ Admin auth verified via session keys:', auth.user);
+        revealMainContent();
+        onAuthorized();
+    } else {
+        showAccessDeniedAndRedirect(auth.reason);
+    }
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+});
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — ACADEMIC YEAR DISPLAY
+   ===================================================================== */
+
+function updateAcademicYear() {
+    function getAcademicYear() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+    }
+    const display = document.getElementById('academicYearDisplay');
+    if (display) {
+        const academicYear = getAcademicYear();
+        display.innerHTML = `<i class="far fa-calendar-alt"></i> ${academicYear}`;
+        document.title = `Exam Dashboard | ${academicYear}`;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 4 — INITIALIZATION
+   ===================================================================== */
+
+function initApp() {
+    updateAdminBadge();
+    updateAcademicYear();
+    console.log('✅ Exam Dashboard ready');
+}
+
+
+/* =====================================================================
+   SECTION 5 — BOOTSTRAP WITH AUTH GATE
+   ===================================================================== */
+
+(function bootstrap() {
+    syncThemeWithParent();
+
+    const startWhenReady = () => {
+        setTimeout(() => {
+            gateAdminAccess(() => initApp());
+        }, 800);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    /* Safety net: 5s redirect if still unauthorized */
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 6 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+
+console.log('✅ Exam Dashboard script initialised (auth-gated)');
+</script>
+</body>
+</html>

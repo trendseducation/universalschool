@@ -1,0 +1,3587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>💰 Fees Management System | 5th Standard</title>
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ⭐ admin-auth.js - Handles authentication ONLY -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <style>
+        /* ======================== CSS VARIABLES FOR THEMING ======================== */
+        :root {
+            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-secondary: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-primary: #1e293b;
+            --text-primary2: black;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #fbbf24;
+            --info: #06b6d4;
+
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+            --table-header-bg: #f8fafc;
+            --table-row-hover: #f1f5f9;
+            --table-border: #e2e8f0;
+
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --transition-slow: 500ms ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
+            --bg-secondary: #1e1e2e;
+            --card-bg: rgba(30, 30, 46, 0.98);
+            --text-primary: #e2e8f0;
+            --text-primary2: black;
+            --text-secondary: #94a3b8;
+            --text-light: #64748b;
+            --border-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+
+            --table-header-bg: #1e293b;
+            --table-row-hover: #334155;
+            --table-border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ================================================================
+           LOADING SPINNER
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+            transition: background var(--transition-normal);
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           ADMIN BADGE
+           ================================================================ */
+        .admin-badge-container {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--warning);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border: 1px solid var(--warning);
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+        }
+        .admin-badge i { font-size: 0.7rem; }
+        .admin-badge span {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .admin-badge .session-indicator {
+            font-size: 0.5rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+        [data-theme="dark"] .admin-badge {
+            background: rgba(30, 30, 46, 0.95);
+        }
+        .my-account-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--card-bg);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        .my-account-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px 16px;
+            color: var(--text-primary);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            position: relative;
+            padding-top: 80px;
+        }
+
+        #mainContent {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        #mainContent.visible { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .page { display: none; animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.active-page { display: block; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .soft-card {
+            background: var(--card-bg);
+            border-radius: 2rem;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        .soft-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 14px;
+        }
+        [data-theme="dark"] .card-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .search-section {
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn:active::before { width: 300px; height: 300px; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            filter: brightness(1.05);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-sm { padding: 6px 16px; font-size: 0.75rem; }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .search-wrapper { width: 100%; }
+        .search-wrapper input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 60px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+        .search-wrapper input::placeholder { color: var(--text-light); }
+        .search-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .mobile-buttons {
+            display: none;
+            gap: 12px;
+            margin-top: 12px;
+            width: 100%;
+        }
+        .mobile-buttons .btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            border-radius: 60px;
+        }
+        .mobile-buttons .btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .mobile-buttons .btn-outline .spinner {
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+        }
+        .mobile-buttons .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .mobile-buttons .btn.loading .spinner { display: inline-block; }
+        .mobile-buttons .btn.loading .btn-text { display: none; }
+
+        .table-wrapper {
+            overflow-x: auto;
+            overflow-y: visible;
+            scrollbar-width: thin;
+            padding: 0;
+        }
+        .table-wrapper::-webkit-scrollbar { height: 6px; background: transparent; }
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.875rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 16px 20px;
+            background: var(--table-header-bg);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+        }
+        .data-table th:first-child { border-top-left-radius: 12px; }
+        .data-table th:last-child { border-top-right-radius: 12px; }
+        .data-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--table-border);
+            color: var(--text-primary);
+            transition: background var(--transition-fast);
+            font-size: 0.9rem;
+        }
+        .data-table tr:hover td { background: var(--table-row-hover); }
+
+        .view-action-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .view-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            filter: brightness(1.05);
+        }
+
+        .total-badge {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            box-shadow: var(--shadow-sm);
+            min-width: 85px;
+            text-align: center;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+        @media (max-width: 640px) {
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+        }
+        .detail-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(255,255,255,0.05));
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            transition: all var(--transition-fast);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .detail-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        .detail-value {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 6px;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .action-row {
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            gap: 14px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 2rem 2rem 0;
+            flex-wrap: wrap;
+        }
+        .profile-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .profile-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            width: 92%;
+            max-width: 900px;
+            max-height: 85vh;
+            border-radius: 2rem;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: white;
+        }
+        .modal-header h3 { font-size: 1.3rem; font-weight: 700; }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            transition: transform var(--transition-fast);
+            line-height: 1;
+        }
+        .close-modal:hover { transform: rotate(90deg); }
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(85vh - 70px);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--secondary);
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            font-family: inherit;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .field input:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .fullwidth { grid-column: 1 / -1; }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: var(--table-header-bg);
+            border-radius: 1.2rem;
+            margin: 1rem 2rem;
+        }
+        .kpi-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .kpi-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 4px;
+            color: var(--text-primary);
+        }
+        .kpi-value.success { color: var(--success); }
+        .kpi-value.danger { color: var(--danger); }
+        .kpi-value.primary { color: var(--primary); }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+        .status-success { background: var(--success); color: white; }
+        .status-error { background: var(--danger); color: white; }
+
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-xl);
+            border-radius: 0 16px 16px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-primary);
+            max-width: 400px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.info { border-left-color: var(--info); }
+
+        .installment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.2rem;
+            padding: 1rem;
+            transition: all var(--transition-fast);
+        }
+        .installment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .installment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 0.5rem;
+        }
+        .installment-header .ins-number {
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .installment-header .ins-method {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+        }
+        .installment-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .installment-details .ins-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .installment-details .ins-item .ins-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+        .installment-details .ins-item .ins-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .installment-amount {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+        }
+        .installment-amount .amount-value {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .student-selector-btn {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .student-selector-btn:hover {
+            border-color: var(--primary);
+            background: var(--table-header-bg);
+        }
+        .student-selector-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .student-selector-btn .lock-icon {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .student-list-item {
+            width: 100%;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: left;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .student-list-item:hover:not(.disabled) {
+            background: var(--table-row-hover);
+        }
+        .student-list-item .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+        .student-list-item .student-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        .student-list-item .status-icon {
+            font-size: 0.9rem;
+            color: var(--success);
+            flex-shrink: 0;
+        }
+        .student-list-item.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: var(--table-header-bg);
+        }
+        .student-list-item.disabled .student-name {
+            color: var(--text-secondary);
+        }
+        .student-list-item .existing-badge {
+            font-size: 0.6rem;
+            background: var(--warning);
+            color: var(--text-primary2);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .status-indicator {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .status-indicator.success { background: var(--success); color: white; }
+        .status-indicator.error { background: var(--danger); color: white; }
+        .status-indicator.warning { background: var(--warning); color: var(--text-primary); }
+
+        #installmentDeleteModal .modal-header {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+        }
+        #installmentDeleteModal .modal-body p {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        #installmentDeleteModal .modal-body strong {
+            color: var(--danger);
+        }
+
+        /* ================================================================
+           PRINT OPTIONS POPUP — Attractive Blue Theme
+           ================================================================ */
+        #printOptionsModal .modal-box {
+            max-width: 780px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            box-shadow: 0 30px 80px -20px rgba(13, 44, 84, 0.45);
+        }
+        .print-modal-header {
+            background:
+                radial-gradient(circle at 15% 20%, rgba(255,255,255,0.18), transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(255,255,255,0.12), transparent 45%),
+                linear-gradient(135deg, #0d2c54 0%, #1e40af 50%, #2563eb 100%);
+            padding: 1.4rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .print-modal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #60a5fa, #93c5fd, #60a5fa);
+        }
+        .print-modal-header h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.2px;
+            margin: 0;
+        }
+        .print-modal-header h3 i {
+            background: rgba(255,255,255,0.2);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        .print-modal-header .pmh-sub {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.75);
+            margin-top: 3px;
+            letter-spacing: 0.3px;
+        }
+        .print-modal-header .close-modal {
+            color: #fff;
+            background: rgba(255,255,255,0.12);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .print-modal-header .close-modal:hover {
+            background: rgba(255,255,255,0.25);
+            transform: rotate(90deg);
+        }
+        .print-modal-body {
+            padding: 1.6rem 1.8rem 1.8rem;
+            background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+            max-height: calc(85vh - 80px);
+            overflow-y: auto;
+        }
+        [data-theme="dark"] .print-modal-body {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .print-meta-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.2rem;
+        }
+        .print-meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 1px solid #bfdbfe;
+        }
+        .print-meta-chip i { font-size: 0.68rem; color: #2563eb; }
+        .print-meta-chip.success { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+        .print-meta-chip.success i { color: #10b981; }
+        .print-meta-chip.danger  { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+        .print-meta-chip.danger i { color: #ef4444; }
+        [data-theme="dark"] .print-meta-chip {
+            background: rgba(37, 99, 235, 0.15);
+            color: #93c5fd;
+            border-color: rgba(37, 99, 235, 0.35);
+        }
+        [data-theme="dark"] .print-meta-chip.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        [data-theme="dark"] .print-meta-chip.danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .print-section-label {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #1e40af;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .print-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #bfdbfe, transparent);
+        }
+        [data-theme="dark"] .print-section-label { color: #93c5fd; }
+        [data-theme="dark"] .print-section-label::after {
+            background: linear-gradient(90deg, rgba(147,197,253,0.4), transparent);
+        }
+
+        .print-opt-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 1rem 1.1rem;
+            margin-bottom: 0.7rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .print-opt-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #2563eb, #60a5fa);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease;
+        }
+        .print-opt-card:hover {
+            border-color: #93c5fd;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -8px rgba(37, 99, 235, 0.25);
+        }
+        .print-opt-card.selected {
+            border-color: #2563eb;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            box-shadow: 0 8px 24px -8px rgba(37, 99, 235, 0.35);
+        }
+        .print-opt-card.selected::before { transform: scaleY(1); }
+        [data-theme="dark"] .print-opt-card {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .print-opt-card.selected {
+            background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(96,165,250,0.12));
+            border-color: #3b82f6;
+        }
+
+        .print-opt-card input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: relative;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+        .print-opt-card input[type="radio"]:checked {
+            border-color: #2563eb;
+            background: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+        .print-opt-card input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        [data-theme="dark"] .print-opt-card input[type="radio"] {
+            background: #0f172a;
+            border-color: #475569;
+        }
+        [data-theme="dark"] .print-opt-card input[type="radio"]:checked {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .print-opt-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .print-opt-content strong {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #0d2c54;
+            letter-spacing: 0.2px;
+        }
+        .print-opt-content small {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        [data-theme="dark"] .print-opt-content strong { color: #f1f5f9; }
+        [data-theme="dark"] .print-opt-content small { color: #94a3b8; }
+
+        .print-ins-wrap {
+            margin-top: 0.4rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px dashed #7dd3fc;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
+            animation: fadeSlideIn 0.3s ease;
+        }
+        [data-theme="dark"] .print-ins-wrap {
+            background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(14,165,233,0.05));
+            border-color: rgba(6,182,212,0.4);
+        }
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .print-ins-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.7rem 0.9rem;
+            background: #ffffff;
+            border: 1.5px solid #bfdbfe;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .print-ins-row:hover {
+            border-color: #2563eb;
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px -4px rgba(37,99,235,0.2);
+        }
+        .print-ins-row:has(input:checked) {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            border-color: #2563eb;
+        }
+        [data-theme="dark"] .print-ins-row {
+            background: #0f172a;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .print-ins-row:has(input:checked) {
+            background: rgba(37,99,235,0.2);
+            border-color: #3b82f6;
+        }
+
+        .print-ins-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 5px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.2s ease;
+            background: #fff;
+        }
+        .print-ins-row input[type="checkbox"]:checked {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+        .print-ins-row input[type="checkbox"]:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #fff;
+            font-size: 10px;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        [data-theme="dark"] .print-ins-row input[type="checkbox"] {
+            background: #1e293b;
+            border-color: #475569;
+        }
+
+        .print-ins-label {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+        .print-ins-label strong {
+            font-size: 0.82rem;
+            color: #0d2c54;
+            font-weight: 800;
+        }
+        .print-ins-label small {
+            font-size: 0.68rem;
+            color: #64748b;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        [data-theme="dark"] .print-ins-label strong { color: #f1f5f9; }
+        [data-theme="dark"] .print-ins-label small { color: #94a3b8; }
+
+        .print-preview-trigger {
+            text-align: center;
+            margin: 1.4rem 0 0.5rem;
+        }
+        .print-preview-trigger button {
+            background: linear-gradient(135deg, #0891b2, #06b6d4);
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 25px -8px rgba(8, 145, 178, 0.6);
+        }
+        .print-preview-trigger button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 14px 30px -8px rgba(8, 145, 178, 0.75);
+        }
+        .print-preview-trigger button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+
+        #printPreviewContainer {
+            margin-top: 1.2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #bfdbfe;
+            background: #eef2f7;
+            box-shadow: 0 12px 30px -12px rgba(13, 44, 84, 0.3);
+            animation: fadeSlideIn 0.35s ease;
+        }
+        [data-theme="dark"] #printPreviewContainer {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        .print-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 1.2rem;
+            margin-top: 1.2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        [data-theme="dark"] .print-modal-footer {
+            border-color: #334155;
+        }
+
+        @media (max-width: 640px) {
+            #printOptionsModal .modal-box { max-width: 95%; border-radius: 20px; }
+            .print-modal-header { padding: 1rem 1.2rem; }
+            .print-modal-header h3 { font-size: 0.95rem; }
+            .print-modal-body { padding: 1.1rem; }
+            .print-ins-wrap { grid-template-columns: 1fr; }
+            .print-preview-trigger button { padding: 10px 22px; font-size: 0.8rem; }
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 768px) {
+            body { padding: 12px; padding-top: 70px; }
+            .admin-badge-container { top: 10px; right: 10px; }
+            .admin-badge { font-size: 0.55rem; padding: 4px 12px; gap: 4px; }
+            .admin-badge span { max-width: 80px; }
+            .my-account-btn { font-size: 0.6rem; padding: 4px 10px; }
+            .card-header {
+                padding: 1rem 1.2rem;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .card-header h2 { font-size: 1rem; width: 100%; }
+            .card-header .subtitle { font-size: 0.75rem; }
+            .desktop-buttons { display: none !important; }
+            .mobile-buttons {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-top: 12px;
+                width: 100%;
+            }
+            .search-section { padding: 1rem 1.2rem; }
+            .data-table th, .data-table td { padding: 12px 12px; font-size: 0.7rem; }
+            .btn { padding: 8px 18px; font-size: 0.8rem; }
+            .modal-box { width: 95%; border-radius: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; padding: 1rem; margin: 0.5rem 1rem; }
+            .profile-wrapper { padding: 1rem; flex-direction: column; text-align: center; }
+            .details-grid { grid-template-columns: 1fr 1fr; }
+            .action-row { padding: 1rem; justify-content: center; }
+            .action-row .btn {
+                flex: 1; min-width: 100px; justify-content: center;
+                font-size: 0.75rem; padding: 10px 12px;
+            }
+        }
+        @media (min-width: 769px) {
+            .mobile-buttons { display: none !important; }
+        }
+        @media (max-width: 380px) {
+            .admin-badge { font-size: 0.45rem; padding: 3px 8px; }
+            .admin-badge span { max-width: 50px; }
+            .my-account-btn { font-size: 0.55rem; padding: 3px 8px; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--table-header-bg); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        .table-wrapper::-webkit-scrollbar,
+        .modal-box::-webkit-scrollbar {
+            width: 0px; height: 0px;
+            background: transparent; display: none;
+        }
+        .table-wrapper, .modal-box {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--table-header-bg) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY (Admin Auth) -->
+    <!-- ================================================================ -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- ADMIN BADGE - Top Right Corner -->
+    <!-- ================================================================ -->
+    <div class="admin-badge-container" id="adminBadgeContainer">
+        <span class="admin-badge" id="adminBadge">
+            <i class="fas fa-user-shield"></i>
+            <span id="adminNameDisplay">Admin</span>
+            <span class="session-indicator" id="sessionIndicator">Session</span>
+        </span>
+        <a href="../../Study Material/My Account/myaccount.html" class="my-account-btn">
+            <i class="fas fa-user-circle"></i> My Account
+        </a>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT (Hidden until authenticated) -->
+    <!-- ================================================================ -->
+    <div id="mainContent">
+
+        <div class="app-container">
+
+            <!-- ===================== PAGE 1 - LIST VIEW ===================== -->
+            <div id="page1" class="page active-page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>💰 Fees Management Portal - 5th STD</h2>
+                        </div>
+                        <div class="desktop-buttons">
+                            <button id="refreshBtn" class="btn btn-outline">
+                                <span>⟳</span> Refresh
+                            </button>
+                            <button id="addNewBtn" class="btn btn-primary">
+                                <span>+</span> Add Fees
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="search-section">
+                        <div class="search-wrapper">
+                            <input type="text" id="searchInput" placeholder="🔍 Search by Student Name...">
+                        </div>
+
+                        <div class="mobile-buttons">
+                            <button id="mobileRefreshBtn" class="btn btn-outline">
+                                <span class="spinner"></span>
+                                <span class="btn-text">⟳ Refresh</span>
+                            </button>
+                            <button id="mobileAddBtn" class="btn btn-primary">
+                                <span class="btn-text">+ Add Fees</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th>
+                                    <th>Academic Year</th>
+                                    <th>Student Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">
+                                        <div class="spinner"></div> Loading fees records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="padding: 1rem 2rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <span style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Showing <strong id="recordCount">0</strong> records
+                        </span>
+                        <span class="total-badge" id="totalRecordsBadge">Total: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== PAGE 2 - DETAIL VIEW ===================== -->
+            <div id="page2" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>👤 Fees Details Summary</h2>
+                        </div>
+                        <button id="backToPage1Btn" class="btn btn-outline">← Back</button>
+                    </div>
+
+                    <div class="profile-wrapper">
+                        <div class="profile-info">
+                            <h3 id="profileName">Student Name</h3>
+                            <p>Sr. No: <span id="profileSrNo"></span> | Academic Year: <span id="profileAcademicYear"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Total Obligated Fees</div>
+                            <div class="kpi-value primary">₹<span id="p2_totalFees">0.00</span></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Total Liquidated Paid</div>
+                            <div class="kpi-value success">₹<span id="p2_paidFees">0.00</span></div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Outstanding Balance Due</div>
+                            <div class="kpi-value danger">₹<span id="p2_balanceFees">0.00</span></div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 0 2rem 1rem;">
+                        <h4 style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;">
+                            <i class="fas fa-layer-group" style="margin-right: 8px;"></i> Student Installment Details
+                        </h4>
+                        <div id="p2_installmentsContainer" class="details-grid"></div>
+                    </div>
+
+                    <div class="action-row">
+                        <button id="editFromDetailBtn" class="btn btn-primary">✏️ Edit</button>
+                        <button id="printFromDetailBtn" class="btn btn-info">🖨️ Print</button>
+                        <button id="deleteFromDetailBtn" class="btn btn-danger">🗑 Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== PAGE 3 - UPDATE/EDIT VIEW ===================== -->
+            <div id="page3" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 id="page3Title">✏️ Update Fees Record</h2>
+                            <div class="subtitle" id="page3Subtitle">Modify the Student Fees details and update the record</div>
+                        </div>
+                        <button id="backToPage2Btn" class="btn btn-outline">← Back</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="feesUpdateForm" class="space-y-6">
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label>Sr. No <span style="color: var(--danger);">*</span></label>
+                                    <input type="text" id="p3_srNo" readonly>
+                                </div>
+                                <div class="field">
+                                    <label>Academic Year</label>
+                                    <input type="text" id="p3_academicYear" readonly>
+                                </div>
+                                <div class="field">
+                                    <label>Student Name <span style="color: var(--danger);">*</span></label>
+                                    <button type="button" id="p3_selectStudentBtn" class="student-selector-btn" onclick="openStudentSelector()">
+                                        <span id="p3_studentNameDisplay">Select a student...</span>
+                                        <span id="p3_studentLockIcon" style="display: none;">
+                                            <i class="fas fa-lock lock-icon"></i>
+                                        </span>
+                                        <i class="fas fa-chevron-down" style="color: var(--text-secondary);"></i>
+                                    </button>
+                                    <input type="hidden" id="p3_studentName" value="">
+                                </div>
+                            </div>
+
+                            <div class="kpi-grid" style="margin: 0;">
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Total Fixed Fees <span style="color: var(--danger);">*</span></div>
+                                    <input type="number" id="p3_totalFees" min="0" oninput="calculatePage3Financials()"
+                                           style="font-size: 1.5rem; font-weight: 800; border: none; background: transparent; width: 100%; text-align: center; color: var(--text-primary);">
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Paid Cumulative Fees</div>
+                                    <div class="kpi-value success">₹<span id="p3_paidFees">0.00</span></div>
+                                </div>
+                                <div class="kpi-card">
+                                    <div class="kpi-label">Remaining Balance</div>
+                                    <div class="kpi-value danger">₹<span id="p3_balanceFees">0.00</span></div>
+                                </div>
+                            </div>
+
+                            <div class="field" style="max-width: 300px;">
+                                <label>Process Milestone Payment</label>
+                                <select id="p3_installmentDropdown" onchange="openPage3InstallmentModal(this.value)"
+                                        style="padding: 12px 16px; border-radius: 16px; border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem;">
+                                    <option value="" disabled selected>Select Installment...</option>
+                                    <option value="1" id="p3_opt_ins_1">Installment 1</option>
+                                    <option value="2" id="p3_opt_ins_2">Installment 2</option>
+                                    <option value="3" id="p3_opt_ins_3">Installment 3</option>
+                                    <option value="4" id="p3_opt_ins_4">Installment 4</option>
+                                    <option value="5" id="p3_opt_ins_5">Installment 5</option>
+                                </select>
+                            </div>
+
+                            <div id="p3_summarySection" class="hidden">
+                                <div style="background: var(--table-header-bg); padding: 0.75rem 1rem; border-radius: 1rem 1rem 0 0; border: 1px solid var(--border-color); border-bottom: none;">
+                                    <h4 style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">
+                                        <i class="fas fa-list-ol" style="margin-right: 8px;"></i> Active Installment Summary
+                                    </h4>
+                                </div>
+                                <div class="table-wrapper" style="border: 1px solid var(--border-color); border-radius: 0 0 1rem 1rem;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Installment</th>
+                                                <th>Date</th>
+                                                <th>Receipt No</th>
+                                                <th>Mode</th>
+                                                <th>Ref String</th>
+                                                <th>Amount</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="p3_summaryTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                                <button type="button" onclick="navigateToPage(1)" class="btn btn-outline">Cancel</button>
+                                <button type="button" id="commitUpdatesBtn" onclick="commitModifiedLedgerToCloud()" class="btn btn-primary">
+                                    <i class="fas fa-cloud-upload-alt"></i> <span id="commitBtnText">Update</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== GLOBAL MODAL ===================== -->
+            <div id="globalModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h3 id="modalTitle">Notice</h3>
+                        <button class="close-modal" id="closeGlobalModal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMsg" style="font-size: 1rem; line-height: 1.5;"></p>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                            <button id="confirmModalBtn" class="btn btn-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== STUDENT SELECTOR MODAL ===================== -->
+            <div id="studentSelectorModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <h3>Select Student</h3>
+                        <button class="close-modal" id="closeStudentSelectorBtn">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="search-wrapper" style="margin-bottom: 1rem;">
+                            <input type="text" id="studentSearchInput" placeholder="🔍 Search by student name..." oninput="filterStudentList(this.value)">
+                        </div>
+                        <div id="studentListContainer" style="max-height: 400px; overflow-y: auto;">
+                            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                                <div class="spinner"></div> Loading students...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== INSTALLMENT MODAL ===================== -->
+            <div id="installmentModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 id="insModalHeader">Configure Installment Context</h3>
+                        <button class="close-modal" id="closeInsModalBtn">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="insForm" onsubmit="event.preventDefault();">
+                            <input type="hidden" id="currentInsId">
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label>Transaction Date <span style="color: var(--danger);">*</span></label>
+                                    <input type="date" id="insDate" required>
+                                </div>
+                                <div class="field">
+                                    <label>Receipt ID Number <span style="color: var(--danger);">*</span></label>
+                                    <input type="number" id="insReceipt" required>
+                                </div>
+                                <div class="field">
+                                    <label>Payment Method Routing <span style="color: var(--danger);">*</span></label>
+                                    <select id="insMethod" required onchange="togglePaymentFields(this.value)">
+                                        <option value="Cash">Cash</option>
+                                        <option value="UPI">UPI</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                    </select>
+                                </div>
+                                <div class="field" id="dynamicTransBox"></div>
+                                <div class="field">
+                                    <label>Next Due Interval Date</label>
+                                    <input type="date" id="insNextDate">
+                                </div>
+                                <div class="field">
+                                    <label>Allocation Amount (INR) <span style="color: var(--danger);">*</span></label>
+                                    <input type="number" id="insAmount" min="1" required>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                                <button type="button" onclick="closeInstallmentModal()" class="btn btn-outline">Cancel</button>
+                                <button type="button" onclick="saveInstallmentState()" class="btn btn-primary">Save Draft</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== DELETE CONFIRM MODAL ===================== -->
+            <div id="deleteConfirmModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 450px;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, var(--danger), #dc2626);">
+                        <h3>⚠️ Irreversible Destructive Operation</h3>
+                        <button class="close-modal" id="closeDeleteModalBtn">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="font-size: 1rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Are you completely sure you want to Delete <strong id="deleteTargetStudentName"></strong> from the ledger?
+                            <br><br>This action deletes all tracked records from Data and cannot be restored.
+                        </p>
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button onclick="closeDeleteConfirmation()" class="btn btn-outline">Cancel</button>
+                            <button id="executePurgeBtn" onclick="executeCloudRowDeletion()" class="btn btn-danger">Confirm Purge</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== INSTALLMENT DELETE CONFIRM MODAL ===================== -->
+            <div id="installmentDeleteModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 450px;">
+                    <div class="modal-header" style="background: linear-gradient(135deg, var(--danger), #dc2626);">
+                        <h3>⚠️ Delete Installment</h3>
+                        <button class="close-modal" onclick="closeInstallmentDeleteModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="font-size: 1rem; line-height: 1.5; margin-bottom: 1rem;">
+                            Are you sure you want to delete <strong id="installmentDeleteTarget">Installment</strong> from this fees record?
+                            <br><br>This action cannot be undone.
+                        </p>
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button onclick="closeInstallmentDeleteModal()" class="btn btn-outline">Cancel</button>
+                            <button id="executeInstallmentPurgeBtn" onclick="executeInstallmentDeletion()" class="btn btn-danger">Confirm Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== ALERT POPUP ===================== -->
+            <div id="alertBox" class="alert-popup">Message...</div>
+
+        </div>
+
+    </div>
+
+<script>
+/* =====================================================================
+   Fees_5th_STD.html — Full Enhanced Script
+   ===================================================================== */
+
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTHENTICATION GUARD
+   ===================================================================== */
+
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k);
+            sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function updateAdminBadge() {
+    const userData = readMyAccountSession('Universal_user_data');
+    const user = readMyAccountSession('Universal_user');
+    const expiry = readMyAccountSession('Universal_session_expiry');
+
+    const container = document.getElementById('adminBadgeContainer');
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) {
+        displayName = user;
+    }
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+    if (container) container.style.display = 'flex';
+
+    if (indicator) {
+        const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = expiry - Date.now();
+            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+function revealMainContent() {
+    const main = document.getElementById('mainContent');
+    const loading = document.getElementById('authLoading');
+    if (loading) loading.classList.add('hidden');
+    if (main) {
+        main.style.display = 'block';
+        main.classList.add('visible');
+    }
+}
+
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+    const alreadyRevealed = mainEl &&
+        (mainEl.style.display === 'block' || mainEl.classList.contains('visible'));
+    const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+    if (alreadyRevealed || loadingHidden) {
+        console.log('✅ loginadmin.js already authorized this session');
+        onAuthorized();
+        return;
+    }
+
+    const auth = checkAdminAuth();
+    if (auth.ok) {
+        console.log('✅ Admin auth verified via session keys:', auth.user);
+        revealMainContent();
+        onAuthorized();
+    } else {
+        showAccessDeniedAndRedirect(auth.reason);
+    }
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+});
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — CONFIGURATION
+   ===================================================================== */
+
+const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const ROSTER_SS_ID = "1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8";
+const TARGET_SS_ID = "1oSgbGG5NmYXV5AVR7uvmLnp5pQx83QFQsqCf1u3YFo0";
+const GLOBAL_SHEET_NAME = "STD_5";
+
+
+/* =====================================================================
+   SECTION 4 — GLOBAL STATE
+   ===================================================================== */
+
+let masterCloudDataset = [];
+let masterRosterList = [];
+let activeSelectedRowIndex = -1;
+let activeRowDataInstance = null;
+let page3LocalizedInstallmentsMemory = {};
+let searchDebounceTimer = null;
+let isAddMode = false;
+
+
+/* =====================================================================
+   SECTION 5 — DOM REFS
+   ===================================================================== */
+
+const dom = {};
+
+function cacheDomElements() {
+    dom.page1 = document.getElementById('page1');
+    dom.page2 = document.getElementById('page2');
+    dom.page3 = document.getElementById('page3');
+    dom.tableBody = document.getElementById('tableBody');
+    dom.searchInput = document.getElementById('searchInput');
+    dom.refreshBtn = document.getElementById('refreshBtn');
+    dom.addNewBtn = document.getElementById('addNewBtn');
+    dom.mobileRefreshBtn = document.getElementById('mobileRefreshBtn');
+    dom.mobileAddBtn = document.getElementById('mobileAddBtn');
+    dom.backBtn = document.getElementById('backToPage1Btn');
+    dom.backToPage2Btn = document.getElementById('backToPage2Btn');
+    dom.editBtn = document.getElementById('editFromDetailBtn');
+    dom.deleteBtn = document.getElementById('deleteFromDetailBtn');
+    dom.globalModal = document.getElementById('globalModal');
+    dom.studentSelectorModal = document.getElementById('studentSelectorModal');
+    dom.installmentModal = document.getElementById('installmentModal');
+    dom.deleteConfirmModal = document.getElementById('deleteConfirmModal');
+    dom.modalTitle = document.getElementById('modalTitle');
+    dom.modalMsg = document.getElementById('modalMsg');
+    dom.alertBox = document.getElementById('alertBox');
+    dom.recordCount = document.getElementById('recordCount');
+    dom.totalRecordsBadge = document.getElementById('totalRecordsBadge');
+    dom.page3Title = document.getElementById('page3Title');
+    dom.page3Subtitle = document.getElementById('page3Subtitle');
+    dom.commitBtnText = document.getElementById('commitBtnText');
+}
+
+
+/* =====================================================================
+   SECTION 6 — UTILITIES
+   ===================================================================== */
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+}
+function getIsoDateString(dateObj) {
+    return dateObj.toISOString().split('T')[0];
+}
+function formatDisplayDate(rawIsoDate) {
+    if (!rawIsoDate) return '';
+    const split = rawIsoDate.split('-');
+    if (split.length !== 3) return rawIsoDate;
+    return `${split[2]}/${split[1]}/${split[0]}`;
+}
+function parseToIsoDate(displayDateStr) {
+    if (!displayDateStr) return '';
+    const bits = displayDateStr.split('/');
+    if (bits.length !== 3) return '';
+    return `${bits[2]}-${bits[1]}-${bits[0]}`;
+}
+function getAcademicYear() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+}
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4500);
+}
+function showModal(msg, title = "Message", isConfirm = false, onConfirm = null) {
+    dom.modalTitle.innerText = title;
+    dom.modalMsg.innerHTML = msg;
+    const confirmBtn = document.getElementById('confirmModalBtn');
+    confirmBtn.onclick = () => {
+        dom.globalModal.classList.remove('active');
+        if (isConfirm && onConfirm) onConfirm();
+    };
+    dom.globalModal.classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+function showSpinner(element, show) {
+    if (!element) return;
+    if (show) {
+        element.disabled = true;
+        const originalText = element.innerHTML;
+        element.setAttribute('data-original-text', originalText);
+        element.innerHTML = '<span class="spinner"></span> Loading...';
+    } else {
+        element.disabled = false;
+        const original = element.getAttribute('data-original-text');
+        if (original) element.innerHTML = original;
+    }
+}
+function showMobileSpinner(buttonId, show) {
+    const btn = document.getElementById(buttonId);
+    if (!btn) return;
+    if (show) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+    } else {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 7 — NAVIGATION
+   ===================================================================== */
+
+function navigateToPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+    document.getElementById(`page${pageId}`).classList.add('active-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (pageId === 1) {
+        activeRowDataInstance = null;
+        activeSelectedRowIndex = -1;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 8 — DATA MANAGEMENT
+   ===================================================================== */
+
+async function fetchCloudDataPool() {
+    const tbody = dom.tableBody;
+    try {
+        const queryUrl = `${API_ENDPOINT}?spreadsheetId=${TARGET_SS_ID}&sheetName=${encodeURIComponent(GLOBAL_SHEET_NAME)}`;
+        const res = await fetch(queryUrl);
+        const json = await res.json();
+        if (json.status === "success") {
+            masterCloudDataset = json.data || [];
+            renderPage1RosterTable(masterCloudDataset);
+        } else {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--danger);">❌ Failed synchronization: ${json.message}</td></tr>`;
+        }
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--danger);">❌ Network Connection Timeout.</td></tr>`;
+    }
+}
+
+async function fetchRosterList() {
+    try {
+        const rosterUrl = `${API_ENDPOINT}?spreadsheetId=${ROSTER_SS_ID}&sheetName=${encodeURIComponent(GLOBAL_SHEET_NAME)}`;
+        const res = await fetch(rosterUrl);
+        const json = await res.json();
+        if (json.status === "success") {
+            masterRosterList = json.data.map(item =>
+                item["Full Name"] || item["FullName"] || item["fullname"] || ""
+            ).filter(Boolean);
+            renderStudentList(masterRosterList);
+        }
+    } catch (err) {
+        console.error("Failed to load roster:", err);
+    }
+}
+
+function renderPage1RosterTable(data) {
+    const tbody = dom.tableBody;
+    if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">✨ No fee records found.</td></tr>`;
+        dom.recordCount.textContent = '0';
+        dom.totalRecordsBadge.textContent = 'Total: 0';
+        return;
+    }
+    tbody.innerHTML = data.map((row, index) => {
+        const computeSheetRowIndex = index + 2;
+        const srNo = row["Sr. No"] || row["SrNo"] || (index + 1);
+        const academicYear = row["Academic Year"] || row["AcademicYear"] || "N/A";
+        const fullName = row["Full Name"] || row["FullName"] || "Unknown";
+        return `
+            <tr>
+                <td><strong>${escapeHtml(srNo)}</strong></td>
+                <td>${escapeHtml(academicYear)}</td>
+                <td style="font-weight: 600;">${escapeHtml(fullName)}</td>
+                <td>
+                    <button class="view-action-btn" data-row="${computeSheetRowIndex}">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    dom.recordCount.textContent = data.length;
+    dom.totalRecordsBadge.textContent = `Total: ${data.length}`;
+    tbody.querySelectorAll('.view-action-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const rowIndex = parseInt(btn.getAttribute('data-row'));
+            loadPage2DetailsView(rowIndex);
+        });
+    });
+}
+
+function filterRosterTable(value) {
+    const keyword = value.toLowerCase().trim();
+    const filtered = masterCloudDataset.filter(row => {
+        const name = (row["Full Name"] || row["FullName"] || "").toLowerCase();
+        return name.includes(keyword);
+    });
+    renderPage1RosterTable(filtered);
+}
+
+
+/* =====================================================================
+   SECTION 9 — STUDENT SELECTOR
+   ===================================================================== */
+
+function renderStudentList(list) {
+    const container = document.getElementById('studentListContainer');
+    if (!list || list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-secondary);">No students found.</div>`;
+        return;
+    }
+    const existingStudents = new Set();
+    masterCloudDataset.forEach(row => {
+        const name = (row["Full Name"] || row["FullName"] || "").toLowerCase().trim();
+        if (name) existingStudents.add(name);
+    });
+    container.innerHTML = list.map(name => {
+        const nameLower = name.toLowerCase().trim();
+        const isExisting = existingStudents.has(nameLower);
+        const disabledClass = isExisting ? 'disabled' : '';
+        const statusIcon = isExisting ? '<i class="fas fa-check-circle status-icon"></i>' : '';
+        const badge = isExisting ? '<span class="existing-badge">Already Added</span>' : '';
+        return `
+            <button type="button" class="student-list-item ${disabledClass}"
+                    onclick="${isExisting ? '' : `selectStudent('${escapeHtml(name)}')`}"
+                    ${isExisting ? 'disabled' : ''}>
+                <div class="avatar">${escapeHtml(name.charAt(0).toUpperCase())}</div>
+                <span class="student-name">${escapeHtml(name)}</span>
+                ${badge}
+                ${statusIcon}
+            </button>
+        `;
+    }).join('');
+}
+
+function filterStudentList(value) {
+    const keyword = value.toLowerCase().trim();
+    const filtered = masterRosterList.filter(name => name.toLowerCase().includes(keyword));
+    renderStudentList(filtered);
+}
+
+function openStudentSelector() {
+    const studentBtn = document.getElementById('p3_selectStudentBtn');
+    if (studentBtn.disabled) {
+        showToast("❌ Student name cannot be changed in Edit mode.", "info");
+        return;
+    }
+    document.getElementById('studentSelectorModal').classList.add('active');
+    document.getElementById('studentSearchInput').value = '';
+    if (masterRosterList.length === 0) fetchRosterList();
+    else renderStudentList(masterRosterList);
+}
+
+function closeStudentSelector() {
+    document.getElementById('studentSelectorModal').classList.remove('active');
+}
+
+function checkStudentDuplicate(studentName) {
+    if (!studentName || studentName.trim() === '') return false;
+    const normalizedName = studentName.trim().toLowerCase();
+    return masterCloudDataset.some(row => {
+        const fullName = (row["Full Name"] || row["FullName"] || "").toLowerCase();
+        return fullName === normalizedName;
+    });
+}
+
+function selectStudent(name) {
+    if (isAddMode) {
+        const dup = checkStudentDuplicate(name);
+        if (dup) {
+            showToast(`❌ Student "${name}" already has a fees record.`, "error");
+            return;
+        }
+    }
+    document.getElementById('p3_studentNameDisplay').textContent = name;
+    document.getElementById('p3_studentName').value = name;
+    closeStudentSelector();
+    document.getElementById('p3_installmentDropdown').disabled = false;
+}
+
+
+/* =====================================================================
+   SECTION 10 — PAGE 2 DETAIL VIEW
+   ===================================================================== */
+
+function loadPage2DetailsView(sheetRowIndex) {
+    activeSelectedRowIndex = sheetRowIndex;
+    activeRowDataInstance = masterCloudDataset[sheetRowIndex - 2];
+    if (!activeRowDataInstance) {
+        showToast("❌ Record not found", "error");
+        return;
+    }
+    const fullName = activeRowDataInstance["Full Name"] || activeRowDataInstance["FullName"] || "Unknown";
+    const srNo = activeRowDataInstance["Sr. No"] || activeRowDataInstance["SrNo"] || "";
+    const academicYear = activeRowDataInstance["Academic Year"] || activeRowDataInstance["AcademicYear"] || "";
+
+    document.getElementById('profileName').textContent = fullName;
+    document.getElementById('profileSrNo').textContent = srNo;
+    document.getElementById('profileAcademicYear').textContent = academicYear;
+
+    document.getElementById('p2_totalFees').textContent = parseFloat(activeRowDataInstance["Total Fees"] || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    document.getElementById('p2_paidFees').textContent = parseFloat(activeRowDataInstance["Paid Fees"] || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    document.getElementById('p2_balanceFees').textContent = parseFloat(activeRowDataInstance["Balance Fees"] || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+    const container = document.getElementById('p2_installmentsContainer');
+    container.innerHTML = '';
+    let visibleCount = 0;
+
+    for (let i = 1; i <= 5; i++) {
+        const modeValue = activeRowDataInstance[`Transaction ${i}`] || activeRowDataInstance[`Installment ${i}`] || "";
+        const amountValue = activeRowDataInstance[`Amount ${i}`];
+        if (!modeValue || !amountValue || amountValue == 0) continue;
+        visibleCount++;
+
+        const dateValue = activeRowDataInstance[`Date ${i}`] || "N/A";
+        const receiptNo = activeRowDataInstance[`Receipt No ${i}`] || "N/A";
+        const bankRef = activeRowDataInstance[`Bank Trans ${i}`] || "";
+        const upiRef = activeRowDataInstance[`UPI Trans ${i}`] || "";
+        const nextDue = activeRowDataInstance[`Next Ins Date ${i}`] || "None Recorded";
+
+        let refString = "<span style='color: var(--text-secondary);'>None</span>";
+        if (bankRef) refString = `<span style="background: var(--table-header-bg); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${escapeHtml(bankRef)}</span>`;
+        if (upiRef) refString = `<span style="background: var(--table-header-bg); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${escapeHtml(upiRef)}</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'installment-card';
+        card.innerHTML = `
+            <div class="installment-header">
+                <span class="ins-number">Installment ${i}</span>
+                <span class="ins-method">${escapeHtml(modeValue)}</span>
+            </div>
+            <div class="installment-details">
+                <div class="ins-item">
+                    <span class="ins-label">Transaction Date</span>
+                    <span class="ins-value">${escapeHtml(formatDisplayDate(dateValue))}</span>
+                </div>
+                <div class="ins-item">
+                    <span class="ins-label">Receipt ID</span>
+                    <span class="ins-value">${escapeHtml(receiptNo)}</span>
+                </div>
+                <div class="ins-item" style="grid-column: 1 / -1;">
+                    <span class="ins-label">Next Scheduled Interval</span>
+                    <span class="ins-value">${escapeHtml(formatDisplayDate(nextDue))}</span>
+                </div>
+                <div class="ins-item" style="grid-column: 1 / -1;">
+                    <span class="ins-label">Reference</span>
+                    <span class="ins-value">${refString}</span>
+                </div>
+            </div>
+            <div class="installment-amount">
+                <span>Value Allocation</span>
+                <span class="amount-value">₹${parseFloat(amountValue).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+    if (visibleCount === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-secondary);">No installment steps have materialized for this record profile.</div>`;
+    }
+    navigateToPage(2);
+}
+
+
+/* =====================================================================
+   SECTION 11 — PAGE 3 ADD / UPDATE
+   ===================================================================== */
+
+function loadPage3Setup(isAdd = false) {
+    isAddMode = isAdd;
+    page3LocalizedInstallmentsMemory = {};
+    const studentBtn = document.getElementById('p3_selectStudentBtn');
+    const studentDisplay = document.getElementById('p3_studentNameDisplay');
+
+    if (isAdd) {
+        activeRowDataInstance = null;
+        activeSelectedRowIndex = -1;
+        dom.page3Title.textContent = '➕ Add New Fees Record';
+        dom.page3Subtitle.textContent = 'Create a new student fees record';
+        dom.commitBtnText.textContent = 'Save';
+        document.getElementById('p3_srNo').value = masterCloudDataset.length + 1;
+        document.getElementById('p3_academicYear').value = getAcademicYear();
+        studentBtn.disabled = false;
+        studentBtn.style.opacity = '1';
+        studentBtn.style.cursor = 'pointer';
+        studentDisplay.textContent = 'Select a student...';
+        document.getElementById('p3_studentName').value = '';
+        document.getElementById('p3_installmentDropdown').disabled = true;
+        document.getElementById('p3_summarySection').classList.add('hidden');
+        document.getElementById('p3_summaryTableBody').innerHTML = '';
+        for (let i = 1; i <= 5; i++) document.getElementById(`p3_opt_ins_${i}`).disabled = false;
+        document.getElementById('p3_paidFees').textContent = '0.00';
+        document.getElementById('p3_balanceFees').textContent = '0.00';
+        document.getElementById('p3_totalFees').value = '';
+    } else {
+        dom.page3Title.textContent = '✏️ Update Fees Record';
+        dom.page3Subtitle.textContent = 'Modify the Student Fees details and update the record';
+        dom.commitBtnText.textContent = 'Update';
+        if (!activeRowDataInstance) {
+            showToast("❌ No record selected for editing.", "error");
+            navigateToPage(1);
+            return;
+        }
+        document.getElementById('p3_srNo').value = activeRowDataInstance["Sr. No"] || activeRowDataInstance["SrNo"] || "";
+        document.getElementById('p3_academicYear').value = activeRowDataInstance["Academic Year"] || activeRowDataInstance["AcademicYear"] || "";
+        const fullName = activeRowDataInstance["Full Name"] || activeRowDataInstance["FullName"] || "";
+        studentBtn.disabled = true;
+        studentBtn.style.opacity = '0.7';
+        studentBtn.style.cursor = 'not-allowed';
+        studentDisplay.textContent = fullName;
+        document.getElementById('p3_studentName').value = fullName;
+        document.getElementById('p3_totalFees').value = activeRowDataInstance["Total Fees"] || 0;
+        document.getElementById('p3_installmentDropdown').disabled = false;
+
+        for (let i = 1; i <= 5; i++) {
+            const mode = activeRowDataInstance[`Transaction ${i}`] || "";
+            const amount = parseFloat(activeRowDataInstance[`Amount ${i}`]) || 0;
+            if (mode && amount > 0) {
+                page3LocalizedInstallmentsMemory[i] = {
+                    id: i.toString(),
+                    date: parseToIsoDate(activeRowDataInstance[`Date ${i}`]),
+                    receipt: activeRowDataInstance[`Receipt No ${i}`] || "",
+                    method: mode,
+                    upi: activeRowDataInstance[`UPI Trans ${i}`] || "",
+                    bank: activeRowDataInstance[`Bank Trans ${i}`] || "",
+                    nextDate: parseToIsoDate(activeRowDataInstance[`Next Ins Date ${i}`]),
+                    amount: amount
+                };
+            }
+        }
+    }
+    refreshPage3SummaryLedger();
+    calculatePage3Financials();
+    navigateToPage(3);
+}
+
+function calculatePage3Financials() {
+    const total = parseFloat(document.getElementById('p3_totalFees').value) || 0;
+    const paid = Object.values(page3LocalizedInstallmentsMemory).reduce((acc, obj) => acc + obj.amount, 0);
+    document.getElementById('p3_paidFees').textContent = paid.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    document.getElementById('p3_balanceFees').textContent = (total - paid).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+}
+
+function refreshPage3SummaryLedger() {
+    const tbody = document.getElementById('p3_summaryTableBody');
+    const section = document.getElementById('p3_summarySection');
+    const entries = Object.values(page3LocalizedInstallmentsMemory);
+
+    if (entries.length === 0) {
+        section.classList.add('hidden');
+        for (let i = 1; i <= 5; i++) document.getElementById(`p3_opt_ins_${i}`).disabled = false;
+        return;
+    }
+    section.classList.remove('hidden');
+    tbody.innerHTML = entries.map(item => {
+        let refString = "<span style='color: var(--text-secondary);'>None</span>";
+        if (item.method === "UPI") refString = `<span style="background: var(--table-header-bg); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${escapeHtml(item.upi)}</span>`;
+        if (item.method === "Bank Transfer") refString = `<span style="background: var(--table-header-bg); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${escapeHtml(item.bank)}</span>`;
+        return `
+            <tr>
+                <td><strong>Installment ${item.id}</strong></td>
+                <td>${escapeHtml(formatDisplayDate(item.date))}</td>
+                <td>${escapeHtml(item.receipt)}</td>
+                <td><span style="background: var(--primary); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700;">${escapeHtml(item.method)}</span></td>
+                <td>${refString}</td>
+                <td style="text-align: right; font-weight: 700;">₹${item.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td>
+                    <div style="display: flex; gap: 4px;">
+                        <button onclick="event.preventDefault(); event.stopPropagation(); openPage3InstallmentModal('${item.id}')"
+                                class="btn btn-sm btn-outline" style="padding: 4px 8px; cursor: pointer;">✏️</button>
+                        <button onclick="event.preventDefault(); event.stopPropagation(); showInstallmentDeleteConfirm('${item.id}')"
+                                class="btn btn-sm btn-danger" style="padding: 4px 8px; cursor: pointer;">🗑</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`p3_opt_ins_${i}`).disabled = !!page3LocalizedInstallmentsMemory[i];
+    }
+}
+
+
+/* =====================================================================
+   SECTION 12 — INSTALLMENT DELETE
+   ===================================================================== */
+
+let installmentToDelete = null;
+
+function showInstallmentDeleteConfirm(installmentId) {
+    if (!installmentId) { showToast("❌ Invalid installment ID", "error"); return; }
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    installmentToDelete = installmentId;
+    const insData = page3LocalizedInstallmentsMemory[installmentId];
+    const displayName = insData ? `Installment ${insData.id}` : `Installment ${installmentId}`;
+    document.getElementById('installmentDeleteTarget').textContent = displayName;
+    const modal = document.getElementById('installmentDeleteModal');
+    if (modal) {
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+    }
+}
+
+function closeInstallmentDeleteModal() {
+    const modal = document.getElementById('installmentDeleteModal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+    }
+    installmentToDelete = null;
+}
+
+function executeInstallmentDeletion() {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    const btn = document.getElementById('executeInstallmentPurgeBtn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Deleting...'; }
+    try {
+        if (!installmentToDelete) {
+            showToast("❌ No installment selected", "error");
+            closeInstallmentDeleteModal();
+            return;
+        }
+        delete page3LocalizedInstallmentsMemory[installmentToDelete];
+        closeInstallmentDeleteModal();
+        refreshPage3SummaryLedger();
+        calculatePage3Financials();
+        showToast(`✅ Installment ${installmentToDelete} deleted successfully!`, "success");
+        installmentToDelete = null;
+    } catch (error) {
+        showToast("❌ Error deleting installment: " + error.message, "error");
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Confirm Delete'; }
+    }
+}
+
+
+/* =====================================================================
+   SECTION 13 — INSTALLMENT MODAL
+   ===================================================================== */
+
+function openPage3InstallmentModal(insId) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    if (!insId) { showToast("❌ Invalid installment ID", "error"); return; }
+    const modal = document.getElementById('installmentModal');
+    if (!modal) { showToast("❌ Modal not found", "error"); return; }
+    try {
+        document.getElementById('currentInsId').value = insId;
+        document.getElementById('insModalHeader').textContent = `Configure Allocation Framework: Installment ${insId}`;
+        const now = new Date();
+        document.getElementById('insDate').max = getIsoDateString(now);
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('insNextDate').min = getIsoDateString(tomorrow);
+        const form = document.getElementById('insForm');
+        if (form) form.reset();
+        togglePaymentFields("Cash");
+        if (page3LocalizedInstallmentsMemory && page3LocalizedInstallmentsMemory[insId]) {
+            const mem = page3LocalizedInstallmentsMemory[insId];
+            const dateInput = document.getElementById('insDate');
+            const receiptInput = document.getElementById('insReceipt');
+            const methodSelect = document.getElementById('insMethod');
+            const nextDateInput = document.getElementById('insNextDate');
+            const amountInput = document.getElementById('insAmount');
+            if (dateInput) dateInput.value = mem.date || '';
+            if (receiptInput) receiptInput.value = mem.receipt || '';
+            if (methodSelect) {
+                methodSelect.value = mem.method || 'Cash';
+                togglePaymentFields(mem.method || 'Cash');
+            }
+            if (mem.method === "UPI") {
+                const upiInput = document.getElementById('insUpiTrans');
+                if (upiInput) upiInput.value = mem.upi || '';
+            }
+            if (mem.method === "Bank Transfer") {
+                const bankInput = document.getElementById('insBankTrans');
+                if (bankInput) bankInput.value = mem.bank || '';
+            }
+            if (nextDateInput) nextDateInput.value = mem.nextDate || '';
+            if (amountInput) amountInput.value = mem.amount || '';
+        }
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
+    } catch (error) {
+        showToast("❌ Error opening installment form: " + error.message, "error");
+    }
+}
+
+function closeInstallmentModal() {
+    try {
+        const modal = document.getElementById('installmentModal');
+        if (modal) {
+            modal.classList.remove('active');
+            modal.style.display = 'none';
+            modal.style.visibility = 'hidden';
+            modal.style.opacity = '0';
+        }
+        const dropdown = document.getElementById('p3_installmentDropdown');
+        if (dropdown) dropdown.value = "";
+        const form = document.getElementById('insForm');
+        if (form) form.reset();
+    } catch (error) {}
+}
+
+function togglePaymentFields(value) {
+    try {
+        const box = document.getElementById('dynamicTransBox');
+        if (!box) return;
+        if (value === "UPI") {
+            box.style.display = 'block';
+            box.innerHTML = `<label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--secondary);">UPI Reference ID String <span style="color: var(--danger);">*</span></label>
+                <input type="text" id="insUpiTrans" required style="padding: 12px 16px; border-radius: 16px; border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; width: 100%;">`;
+        } else if (value === "Bank Transfer") {
+            box.style.display = 'block';
+            box.innerHTML = `<label style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--secondary);">Bank Wire Remittance ID <span style="color: var(--danger);">*</span></label>
+                <input type="text" id="insBankTrans" required style="padding: 12px 16px; border-radius: 16px; border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.9rem; width: 100%;">`;
+        } else {
+            box.style.display = 'none';
+            box.innerHTML = '';
+        }
+    } catch (error) {}
+}
+
+function saveInstallmentState() {
+    try {
+        const insId = document.getElementById('currentInsId').value;
+        if (!insId) { showToast("❌ No installment selected", "error"); return; }
+        const formRef = document.getElementById('insForm');
+        if (!formRef) { showToast("❌ Form not found", "error"); return; }
+        if (!formRef.checkValidity()) { formRef.reportValidity(); return; }
+        const methodVal = document.getElementById('insMethod').value;
+        const amountVal = parseFloat(document.getElementById('insAmount').value) || 0;
+        if (amountVal <= 0) { showToast("❌ Amount must be greater than 0", "error"); return; }
+        page3LocalizedInstallmentsMemory[insId] = {
+            id: insId,
+            date: document.getElementById('insDate').value || '',
+            receipt: document.getElementById('insReceipt').value || '',
+            method: methodVal,
+            upi: (methodVal === "UPI") ? (document.getElementById('insUpiTrans')?.value || '') : '',
+            bank: (methodVal === "Bank Transfer") ? (document.getElementById('insBankTrans')?.value || '') : '',
+            nextDate: document.getElementById('insNextDate').value || '',
+            amount: amountVal
+        };
+        closeInstallmentModal();
+        refreshPage3SummaryLedger();
+        calculatePage3Financials();
+        showToast("✅ Installment saved successfully!", "success");
+    } catch (error) {
+        showToast("❌ Error saving installment: " + error.message, "error");
+    }
+}
+
+
+/* =====================================================================
+   SECTION 14 — COMMIT
+   ===================================================================== */
+
+async function commitModifiedLedgerToCloud() {
+    const btn = document.getElementById('commitUpdatesBtn');
+    const totalFeesVal = parseFloat(document.getElementById('p3_totalFees').value) || 0;
+    const studentName = document.getElementById('p3_studentName').value;
+    if (!studentName || studentName.trim() === '') {
+        showToast("❌ Please select a student first.", "error");
+        return;
+    }
+    if (totalFeesVal <= 0) {
+        showToast("❌ Please assign a valid Total Fees amount.", "error");
+        return;
+    }
+    if (Object.keys(page3LocalizedInstallmentsMemory).length === 0) {
+        showToast("❌ Please add at least one installment.", "error");
+        return;
+    }
+    if (isAddMode) {
+        const dup = checkStudentDuplicate(studentName);
+        if (dup) {
+            showToast(`❌ Student "${studentName}" already has a fees record.`, "error");
+            return;
+        }
+    }
+    showSpinner(btn, true);
+    const action = isAddMode ? "insert" : "update";
+    const payload = {
+        action: action,
+        spreadsheetId: TARGET_SS_ID,
+        sheetName: GLOBAL_SHEET_NAME,
+        "Sr. No": document.getElementById('p3_srNo').value,
+        "Academic Year": document.getElementById('p3_academicYear').value,
+        "Full Name": studentName,
+        "Paid Fees": document.getElementById('p3_paidFees').textContent.replace(/,/g, ''),
+        "Balance Fees": document.getElementById('p3_balanceFees').textContent.replace(/,/g, ''),
+        "Total Fees": totalFeesVal
+    };
+    if (!isAddMode) payload.rowIndex = activeSelectedRowIndex;
+    for (let i = 1; i <= 5; i++) {
+        if (page3LocalizedInstallmentsMemory[i]) {
+            const ins = page3LocalizedInstallmentsMemory[i];
+            payload[`Installment ${i}`] = `Installment ${i}`;
+            payload[`Date ${i}`] = ins.date || '';
+            payload[`Receipt No ${i}`] = ins.receipt || '';
+            payload[`Transaction ${i}`] = ins.method || '';
+            payload[`Bank Trans ${i}`] = ins.bank || '';
+            payload[`UPI Trans ${i}`] = ins.upi || '';
+            payload[`Next Ins Date ${i}`] = ins.nextDate || '';
+            payload[`Amount ${i}`] = ins.amount || 0;
+        } else {
+            payload[`Installment ${i}`] = "";
+            payload[`Date ${i}`] = "";
+            payload[`Receipt No ${i}`] = "";
+            payload[`Transaction ${i}`] = "";
+            payload[`Bank Trans ${i}`] = "";
+            payload[`UPI Trans ${i}`] = "";
+            payload[`Next Ins Date ${i}`] = "";
+            payload[`Amount ${i}`] = "";
+        }
+    }
+    try {
+        const bodyParams = new URLSearchParams();
+        Object.keys(payload).forEach(key => bodyParams.append(key, payload[key]));
+        await fetch(API_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: bodyParams
+        });
+        showToast(`✅ Student Fees ${isAddMode ? 'added' : 'updated'} successfully!`, "success");
+        navigateToPage(1);
+        fetchCloudDataPool();
+    } catch (err) {
+        showToast("❌ Processing error: " + err.message, "error");
+    } finally {
+        showSpinner(btn, false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 15 — DELETE
+   ===================================================================== */
+
+function triggerDeleteConfirmation() {
+    const modal = document.getElementById('deleteConfirmModal');
+    document.getElementById('deleteTargetStudentName').textContent =
+        activeRowDataInstance["Full Name"] || "this profile";
+    modal.classList.add('active');
+}
+
+function closeDeleteConfirmation() {
+    document.getElementById('deleteConfirmModal').classList.remove('active');
+}
+
+async function executeCloudRowDeletion() {
+    const btn = document.getElementById('executePurgeBtn');
+    showSpinner(btn, true);
+    try {
+        const deleteUrlParams = new URLSearchParams();
+        deleteUrlParams.append("action", "delete");
+        deleteUrlParams.append("spreadsheetId", TARGET_SS_ID);
+        deleteUrlParams.append("sheetName", GLOBAL_SHEET_NAME);
+        deleteUrlParams.append("rowIndex", activeSelectedRowIndex);
+        await fetch(API_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: deleteUrlParams
+        });
+        closeDeleteConfirmation();
+        showToast("✅ Record purged successfully!", "success");
+        navigateToPage(1);
+        fetchCloudDataPool();
+    } catch (err) {
+        showToast("❌ Purge operation failed: " + err.message, "error");
+    } finally {
+        showSpinner(btn, false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 16 — REFRESH
+   ===================================================================== */
+
+async function refreshData() {
+    showSpinner(dom.refreshBtn, true);
+    showMobileSpinner('mobileRefreshBtn', true);
+    try {
+        await fetchCloudDataPool();
+        showToast("✅ Data refreshed successfully!", "success");
+    } catch (err) {
+        showToast("❌ Refresh failed: " + err.message, "error");
+    } finally {
+        showSpinner(dom.refreshBtn, false);
+        showMobileSpinner('mobileRefreshBtn', false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 17 — PRINT FEATURE
+   ===================================================================== */
+
+const PRINT_LOGO_URL    = "https://lh3.googleusercontent.com/d/1Vhe8N8xtlYhf1mYkZGo4lbHjSy6cCht9";
+const PRINT_SCHOOL_NAME = "Romiya Primary English Medium School";
+const PRINT_SCHOOL_SUB  = "Fees Receipt / Installment Statement";
+const PRINT_STD_LABEL   = "5th STD";
+
+let printState = {
+    mode: "all",
+    selectedIndexes: new Set(),
+    previewVisible: false
+};
+
+function openPrintOptionsPopup() {
+    if (!activeRowDataInstance) {
+        showToast("❌ No fees record selected to print.", "error");
+        return;
+    }
+    printState = { mode: "all", selectedIndexes: new Set(), previewVisible: false };
+
+    let modal = document.getElementById('printOptionsModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'printOptionsModal';
+        modal.className = 'modal-overlay';
+        document.body.appendChild(modal);
+    }
+    modal.innerHTML = buildPrintOptionsHtml();
+    modal.classList.add('active');
+    modal.style.display = 'flex';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+
+    setTimeout(() => {
+        modal.querySelectorAll('input[name="printMode"]').forEach(r => {
+            r.addEventListener('change', handlePrintModeChange);
+        });
+        modal.querySelectorAll('.print-opt-card').forEach(card => {
+            card.addEventListener('click', function() {
+                setTimeout(() => {
+                    modal.querySelectorAll('.print-opt-card').forEach(c => c.classList.remove('selected'));
+                    const checked = modal.querySelector('input[name="printMode"]:checked');
+                    if (checked && checked.closest('.print-opt-card')) {
+                        checked.closest('.print-opt-card').classList.add('selected');
+                    }
+                }, 0);
+            });
+        });
+        const checkedInit = modal.querySelector('input[name="printMode"]:checked');
+        if (checkedInit && checkedInit.closest('.print-opt-card')) {
+            checkedInit.closest('.print-opt-card').classList.add('selected');
+        }
+        modal.querySelectorAll('.print-ins-checkbox').forEach(cb => {
+            cb.addEventListener('change', handleIndividualCheckboxChange);
+        });
+        document.getElementById('showPrintPreviewBtn')?.addEventListener('click', showPrintPreview);
+        document.getElementById('confirmPrintBtn')?.addEventListener('click', executeBrowserPrint);
+        document.getElementById('closePrintModalBtn')?.addEventListener('click', closePrintOptionsPopup);
+        document.getElementById('cancelPrintBtn')?.addEventListener('click', closePrintOptionsPopup);
+    }, 30);
+}
+
+function buildPrintOptionsHtml() {
+    const row = activeRowDataInstance;
+    const fullName     = row["Full Name"] || row["FullName"] || "Student";
+    const srNo         = row["Sr. No"] || row["SrNo"] || "";
+    const academicYear = row["Academic Year"] || row["AcademicYear"] || "";
+    const paidFees     = parseFloat(row["Paid Fees"] || 0);
+    const balanceFees  = parseFloat(row["Balance Fees"] || 0);
+
+    const installments = [];
+    for (let i = 1; i <= 5; i++) {
+        const mode = row[`Transaction ${i}`] || row[`Installment ${i}`] || "";
+        const amount = parseFloat(row[`Amount ${i}`]) || 0;
+        if (mode && amount > 0) {
+            installments.push({
+                index: i,
+                mode,
+                amount,
+                date: row[`Date ${i}`] || "",
+                receipt: row[`Receipt No ${i}`] || ""
+            });
+        }
+    }
+
+    const insCheckboxesHtml = installments.length
+        ? installments.map(ins => `
+            <label class="print-ins-row">
+                <input type="checkbox" class="print-ins-checkbox" data-ins="${ins.index}" checked>
+                <span class="print-ins-label">
+                    <strong>Installment ${ins.index}</strong>
+                    <small>${escapeHtml(ins.mode)} • ₹${ins.amount.toLocaleString('en-IN')} • ${escapeHtml(ins.date || 'N/A')}</small>
+                </span>
+            </label>
+        `).join('')
+        : `<div style="grid-column:1/-1;padding:1.2rem;color:var(--text-secondary);font-size:0.85rem;text-align:center;">
+              No installments recorded for this student.
+           </div>`;
+
+    return `
+        <div class="modal-box" style="max-width:780px;">
+            <div class="print-modal-header">
+                <div>
+                    <h3><i class="fas fa-print"></i> Print Options</h3>
+                    <span class="pmh-sub">${escapeHtml(fullName)} — ${escapeHtml(PRINT_STD_LABEL)}</span>
+                </div>
+                <button class="close-modal" id="closePrintModalBtn">×</button>
+            </div>
+
+            <div class="print-modal-body">
+                <div class="print-meta-strip">
+                    <span class="print-meta-chip"><i class="fas fa-hashtag"></i> Sr. No: ${escapeHtml(srNo)}</span>
+                    <span class="print-meta-chip"><i class="fas fa-calendar"></i> AY: ${escapeHtml(academicYear)}</span>
+                    <span class="print-meta-chip success"><i class="fas fa-check-circle"></i> Paid: ₹${paidFees.toLocaleString('en-IN')}</span>
+                    <span class="print-meta-chip danger"><i class="fas fa-exclamation-circle"></i> Balance: ₹${balanceFees.toLocaleString('en-IN')}</span>
+                </div>
+
+                <div class="print-section-label">
+                    <i class="fas fa-list-check"></i> Pick up print option
+                </div>
+
+                <label class="print-opt-card selected">
+                    <input type="radio" name="printMode" id="printOptAll" value="all" checked>
+                    <span class="print-opt-content">
+                        <strong>A. Print All Installments</strong>
+                        <small>Print every recorded installment for this student.</small>
+                    </span>
+                </label>
+
+                <label class="print-opt-card">
+                    <input type="radio" name="printMode" id="printOptIndividual" value="individual">
+                    <span class="print-opt-content">
+                        <strong>B. Print Individual Installments</strong>
+                        <small>Choose which installments you want to print below.</small>
+                    </span>
+                </label>
+
+                <div id="individualInsWrap" class="print-ins-wrap" style="display:none;margin-top:0.8rem;">
+                    ${insCheckboxesHtml}
+                </div>
+
+                <div class="print-preview-trigger">
+                    <button id="showPrintPreviewBtn" type="button">
+                        <i class="fas fa-eye"></i> Show Print Preview
+                    </button>
+                </div>
+
+                <div id="printPreviewContainer" style="display:none;"></div>
+
+                <div class="print-modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelPrintBtn">Cancel</button>
+                    <button type="button" id="confirmPrintBtn" class="btn btn-primary" disabled>
+                        <i class="fas fa-print"></i> Print Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function handlePrintModeChange() {
+    const checked = document.querySelector('input[name="printMode"]:checked');
+    printState.mode = checked ? checked.value : 'all';
+    document.querySelectorAll('.print-opt-card').forEach(c => c.classList.remove('selected'));
+    if (checked && checked.closest('.print-opt-card')) {
+        checked.closest('.print-opt-card').classList.add('selected');
+    }
+    const wrap = document.getElementById('individualInsWrap');
+    if (wrap) wrap.style.display = (printState.mode === 'individual') ? 'grid' : 'none';
+    updatePrintPreviewButtonState();
+    hidePreviewIfStale();
+}
+
+function handleIndividualCheckboxChange() {
+    printState.selectedIndexes = new Set(
+        Array.from(document.querySelectorAll('.print-ins-checkbox:checked'))
+             .map(cb => parseInt(cb.getAttribute('data-ins')))
+    );
+    updatePrintPreviewButtonState();
+    hidePreviewIfStale();
+}
+
+function updatePrintPreviewButtonState() {
+    const previewBtn = document.getElementById('showPrintPreviewBtn');
+    const printBtn = document.getElementById('confirmPrintBtn');
+    if (!previewBtn || !printBtn) return;
+    if (printState.mode === 'individual') {
+        const anyChecked = document.querySelectorAll('.print-ins-checkbox:checked').length > 0;
+        previewBtn.disabled = !anyChecked;
+        printBtn.disabled = !anyChecked;
+    } else {
+        previewBtn.disabled = false;
+        printBtn.disabled = false;
+    }
+}
+
+function hidePreviewIfStale() {
+    printState.previewVisible = false;
+    const preview = document.getElementById('printPreviewContainer');
+    if (preview) { preview.style.display = 'none'; preview.innerHTML = ''; }
+    const printBtn = document.getElementById('confirmPrintBtn');
+    if (printBtn) printBtn.disabled = true;
+}
+
+function showPrintPreview() {
+    const container = document.getElementById('printPreviewContainer');
+    if (!container) return;
+    const html = generatePrintHtml({ forPreview: true });
+    container.innerHTML = html;
+    container.style.display = 'block';
+    printState.previewVisible = true;
+    const printBtn = document.getElementById('confirmPrintBtn');
+    if (printBtn) printBtn.disabled = false;
+    setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+}
+
+function executeBrowserPrint() {
+    if (!printState.previewVisible) {
+        showToast("⚠️ Please click 'Show Print Preview' first.", "warning");
+        return;
+    }
+    const html = generatePrintHtml({ forPreview: false });
+    const printWindow = window.open('', '_blank',
+        'width=900,height=1200,toolbar=yes,scrollbars=yes,resizable=yes,menubar=no');
+    if (!printWindow) {
+        showToast("❌ Please allow pop-ups to print.", "error");
+        return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.onload = function () {
+        setTimeout(() => { printWindow.focus(); printWindow.print(); }, 700);
+    };
+}
+
+function generatePrintHtml(opts = { forPreview: false }) {
+    const row = activeRowDataInstance;
+    if (!row) return '<div style="padding:2rem;text-align:center;">No data</div>';
+
+    const fullName     = row["Full Name"] || row["FullName"] || "Student";
+    const srNo         = row["Sr. No"] || row["SrNo"] || "";
+    const academicYear = row["Academic Year"] || row["AcademicYear"] || "";
+    const totalFees    = parseFloat(row["Total Fees"] || 0);
+    const balanceFees  = parseFloat(row["Balance Fees"] || 0);
+
+    const allInstallments = [];
+    for (let i = 1; i <= 5; i++) {
+        const mode = row[`Transaction ${i}`] || row[`Installment ${i}`] || "";
+        const amount = parseFloat(row[`Amount ${i}`]) || 0;
+        if (mode && amount > 0) {
+            allInstallments.push({
+                index: i, mode, amount,
+                date: row[`Date ${i}`] || "",
+                receipt: row[`Receipt No ${i}`] || "",
+                nextDate: row[`Next Ins Date ${i}`] || "",
+                bank: row[`Bank Trans ${i}`] || "",
+                upi: row[`UPI Trans ${i}`] || ""
+            });
+        }
+    }
+
+    let chosenInstallments = allInstallments;
+    if (printState.mode === 'individual') {
+        chosenInstallments = allInstallments.filter(ins => printState.selectedIndexes.has(ins.index));
+    }
+    const chosenSubtotal = chosenInstallments.reduce((a, b) => a + b.amount, 0);
+
+    const installmentRows = chosenInstallments.length
+        ? chosenInstallments.map((ins, idx) => {
+            const ref = ins.bank || ins.upi || "—";
+            return `
+                <tr>
+                    <td style="text-align:center;">${idx + 1}</td>
+                    <td><strong>Installment ${ins.index}</strong></td>
+                    <td>${escapeHtml(ins.date ? formatDisplayDate(ins.date) : "—")}</td>
+                    <td>${escapeHtml(ins.receipt || "—")}</td>
+                    <td>${escapeHtml(ins.mode)}</td>
+                    <td>${escapeHtml(ref)}</td>
+                    <td>${escapeHtml(ins.nextDate ? formatDisplayDate(ins.nextDate) : "—")}</td>
+                    <td style="text-align:right;font-weight:800;">₹${ins.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                </tr>
+            `;
+        }).join('')
+        : `<tr><td colspan="8" style="text-align:center;padding:1rem;color:#64748b;">No installments selected</td></tr>`;
+
+    const wrapperStart = opts.forPreview
+        ? `<div style="background:#eef2f7;padding:1rem;border-radius:12px;overflow:auto;max-height:620px;">`
+        : `<div>`;
+    const wrapperEnd = `</div>`;
+
+    return `
+    ${wrapperStart}
+    <style>
+        .print-sheet, .print-sheet * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        }
+        .print-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: #ffffff;
+            color: #0d2c54;
+            padding: 0;
+            position: relative;
+            border: 2px solid #0d2c54;
+            border-radius: 3mm;
+            box-shadow: 0 8px 30px rgba(13, 44, 84, 0.18);
+            overflow: hidden;
+        }
+        .print-inner {
+            padding: 8mm 12mm 20mm 12mm;
+            min-height: 297mm;
+            position: relative;
+        }
+        .print-ribbon {
+            height: 6mm;
+            background: linear-gradient(90deg, #0d2c54 0%, #2563eb 50%, #0d2c54 100%);
+        }
+        .print-header {
+            display: flex;
+            align-items: center;
+            gap: 6mm;
+            padding-bottom: 4mm;
+            margin-top: 3mm;
+            border-bottom: 2px solid #0d2c54;
+        }
+        .print-logo {
+            width: 24mm; height: 24mm;
+            object-fit: contain;
+            border: 1.5px solid #2563eb;
+            border-radius: 3mm;
+            padding: 1mm;
+            background: #fff;
+            flex-shrink: 0;
+        }
+        .print-title-block { flex: 1; text-align: center; }
+        .print-title-block h1 {
+            font-size: 18pt; font-weight: 900;
+            color: #0d2c54;
+            letter-spacing: 0.5px;
+            margin: 0;
+            text-transform: uppercase;
+            line-height: 1.15;
+        }
+        .print-title-block .print-sub {
+            display: inline-block;
+            margin-top: 2mm;
+            background: linear-gradient(135deg, #0d2c54, #2563eb);
+            color: #fff;
+            font-size: 9.5pt;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            padding: 1.2mm 8mm;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+        .print-title-block .print-subtag {
+            display: block;
+            margin-top: 1.5mm;
+            font-size: 8.5pt;
+            color: #64748b;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+        .print-student-strip {
+            margin-top: 5mm;
+            padding: 3.5mm 4mm;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #93c5fd;
+            border-left: 4px solid #2563eb;
+            border-radius: 2mm;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3mm 6mm;
+            font-size: 9.5pt;
+        }
+        .print-student-strip .ps-item { display: flex; flex-direction: column; }
+        .print-student-strip .ps-label {
+            font-size: 7.5pt;
+            color: #2563eb;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-student-strip .ps-value {
+            font-size: 11pt;
+            font-weight: 800;
+            color: #0d2c54;
+            margin-top: 0.8mm;
+        }
+        .print-section-title {
+            margin-top: 6mm;
+            display: inline-block;
+            background: #0d2c54;
+            color: #fff;
+            font-size: 10pt;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            padding: 1.3mm 6mm;
+            border-radius: 20px 20px 0 0;
+            text-transform: uppercase;
+        }
+        .print-table-wrap {
+            border: 1.5px solid #0d2c54;
+            border-radius: 0 2mm 2mm 2mm;
+            overflow: hidden;
+            margin-top: -0.5mm;
+        }
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.8pt;
+        }
+        .print-table thead th {
+            background: linear-gradient(135deg, #0d2c54 0%, #2563eb 100%);
+            color: #fff;
+            padding: 2.5mm 2mm;
+            text-align: left;
+            font-size: 8.2pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            border-right: 1px solid rgba(255,255,255,0.15);
+        }
+        .print-table thead th:last-child { border-right: none; }
+        .print-table tbody td {
+            padding: 2.5mm 2mm;
+            border-bottom: 1px solid #dbeafe;
+            color: #0f172a;
+            font-weight: 500;
+        }
+        .print-table tbody tr:nth-child(even) td { background: #f8fafc; }
+        .print-table tbody tr:last-child td { border-bottom: none; }
+        .print-summary-box {
+            margin-top: 5mm;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3mm;
+        }
+        .print-summary-card {
+            border: 1.5px solid #93c5fd;
+            border-radius: 2mm;
+            padding: 3mm 3mm 3mm 5mm;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+        .print-summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #0d2c54, #2563eb);
+        }
+        .print-summary-card .sc-label {
+            font-size: 7.5pt;
+            color: #64748b;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .print-summary-card .sc-value {
+            font-size: 13pt;
+            font-weight: 900;
+            margin-top: 1mm;
+            color: #0d2c54;
+        }
+        .print-summary-card.paid .sc-value { color: #059669; }
+        .print-summary-card.balance .sc-value { color: #dc2626; }
+        .print-declaration {
+            margin-top: 5mm;
+            padding: 3mm 4mm;
+            background: #eff6ff;
+            border: 1px dashed #2563eb;
+            border-radius: 2mm;
+            font-size: 8.5pt;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+        .print-declaration strong { color: #0d2c54; }
+        .print-sign-row {
+            margin-top: 14mm;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22mm;
+            padding: 0 6mm;
+        }
+        .print-sign-box {
+            text-align: center;
+            padding-top: 14mm;
+            border-top: 1.5px solid #0d2c54;
+            font-size: 9.5pt;
+            font-weight: 800;
+            color: #0d2c54;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .print-sign-box small {
+            display: block;
+            font-size: 7.5pt;
+            color: #64748b;
+            font-weight: 600;
+            margin-top: 0.8mm;
+            text-transform: none;
+        }
+        .print-footer-note {
+            position: absolute;
+            bottom: 4mm;
+            left: 12mm;
+            right: 12mm;
+            text-align: center;
+            font-size: 7.5pt;
+            color: #64748b;
+            padding-top: 2mm;
+            border-top: 1px dashed #cbd5e1;
+        }
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+            }
+            .print-sheet {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                border: none !important;
+                width: 210mm !important;
+                min-height: 297mm !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+
+    <div class="print-sheet">
+        <div class="print-ribbon"></div>
+        <div class="print-inner">
+            <div class="print-header">
+                <img src="${PRINT_LOGO_URL}" alt="Logo" class="print-logo"
+                     onerror="this.style.visibility='hidden'">
+                <div class="print-title-block">
+                    <h1>${escapeHtml(PRINT_SCHOOL_NAME)}</h1>
+                    <span class="print-sub">${escapeHtml(PRINT_SCHOOL_SUB)}</span>
+                    <span class="print-subtag">Academic Year ${escapeHtml(academicYear || "—")}</span>
+                </div>
+            </div>
+
+            <div class="print-student-strip">
+                <div class="ps-item">
+                    <span class="ps-label">Student Name</span>
+                    <span class="ps-value">${escapeHtml(fullName)}</span>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-label">Std</span>
+                    <span class="ps-value">${escapeHtml(PRINT_STD_LABEL)}</span>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-label">Academic Year</span>
+                    <span class="ps-value">${escapeHtml(academicYear || "—")}</span>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-label">Sr. No</span>
+                    <span class="ps-value">${escapeHtml(String(srNo || "—"))}</span>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-label">Date</span>
+                    <span class="ps-value">${escapeHtml(formatDisplayDate(getIsoDateString(new Date())))}</span>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-label">Printed On</span>
+                    <span class="ps-value" style="font-size:9pt;">${new Date().toLocaleString('en-GB', { hour12: true })}</span>
+                </div>
+            </div>
+
+            <div class="print-section-title">
+                <i class="fas fa-layer-group"></i> Installment Details
+            </div>
+            <div class="print-table-wrap">
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th style="width:8%;text-align:center;">#</th>
+                            <th style="width:15%;">Installment</th>
+                            <th style="width:13%;">Date</th>
+                            <th style="width:12%;">Receipt No</th>
+                            <th style="width:13%;">Mode</th>
+                            <th style="width:14%;">Reference</th>
+                            <th style="width:13%;">Next Due</th>
+                            <th style="width:12%;text-align:right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${installmentRows}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="print-summary-box">
+                <div class="print-summary-card">
+                    <div class="sc-label">Total Fees</div>
+                    <div class="sc-value">₹${totalFees.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="print-summary-card paid">
+                    <div class="sc-label">Paid (Selected)</div>
+                    <div class="sc-value">₹${chosenSubtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+                <div class="print-summary-card balance">
+                    <div class="sc-label">Balance Due</div>
+                    <div class="sc-value">₹${balanceFees.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                </div>
+            </div>
+
+            <div class="print-declaration">
+                <strong>Note:</strong> This is a computer-generated fee receipt / installment statement.
+                Please retain it for your records. Any discrepancy must be reported to the accounts
+                department within 7 days from the date of issue.
+            </div>
+
+            <div class="print-sign-row">
+                <div class="print-sign-box">
+                    Fees Receiver Sign
+                    <small>Authorized Accounts Staff</small>
+                </div>
+                <div class="print-sign-box">
+                    Director Sign
+                    <small>${escapeHtml(PRINT_SCHOOL_NAME)}</small>
+                </div>
+            </div>
+
+           <!-- <div class="print-footer-note">
+                ${escapeHtml(PRINT_SCHOOL_NAME)} • Official Fees Statement • Generated on ${new Date().toLocaleString('en-GB')}
+            </div> -->
+        </div>
+    </div>
+    ${wrapperEnd}
+    `;
+}
+
+function closePrintOptionsPopup() {
+    const modal = document.getElementById('printOptionsModal');
+    if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+    }
+    printState = { mode: "all", selectedIndexes: new Set(), previewVisible: false };
+}
+
+function bindPrintButton() {
+    const printBtn = document.getElementById('printFromDetailBtn');
+    if (printBtn && !printBtn.dataset.printBound) {
+        printBtn.addEventListener('click', openPrintOptionsPopup);
+        printBtn.dataset.printBound = "1";
+        console.log('✅ Print button bound');
+    }
+}
+
+
+/* =====================================================================
+   SECTION 18 — INITIALIZATION
+   ===================================================================== */
+
+function initApp() {
+    cacheDomElements();
+    updateAdminBadge();
+
+    dom.tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;"><div class="spinner"></div> Loading fees records...</td></tr>';
+    fetchCloudDataPool();
+    fetchRosterList();
+
+    window.onclick = function(event) {
+        if (event.target.classList && event.target.classList.contains('modal-overlay')) {
+            const modalId = event.target.id;
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.display = 'none';
+                modal.style.visibility = 'hidden';
+                modal.style.opacity = '0';
+                if (modalId === 'installmentModal') {
+                    const form = document.getElementById('insForm');
+                    if (form) form.reset();
+                    const dropdown = document.getElementById('p3_installmentDropdown');
+                    if (dropdown) dropdown.value = "";
+                }
+                if (modalId === 'printOptionsModal') {
+                    printState = { mode: "all", selectedIndexes: new Set(), previewVisible: false };
+                }
+            }
+        }
+    };
+
+    dom.searchInput?.addEventListener('input', (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => filterRosterTable(e.target.value), 300);
+    });
+
+    dom.refreshBtn?.addEventListener('click', refreshData);
+    dom.mobileRefreshBtn?.addEventListener('click', refreshData);
+
+    dom.addNewBtn?.addEventListener('click', function(e) {
+        e.preventDefault();
+        activeRowDataInstance = null;
+        activeSelectedRowIndex = -1;
+        loadPage3Setup(true);
+    });
+
+    dom.mobileAddBtn?.addEventListener('click', function(e) {
+        e.preventDefault();
+        activeRowDataInstance = null;
+        activeSelectedRowIndex = -1;
+        loadPage3Setup(true);
+    });
+
+    dom.backBtn?.addEventListener('click', () => navigateToPage(1));
+    dom.backToPage2Btn?.addEventListener('click', () => {
+        if (isAddMode) navigateToPage(1);
+        else navigateToPage(2);
+    });
+    dom.editBtn?.addEventListener('click', () => loadPage3Setup(false));
+    dom.deleteBtn?.addEventListener('click', triggerDeleteConfirmation);
+
+    document.getElementById('closeGlobalModal')?.addEventListener('click', () => dom.globalModal.classList.remove('active'));
+    document.getElementById('closeStudentSelectorBtn')?.addEventListener('click', closeStudentSelector);
+    document.getElementById('closeInsModalBtn')?.addEventListener('click', closeInstallmentModal);
+    document.getElementById('closeDeleteModalBtn')?.addEventListener('click', closeDeleteConfirmation);
+
+    // Print button binding
+    bindPrintButton();
+    setTimeout(bindPrintButton, 500);
+    const observer = new MutationObserver(() => bindPrintButton());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(() => fetchCloudDataPool(), 5000);
+    console.log('✅ Fees_5th_STD.html app initialised');
+}
+
+
+/* =====================================================================
+   SECTION 19 — BOOTSTRAP
+   ===================================================================== */
+
+(function bootstrap() {
+    syncThemeWithParent();
+    const startWhenReady = () => {
+        setTimeout(() => {
+            gateAdminAccess(() => initApp());
+        }, 800);
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 20 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+window.openStudentSelector = openStudentSelector;
+window.filterStudentList = filterStudentList;
+window.selectStudent = selectStudent;
+window.openPage3InstallmentModal = openPage3InstallmentModal;
+window.closeInstallmentModal = closeInstallmentModal;
+window.togglePaymentFields = togglePaymentFields;
+window.saveInstallmentState = saveInstallmentState;
+window.showInstallmentDeleteConfirm = showInstallmentDeleteConfirm;
+window.closeInstallmentDeleteModal = closeInstallmentDeleteModal;
+window.executeInstallmentDeletion = executeInstallmentDeletion;
+window.calculatePage3Financials = calculatePage3Financials;
+window.commitModifiedLedgerToCloud = commitModifiedLedgerToCloud;
+window.navigateToPage = navigateToPage;
+window.executeCloudRowDeletion = executeCloudRowDeletion;
+window.closeDeleteConfirmation = closeDeleteConfirmation;
+window.openPrintOptionsPopup = openPrintOptionsPopup;
+window.closePrintOptionsPopup = closePrintOptionsPopup;
+window.showPrintPreview = showPrintPreview;
+window.executeBrowserPrint = executeBrowserPrint;
+window.generatePrintHtml = generatePrintHtml;
+
+console.log('✅ Fees_5th_STD.html script initialised (auth-gated + print)');
+</script>
+</body>
+</html>

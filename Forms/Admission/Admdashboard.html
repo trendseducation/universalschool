@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Universal English Medium High School | Admission Dashboard</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ⭐ loginadmin.js - Handles authentication -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <!-- ⭐ footer-loader.js -->
+    <script src="../../Script/footer-loader.js" data-footer="true" data-footer-path="../../Script/footer.html"></script>
+
+    <style>
+        /* ================================================================
+           CSS VARIABLES - Light & Dark Mode
+           ================================================================ */
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-section: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --accent-hover: #1d4ed8;
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --gradient-accent: linear-gradient(135deg, #2563eb, #7c3aed);
+            --logo-filter: none;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-light: rgba(239, 68, 68, 0.1);
+            --info: #06b6d4;
+            --admin-gold: #f59e0b;
+            --admin-badge-bg: rgba(245, 158, 11, 0.15);
+            --transition: 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-section: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --accent-hover: #60a5fa;
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            /* ⚠️ In dark mode we DON'T invert a colored logo — keep original colors */
+            --logo-filter: none;
+            --danger-light: rgba(239, 68, 68, 0.2);
+            --admin-badge-bg: rgba(245, 158, 11, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background-color var(--transition), color var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================================================================
+           LOADING OVERLAY
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        #authLoading.hidden { display: none !important; }
+
+        #authLoading .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           MAIN CONTENT
+           ================================================================ */
+        .main-content {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto 2rem auto;
+            padding: 1rem 0.8rem 0 0.8rem;
+        }
+
+        /* ================================================================
+           BRAND HEADER  (responsive + two-line title on mobile)
+           ================================================================ */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            margin-bottom: 1rem;
+            background: var(--bg-card);
+            border: var(--card-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+        }
+
+        .brand-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        /* Logo wrapper with fallback state */
+        .brand-logo-wrap {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--border-light);
+            padding: 3px;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .brand-logo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            filter: var(--logo-filter);
+        }
+        /* Inline SVG fallback — hidden by default, shown if all <img> attempts fail */
+        .brand-logo-fallback {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-accent);
+            border-radius: 9px;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+        .brand-logo-wrap.fallback-active img { display: none; }
+        .brand-logo-wrap.fallback-active .brand-logo-fallback { display: flex; }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+        .brand-text h1 {
+            /* ✅ ALLOW 2 LINES on mobile (no more ellipsis cut-off) */
+            font-size: 0.92rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            word-break: break-word;
+        }
+        .brand-text span {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .brand-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            flex: 0 0 auto;
+        }
+
+        /* Admin badge */
+        .admin-badge {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            background: var(--admin-badge-bg);
+            color: var(--admin-gold);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            border: 1px solid var(--admin-gold);
+            white-space: nowrap;
+        }
+        .admin-badge.visible { display: inline-flex; }
+        .admin-badge i { font-size: 0.62rem; }
+        .admin-badge .session-pill {
+            font-size: 0.5rem;
+            padding: 1px 5px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+
+        /* Back-to-account button */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 5px 11px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn-back:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* ================================================================
+           ACADEMIC YEAR PILL
+           ================================================================ */
+        .page-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            padding: 0.6rem 0;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .page-title h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .page-title h2 i {
+            font-size: 1.05rem;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 7px;
+            border-radius: 10px;
+        }
+        .page-title .academic-year {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ================================================================
+           SECTION HEADERS
+           ================================================================ */
+        .section-header {
+            background: var(--bg-section);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin: 1.5rem 0 0.9rem 0;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .section-header .section-icon {
+            font-size: 1.05rem;
+            color: var(--accent);
+            background: var(--accent-soft);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .section-header .section-info { flex: 1; min-width: 0; }
+        .section-header .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+        .section-header .section-sub {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: block;
+        }
+        .section-header .section-badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ================================================================
+           ADMISSION GRID
+           ================================================================ */
+        .admission-grid {
+            display: grid;
+            gap: 0.7rem;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-link { text-decoration: none; display: block; }
+
+        .admission-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 1rem 0.7rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            height: 100%;
+            min-height: 125px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .admission-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .admission-card:active::before { opacity: 1; }
+        .admission-card:active { transform: scale(0.97); }
+
+        .card-icon {
+            font-size: 1.35rem;
+            color: var(--accent);
+            background: var(--accent-soft);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin: 0 auto 0.5rem;
+            transition: all var(--transition);
+            flex-shrink: 0;
+        }
+        .card-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.15rem;
+            line-height: 1.2;
+        }
+        .card-description {
+            /* ✅ NOW ALWAYS VISIBLE, even on mobile */
+            display: block;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            line-height: 1.25;
+            margin-bottom: 0.3rem;
+        }
+        .card-badge {
+            display: inline-block;
+            font-size: 0.48rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 2px 9px;
+            border-radius: 30px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            transition: all var(--transition);
+        }
+        .admission-card:active .card-badge {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ================================================================
+           RESPONSIVE BREAKPOINTS
+           ================================================================ */
+
+        /* --- Tablet (>=600px) --- */
+        @media (min-width: 600px) {
+            .main-content { padding: 1.4rem 1.2rem 0 1.2rem; }
+
+            .brand-header { padding: 0.9rem 1.2rem; border-radius: 20px; }
+            .brand-logo-wrap { width: 54px; height: 54px; border-radius: 14px; padding: 4px; }
+            .brand-text h1 { font-size: 1.05rem; line-height: 1.25; }
+            .brand-text span { font-size: 0.68rem; }
+            .admin-badge { font-size: 0.68rem; padding: 5px 12px; }
+            .btn-back { font-size: 0.72rem; padding: 6px 13px; }
+
+            .page-title { flex-direction: row; align-items: center; justify-content: space-between; padding: 0.8rem 0; }
+            .page-title h2 { font-size: 1.4rem; }
+            .page-title h2 i { font-size: 1.2rem; padding: 8px; border-radius: 12px; }
+            .page-title .academic-year { font-size: 0.78rem; padding: 6px 16px; }
+
+            .section-header { padding: 12px 18px; border-radius: 16px; }
+            .section-header .section-icon { width: 42px; height: 42px; font-size: 1.25rem; }
+            .section-header .section-title { font-size: 1.05rem; }
+            .section-header .section-sub { font-size: 0.68rem; }
+            .section-header .section-badge { font-size: 0.62rem; }
+
+            .admission-grid { gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+            .admission-card { padding: 1.4rem 1rem; min-height: 155px; border-radius: 18px; }
+            .card-icon { width: 52px; height: 52px; font-size: 1.55rem; border-radius: 15px; }
+            .card-title { font-size: 0.95rem; }
+            .card-description { font-size: 0.7rem; }
+            .card-badge { font-size: 0.55rem; padding: 3px 12px; }
+        }
+
+        /* --- Desktop (>=1024px) --- */
+        @media (min-width: 1024px) {
+            .main-content { padding: 1.8rem 2rem 0 2rem; }
+
+            .brand-header { padding: 1rem 1.6rem; border-radius: 22px; }
+            .brand-logo-wrap { width: 64px; height: 64px; border-radius: 16px; padding: 5px; }
+            .brand-text h1 { font-size: 1.32rem; }
+            .brand-text span { font-size: 0.74rem; }
+            .admin-badge { font-size: 0.72rem; }
+            .btn-back { font-size: 0.78rem; padding: 7px 16px; }
+
+            .page-title h2 { font-size: 1.9rem; }
+            .page-title h2 i { font-size: 1.5rem; padding: 10px; border-radius: 14px; }
+            .page-title .academic-year { font-size: 0.88rem; padding: 8px 20px; }
+
+            .section-header { padding: 16px 24px; border-radius: 20px; margin: 2.2rem 0 1.4rem 0; }
+            .section-header .section-icon { width: 50px; height: 50px; font-size: 1.5rem; }
+            .section-header .section-title { font-size: 1.3rem; }
+            .section-header .section-sub { font-size: 0.8rem; }
+            .section-header .section-badge { font-size: 0.68rem; padding: 4px 14px; }
+
+            /* 7 cards → auto-fill looks best at 5 per row */
+            .admission-grid { gap: 1.5rem; grid-template-columns: repeat(5, 1fr); }
+            .admission-card { padding: 1.75rem 1.2rem; min-height: 185px; border-radius: 20px; }
+            .admission-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+            .admission-card:hover::before { opacity: 1; }
+            .admission-card:hover .card-icon { background: var(--gradient-accent); color: white; transform: scale(1.05); }
+            .admission-card:hover .card-badge { background: var(--accent); color: white; }
+            .card-icon { width: 60px; height: 60px; font-size: 1.8rem; margin: 0 auto 0.7rem; }
+            .card-title { font-size: 1.08rem; }
+            .card-description { font-size: 0.75rem; }
+            .card-badge { font-size: 0.6rem; padding: 4px 14px; }
+        }
+
+        /* --- Very small phones (<380px) --- */
+        @media (max-width: 380px) {
+            .main-content { padding: 0.7rem 0.5rem 0 0.5rem; }
+
+            .brand-header { padding: 0.55rem 0.7rem; border-radius: 12px; gap: 0.5rem; }
+            .brand-logo-wrap { width: 38px; height: 38px; border-radius: 10px; padding: 2px; }
+            .brand-text h1 { font-size: 0.82rem; line-height: 1.15; }
+            .brand-text span { font-size: 0.55rem; }
+            /* Stack badge + button below the brand on tiny screens */
+            .brand-right { width: 100%; justify-content: flex-start; }
+            .admin-badge { font-size: 0.58rem; padding: 3px 8px; }
+            .btn-back { font-size: 0.6rem; padding: 4px 9px; }
+
+            .page-title h2 { font-size: 1rem; }
+            .page-title h2 i { font-size: 0.9rem; padding: 5px; border-radius: 8px; }
+            .page-title .academic-year { font-size: 0.58rem; padding: 3px 10px; }
+
+            .section-header { padding: 9px 11px; margin: 1.1rem 0 0.7rem 0; border-radius: 11px; gap: 7px; }
+            .section-header .section-icon { width: 30px; height: 30px; font-size: 0.85rem; border-radius: 9px; }
+            .section-header .section-title { font-size: 0.82rem; }
+            .section-header .section-sub { font-size: 0.52rem; }
+            .section-header .section-badge { font-size: 0.5rem; padding: 2px 7px; }
+
+            .admission-grid { gap: 0.45rem; grid-template-columns: 1fr 1fr; }
+            .admission-card { padding: 0.7rem 0.4rem; min-height: 105px; border-radius: 11px; }
+            .card-icon { width: 34px; height: 34px; font-size: 1rem; border-radius: 9px; margin-bottom: 0.35rem; }
+            .card-title { font-size: 0.7rem; }
+            .card-description { font-size: 0.55rem; line-height: 1.15; }
+            .card-badge { font-size: 0.42rem; padding: 1px 7px; }
+        }
+
+        /* --- Landscape short screens --- */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .main-content { padding: 0.5rem 0.8rem 0 0.8rem; }
+            .brand-header { padding: 0.45rem 0.8rem; margin-bottom: 0.6rem; }
+            .brand-logo-wrap { width: 36px; height: 36px; }
+            .brand-text h1 { font-size: 0.85rem; }
+            .brand-text span { font-size: 0.55rem; }
+            .page-title { margin-bottom: 0.5rem; padding: 0.35rem 0; }
+            .page-title h2 { font-size: 1.05rem; }
+            .section-header { padding: 7px 11px; margin: 0.9rem 0 0.55rem 0; }
+            .admission-grid { gap: 0.5rem; grid-template-columns: repeat(5, 1fr); }
+            .admission-card { padding: 0.55rem 0.4rem; min-height: 85px; }
+            .card-icon { width: 30px; height: 30px; font-size: 0.85rem; margin-bottom: 0.2rem; }
+            .card-title { font-size: 0.62rem; }
+            .card-description { font-size: 0.5rem; line-height: 1.1; }
+            .card-badge { font-size: 0.4rem; padding: 1px 6px; }
+        }
+
+        @media (hover: none) {
+            .admission-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+            .admission-card:hover::before { opacity: 0; }
+            .admission-card:active { transform: scale(0.97); }
+            .admission-card:active::before { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY -->
+    <!-- ================================================================ -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ================================================================ -->
+    <main class="main-content" id="mainContent" style="display:none;">
+
+        <!-- BRAND HEADER -->
+        <div class="brand-header">
+            <div class="brand-left">
+                <div class="brand-logo-wrap" id="brandLogoWrap">
+                    <img id="brandLogoImg"
+                         src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                         alt="Universal English Medium High School logo"
+                         data-fallback-stage="0"
+                         crossorigin="anonymous"
+                         referrerpolicy="no-referrer">
+                    <div class="brand-logo-fallback" aria-hidden="true">
+                        <i class="fas fa-school"></i>
+                    </div>
+                </div>
+                <div class="brand-text">
+                    <h1>Universal English Medium High School</h1>
+                    <span>Admission Dashboard</span>
+                </div>
+            </div>
+            <div class="brand-right">
+                <span class="admin-badge" id="adminBadge">
+                    <i class="fas fa-user-shield"></i>
+                    <span id="adminNameDisplay">Admin</span>
+                    <span class="session-pill" id="sessionIndicator">Session</span>
+                </span>
+                <a href="../../Study Material/My Account/myaccount.html" class="btn-back">
+                    <i class="fas fa-user-circle"></i> My Account
+                </a>
+            </div>
+        </div>
+
+        <!-- PAGE TITLE + ACADEMIC YEAR -->
+        <div class="page-title">
+            <h2><i class="fas fa-graduation-cap"></i> Admission Forms</h2>
+            <span class="academic-year" id="academicYearDisplay">
+                <i class="far fa-calendar-alt"></i> 2026-27
+            </span>
+        </div>
+		
+		<!-- ============================================================
+             SECTION A — PRE - PRIMARY SECTION (JR KG and SR KG)
+             ============================================================ -->
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-child"></i></div>
+            <div class="section-info">
+                <div class="section-title">Pre - Primary Section</div>
+                <span class="section-sub">Standards JR KG & SR KG</span>
+            </div>
+            <span class="section-badge">7</span>
+        </div>
+
+        <div class="admission-grid">
+            <a href="Adm_JR_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">JR KG</h3>
+                    <p class="card-description">Admission Form for JR KG Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_SR_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">SR KG</h3>
+                    <p class="card-description">Admission Form for SR_KG Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+			</div>
+
+        <!-- ============================================================
+             SECTION A — PRIMARY SECTION (1st – 7th Std)
+             ============================================================ -->
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-child"></i></div>
+            <div class="section-info">
+                <div class="section-title">Primary Section</div>
+                <span class="section-sub">Standards 1st to 7th</span>
+            </div>
+            <span class="section-badge">7</span>
+        </div>
+
+        <div class="admission-grid">
+            <a href="Adm_1st_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">1st Std</h3>
+                    <p class="card-description">Admission Form for 1st Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_2nd_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">2nd Std</h3>
+                    <p class="card-description">Admission Form for 2nd Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_3rd_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">3rd Std</h3>
+                    <p class="card-description">Admission Form for 3rd Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_4th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-child"></i></div>
+                    <h3 class="card-title">4th Std</h3>
+                    <p class="card-description">Admission Form for 4th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_5th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3 class="card-title">5th Std</h3>
+                    <p class="card-description">Admission Form for 5th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_6th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3 class="card-title">6th Std</h3>
+                    <p class="card-description">Admission Form for 6th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_7th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3 class="card-title">7th Std</h3>
+                    <p class="card-description">Admission Form for 7th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- ============================================================
+             SECTION B — SECONDARY SECTION (8th – 10th Std)
+             ============================================================ -->
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-book-reader"></i></div>
+            <div class="section-info">
+                <div class="section-title">Secondary Section</div>
+                <span class="section-sub">Standards 8th to 10th</span>
+            </div>
+            <span class="section-badge">3</span>
+        </div>
+
+        <div class="admission-grid">
+            <a href="Adm_8th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+                    <h3 class="card-title">8th Std</h3>
+                    <p class="card-description">Admission Form for 8th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_9th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-book-reader"></i></div>
+                    <h3 class="card-title">9th Std</h3>
+                    <p class="card-description">Admission Form for 9th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+
+            <a href="Adm_10th_STD.html" class="card-link">
+                <div class="admission-card">
+                    <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h3 class="card-title">10th Std</h3>
+                    <p class="card-description">Admission Form for 10th Standard</p>
+                    <span class="card-badge">Apply</span>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- ================================================================ -->
+    <!-- SCRIPTS -->
+    <!-- ================================================================ -->
+    <script>
+    /* =====================================================================
+       Admdashboard.html — Auth Guard + Theme Sync + Logo Fallback
+       ===================================================================== */
+
+
+    /* ============================================================
+       ⭐ LOGO FALLBACK LOADER
+       ------------------------------------------------------------
+       Tries multiple Drive URL formats in order. If all fail,
+       shows the inline SVG fallback so the header NEVER looks broken.
+       ============================================================ */
+    (function setupLogoFallback() {
+        const LOGO_ID = '1ZbIwxZRLxZRX2lXEqohd3783UTnv_6Z5';
+
+        // Ordered list of candidate URLs (best → worst)
+        const candidates = [
+            `https://lh3.googleusercontent.com/d/${LOGO_ID}=w200`,
+            `https://lh3.googleusercontent.com/d/${LOGO_ID}`,
+            `https://drive.google.com/thumbnail?id=${LOGO_ID}&sz=w200`,
+            `https://drive.google.com/uc?export=view&id=${LOGO_ID}`
+        ];
+
+        function activateFallback() {
+            const wrap = document.getElementById('brandLogoWrap');
+            if (wrap) wrap.classList.add('fallback-active');
+            console.warn('⚠️ All logo URLs failed — using inline SVG fallback');
+        }
+
+        function tryNext(img, stage) {
+            if (stage >= candidates.length) {
+                activateFallback();
+                return;
+            }
+            img.setAttribute('data-fallback-stage', String(stage));
+            img.src = candidates[stage];
+            // onerror set in the next block will re-fire tryNext
+            img.onerror = () => {
+                console.warn(`Logo attempt ${stage + 1} failed:`, candidates[stage]);
+                tryNext(img, stage + 1);
+            };
+        }
+
+        function boot() {
+            const img = document.getElementById('brandLogoImg');
+            if (!img) return;
+
+            // Verify the initial src loads; if not, walk the candidate list
+            if (img.complete && img.naturalWidth > 0) {
+                console.log('✅ Logo loaded:', img.src);
+                return;
+            }
+            img.onerror = () => {
+                console.warn('Logo attempt 1 failed:', img.src);
+                tryNext(img, 1);
+            };
+            // If after 4s still no image, force fallback
+            setTimeout(() => {
+                if (!img.complete || img.naturalWidth === 0) {
+                    tryNext(img, 1);
+                }
+            }, 4000);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', boot);
+        } else {
+            boot();
+        }
+    })();
+
+
+    /* ================= SESSION READER (matches myaccount.html) ================= */
+    function readMyAccountSession(key) {
+        try {
+            const rawLocal = localStorage.getItem(key);
+            if (rawLocal) {
+                const parsed = JSON.parse(rawLocal);
+                if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                    if (parsed.expiry && Date.now() >= parsed.expiry) {
+                        localStorage.removeItem(key);
+                        return null;
+                    }
+                    return parsed.value;
+                }
+                return parsed;
+            }
+        } catch (e) {}
+        try {
+            const rawSession = sessionStorage.getItem(key);
+            if (rawSession) return JSON.parse(rawSession);
+        } catch (e) {}
+        return null;
+    }
+
+    function checkAdminAuth() {
+        const userType = readMyAccountSession('Universal_user_type');
+        const user     = readMyAccountSession('Universal_user');
+        const expiry   = readMyAccountSession('Universal_session_expiry');
+
+        if (!userType || !user) return { ok: false, reason: 'no-session' };
+        if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+        if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+            ['Universal_user','Universal_user_data','Universal_user_type',
+             'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+                localStorage.removeItem(k);
+                sessionStorage.removeItem(k);
+            });
+            return { ok: false, reason: 'expired' };
+        }
+        return { ok: true, userType, user };
+    }
+
+    function redirectToMyAccount(reason) {
+        console.warn('🔒 Admin auth failed:', reason);
+        try {
+            if (window.top && window.top !== window) {
+                window.top.location.href = '../../Study Material/My Account/myaccount.html';
+            } else {
+                window.location.href = '../../Study Material/My Account/myaccount.html';
+            }
+        } catch (e) {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    }
+
+    /* ================= ADMIN BADGE ================= */
+    function updateAdminBadge() {
+        const userData = readMyAccountSession('Universal_user_data');
+        const user = readMyAccountSession('Universal_user');
+        const expiry = readMyAccountSession('Universal_session_expiry');
+
+        const badge = document.getElementById('adminBadge');
+        const nameDisplay = document.getElementById('adminNameDisplay');
+        const indicator = document.getElementById('sessionIndicator');
+
+        let displayName = 'Admin';
+        if (userData) {
+            if (userData['User Name']) displayName = userData['User Name'];
+            else if (userData['Full Name']) displayName = userData['Full Name'];
+            else if (userData['First Name']) {
+                displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+            }
+        } else if (user) {
+            displayName = user;
+        }
+
+        if (nameDisplay) nameDisplay.textContent = displayName;
+        if (badge) badge.classList.add('visible');
+
+        if (indicator) {
+            const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+            if (isRememberMe) {
+                const remaining = expiry - Date.now();
+                const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+                const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+                indicator.style.background = 'rgba(16,185,129,0.3)';
+                indicator.style.color = '#34d399';
+            } else {
+                indicator.textContent = 'Session';
+                indicator.style.background = 'rgba(255,255,255,0.15)';
+                indicator.style.color = '';
+            }
+        }
+    }
+
+    /* ================= AUTH GATE ================= */
+    function gateAdminAccess(onAuthorized) {
+        const mainEl = document.getElementById('mainContent');
+        const loadingEl = document.getElementById('authLoading');
+        const alreadyRevealed = mainEl && mainEl.style.display !== 'none' && mainEl.style.display !== '';
+        const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+        if (alreadyRevealed || loadingHidden) {
+            console.log('✅ loginadmin.js already authorized this session');
+            onAuthorized();
+            return;
+        }
+
+        const auth = checkAdminAuth();
+        if (auth.ok) {
+            console.log('✅ Admin auth verified via session keys:', auth.user);
+            if (loadingEl) loadingEl.classList.add('hidden');
+            if (mainEl) mainEl.style.display = 'block';
+            onAuthorized();
+        } else {
+            showAccessDeniedAndRedirect(auth.reason);
+        }
+    }
+
+    function showAccessDeniedAndRedirect(reason) {
+        const loadingEl = document.getElementById('authLoading');
+        if (loadingEl) {
+            loadingEl.innerHTML = `
+                <div style="text-align:center; padding: 2rem;">
+                    <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                    <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                    <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        ${reason === 'not-admin'
+                            ? 'You are logged in as a student. Please login as admin.'
+                            : reason === 'expired'
+                            ? 'Your session has expired. Please login again.'
+                            : 'Please login as admin to access this page.'}
+                    </p>
+                    <div class="spinner" style="margin: 0 auto;"></div>
+                    <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                        Redirecting to My Account...
+                    </p>
+                </div>
+            `;
+        }
+        setTimeout(() => redirectToMyAccount(reason), 1500);
+    }
+
+    /* ================= THEME SYNC ================= */
+    function syncThemeWithParent() {
+        const localTheme = localStorage.getItem('user-theme-preference');
+        if (localTheme) {
+            document.body.setAttribute('data-theme', localTheme);
+            document.documentElement.setAttribute('data-theme', localTheme);
+        } else {
+            try {
+                if (window.parent && window.parent.document.body) {
+                    const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                    if (parentTheme) {
+                        document.body.setAttribute('data-theme', parentTheme);
+                        document.documentElement.setAttribute('data-theme', parentTheme);
+                    }
+                }
+            } catch (e) { }
+        }
+    }
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'user-theme-preference') syncThemeWithParent();
+        if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+    });
+    window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme;
+            if (newTheme) {
+                document.body.setAttribute('data-theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        }
+    });
+
+    /* ================= ACADEMIC YEAR ================= */
+    function updateAcademicYear() {
+        function getAcademicYear() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth() + 1;
+            return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+        }
+        const display = document.getElementById('academicYearDisplay');
+        if (display) {
+            const academicYear = getAcademicYear();
+            display.innerHTML = `<i class="far fa-calendar-alt"></i> ${academicYear}`;
+            document.title = `Universal English Medium High School | Admission ${academicYear}`;
+        }
+    }
+
+    /* ================= BOOTSTRAP ================= */
+    (function bootstrap() {
+        syncThemeWithParent();
+
+        const startWhenReady = () => {
+            setTimeout(() => {
+                gateAdminAccess(() => {
+                    updateAdminBadge();
+                    updateAcademicYear();
+                    console.log('✅ Universal English Medium High School Admission Dashboard loaded');
+                });
+            }, 800);
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startWhenReady);
+        } else {
+            startWhenReady();
+        }
+
+        // Safety net: if after 5s still hidden and no session → redirect
+        setTimeout(() => {
+            const mainEl = document.getElementById('mainContent');
+            const stillHidden = !mainEl || mainEl.style.display === 'none';
+            if (stillHidden) {
+                const auth = checkAdminAuth();
+                if (!auth.ok) {
+                    console.warn('⏰ Safety net: auth not verified after 5s, redirecting');
+                    redirectToMyAccount(auth.reason);
+                }
+            }
+        }, 5000);
+    })();
+
+    // Expose for debugging
+    window.checkAdminAuth = checkAdminAuth;
+    window.updateAdminBadge = updateAdminBadge;
+
+    console.log('✅ Admission Dashboard script initialised (auth-gated)');
+    </script>
+
+</body>
+</html>

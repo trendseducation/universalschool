@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>📝 Universal School | Exam Form</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <style>
+        :root {
+            --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-secondary: #ffffff;
+            --bg-body: #f4f7fc;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --secondary: #f59e0b;
+            --secondary-dark: #d97706;
+            --success: #10b981;
+            --danger: #ef4444;
+            --danger-light: rgba(239, 68, 68, 0.1);
+            --warning: #fbbf24;
+            --info: #06b6d4;
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-accent: linear-gradient(135deg, #2563eb, #7c3aed);
+            --table-header-bg: #f8fafc;
+            --table-row-hover: #f1f5f9;
+            --table-border: #e2e8f0;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --transition-slow: 500ms ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
+            --bg-secondary: #1e1e2e;
+            --bg-body: #0a0f1c;
+            --card-bg: rgba(30, 30, 46, 0.98);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-color: #334155;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+            --table-header-bg: #1e293b;
+            --table-row-hover: #334155;
+            --table-border: #334155;
+            --danger-light: rgba(239, 68, 68, 0.2);
+            --accent-soft: rgba(59, 130, 246, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: var(--bg-body);
+            min-height: 100vh;
+            padding: 20px 16px;
+            color: var(--text-primary);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #authLoading {
+            position: fixed; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-body); z-index: 9999;
+            flex-direction: column; gap: 1.5rem;
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .spinner {
+            width: 50px; height: 50px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        #authLoading p { color: var(--text-muted); font-weight: 500; font-size: 0.9rem; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .app-container {
+            max-width: 1400px; margin: 0 auto;
+            animation: fadeIn 0.5s ease-out; flex: 1;
+            display: flex; flex-direction: column;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .page { display: none; animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.active-page { display: block; }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .soft-card {
+            background: var(--card-bg);
+            border-radius: 2rem;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+        .soft-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: nowrap; gap: 14px;
+        }
+        [data-theme="dark"] .card-header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        .card-header h2 {
+            font-size: 1.8rem; font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent; letter-spacing: -0.02em;
+            flex: 1; min-width: 0; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .search-section {
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .btn {
+            border: none; padding: 10px 24px; border-radius: 60px;
+            font-weight: 600; font-size: 0.875rem; cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex; align-items: center; gap: 8px;
+            position: relative; overflow: hidden;
+        }
+        .btn::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn:active::before { width: 300px; height: 300px; }
+
+        .btn-primary { background: var(--gradient-accent); color: white; box-shadow: var(--shadow-sm); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); color: white; }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-info { background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; }
+        .btn-info:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .btn-warning:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-sm { padding: 6px 16px; font-size: 0.75rem; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .search-wrapper { width: 100%; }
+        .search-wrapper input {
+            width: 100%; padding: 14px 20px;
+            border: 2px solid var(--border-color); border-radius: 60px;
+            background: var(--bg-secondary); color: var(--text-primary);
+            font-size: 0.95rem; font-family: inherit;
+            transition: all var(--transition-fast); box-shadow: var(--shadow-sm);
+        }
+        .search-wrapper input::placeholder { color: var(--text-light); }
+        .search-wrapper input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .table-wrapper { overflow-x: auto; overflow-y: visible; scrollbar-width: thin; padding: 0; }
+        .table-wrapper::-webkit-scrollbar { height: 6px; background: transparent; }
+        .table-wrapper::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .data-table {
+            width: 100%; border-collapse: separate;
+            border-spacing: 0; font-size: 0.875rem;
+        }
+        .data-table th {
+            text-align: left; padding: 16px 20px;
+            background: var(--table-header-bg); color: var(--primary);
+            font-weight: 800; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 0.8px;
+            border-bottom: 3px solid var(--primary); position: relative;
+        }
+        .data-table th:first-child { border-top-left-radius: 12px; }
+        .data-table th:last-child { border-top-right-radius: 12px; }
+        .data-table td {
+            padding: 16px 20px; border-bottom: 1px solid var(--table-border);
+            color: var(--text-primary); transition: background var(--transition-fast);
+            font-size: 0.9rem;
+        }
+        .data-table tr:hover td { background: var(--table-row-hover); }
+
+        .view-action-btn {
+            background: var(--gradient-accent); color: white; border: none;
+            padding: 6px 16px; border-radius: 30px;
+            font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .view-action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); filter: brightness(1.05); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(12px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 2000; visibility: hidden; opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal-overlay.active { display: flex; visibility: visible; opacity: 1; }
+
+        .modal-box {
+            background: var(--card-bg); width: 92%; max-width: 900px;
+            max-height: 85vh; border-radius: 2rem; overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-header {
+            background: var(--gradient-accent); padding: 1.2rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 10; color: white;
+        }
+        .modal-header h3 { font-size: 1.3rem; font-weight: 700; }
+        .close-modal {
+            background: none; border: none; font-size: 2rem;
+            cursor: pointer; color: white;
+            transition: transform var(--transition-fast); line-height: 1;
+        }
+        .close-modal:hover { transform: rotate(90deg); }
+
+        .modal-body { padding: 1.5rem; overflow-y: auto; max-height: calc(85vh - 70px); }
+
+        .form-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label {
+            font-size: 0.7rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--secondary);
+        }
+        .field input, .field select, .field textarea {
+            padding: 12px 16px; border-radius: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary); color: var(--text-primary);
+            font-size: 0.9rem; transition: all var(--transition-fast);
+            font-family: inherit;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .field input:disabled, .field input[readonly] {
+            background: var(--table-header-bg);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            font-style: italic;
+        }
+        .fullwidth { grid-column: 1 / -1; }
+
+        .spinner {
+            display: inline-block; width: 18px; height: 18px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%; animation: spin 0.6s linear infinite;
+        }
+
+        .status-message {
+            padding: 12px 20px; border-radius: 16px;
+            margin-top: 20px; display: none;
+            text-align: center; font-weight: 600;
+        }
+        .status-success { background: var(--success); color: white; }
+        .status-error { background: var(--danger); color: white; }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .card-header { padding: 1rem 1.2rem; flex-direction: row; align-items: flex-start; gap: 8px; }
+            .card-header h2 { font-size: 1rem; width: 100%; }
+            .desktop-buttons { display: none; }
+            .mobile-buttons {
+                display: grid !important; grid-template-columns: 1fr 1fr;
+                gap: 12px; margin-top: 12px; width: 100%;
+            }
+            .mobile-buttons .btn {
+                width: 100%; justify-content: center;
+                padding: 12px 16px; font-size: 0.85rem; border-radius: 60px;
+            }
+            .search-section { padding: 1rem 1.2rem; }
+            .search-wrapper { width: 100%; }
+            .search-wrapper input { padding: 14px 20px; font-size: 0.95rem; border-radius: 60px; }
+            .data-table th, .data-table td { padding: 12px 12px; font-size: 0.7rem; }
+            .btn { padding: 8px 18px; font-size: 0.8rem; }
+            .modal-box { width: 95%; border-radius: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+        @media (min-width: 769px) { .mobile-buttons { display: none !important; } }
+
+        .mobile-buttons { display: none; gap: 12px; margin-top: 12px; width: 100%; }
+        .mobile-buttons .btn {
+            border: none; padding: 12px 16px; border-radius: 60px;
+            font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; position: relative; overflow: hidden; width: 100%;
+        }
+        .mobile-buttons .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .mobile-buttons .btn-primary { background: var(--gradient-accent); color: white; box-shadow: var(--shadow-sm); }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--table-header-bg); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        .table-wrapper::-webkit-scrollbar, .modal-box::-webkit-scrollbar {
+            width: 0px; height: 0px; background: transparent; display: none;
+        }
+        .table-wrapper, .modal-box { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .alert-popup {
+            position: fixed; bottom: 100px; right: 30px;
+            background: var(--card-bg); border-left: 5px solid var(--primary);
+            padding: 16px 24px; box-shadow: var(--shadow-xl);
+            border-radius: 0 16px 16px 0; font-weight: 600;
+            font-size: 0.95rem; z-index: 1000; display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-primary); max-width: 400px;
+        }
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--table-header-bg) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        .loading-container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 60px 20px; gap: 16px;
+        }
+        .loading-spinner {
+            width: 48px; height: 48px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        .loading-message { font-weight: 600; font-size: 1.1rem; color: var(--text-primary); }
+        .loading-submessage { font-size: 0.85rem; color: var(--text-light); }
+
+        .error-container { text-align: center; padding: 40px 20px; }
+        .error-icon { font-size: 2.5rem; color: var(--danger); display: block; margin-bottom: 12px; }
+        .error-title { font-weight: 600; color: var(--danger); font-size: 1.1rem; }
+        .error-message { margin-top: 4px; font-size: 0.85rem; color: var(--text-secondary); }
+        .error-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+        .empty-container { text-align: center; padding: 40px 20px; }
+        .empty-icon { font-size: 2.5rem; color: var(--text-light); display: block; margin-bottom: 12px; }
+        .empty-title { font-weight: 600; color: var(--text-secondary); font-size: 1.1rem; }
+        .empty-subtitle { margin-top: 4px; font-size: 0.85rem; color: var(--text-light); }
+
+        .admin-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(245, 158, 11, 0.15); color: var(--warning);
+            padding: 4px 14px; border-radius: 30px;
+            font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.3px;
+            border: 1px solid var(--warning);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .admin-badge i { font-size: 0.7rem; }
+        .admin-badge span {
+            max-width: 100px; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap;
+        }
+        .admin-badge .session-indicator {
+            font-size: 0.45rem; padding: 1px 6px;
+            border-radius: 20px; background: rgba(255,255,255,0.15); margin-left: 2px;
+        }
+
+        .field-error {
+            display: none; color: var(--danger);
+            font-size: 0.72rem; font-weight: 600;
+            margin-top: 4px; padding-left: 4px;
+            line-height: 1.3; animation: errorFade 0.2s ease-out;
+        }
+        .field-error.show { display: block; }
+        @keyframes errorFade {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .field input.field-invalid,
+        .field select.field-invalid,
+        .field textarea.field-invalid {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+        .field input.field-valid { border-color: var(--success) !important; }
+
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-soft), transparent);
+            border-left: 5px solid var(--primary);
+            border-radius: 12px; margin-bottom: 12px;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .section-header h4 {
+            font-size: 1rem; font-weight: 800;
+            color: var(--text-primary);
+            display: flex; align-items: center; gap: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .section-header h4 i { color: var(--primary); }
+        .section-header .btn-group {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .section-header .btn-group .btn {
+            padding: 6px 14px; font-size: 0.72rem;
+        }
+        .section-header .status-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 30px;
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .status-chip.saved {
+            background: rgba(16,185,129,0.15); color: var(--success);
+            border: 1px solid var(--success);
+        }
+        .status-chip.draft {
+            background: rgba(245,158,11,0.15); color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        .status-chip.empty {
+            background: rgba(148,163,184,0.15); color: var(--text-light);
+            border: 1px solid var(--text-light);
+        }
+
+        .match-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin-top: 12px; border-radius: 12px; overflow: hidden;
+            border: 1.5px solid var(--border-color);
+        }
+        .match-table th {
+            background: var(--table-header-bg);
+            padding: 10px 14px; text-align: left;
+            font-size: 0.7rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        .match-table td { padding: 6px 8px; border-bottom: 1px solid var(--table-border); }
+        .match-table input {
+            width: 100%; padding: 8px 10px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px; font-size: 0.82rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all var(--transition-fast);
+        }
+        .match-table input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .total-marks-display {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, var(--accent-soft), transparent);
+            border: 2px dashed var(--primary);
+            border-radius: 14px;
+            font-weight: 700; color: var(--primary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .total-marks-display .value {
+            font-size: 1.4rem; font-weight: 900;
+            color: var(--accent);
+        }
+
+        .exam-header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 1.2rem 1.5rem;
+            background: var(--table-header-bg);
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+        .exam-header-info .info-item {
+            display: flex; flex-direction: column; gap: 3px;
+        }
+        .exam-header-info .info-item .lbl {
+            font-size: 0.6rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            color: var(--secondary);
+        }
+        .exam-header-info .info-item .val {
+            font-size: 0.9rem; font-weight: 700;
+            color: var(--text-primary); word-break: break-word;
+        }
+
+        .exam-actions-bar {
+            display: flex; gap: 10px; justify-content: flex-end;
+            padding: 1rem 0; flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <div id="mainContent" style="display:none; flex: 1;">
+        <div class="app-container">
+
+            <!-- ===================== PAGE 1 — EXAM LIST ===================== -->
+            <div id="page1" class="page active-page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2>
+                            <img src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                                 alt="Universal School" style="width:36px;height:36px;object-fit:contain;vertical-align:middle;margin-right:10px;border-radius:8px;background:white;padding:2px;">
+                            Universal School — Exam Form
+                        </h2>
+                        <div class="desktop-buttons">
+                            <span class="admin-badge" id="adminBadge">
+                                <i class="fas fa-user-shield"></i>
+                                <span id="adminNameDisplay">Admin</span>
+                                <span class="session-indicator" id="sessionIndicator">Session</span>
+                            </span>
+                            <button id="refreshBtn" class="btn btn-outline"><span>⟳</span> Refresh</button>
+                            <button id="addNewBtn" class="btn btn-primary"><span>+</span> Add Question</button>
+                        </div>
+                    </div>
+
+                    <div class="search-section">
+                        <div class="search-wrapper">
+                            <input type="text" id="searchInput"
+                                   placeholder="🔍 Search by Std, Subject, Test Name, or Date...">
+                        </div>
+                        <div class="mobile-buttons">
+                            <button id="mobileRefreshBtn" class="btn btn-outline"><span>⟳</span> Refresh</button>
+                            <button id="mobileAddBtn" class="btn btn-primary"><span>+</span> Add Question</button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No</th><th>Date</th><th>Std</th><th>Subject Name</th>
+                                    <th>Test Name</th><th>Total Marks</th><th>Status</th><th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <tr><td colspan="8" style="text-align:center;">
+                                    <div class="loading-container">
+                                        <div class="loading-spinner"></div>
+                                        <div class="loading-message">Loading exams...</div>
+                                        <div class="loading-submessage">Please wait while we fetch your data...</div>
+                                    </div>
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================== PAGE 2 — CREATE / EDIT ===================== -->
+            <div id="page2" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2>📝 Create Your Question</h2>
+                        <button id="backToPage1Btn" class="btn btn-outline">← Back</button>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem 0.5rem;">
+                        <div id="examHeaderInfoBox" class="exam-header-info"></div>
+
+                        <!-- A -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-clipboard-list"></i> A. Exam Information</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="examInfoStatusChip">
+                                    <i class="fas fa-circle" style="font-size:0.5rem;"></i> Not Filled
+                                </span>
+                                <button class="btn btn-primary" id="openExamInfoBtn"><i class="fas fa-pen"></i> Fill / Edit</button>
+                            </div>
+                        </div>
+
+                        <!-- B -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-keyboard"></i> B. Fill in the Blanks</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="fillMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openFillMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openFillQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- C -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-link"></i> C. Match the Columns</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="matchMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openMatchMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openMatchQuestionsBtn"><i class="fas fa-table"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- D -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-check-double"></i> D. True or False</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="tfMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openTFMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openTFQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- E -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-search"></i> E. Odd Man Out</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="oddMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openOddMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openOddQuestionsBtn"><i class="fas fa-th-large"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- F -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-pen-fancy"></i> F. Answer in One Sentence</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="osMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openOSMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openOSQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- G -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-not-equal"></i> G. Distinguishing between</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="disMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openDisMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openDisQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- H -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-comments"></i> H. Answer the Following Question</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="aqMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openAQMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openAQQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- I -->
+                        <div class="section-header">
+                            <h4><i class="fas fa-align-left"></i> I. Brief Answer</h4>
+                            <div class="btn-group">
+                                <span class="status-chip empty" id="bqMarksStatusChip"><i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: 0</span>
+                                <button class="btn btn-warning" id="openBQMarksBtn"><i class="fas fa-tag"></i> Marks</button>
+                                <button class="btn btn-info" id="openBQQuestionsBtn"><i class="fas fa-question-circle"></i> Question</button>
+                            </div>
+                        </div>
+
+                        <!-- TOTAL MARKS + ACTIONS -->
+                        <div class="total-marks-display">
+                            <i class="fas fa-calculator"></i>
+                            <span>Total Marks:</span>
+                            <span class="value" id="totalMarksDisplay">0</span>
+                            <span style="font-size:0.75rem; font-weight:500; color:var(--text-secondary); margin-left:6px;">
+                                (Marks 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8)
+                            </span>
+                        </div>
+
+                        <div class="exam-actions-bar">
+                            <button class="btn btn-outline" id="cancelExamBtn">Cancel</button>
+                            <button class="btn btn-success" id="printPaperBtn">
+                                <i class="fas fa-print"></i> Print Question Paper
+                            </button>
+                            <button class="btn btn-primary" id="saveExamDraftBtn">
+                                <i class="fas fa-save"></i> Save Draft
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GLOBAL MODAL -->
+            <div id="globalModal" class="modal-overlay">
+                <div class="modal-box" style="max-width: 450px;">
+                    <div class="modal-header">
+                        <h3 id="modalTitle">Notice</h3>
+                        <button class="close-modal" id="closeGlobalModal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMsg" style="font-size: 1rem; line-height: 1.5;"></p>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                            <button id="confirmModalBtn" class="btn btn-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORM MODAL -->
+            <div id="formModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3 id="formModalTitle">Form</h3>
+                        <button class="close-modal" id="closeFormModalBtn">×</button>
+                    </div>
+                    <div class="modal-body" id="formModalBody"></div>
+                </div>
+            </div>
+
+            <div id="alertBox" class="alert-popup">Message...</div>
+
+        </div>
+    </div>
+       <script>
+/* =====================================================================
+   Examform.html — Full JS
+   Latest changes in this version:
+     • Section E (Odd Man Out): options are now OPTIONAL.
+       Print format uses:  A : B :: C : D  (each of the 6 sets is one line).
+       Empty options render as blank fill-in lines (________).
+     • Print layout: multi-page A4 aware. Header repeats on every page.
+       Sections never split across pages.
+     • Print theme: Blue + White + Yellow.
+     • True/False section: only 6 question fields (no options).
+     • Empty sections skipped in print automatically.
+   ===================================================================== */
+
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTH GUARD
+   ===================================================================== */
+
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key); return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) { }
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) { }
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const userData = readMyAccountSession('Universal_user_data');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user, userData, expiry };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function revealMainContent() {
+    const loading = document.getElementById('authLoading');
+    const main = document.getElementById('mainContent');
+    if (loading) loading.classList.add('hidden');
+    if (main) main.style.display = 'block';
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loading = document.getElementById('authLoading');
+    if (loading) {
+        loading.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin' ? 'You are logged in as a student. Please login as admin.'
+                    : reason === 'expired' ? 'Your session has expired. Please login again.'
+                    : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="color: var(--text-light); font-size: 0.8rem; margin-top: 1rem;">Redirecting to My Account...</p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+    const alreadyRevealed = mainEl && mainEl.style.display !== 'none' && mainEl.style.display !== '';
+    const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+    if (alreadyRevealed || loadingHidden) { onAuthorized(); return; }
+    const auth = checkAdminAuth();
+    if (auth.ok) { revealMainContent(); onAuthorized(); }
+    else { showAccessDeniedAndRedirect(auth.reason); }
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch (e) { }
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', syncThemeWithParent);
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — ADMIN BADGE
+   ===================================================================== */
+
+function updateAdminBadge() {
+    const user = readMyAccountSession('Universal_user');
+    const userData = readMyAccountSession('Universal_user_data');
+    const expiry = readMyAccountSession('Universal_session_expiry');
+
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) displayName = user;
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+
+    if (indicator) {
+        const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = expiry - Date.now();
+            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+
+/* =====================================================================
+   SECTION 4 — CONFIG
+   ===================================================================== */
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec";
+const SPREADSHEET_ID = "1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE";
+const SHEET_NAME = "Questions";
+
+const CACHE_KEY = "examform_cache_Questions";
+const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_VERSION_KEY = "examform_cache_version_Questions";
+const CURRENT_CACHE_VERSION = "2.1";  // bumped for odd-optional + multipage print
+
+const SHEET_HEADERS = [
+    "Sr. No","Date","Status","Std","Subject Name","Test Name","Total Marks","Timing",
+    "Fill in the Blanks","Marks 1",
+    "Fill Questions 1","Fill Option A","Fill Option B","Fill Option C","Fill Option D",
+    "Fill Questions 2","Fill Option E","Fill Option F","Fill Option G","Fill Option H",
+    "Fill Questions 3","Fill Option I","Fill Option J","Fill Option K","Fill Option L",
+    "Fill Questions 4","Fill Option M","Fill Option N","Fill Option O","Fill Option P",
+    "Fill Questions 5","Fill Option Q","Fill Option R","Fill Option S","Fill Option T",
+    "Match the Columns","Marks 2",
+    "Match Pair 1","Match Pair 2","Match Pair 3","Match Pair 4","Match Pair 5","Match Pair 6","Match Pair 7","Match Pair 8",
+    "Match Pair A","Match Pair B","Match Pair C","Match Pair D","Match Pair E","Match Pair F","Match Pair G","Match Pair H",
+    "True or False","Marks 3",
+    "TF Question 1","TF Question 2","TF Question 3",
+    "TF Question 4","TF Question 5","TF Question 6",
+    "Find odd man out","Marks 4",
+    "Option 1","Option 2","Option 3","Option 4",
+    "Option 5","Option 6","Option 7","Option 8",
+    "Option 9","Option 10","Option 11","Option 12",
+    "Option 13","Option 14","Option 15","Option 16",
+    "Option 17","Option 18","Option 19","Option 20",
+    "Option 21","Option 22","Option 23","Option 24",
+    "Answer in One Sentence","Marks 5",
+    "OS Questions 1","OS Questions 2","OS Questions 3","OS Questions 4","OS Questions 5","OS Questions 6",
+    "Distinguishing between","Marks 6",
+    "Dis Question 1","Dis Question 2","Dis Question 3","Dis Question 4","Dis Question 5","Dis Question 6",
+    "Answer the Following Question","Marks 7",
+    "AQ 1","AQ 2","AQ 3","AQ 4","AQ 5","AQ 6",
+    "Brief Answer","Marks 8",
+    "BQ 1","BQ 2","BQ 3","BQ 4","BQ 5","BQ 6"
+];
+
+const FILL_GROUPS = [
+    { q: "Fill Questions 1", options: ["Fill Option A","Fill Option B","Fill Option C","Fill Option D"] },
+    { q: "Fill Questions 2", options: ["Fill Option E","Fill Option F","Fill Option G","Fill Option H"] },
+    { q: "Fill Questions 3", options: ["Fill Option I","Fill Option J","Fill Option K","Fill Option L"] },
+    { q: "Fill Questions 4", options: ["Fill Option M","Fill Option N","Fill Option O","Fill Option P"] },
+    { q: "Fill Questions 5", options: ["Fill Option Q","Fill Option R","Fill Option S","Fill Option T"] }
+];
+
+const TF_HEADERS = ["TF Question 1","TF Question 2","TF Question 3","TF Question 4","TF Question 5","TF Question 6"];
+
+const ODD_GROUPS = [
+    { options: ["Option 1","Option 2","Option 3","Option 4"] },
+    { options: ["Option 5","Option 6","Option 7","Option 8"] },
+    { options: ["Option 9","Option 10","Option 11","Option 12"] },
+    { options: ["Option 13","Option 14","Option 15","Option 16"] },
+    { options: ["Option 17","Option 18","Option 19","Option 20"] },
+    { options: ["Option 21","Option 22","Option 23","Option 24"] }
+];
+
+const OS_HEADERS  = ["OS Questions 1","OS Questions 2","OS Questions 3","OS Questions 4","OS Questions 5","OS Questions 6"];
+const DIS_HEADERS = ["Dis Question 1","Dis Question 2","Dis Question 3","Dis Question 4","Dis Question 5","Dis Question 6"];
+const AQ_HEADERS  = ["AQ 1","AQ 2","AQ 3","AQ 4","AQ 5","AQ 6"];
+const BQ_HEADERS  = ["BQ 1","BQ 2","BQ 3","BQ 4","BQ 5","BQ 6"];
+
+const LOGO_URL = "https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_";
+
+const DEFAULT_PROMPTS = {
+    "True or False":                 "Q3. State whether True or False",
+    "Find odd man out":              "Q4. Find Odd Man Out",
+    "Answer in One Sentence":        "Q4. Answer in One Sentence",
+    "Distinguishing between":        "Q5. Distinguishing between",
+    "Answer the Following Question": "Answer the Following Question",
+    "Brief Answer":                  "Brief Answer"
+};
+
+
+/* =====================================================================
+   SECTION 5 — STATE
+   ===================================================================== */
+
+let allExams = [];
+let currentEditExam = null;
+let currentEditRowIndex = null;
+let saveInProgress = false;
+let cropper = null;
+let isLoading = false;
+let dataLoaded = false;
+let renderRafHandle = null;
+let pendingRenderFilter = "";
+let initDone = false;
+
+let draft = {};
+let fillQuestions = [];
+let matchPairs = [];
+let tfQuestions = [];
+let oddQuestions = [];
+let osQuestions = [];
+let disQuestions = [];
+let aqQuestions = [];
+let bqQuestions = [];
+
+
+/* =====================================================================
+   SECTION 6 — DOM REFS
+   ===================================================================== */
+
+const dom = {};
+
+function cacheDomElements() {
+    dom.page1 = document.getElementById('page1');
+    dom.page2 = document.getElementById('page2');
+    dom.tableBody = document.getElementById('tableBody');
+    dom.searchInput = document.getElementById('searchInput');
+    dom.refreshBtn = document.getElementById('refreshBtn');
+    dom.addNewBtn = document.getElementById('addNewBtn');
+    dom.backBtn = document.getElementById('backToPage1Btn');
+    dom.globalModal = document.getElementById('globalModal');
+    dom.formModal = document.getElementById('formModal');
+    dom.modalTitle = document.getElementById('modalTitle');
+    dom.modalMsg = document.getElementById('modalMsg');
+    dom.formModalTitle = document.getElementById('formModalTitle');
+    dom.formModalBody = document.getElementById('formModalBody');
+    dom.alertBox = document.getElementById('alertBox');
+    dom.examHeaderInfoBox = document.getElementById('examHeaderInfoBox');
+    dom.totalMarksDisplay = document.getElementById('totalMarksDisplay');
+}
+
+
+/* =====================================================================
+   SECTION 7 — UTILITIES
+   ===================================================================== */
+
+function debounce(fn, wait = 250) {
+    let t;
+    return function(...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+}
+
+function formatDateToDDMMYYYY(dateInput) {
+    if (!dateInput) return "";
+    try {
+        if (typeof dateInput === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(dateInput)) return dateInput;
+        if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+            const [y, m, d] = dateInput.split('-');
+            return `${d}/${m}/${y}`;
+        }
+        const d = new Date(dateInput);
+        if (!isNaN(d.getTime())) {
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+    } catch (e) {}
+    return "";
+}
+
+function ddmmyyyyToInputValue(ddmmyyyy) {
+    if (!ddmmyyyy) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(ddmmyyyy)) return ddmmyyyy;
+    const m = String(ddmmyyyy).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+    return "";
+}
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
+
+function todayDDMMYYYY() { return formatDateToDDMMYYYY(new Date()); }
+
+function hasValue(v) {
+    if (v === null || v === undefined) return false;
+    if (Array.isArray(v)) return v.some(x => hasValue(x));
+    return String(v).trim() !== '';
+}
+
+
+/* =====================================================================
+   SECTION 8 — TOAST / MODAL / SPINNER
+   ===================================================================== */
+
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 3500);
+}
+
+function showModal(msg, title = "Message", isConfirm = false, onConfirm = null, autoClose = 0) {
+    if (!dom.globalModal) return;
+    dom.modalTitle.innerText = title;
+    dom.modalMsg.innerHTML = msg;
+    const confirmBtn = document.getElementById('confirmModalBtn');
+    if (confirmBtn) {
+        confirmBtn.onclick = () => {
+            dom.globalModal.classList.remove('active');
+            if (isConfirm && onConfirm) onConfirm();
+        };
+    }
+    dom.globalModal.classList.add('active');
+    if (autoClose > 0) setTimeout(() => dom.globalModal.classList.remove('active'), autoClose);
+}
+
+function showSpinner(element, show, customHtml = null) {
+    if (!element) return;
+    if (show) {
+        element.disabled = true;
+        if (!element.hasAttribute('data-original-text')) {
+            element.setAttribute('data-original-text', element.innerHTML);
+        }
+        element.innerHTML = customHtml || '<span class="spinner"></span> Loading...';
+    } else {
+        element.disabled = false;
+        const original = element.getAttribute('data-original-text');
+        if (original) {
+            element.innerHTML = original;
+            element.removeAttribute('data-original-text');
+        }
+    }
+}
+
+function closeFormModal() {
+    dom.formModal.classList.remove('active');
+    if (cropper) { cropper.destroy(); cropper = null; }
+}
+
+
+/* =====================================================================
+   SECTION 9 — CACHE
+   ===================================================================== */
+
+function clearAllCaches() {
+    try { localStorage.removeItem(CACHE_KEY); localStorage.removeItem(CACHE_VERSION_KEY); } catch (e) {}
+}
+function invalidateExamCache() {
+    try {
+        allExams = []; dataLoaded = false;
+        localStorage.removeItem(CACHE_KEY); localStorage.removeItem(CACHE_VERSION_KEY);
+    } catch (e) {}
+}
+function getCache() {
+    try {
+        const v = localStorage.getItem(CACHE_VERSION_KEY);
+        if (v !== CURRENT_CACHE_VERSION) {
+            localStorage.removeItem(CACHE_KEY);
+            localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION);
+            return null;
+        }
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+            const { data, timestamp, sheetName } = JSON.parse(cached);
+            if (sheetName !== SHEET_NAME) { localStorage.removeItem(CACHE_KEY); return null; }
+            if (Date.now() - timestamp < CACHE_TTL) return data;
+            localStorage.removeItem(CACHE_KEY);
+        }
+    } catch (e) { localStorage.removeItem(CACHE_KEY); }
+    return null;
+}
+function setCache(data) {
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now(), sheetName: SHEET_NAME }));
+        localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION);
+    } catch (e) {}
+}
+
+
+/* =====================================================================
+   SECTION 10 — SKELETON
+   ===================================================================== */
+
+function buildSkeletonRows(count = 5) {
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `
+            <tr class="skeleton-row">
+                <td><div class="loading-skeleton" style="height:16px;width:60%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:80%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:70%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:60%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:50%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:60%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:50%;"></div></td>
+                <td><div class="loading-skeleton" style="height:16px;width:50%;"></div></td>
+            </tr>
+        `;
+    }
+    return html;
+}
+
+
+/* =====================================================================
+   SECTION 11 — DATA LOADING
+   ===================================================================== */
+
+async function loadExams(forceRefresh = false) {
+    const tableBody = dom.tableBody;
+    if (!tableBody) return [];
+    if (!forceRefresh && dataLoaded) { renderTable(); return allExams; }
+
+    try {
+        if (!forceRefresh) {
+            const cached = getCache();
+            if (cached && Array.isArray(cached) && cached.length > 0) {
+                allExams = cached; dataLoaded = true;
+                renderTable();
+                showToast(`📦 Loaded ${allExams.length} exams from cache`, "info");
+                scheduleIdleRefresh();
+                isLoading = false;
+                return allExams;
+            }
+        }
+
+        tableBody.innerHTML = buildSkeletonRows(6);
+
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}&_=${Date.now()}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const result = await response.json();
+        if (result.status === "success" && Array.isArray(result.data)) {
+            allExams = result.data.map((item, idx) => ({ ...item, _rowIndex: idx + 2 }));
+            setCache(allExams);
+            dataLoaded = true;
+            renderTable();
+            showToast(`✅ Loaded ${allExams.length} exams`, "success");
+            isLoading = false;
+            return allExams;
+        } else {
+            throw new Error(result.message || "Failed to load data");
+        }
+    } catch (err) {
+        console.error('❌ Load exams error:', err);
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const { data } = JSON.parse(cached);
+                if (data && Array.isArray(data) && data.length) {
+                    allExams = data; dataLoaded = true;
+                    renderTable();
+                    showToast("⚠️ Using cached data (offline)", "warning");
+                    isLoading = false;
+                    return allExams;
+                }
+            }
+        } catch (e) {}
+
+        tableBody.innerHTML = `
+            <tr><td colspan="8">
+                <div class="error-container">
+                    <span class="error-icon">⚠️</span>
+                    <p class="error-title">Failed to load data</p>
+                    <p class="error-message">${escapeHtml(err.message)}</p>
+                    <div class="error-actions">
+                        <button onclick="handleRetry()" class="btn btn-primary">⟳ Retry</button>
+                        <button onclick="handleClearCache()" class="btn btn-outline">🧹 Clear Cache</button>
+                    </div>
+                </div>
+            </td></tr>
+        `;
+        isLoading = false;
+        return [];
+    }
+}
+
+function scheduleIdleRefresh() {
+    const run = () => refreshDataInBackground();
+    if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 4000 });
+    else setTimeout(run, 2000);
+}
+
+async function refreshDataInBackground() {
+    try {
+        const response = await fetch(`${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}&_=${Date.now()}`);
+        const result = await response.json();
+        if (result.status === "success" && Array.isArray(result.data)) {
+            const newData = result.data.map((item, idx) => ({ ...item, _rowIndex: idx + 2 }));
+            if (JSON.stringify(allExams) !== JSON.stringify(newData)) {
+                allExams = newData; setCache(allExams); renderTable();
+            }
+        }
+    } catch (err) {}
+}
+
+async function refreshData() {
+    const refreshBtn = dom.refreshBtn;
+    const mobileRefreshBtn = document.getElementById('mobileRefreshBtn');
+    showSpinner(refreshBtn, true);
+    if (mobileRefreshBtn) {
+        mobileRefreshBtn.disabled = true;
+        mobileRefreshBtn.innerHTML = '<span class="spinner"></span> Loading...';
+    }
+    try {
+        clearAllCaches(); dataLoaded = false;
+        await loadExams(true);
+        showToast("✅ Data refreshed successfully!", "success");
+    } catch (err) {
+        showToast("❌ Refresh failed: " + err.message, "error");
+    } finally {
+        showSpinner(refreshBtn, false);
+        if (mobileRefreshBtn) {
+            mobileRefreshBtn.disabled = false;
+            mobileRefreshBtn.innerHTML = '<span>⟳</span> Refresh';
+        }
+    }
+}
+
+window.handleRetry = function() { dataLoaded = false; clearAllCaches(); setTimeout(() => loadExams(true), 300); };
+window.handleClearCache = function() { clearAllCaches(); dataLoaded = false; showToast("🧹 Cache cleared!", "success"); setTimeout(() => loadExams(true), 300); };
+
+
+/* =====================================================================
+   SECTION 12 — TABLE RENDERING
+   ===================================================================== */
+
+function scheduleRender(filter = "") {
+    pendingRenderFilter = filter;
+    if (renderRafHandle) return;
+    renderRafHandle = requestAnimationFrame(() => {
+        renderRafHandle = null;
+        renderTable(pendingRenderFilter);
+    });
+}
+
+function renderTable(filter = "") {
+    if (!dom.tableBody) return;
+
+    if (!allExams || allExams.length === 0) {
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="8">
+                <div class="empty-container">
+                    <span class="empty-icon">📝</span>
+                    <p class="empty-title">No exams found</p>
+                    <p class="empty-subtitle">Click "Add Question" to create your first exam</p>
+                </div>
+            </td></tr>
+        `;
+        return;
+    }
+
+    const searchLower = filter.toLowerCase().trim();
+    let filtered = allExams;
+    if (searchLower) {
+        filtered = allExams.filter(e =>
+            String(e['Std'] || '').toLowerCase().includes(searchLower) ||
+            String(e['Subject Name'] || '').toLowerCase().includes(searchLower) ||
+            String(e['Test Name'] || '').toLowerCase().includes(searchLower) ||
+            String(e['Date'] || '').toLowerCase().includes(searchLower)
+        );
+    }
+
+    if (!filtered.length) {
+        dom.tableBody.innerHTML = `
+            <tr><td colspan="8">
+                <div class="empty-container">
+                    <span class="empty-icon">🔍</span>
+                    <p class="empty-title">No matching exams found</p>
+                    <p class="empty-subtitle">Try adjusting your search</p>
+                </div>
+            </td></tr>
+        `;
+        return;
+    }
+
+    let html = '';
+    for (let i = 0; i < filtered.length; i++) {
+        const e = filtered[i];
+        const actualIndex = allExams.indexOf(e);
+        const status = String(e['Status'] || 'Active');
+        const statusClass = status.toLowerCase() === 'active' ? 'status-saved' : 'status-draft';
+
+        html += `
+            <tr>
+                <td><strong>${escapeHtml(e['Sr. No'] || (i + 1))}</strong></td>
+                <td>${escapeHtml(e['Date'] || '—')}</td>
+                <td>${escapeHtml(e['Std'] || '—')}</td>
+                <td>${escapeHtml(e['Subject Name'] || '—')}</td>
+                <td>${escapeHtml(e['Test Name'] || '—')}</td>
+                <td><strong>${escapeHtml(e['Total Marks'] || '0')}</strong></td>
+                <td><span class="status-chip ${statusClass}">${escapeHtml(status)}</span></td>
+                <td>
+                    <button class="view-action-btn"
+                            data-row-index="${e._rowIndex || (actualIndex + 2)}"
+                            data-sr="${escapeHtml(e['Sr. No'] || '')}"
+                            data-actual-index="${actualIndex}">
+                        ✏️ Edit
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+    dom.tableBody.innerHTML = html;
+}
+
+
+/* =====================================================================
+   SECTION 13 — EVENT DELEGATION
+   ===================================================================== */
+
+function handleTableClick(e) {
+    const btn = e.target.closest('.view-action-btn');
+    if (!btn) return;
+    e.stopPropagation();
+
+    const rowIndex = parseInt(btn.getAttribute('data-row-index'), 10);
+    const actualIndex = parseInt(btn.getAttribute('data-actual-index'), 10);
+
+    let found = null;
+    if (!isNaN(actualIndex) && actualIndex >= 0 && actualIndex < allExams.length) found = allExams[actualIndex];
+    if (!found && !isNaN(rowIndex)) found = allExams.find(e => e._rowIndex === rowIndex);
+
+    if (found) openEditExamPage(found);
+    else showToast("❌ Exam not found. Please refresh.", "error");
+}
+
+
+/* =====================================================================
+   SECTION 14 — PAGE NAVIGATION
+   ===================================================================== */
+
+function goToListView() {
+    dom.page2.classList.remove('active-page');
+    dom.page1.classList.add('active-page');
+    if (!dataLoaded) loadExams();
+}
+
+function goToCreatePage() {
+    dom.page1.classList.remove('active-page');
+    dom.page2.classList.add('active-page');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+/* =====================================================================
+   SECTION 15 — DRAFT STATE / HEADER INFO
+   ===================================================================== */
+
+function getSectionTitle(key) {
+    /* 1) Draft value (current edit) */
+    const draftVal = draft[key];
+    if (hasValue(draftVal)) return String(draftVal).trim();
+
+    /* 2) Value loaded from Google Sheet row */
+    if (currentEditExam && hasValue(currentEditExam[key])) {
+        return String(currentEditExam[key]).trim();
+    }
+
+    /* 3) Named fallback per section */
+    if (DEFAULT_PROMPTS[key]) return DEFAULT_PROMPTS[key];
+
+    /* 4) Humanized key as last resort */
+    return key;
+}
+
+function resetDraft() {
+    draft = {};
+    SHEET_HEADERS.forEach(h => { draft[h] = ""; });
+    draft["Date"] = todayDDMMYYYY();
+    draft["Status"] = "Active";
+    draft["Total Marks"] = 0;
+    draft["Marks 1"] = 0; draft["Marks 2"] = 0; draft["Marks 3"] = 0; draft["Marks 4"] = 0;
+    draft["Marks 5"] = 0; draft["Marks 6"] = 0; draft["Marks 7"] = 0; draft["Marks 8"] = 0;
+
+    Object.keys(DEFAULT_PROMPTS).forEach(k => { draft[k] = DEFAULT_PROMPTS[k]; });
+
+    fillQuestions = FILL_GROUPS.map(g => ({ question: "", options: ["","","",""] }));
+    matchPairs = Array.from({length: 8}, () => ({ left: "", right: "" }));
+    tfQuestions = Array(6).fill("");
+    oddQuestions = ODD_GROUPS.map(g => ({ options: ["","","",""] }));
+    osQuestions  = Array(6).fill("");
+    disQuestions = Array(6).fill("");
+    aqQuestions  = Array(6).fill("");
+    bqQuestions  = Array(6).fill("");
+
+    currentEditExam = null;
+    currentEditRowIndex = null;
+}
+
+function draftFromExam(exam) {
+    resetDraft();
+    if (!exam) return;
+
+    Object.keys(draft).forEach(k => {
+        if (exam[k] !== undefined && exam[k] !== null) draft[k] = exam[k];
+    });
+
+    Object.keys(DEFAULT_PROMPTS).forEach(k => {
+        if (!hasValue(draft[k])) draft[k] = DEFAULT_PROMPTS[k];
+    });
+
+    draft["Total Marks"] = calculateTotalMarks();
+    currentEditExam = exam;
+    currentEditRowIndex = exam._rowIndex || null;
+
+    fillQuestions = FILL_GROUPS.map(g => ({
+        question: draft[g.q] || "",
+        options: g.options.map(o => draft[o] || "")
+    }));
+
+    matchPairs = [];
+    for (let i = 0; i < 8; i++) {
+        const leftKey = `Match Pair ${i + 1}`;
+        const rightKey = `Match Pair ${String.fromCharCode(65 + i)}`;
+        matchPairs.push({ left: draft[leftKey] || "", right: draft[rightKey] || "" });
+    }
+
+    tfQuestions = TF_HEADERS.map(h => draft[h] || "");
+
+    oddQuestions = ODD_GROUPS.map(g => ({ options: g.options.map(o => draft[o] || "") }));
+
+    osQuestions  = OS_HEADERS.map(h => draft[h] || "");
+    disQuestions = DIS_HEADERS.map(h => draft[h] || "");
+    aqQuestions  = AQ_HEADERS.map(h => draft[h] || "");
+    bqQuestions  = BQ_HEADERS.map(h => draft[h] || "");
+}
+
+function calculateTotalMarks() {
+    let total = 0;
+    for (let i = 1; i <= 8; i++) total += Number(draft["Marks " + i]) || 0;
+    return total;
+}
+
+function refreshExamHeaderInfo() {
+    if (!dom.examHeaderInfoBox) return;
+    const rows = [
+        { lbl: "Sr. No",      val: draft["Sr. No"] || "Auto" },
+        { lbl: "Date",        val: draft["Date"] || "—" },
+        { lbl: "Status",      val: draft["Status"] || "—" },
+        { lbl: "Std",         val: draft["Std"] || "—" },
+        { lbl: "Subject Name",val: draft["Subject Name"] || "—" },
+        { lbl: "Test Name",   val: draft["Test Name"] || "—" },
+        { lbl: "Total Marks", val: String(calculateTotalMarks()) },
+        { lbl: "Timing",      val: draft["Timing"] || "—" }
+    ];
+    dom.examHeaderInfoBox.innerHTML = rows.map(r => `
+        <div class="info-item">
+            <span class="lbl">${escapeHtml(r.lbl)}</span>
+            <span class="val">${escapeHtml(r.val)}</span>
+        </div>
+    `).join('');
+
+    if (dom.totalMarksDisplay) dom.totalMarksDisplay.textContent = String(calculateTotalMarks());
+
+    const examInfoChip = document.getElementById('examInfoStatusChip');
+    if (examInfoChip) {
+        const filled = draft["Std"] && draft["Subject Name"] && draft["Test Name"] && draft["Date"];
+        examInfoChip.className = `status-chip ${filled ? 'saved' : 'empty'}`;
+        examInfoChip.innerHTML = `<i class="fas fa-circle" style="font-size:0.5rem;"></i> ${filled ? 'Filled' : 'Not Filled'}`;
+    }
+
+    const setMarksChip = (id, marksKey) => {
+        const chip = document.getElementById(id);
+        if (chip) {
+            const m = Number(draft[marksKey]) || 0;
+            chip.className = `status-chip ${m > 0 ? 'saved' : 'empty'}`;
+            chip.innerHTML = `<i class="fas fa-circle" style="font-size:0.5rem;"></i> Marks: ${m}`;
+        }
+    };
+    setMarksChip('fillMarksStatusChip', 'Marks 1');
+    setMarksChip('matchMarksStatusChip', 'Marks 2');
+    setMarksChip('tfMarksStatusChip', 'Marks 3');
+    setMarksChip('oddMarksStatusChip', 'Marks 4');
+    setMarksChip('osMarksStatusChip', 'Marks 5');
+    setMarksChip('disMarksStatusChip', 'Marks 6');
+    setMarksChip('aqMarksStatusChip', 'Marks 7');
+    setMarksChip('bqMarksStatusChip', 'Marks 8');
+}
+
+
+/* =====================================================================
+   SECTION 15b — A. EXAM INFORMATION
+   ===================================================================== */
+
+function openExamInfoModal() {
+    dom.formModalTitle.textContent = "📋 Exam Information";
+    dom.formModalBody.innerHTML = buildExamInfoFormHtml();
+    dom.formModal.classList.add('active');
+    attachExamInfoEvents();
+}
+
+function buildExamInfoFormHtml() {
+    return `
+        <form id="examInfoForm" novalidate>
+            <div class="form-grid">
+                <div class="field">
+                    <label>Sr. No</label>
+                    <input type="text" id="eiSrNo" value="${escapeHtml(draft['Sr. No'] || 'Auto-generated')}" readonly>
+                </div>
+                <div class="field">
+                    <label>Date *</label>
+                    <input type="date" id="eiDate" value="${ddmmyyyyToInputValue(draft['Date'])}" required>
+                    <div class="field-error" id="err-eiDate"></div>
+                </div>
+                <div class="field">
+                    <label>Status *</label>
+                    <select id="eiStatus" required>
+                        <option value="Active" ${draft['Status'] === 'Active' ? 'selected' : ''}>Active</option>
+                        <option value="Deactive" ${draft['Status'] === 'Deactive' ? 'selected' : ''}>Deactive</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Std *</label>
+                    <select id="eiStd" required>
+                        <option value="">Select Std</option>
+                        ${["4th Std","5th Std","6th Std","7th Std","8th Std","9th Std","10th Std"]
+                            .map(s => `<option value="${s}" ${draft['Std'] === s ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                    <div class="field-error" id="err-eiStd"></div>
+                </div>
+                <div class="field">
+                    <label>Subject Name *</label>
+                    <input type="text" id="eiSubject" value="${escapeHtml(draft['Subject Name'])}" required>
+                    <div class="field-error" id="err-eiSubject"></div>
+                </div>
+                <div class="field">
+                    <label>Test Name *</label>
+                    <input type="text" id="eiTest" value="${escapeHtml(draft['Test Name'])}" required>
+                    <div class="field-error" id="err-eiTest"></div>
+                </div>
+                <div class="field">
+                    <label>Total Marks (auto)</label>
+                    <input type="text" id="eiTotal" value="${calculateTotalMarks()}" readonly>
+                </div>
+                <div class="field">
+                    <label>Timing *</label>
+                    <select id="eiTiming" required>
+                        <option value="">Select Timing</option>
+                        ${["10 Min","20 Min","30 Min","45 Min","60 Min","90 Min","120 Min","180 Min"]
+                            .map(t => `<option value="${t}" ${draft['Timing'] === t ? 'selected' : ''}>${t}</option>`).join('')}
+                    </select>
+                    <div class="field-error" id="err-eiTiming"></div>
+                </div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="button" class="btn btn-outline" id="eiCancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    `;
+}
+
+function attachExamInfoEvents() {
+    const form = document.getElementById('examInfoForm');
+    if (!form) return;
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const date = document.getElementById('eiDate').value;
+        const status = document.getElementById('eiStatus').value;
+        const std = document.getElementById('eiStd').value;
+        const subject = document.getElementById('eiSubject').value.trim();
+        const test = document.getElementById('eiTest').value.trim();
+        const timing = document.getElementById('eiTiming').value;
+
+        let hasErr = false;
+        if (!date) { setFieldError('eiDate', 'Date is required'); hasErr = true; }
+        if (!std) { setFieldError('eiStd', 'Std is required'); hasErr = true; }
+        if (!subject) { setFieldError('eiSubject', 'Subject Name is required'); hasErr = true; }
+        if (!test) { setFieldError('eiTest', 'Test Name is required'); hasErr = true; }
+        if (!timing) { setFieldError('eiTiming', 'Timing is required'); hasErr = true; }
+        if (hasErr) return;
+
+        draft["Date"] = formatDateToDDMMYYYY(date);
+        draft["Status"] = status;
+        draft["Std"] = std;
+        draft["Subject Name"] = subject;
+        draft["Test Name"] = test;
+        draft["Timing"] = timing;
+        draft["Total Marks"] = calculateTotalMarks();
+
+        refreshExamHeaderInfo();
+        closeFormModal();
+        showToast("✅ Exam information saved to draft", "success");
+    };
+    document.getElementById('eiCancelBtn')?.addEventListener('click', closeFormModal);
+}
+
+
+/* =====================================================================
+   SHARED HELPERS
+   ===================================================================== */
+
+function buildSimpleMarksFormHtml(opts) {
+    const { formId, questionId, marksId, questionValue, marksValue, placeholder, cancelBtnId } = opts;
+    return `
+        <form id="${formId}" novalidate>
+            <div class="form-grid">
+                <div class="field fullwidth">
+                    <label>Enter Question *</label>
+                    <textarea id="${questionId}" rows="3" placeholder="${escapeHtml(placeholder)}">${escapeHtml(questionValue)}</textarea>
+                    <div class="field-error" id="err-${questionId}"></div>
+                </div>
+                <div class="field fullwidth">
+                    <label>Marks *</label>
+                    <input type="number" id="${marksId}" min="0" step="0.5" value="${escapeHtml(String(marksValue || ''))}">
+                    <div class="field-error" id="err-${marksId}"></div>
+                </div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="button" class="btn btn-outline" id="${cancelBtnId}">Cancel</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    `;
+}
+
+function buildNumberedQuestionFormHtml(opts) {
+    const { formId, header, value, stepLabel, stepDesc, placeholder } = opts;
+    return `
+        <form id="${formId}" novalidate>
+            <div style="margin-bottom:12px; padding:10px 14px; background:var(--accent-soft); border-radius:12px; font-size:0.8rem; color:var(--text-secondary);">
+                <strong style="color:var(--primary);">${escapeHtml(stepLabel)}</strong> — ${escapeHtml(stepDesc)}
+            </div>
+            <div class="field fullwidth">
+                <label>${escapeHtml(header)} *</label>
+                <input type="text" id="nqInput" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}">
+                <div class="field-error" id="err-nqInput"></div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:space-between; margin-top:1.5rem; flex-wrap:wrap;">
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn btn-outline" id="nqCancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-outline" id="nqPrevBtn" ${stepLabel.includes('Step 1 ') ? 'style="display:none;"' : ''}>← Previous</button>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save & Next</button>
+            </div>
+        </form>
+    `;
+}
+
+
+/* =====================================================================
+   SECTION 16 — B. FILL — MARKS
+   ===================================================================== */
+
+function openFillMarksModal() {
+    dom.formModalTitle.textContent = "🅱️ Fill in the Blanks — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'fillMarksForm', questionId: 'fmQuestion', marksId: 'fmMarks',
+        questionValue: draft['Fill in the Blanks'] || "",
+        marksValue: draft['Marks 1'] || '',
+        placeholder: "Type instruction / question for fill-in-the-blanks section...",
+        cancelBtnId: 'fmCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('fillMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('fmQuestion').value.trim();
+        const marks = document.getElementById('fmMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('fmQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) {
+            setFieldError('fmMarks', 'Please enter valid marks'); hasErr = true;
+        }
+        if (hasErr) return;
+        draft["Fill in the Blanks"] = q;
+        draft["Marks 1"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Fill marks saved", "success");
+    };
+    document.getElementById('fmCancelBtn')?.addEventListener('click', closeFormModal);
+}
+
+
+/* =====================================================================
+   SECTION 17 — B. FILL — QUESTIONS
+   ===================================================================== */
+
+function openFillQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < FILL_GROUPS.length; i++) {
+        if (!fillQuestions[i] || !fillQuestions[i].question) { startIdx = i; break; }
+        if (i === FILL_GROUPS.length - 1) startIdx = i;
+    }
+    openFillQuestionGroup(startIdx);
+}
+
+function openFillQuestionGroup(idx) {
+    if (idx >= FILL_GROUPS.length) {
+        syncFillQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ All 5 fill questions saved", "success");
+        return;
+    }
+    const group = FILL_GROUPS[idx];
+    const data = fillQuestions[idx] || { question: "", options: ["","","",""] };
+
+    dom.formModalTitle.textContent = `🅱️ Fill Question ${idx + 1} of 5`;
+    dom.formModalBody.innerHTML = `
+        <form id="fillQForm" novalidate>
+            <div style="margin-bottom:12px; padding:10px 14px; background:var(--accent-soft); border-radius:12px; font-size:0.8rem; color:var(--text-secondary);">
+                <strong style="color:var(--primary);">Step ${idx + 1} of 5</strong> — Fill in the blanks question and its 4 options.
+            </div>
+            <div class="form-grid">
+                <div class="field fullwidth">
+                    <label>${escapeHtml(group.q)} *</label>
+                    <textarea id="fqQuestion" rows="2" placeholder="Enter question ${idx + 1}...">${escapeHtml(data.question || '')}</textarea>
+                    <div class="field-error" id="err-fqQuestion"></div>
+                </div>
+                <div class="field"><label>${escapeHtml(group.options[0])} *</label>
+                    <input type="text" id="fqOpt0" value="${escapeHtml(data.options[0] || '')}">
+                    <div class="field-error" id="err-fqOpt0"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[1])} *</label>
+                    <input type="text" id="fqOpt1" value="${escapeHtml(data.options[1] || '')}">
+                    <div class="field-error" id="err-fqOpt1"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[2])} *</label>
+                    <input type="text" id="fqOpt2" value="${escapeHtml(data.options[2] || '')}">
+                    <div class="field-error" id="err-fqOpt2"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[3])} *</label>
+                    <input type="text" id="fqOpt3" value="${escapeHtml(data.options[3] || '')}">
+                    <div class="field-error" id="err-fqOpt3"></div></div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:space-between; margin-top:1.5rem; flex-wrap:wrap;">
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn btn-outline" id="fqCancelBtn">Cancel</button>
+                    ${idx > 0 ? `<button type="button" class="btn btn-outline" id="fqPrevBtn">← Previous</button>` : ''}
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> ${idx < FILL_GROUPS.length - 1 ? 'Save & Add New' : 'Save & Finish'}
+                </button>
+            </div>
+        </form>
+    `;
+    dom.formModal.classList.add('active');
+    document.getElementById('fillQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('fqQuestion').value.trim();
+        const opts = [0,1,2,3].map(i => document.getElementById('fqOpt' + i).value.trim());
+        let hasErr = false;
+        if (!q) { setFieldError('fqQuestion', 'Question is required'); hasErr = true; }
+        opts.forEach((o, i) => { if (!o) { setFieldError('fqOpt' + i, 'Option is required'); hasErr = true; } });
+        if (hasErr) return;
+        fillQuestions[idx] = { question: q, options: opts };
+        syncFillQuestionsToDraft();
+        if (idx < FILL_GROUPS.length - 1) { showToast(`✅ Question ${idx + 1} saved`, "success"); openFillQuestionGroup(idx + 1); }
+        else { refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 5 fill questions saved", "success"); }
+    };
+    document.getElementById('fqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('fqPrevBtn')?.addEventListener('click', () => openFillQuestionGroup(idx - 1));
+}
+function syncFillQuestionsToDraft() {
+    FILL_GROUPS.forEach((g, idx) => {
+        const data = fillQuestions[idx] || { question: "", options: ["","","",""] };
+        draft[g.q] = data.question || "";
+        g.options.forEach((optKey, i) => { draft[optKey] = data.options[i] || ""; });
+    });
+}
+
+
+/* =====================================================================
+   SECTION 18 — C. MATCH — MARKS
+   ===================================================================== */
+
+function openMatchMarksModal() {
+    dom.formModalTitle.textContent = "🅲 Match the Columns — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'matchMarksForm', questionId: 'mmQuestion', marksId: 'mmMarks',
+        questionValue: draft['Match the Columns'] || "",
+        marksValue: draft['Marks 2'] || '',
+        placeholder: "Type instruction / question for match the columns...",
+        cancelBtnId: 'mmCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('matchMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('mmQuestion').value.trim();
+        const marks = document.getElementById('mmMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('mmQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('mmMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Match the Columns"] = q;
+        draft["Marks 2"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Match marks saved", "success");
+    };
+    document.getElementById('mmCancelBtn')?.addEventListener('click', closeFormModal);
+}
+
+
+/* =====================================================================
+   SECTION 19 — C. MATCH — QUESTIONS
+   ===================================================================== */
+
+function openMatchQuestionsModal() {
+    dom.formModalTitle.textContent = "🅲 Match the Columns — Table";
+    dom.formModalBody.innerHTML = buildMatchQuestionsFormHtml();
+    dom.formModal.classList.add('active');
+    attachMatchQuestionsEvents();
+}
+
+function buildMatchQuestionsFormHtml() {
+    let rowsHtml = '';
+    for (let i = 0; i < 8; i++) {
+        const leftKey = `Match Pair ${i + 1}`;
+        const rightKey = `Match Pair ${String.fromCharCode(65 + i)}`;
+        const leftVal = (matchPairs[i] && matchPairs[i].left) || draft[leftKey] || "";
+        const rightVal = (matchPairs[i] && matchPairs[i].right) || draft[rightKey] || "";
+        rowsHtml += `
+            <tr>
+                <td style="width:50%;"><input type="text" data-side="left" data-idx="${i}"
+                    value="${escapeHtml(leftVal)}" placeholder="${escapeHtml(leftKey)}"></td>
+                <td style="width:50%;"><input type="text" data-side="right" data-idx="${i}"
+                    value="${escapeHtml(rightVal)}" placeholder="${escapeHtml(rightKey)}"></td>
+            </tr>
+        `;
+    }
+    return `
+        <form id="matchQForm" novalidate>
+            <div style="margin-bottom:12px; padding:10px 14px; background:var(--accent-soft); border-radius:12px; font-size:0.8rem; color:var(--text-secondary);">
+                Fill 8 pairs. <strong>Column A</strong> → <strong>Column B</strong>.
+            </div>
+            <table class="match-table">
+                <thead><tr>
+                    <th><i class="fas fa-list-ol"></i> Column A (Match Pair 1–8)</th>
+                    <th><i class="fas fa-list-ul"></i> Column B (Match Pair A–H)</th>
+                </tr></thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+            <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="button" class="btn btn-outline" id="mqCancelBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+            </div>
+        </form>
+    `;
+}
+
+function attachMatchQuestionsEvents() {
+    const form = document.getElementById('matchQForm');
+    if (!form) return;
+    form.onsubmit = (e) => {
+        e.preventDefault();
+        const inputs = form.querySelectorAll('input[data-side]');
+        matchPairs = Array.from({length: 8}, () => ({ left: "", right: "" }));
+        inputs.forEach(inp => {
+            const idx = parseInt(inp.getAttribute('data-idx'), 10);
+            const side = inp.getAttribute('data-side');
+            if (!isNaN(idx) && matchPairs[idx]) matchPairs[idx][side] = inp.value.trim();
+        });
+        syncMatchPairsToDraft(); refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Match the columns saved", "success");
+    };
+    document.getElementById('mqCancelBtn')?.addEventListener('click', closeFormModal);
+}
+function syncMatchPairsToDraft() {
+    for (let i = 0; i < 8; i++) {
+        const leftKey = `Match Pair ${i + 1}`;
+        const rightKey = `Match Pair ${String.fromCharCode(65 + i)}`;
+        draft[leftKey] = (matchPairs[i] && matchPairs[i].left) || "";
+        draft[rightKey] = (matchPairs[i] && matchPairs[i].right) || "";
+    }
+}
+
+
+/* =====================================================================
+   SECTION 20 — D. TRUE/FALSE — MARKS
+   ===================================================================== */
+
+function openTFMarksModal() {
+    dom.formModalTitle.textContent = "🅳 True or False — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'tfMarksForm', questionId: 'tfQuestion', marksId: 'tfMarks',
+        questionValue: getSectionTitle('True or False'),
+        marksValue: draft['Marks 3'] || '',
+        placeholder: "Type instruction / question for True or False section...",
+        cancelBtnId: 'tfCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('tfMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('tfQuestion').value.trim();
+        const marks = document.getElementById('tfMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('tfQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('tfMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["True or False"] = q;
+        draft["Marks 3"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ True/False marks saved", "success");
+    };
+    document.getElementById('tfCancelBtn')?.addEventListener('click', closeFormModal);
+}
+
+
+/* =====================================================================
+   SECTION 21 — D. TRUE/FALSE — QUESTIONS
+   ===================================================================== */
+
+function openTFQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < TF_HEADERS.length; i++) {
+        if (!hasValue(tfQuestions[i])) { startIdx = i; break; }
+        if (i === TF_HEADERS.length - 1) startIdx = i;
+    }
+    openTFQuestionStep(startIdx);
+}
+
+function openTFQuestionStep(idx) {
+    if (idx >= TF_HEADERS.length) {
+        syncTFQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ All 6 True/False questions saved", "success");
+        return;
+    }
+
+    const header = TF_HEADERS[idx];
+    const value = tfQuestions[idx] || "";
+
+    dom.formModalTitle.textContent = `🅳 True or False — ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = buildNumberedQuestionFormHtml({
+        formId: 'tfQForm',
+        header: header,
+        value: value,
+        stepLabel: `Step ${idx + 1} of 6`,
+        stepDesc: "Type the True/False statement. Only the question text is required.",
+        placeholder: `Enter ${header}...`
+    });
+    dom.formModal.classList.add('active');
+
+    document.getElementById('tfQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const val = document.getElementById('nqInput').value.trim();
+        if (!val) { setFieldError('nqInput', 'This field is required'); return; }
+
+        tfQuestions[idx] = val;
+        syncTFQuestionsToDraft();
+        refreshExamHeaderInfo();
+
+        if (idx < TF_HEADERS.length - 1) {
+            showToast(`✅ Saved (${idx + 1} of 6)`, "success");
+            openTFQuestionStep(idx + 1);
+        } else {
+            closeFormModal();
+            showToast("✅ All 6 True/False questions saved", "success");
+        }
+    };
+    document.getElementById('nqCancelBtn')?.addEventListener('click', closeFormModal);
+    const prevBtn = document.getElementById('nqPrevBtn');
+    if (prevBtn) prevBtn.addEventListener('click', () => openTFQuestionStep(idx - 1));
+}
+
+function syncTFQuestionsToDraft() {
+    TF_HEADERS.forEach((h, i) => { draft[h] = tfQuestions[i] || ""; });
+}
+
+
+/* =====================================================================
+   SECTION 22 — E. ODD MAN OUT — MARKS
+   ===================================================================== */
+
+function openOddMarksModal() {
+    dom.formModalTitle.textContent = "🅴 Odd Man Out — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'oddMarksForm', questionId: 'oddQuestion', marksId: 'oddMarks',
+        questionValue: getSectionTitle('Find odd man out'),
+        marksValue: draft['Marks 4'] || '',
+        placeholder: "Type instruction / question...",
+        cancelBtnId: 'oddCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('oddMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('oddQuestion').value.trim();
+        const marks = document.getElementById('oddMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('oddQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('oddMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Find odd man out"] = q;
+        draft["Marks 4"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Odd Man Out marks saved", "success");
+    };
+    document.getElementById('oddCancelBtn')?.addEventListener('click', closeFormModal);
+}
+
+
+/* =====================================================================
+   SECTION 23 — E. ODD MAN OUT — QUESTIONS
+   ✅ Options are OPTIONAL — no required validation
+   ===================================================================== */
+
+function openOddQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < ODD_GROUPS.length; i++) {
+        const g = oddQuestions[i];
+        const started = g && g.options && g.options.some(o => hasValue(o));
+        if (!started) { startIdx = i; break; }
+        if (i === ODD_GROUPS.length - 1) startIdx = i;
+    }
+    openOddQuestionGroup(startIdx);
+}
+
+function openOddQuestionGroup(idx) {
+    if (idx >= ODD_GROUPS.length) {
+        syncOddQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ All 6 Odd Man Out sets saved", "success");
+        return;
+    }
+    const group = ODD_GROUPS[idx];
+    const data = oddQuestions[idx] || { options: ["","","",""] };
+    const firstOptNum = (idx * 4) + 1;
+
+    dom.formModalTitle.textContent = `🅴 Odd Man Out — Set ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = `
+        <form id="oddQForm" novalidate>
+            <div style="margin-bottom:12px; padding:10px 14px; background:var(--accent-soft); border-radius:12px; font-size:0.8rem; color:var(--text-secondary);">
+                <strong style="color:var(--primary);">Step ${idx + 1} of 6</strong> — Fill 4 options.
+                <span style="color:var(--text-light); font-size:0.72rem; display:block; margin-top:4px;">
+                    ℹ️ All options are <strong>optional</strong>. Leave any field blank to show a fill-in-the-blank line in the printed paper.
+                </span>
+            </div>
+            <div class="form-grid">
+                <div class="field"><label>${escapeHtml(group.options[0])}</label>
+                    <input type="text" id="oddOpt0" value="${escapeHtml(data.options[0] || '')}" placeholder="Option ${firstOptNum} (optional)">
+                    <div class="field-error" id="err-oddOpt0"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[1])}</label>
+                    <input type="text" id="oddOpt1" value="${escapeHtml(data.options[1] || '')}" placeholder="Option ${firstOptNum + 1} (optional)">
+                    <div class="field-error" id="err-oddOpt1"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[2])}</label>
+                    <input type="text" id="oddOpt2" value="${escapeHtml(data.options[2] || '')}" placeholder="Option ${firstOptNum + 2} (optional)">
+                    <div class="field-error" id="err-oddOpt2"></div></div>
+                <div class="field"><label>${escapeHtml(group.options[3])}</label>
+                    <input type="text" id="oddOpt3" value="${escapeHtml(data.options[3] || '')}" placeholder="Option ${firstOptNum + 3} (optional)">
+                    <div class="field-error" id="err-oddOpt3"></div></div>
+            </div>
+            <div style="display:flex; gap:12px; justify-content:space-between; margin-top:1.5rem; flex-wrap:wrap;">
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn btn-outline" id="oddqCancelBtn">Cancel</button>
+                    ${idx > 0 ? `<button type="button" class="btn btn-outline" id="oddqPrevBtn">← Previous</button>` : ''}
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> ${idx < ODD_GROUPS.length - 1 ? 'Save & Next' : 'Save & Finish'}
+                </button>
+            </div>
+        </form>
+    `;
+    dom.formModal.classList.add('active');
+
+    document.getElementById('oddQForm').onsubmit = (e) => {
+        e.preventDefault();
+        /* ✅ No required validation — every option is optional */
+        const opts = [0,1,2,3].map(i => document.getElementById('oddOpt' + i).value.trim());
+
+        oddQuestions[idx] = { options: opts };
+        syncOddQuestionsToDraft();
+        refreshExamHeaderInfo();
+
+        if (idx < ODD_GROUPS.length - 1) {
+            showToast(`✅ Odd Man Out set ${idx + 1} saved`, "success");
+            openOddQuestionGroup(idx + 1);
+        } else {
+            closeFormModal();
+            showToast("✅ All 6 Odd Man Out sets saved", "success");
+        }
+    };
+    document.getElementById('oddqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('oddqPrevBtn')?.addEventListener('click', () => openOddQuestionGroup(idx - 1));
+}
+function syncOddQuestionsToDraft() {
+    ODD_GROUPS.forEach((g, idx) => {
+        const data = oddQuestions[idx] || { options: ["","","",""] };
+        g.options.forEach((optKey, i) => { draft[optKey] = data.options[i] || ""; });
+    });
+}
+
+
+/* =====================================================================
+   SECTION 24 — F/G/H/I
+   ===================================================================== */
+
+/* ---------- F. Answer in One Sentence ---------- */
+function openOSMarksModal() {
+    dom.formModalTitle.textContent = "🅵 Answer in One Sentence — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'osMarksForm', questionId: 'osQuestion', marksId: 'osMarks',
+        questionValue: getSectionTitle('Answer in One Sentence'),
+        marksValue: draft['Marks 5'] || '',
+        placeholder: "Type instruction / question for 'Answer in One Sentence'...",
+        cancelBtnId: 'osCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('osMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('osQuestion').value.trim();
+        const marks = document.getElementById('osMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('osQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('osMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Answer in One Sentence"] = q;
+        draft["Marks 5"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Answer in One Sentence marks saved", "success");
+    };
+    document.getElementById('osCancelBtn')?.addEventListener('click', closeFormModal);
+}
+function openOSQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < OS_HEADERS.length; i++) {
+        if (!osQuestions[i]) { startIdx = i; break; }
+        if (i === OS_HEADERS.length - 1) startIdx = i;
+    }
+    openOSQuestionStep(startIdx);
+}
+function openOSQuestionStep(idx) {
+    if (idx >= OS_HEADERS.length) { syncOSQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); return; }
+    dom.formModalTitle.textContent = `🅵 Answer in One Sentence — ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = buildNumberedQuestionFormHtml({
+        formId: 'osQForm', header: OS_HEADERS[idx], value: osQuestions[idx] || "",
+        stepLabel: `Step ${idx + 1} of 6`, stepDesc: "Type the question/statement.",
+        placeholder: `Enter ${OS_HEADERS[idx]}...`
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('osQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const val = document.getElementById('nqInput').value.trim();
+        if (!val) { setFieldError('nqInput', 'This field is required'); return; }
+        osQuestions[idx] = val; syncOSQuestionsToDraft();
+        if (idx < OS_HEADERS.length - 1) { showToast(`✅ Saved (${idx + 1} of 6)`, "success"); openOSQuestionStep(idx + 1); }
+        else { refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); }
+    };
+    document.getElementById('nqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('nqPrevBtn')?.addEventListener('click', () => openOSQuestionStep(idx - 1));
+}
+function syncOSQuestionsToDraft() { OS_HEADERS.forEach((h, i) => { draft[h] = osQuestions[i] || ""; }); }
+
+/* ---------- G. Distinguishing between ---------- */
+function openDisMarksModal() {
+    dom.formModalTitle.textContent = "🅶 Distinguishing between — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'disMarksForm', questionId: 'disQuestion', marksId: 'disMarks',
+        questionValue: getSectionTitle('Distinguishing between'),
+        marksValue: draft['Marks 6'] || '',
+        placeholder: "Type instruction / question...",
+        cancelBtnId: 'disCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('disMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('disQuestion').value.trim();
+        const marks = document.getElementById('disMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('disQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('disMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Distinguishing between"] = q;
+        draft["Marks 6"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Distinguishing between marks saved", "success");
+    };
+    document.getElementById('disCancelBtn')?.addEventListener('click', closeFormModal);
+}
+function openDisQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < DIS_HEADERS.length; i++) {
+        if (!disQuestions[i]) { startIdx = i; break; }
+        if (i === DIS_HEADERS.length - 1) startIdx = i;
+    }
+    openDisQuestionStep(startIdx);
+}
+function openDisQuestionStep(idx) {
+    if (idx >= DIS_HEADERS.length) { syncDisQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); return; }
+    dom.formModalTitle.textContent = `🅶 Distinguishing between — ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = buildNumberedQuestionFormHtml({
+        formId: 'disQForm', header: DIS_HEADERS[idx], value: disQuestions[idx] || "",
+        stepLabel: `Step ${idx + 1} of 6`, stepDesc: "Type the question/statement.",
+        placeholder: `Enter ${DIS_HEADERS[idx]}...`
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('disQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const val = document.getElementById('nqInput').value.trim();
+        if (!val) { setFieldError('nqInput', 'This field is required'); return; }
+        disQuestions[idx] = val; syncDisQuestionsToDraft();
+        if (idx < DIS_HEADERS.length - 1) { showToast(`✅ Saved (${idx + 1} of 6)`, "success"); openDisQuestionStep(idx + 1); }
+        else { refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); }
+    };
+    document.getElementById('nqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('nqPrevBtn')?.addEventListener('click', () => openDisQuestionStep(idx - 1));
+}
+function syncDisQuestionsToDraft() { DIS_HEADERS.forEach((h, i) => { draft[h] = disQuestions[i] || ""; }); }
+
+/* ---------- H. Answer the Following Question ---------- */
+function openAQMarksModal() {
+    dom.formModalTitle.textContent = "🅷 Answer the Following Question — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'aqMarksForm', questionId: 'aqQuestion', marksId: 'aqMarks',
+        questionValue: getSectionTitle('Answer the Following Question'),
+        marksValue: draft['Marks 7'] || '',
+        placeholder: "Type instruction / question...",
+        cancelBtnId: 'aqCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('aqMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('aqQuestion').value.trim();
+        const marks = document.getElementById('aqMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('aqQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('aqMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Answer the Following Question"] = q;
+        draft["Marks 7"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Marks saved", "success");
+    };
+    document.getElementById('aqCancelBtn')?.addEventListener('click', closeFormModal);
+}
+function openAQQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < AQ_HEADERS.length; i++) {
+        if (!aqQuestions[i]) { startIdx = i; break; }
+        if (i === AQ_HEADERS.length - 1) startIdx = i;
+    }
+    openAQQuestionStep(startIdx);
+}
+function openAQQuestionStep(idx) {
+    if (idx >= AQ_HEADERS.length) { syncAQQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); return; }
+    dom.formModalTitle.textContent = `🅷 Answer the Following Question — ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = buildNumberedQuestionFormHtml({
+        formId: 'aqQForm', header: AQ_HEADERS[idx], value: aqQuestions[idx] || "",
+        stepLabel: `Step ${idx + 1} of 6`, stepDesc: "Type the question/statement.",
+        placeholder: `Enter ${AQ_HEADERS[idx]}...`
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('aqQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const val = document.getElementById('nqInput').value.trim();
+        if (!val) { setFieldError('nqInput', 'This field is required'); return; }
+        aqQuestions[idx] = val; syncAQQuestionsToDraft();
+        if (idx < AQ_HEADERS.length - 1) { showToast(`✅ Saved (${idx + 1} of 6)`, "success"); openAQQuestionStep(idx + 1); }
+        else { refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); }
+    };
+    document.getElementById('nqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('nqPrevBtn')?.addEventListener('click', () => openAQQuestionStep(idx - 1));
+}
+function syncAQQuestionsToDraft() { AQ_HEADERS.forEach((h, i) => { draft[h] = aqQuestions[i] || ""; }); }
+
+/* ---------- I. Brief Answer ---------- */
+function openBQMarksModal() {
+    dom.formModalTitle.textContent = "🅸 Brief Answer — Marks";
+    dom.formModalBody.innerHTML = buildSimpleMarksFormHtml({
+        formId: 'bqMarksForm', questionId: 'bqQuestion', marksId: 'bqMarks',
+        questionValue: getSectionTitle('Brief Answer'),
+        marksValue: draft['Marks 8'] || '',
+        placeholder: "Type instruction / question...",
+        cancelBtnId: 'bqCancelBtn'
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('bqMarksForm').onsubmit = (e) => {
+        e.preventDefault();
+        const q = document.getElementById('bqQuestion').value.trim();
+        const marks = document.getElementById('bqMarks').value.trim();
+        let hasErr = false;
+        if (!q) { setFieldError('bqQuestion', 'Question is required'); hasErr = true; }
+        if (marks === '' || isNaN(Number(marks)) || Number(marks) < 0) { setFieldError('bqMarks', 'Please enter valid marks'); hasErr = true; }
+        if (hasErr) return;
+        draft["Brief Answer"] = q;
+        draft["Marks 8"] = Number(marks);
+        draft["Total Marks"] = calculateTotalMarks();
+        refreshExamHeaderInfo(); closeFormModal();
+        showToast("✅ Brief Answer marks saved", "success");
+    };
+    document.getElementById('bqCancelBtn')?.addEventListener('click', closeFormModal);
+}
+function openBQQuestionsModal() {
+    let startIdx = 0;
+    for (let i = 0; i < BQ_HEADERS.length; i++) {
+        if (!bqQuestions[i]) { startIdx = i; break; }
+        if (i === BQ_HEADERS.length - 1) startIdx = i;
+    }
+    openBQQuestionStep(startIdx);
+}
+function openBQQuestionStep(idx) {
+    if (idx >= BQ_HEADERS.length) { syncBQQuestionsToDraft(); refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); return; }
+    dom.formModalTitle.textContent = `🅸 Brief Answer — ${idx + 1} of 6`;
+    dom.formModalBody.innerHTML = buildNumberedQuestionFormHtml({
+        formId: 'bqQForm', header: BQ_HEADERS[idx], value: bqQuestions[idx] || "",
+        stepLabel: `Step ${idx + 1} of 6`, stepDesc: "Type the question/statement.",
+        placeholder: `Enter ${BQ_HEADERS[idx]}...`
+    });
+    dom.formModal.classList.add('active');
+    document.getElementById('bqQForm').onsubmit = (e) => {
+        e.preventDefault();
+        const val = document.getElementById('nqInput').value.trim();
+        if (!val) { setFieldError('nqInput', 'This field is required'); return; }
+        bqQuestions[idx] = val; syncBQQuestionsToDraft();
+        if (idx < BQ_HEADERS.length - 1) { showToast(`✅ Saved (${idx + 1} of 6)`, "success"); openBQQuestionStep(idx + 1); }
+        else { refreshExamHeaderInfo(); closeFormModal(); showToast("✅ All 6 saved", "success"); }
+    };
+    document.getElementById('nqCancelBtn')?.addEventListener('click', closeFormModal);
+    document.getElementById('nqPrevBtn')?.addEventListener('click', () => openBQQuestionStep(idx - 1));
+}
+function syncBQQuestionsToDraft() { BQ_HEADERS.forEach((h, i) => { draft[h] = bqQuestions[i] || ""; }); }
+
+
+/* =====================================================================
+   SECTION 25 — PRINT QUESTION PAPER
+   ✅ Multi-page A4 aware + Blue/White/Yellow + Odd Man Out A : B :: C : D
+   ===================================================================== */
+
+function syncAllToDraft() {
+    syncFillQuestionsToDraft();
+    syncMatchPairsToDraft();
+    syncTFQuestionsToDraft();
+    syncOddQuestionsToDraft();
+    syncOSQuestionsToDraft();
+    syncDisQuestionsToDraft();
+    syncAQQuestionsToDraft();
+    syncBQQuestionsToDraft();
+}
+
+function stripLeadingQPrefix(text) {
+    if (!text) return "";
+    const raw = String(text).trim();
+    /* Pattern: leading "Qn." / "Qn:" / "n." / "n)" / "(n)" / "Question n." */
+    const re = /^\s*(?:Q(?:uestion)?\s*\.?\s*\d+\s*[.:)\-]|\(\s*\d+\s*\)|\d+\s*[.)\-])\s*/i;
+    /* Only strip when it looks like a pure prefix (word follows immediately) */
+    const stripped = raw.replace(re, "").trim();
+    return stripped || raw;
+}
+
+function buildQuestionBlocks() {
+    const blocks = [];
+
+    const fillItems = (fillQuestions || []).filter(q => hasValue(q.question) || hasValue(q.options));
+    if (fillItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Fill in the Blanks')) || "Fill in the Blanks",
+            marks: Number(draft["Marks 1"]) || 0,
+            type: "fill",
+            items: fillItems
+        });
+    }
+
+    const matchItems = (matchPairs || []).filter(p => hasValue(p.left) || hasValue(p.right));
+    if (matchItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Match the Columns')) || "Match the Columns",
+            marks: Number(draft["Marks 2"]) || 0,
+            type: "match",
+            items: matchItems
+        });
+    }
+
+    const tfItems = (tfQuestions || []).filter(q => hasValue(q));
+    if (tfItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('True or False')) || "State whether True or False",
+            marks: Number(draft["Marks 3"]) || 0,
+            type: "plain",
+            items: tfItems
+        });
+    }
+
+    /* ✅ Odd: at least one set must have any option filled */
+    const oddItems = (oddQuestions || []).filter(g =>
+        g.options && g.options.some(o => hasValue(o))
+    );
+    if (oddItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Find odd man out')) || "Find Odd Man Out",
+            marks: Number(draft["Marks 4"]) || 0,
+            type: "odd",
+            items: oddItems
+        });
+    }
+
+    const osItems = (osQuestions || []).filter(q => hasValue(q));
+    if (osItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Answer in One Sentence')) || "Answer in One Sentence",
+            marks: Number(draft["Marks 5"]) || 0,
+            type: "plain",
+            items: osItems
+        });
+    }
+
+    const disItems = (disQuestions || []).filter(q => hasValue(q));
+    if (disItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Distinguishing between')) || "Distinguishing between",
+            marks: Number(draft["Marks 6"]) || 0,
+            type: "plain",
+            items: disItems
+        });
+    }
+
+    const aqItems = (aqQuestions || []).filter(q => hasValue(q));
+    if (aqItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Answer the Following Question')) || "Answer the Following Question",
+            marks: Number(draft["Marks 7"]) || 0,
+            type: "plain",
+            items: aqItems
+        });
+    }
+
+    const bqItems = (bqQuestions || []).filter(q => hasValue(q));
+    if (bqItems.length > 0) {
+        blocks.push({
+            title: stripLeadingQPrefix(getSectionTitle('Brief Answer')) || "Brief Answer",
+            marks: Number(draft["Marks 8"]) || 0,
+            type: "plain",
+            items: bqItems
+        });
+    }
+
+    return blocks;
+}
+
+function renderBlockBody(block) {
+    if (!block.items || block.items.length === 0) return `<div class="q-empty">—</div>`;
+
+    switch (block.type) {
+
+        /* ---------- B. Fill in the Blanks ---------- */
+        case "fill":
+            return `<ol class="q-list">${block.items.map(it => `
+                <li>
+                    <div class="q-line">${escapeHtml(it.question || '')}</div>
+                    ${it.options && it.options.filter(o => hasValue(o)).length
+                        ? `<div class="q-opts">${it.options.filter(o => hasValue(o)).map((o, i) =>
+                            `<span class="q-opt">(${String.fromCharCode(97 + i)}) ${escapeHtml(o)}</span>`
+                        ).join('')}</div>` : ''}
+                </li>
+            `).join('')}</ol>`;
+
+        /* ---------- C. Match the Columns — strict 2-column table ---------- */
+        case "match": {
+            /* Only rows where at least one side has a value */
+            const rows = block.items.filter(p => hasValue(p.left) || hasValue(p.right));
+            /* Split into Column A and Column B arrays */
+            const colA = rows.map(p => p.left || "");
+            const colB = rows.map(p => p.right || "");
+            const maxLen = Math.max(colA.length, colB.length);
+
+            /* Build table rows — always render both sides */
+            let bodyHtml = '';
+            for (let i = 0; i < maxLen; i++) {
+                const a = hasValue(colA[i]) ? escapeHtml(colA[i]) : `<span class="blank-fill">&nbsp;</span>`;
+                const b = hasValue(colB[i]) ? escapeHtml(colB[i]) : `<span class="blank-fill">&nbsp;</span>`;
+                bodyHtml += `<tr><td>${a}</td><td>${b}</td></tr>`;
+            }
+
+            return `
+                <table class="match-print">
+                    <thead>
+                        <tr>
+                            <th style="width:50%;">Column A</th>
+                            <th style="width:50%;">Column B</th>
+                        </tr>
+                    </thead>
+                    <tbody>${bodyHtml}</tbody>
+                </table>
+            `;
+        }
+
+        /* ---------- D. True or False (plain list) ---------- */
+        case "plain":
+        default:
+            return `<ol class="q-list">${block.items.map(q =>
+                `<li><div class="q-line">${escapeHtml(q)}</div></li>`
+            ).join('')}</ol>`;
+
+        /* ---------- E. Odd Man Out — strict A : B :: C : D ---------- */
+        case "odd":
+            return `<ol class="q-list odd-list">${block.items.map(it => {
+                /* Ensure we always get 4 cells */
+                const opts = (it.options || []).concat(["","",""]).slice(0,4);
+                const render = (v) => hasValue(v)
+                    ? `<span class="odd-item">${escapeHtml(v)}</span>`
+                    : `<span class="blank-fill">&nbsp;</span>`;
+
+                return `
+                    <li>
+                        <div class="odd-line">
+                            ${render(opts[0])}
+                            <span class="odd-sep">:</span>
+                            ${render(opts[1])}
+                            <span class="odd-dbl">::</span>
+                            ${render(opts[2])}
+                            <span class="odd-sep">:</span>
+                            ${render(opts[3])}
+                        </div>
+                    </li>
+                `;
+            }).join('')}</ol>`;
+    }
+}
+
+/**
+ * ✅ Multi-page A4 aware print page
+ *
+ *  Layout:
+ *   • The full question flow lives inside a single .flow container.
+ *   • The header + meta strip is rendered as the first child of .flow.
+ *   • The footer is placed at the end of .flow.
+ *   • A separate compact header (template) is provided at the top of the body.
+ *   • CSS page-break rules ensure:
+ *       - .q-block never splits across pages.
+ *       - Each new page automatically repeats the compact header.
+ *   • For browsers that don't support CSS repeating, we duplicate the
+ *     compact header at intervals using JS on load.
+ */
+function generateQuestionPaperHTML() {
+    const blocks = buildQuestionBlocks();
+
+    const dateStr    = draft["Date"] || "—";
+    const stdStr     = draft["Std"] || "—";
+    const subjectStr = draft["Subject Name"] || "—";
+    const testStr    = draft["Test Name"] || "—";
+    const totalStr   = String(calculateTotalMarks());
+    const timingStr  = draft["Timing"] || "—";
+
+    const metaItems = [
+        { lbl: "Date",        val: dateStr },
+        { lbl: "Std",         val: stdStr },
+        { lbl: "Subject",     val: subjectStr },
+        { lbl: "Test",        val: testStr },
+        { lbl: "Total Marks", val: totalStr },
+        { lbl: "Timing",      val: timingStr }
+    ];
+
+    /* Build all question sections — each block ALWAYS gets a Qn. header */
+    let qNum = 0;
+    const sectionsHtml = blocks.map((b) => {
+        qNum += 1;
+        const label = `Q${qNum}.`;
+
+        /* Ensure the title is never blank */
+        const rawTitle = b.title || "";
+        const safeTitle = hasValue(rawTitle)
+            ? rawTitle
+            : ({
+                fill:  "Fill in the Blanks",
+                match: "Match the Columns",
+                tf:    "State whether True or False",
+                odd:   "Find Odd Man Out",
+                plain: "Answer the Following"
+            })[b.type] || "Question";
+
+        /* Marks badge */
+        const marksTag = b.marks > 0 ? `[${b.marks}M]` : '';
+
+        return `
+            <section class="q-block">
+                <div class="q-header">
+                    <div class="q-title">${label} ${escapeHtml(safeTitle)}</div>
+                    ${marksTag ? `<div class="q-marks">${escapeHtml(marksTag)}</div>` : ''}
+                </div>
+                <div class="q-body">${renderBlockBody(b)}</div>
+            </section>
+        `;
+    }).join('');
+
+    const emptyHtml = blocks.length === 0
+        ? `<div class="no-questions">No questions have been added yet.</div>`
+        : '';
+
+    /* ---------- HEADER (page 1) ---------- */
+    const fullHeaderHtml = `
+        <div class="header-block full">
+            <div class="paper-header">
+                <div class="logo-wrap">
+                    <img src="${LOGO_URL}" alt="Universal School" crossorigin="anonymous">
+                </div>
+                <div class="title-wrap">
+                    <h1>Universal School</h1>
+                    <div class="subtitle">Excellence in Education</div>
+                    <div class="title-pill">Question Paper</div>
+                </div>
+                <div class="photo-spacer"></div>
+            </div>
+            <div class="meta-strip">
+                ${metaItems.map(m => `
+                    <div class="meta-cell">
+                        <span class="lbl">${escapeHtml(m.lbl)}</span>
+                        <span class="val">${escapeHtml(String(m.val))}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+
+    /* ---------- COMPACT HEADER (pages 2+) ---------- */
+    const compactHeaderHtml = `
+        <div class="header-block compact">
+            <div class="compact-header">
+                <div class="compact-title">
+                    <strong>Universal School</strong>
+                    <span class="compact-sub">— ${escapeHtml(subjectStr)} · ${escapeHtml(testStr)}</span>
+                </div>
+                <div class="compact-meta">
+                    <span><b>Std:</b> ${escapeHtml(stdStr)}</span>
+                    <span><b>Date:</b> ${escapeHtml(dateStr)}</span>
+                    <span><b>Timing:</b> ${escapeHtml(timingStr)}</span>
+                    <span><b>Total:</b> ${escapeHtml(totalStr)}M</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Question Paper - ${escapeHtml(testStr)}</title>
+<style>
+    @page { size: A4 portrait; margin: 6mm 5mm 8mm 5mm; }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    html, body {
+        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        background: #fff; color: #111;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+
+    .flow { width: 200mm; margin: 0 auto; background: #fff; }
+    @media screen {
+        body { background: #eef1f5; padding: 8mm 0; }
+        .flow {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            border-radius: 2mm;
+            padding: 6mm;
+            width: 210mm;
+        }
+    }
+
+    /* ===== PAGE FRAME (per A4 page visual) ===== */
+    .page-frame {
+        border: 2.4pt solid #0d2c54;
+        border-radius: 3mm;
+        padding: 3mm;
+        background: #fff;
+        position: relative;
+        box-shadow: inset 0 0 0 1pt #ffd54a;
+    }
+    .page-frame::before {
+        content: '';
+        position: absolute; inset: 1.6mm;
+        border: 1.2pt dashed #ffd54a;
+        border-radius: 2mm;
+        pointer-events: none;
+    }
+
+    /* ===== HEADER FULL ===== */
+    .header-block.full {
+        border: 2pt solid #0d2c54; border-radius: 2mm;
+        background: #fff; margin-bottom: 3mm; overflow: hidden;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .header-block.full::before {
+        content: ''; display: block; height: 2.5mm;
+        background: linear-gradient(90deg, #0d2c54 0%, #1e4b8a 40%, #ffd54a 100%);
+    }
+    .header-block.full .paper-header {
+        display: grid; grid-template-columns: 20mm 1fr 20mm;
+        align-items: center; gap: 3mm;
+        padding: 2.5mm 4mm 1.5mm 4mm;
+    }
+    .header-block.full .logo-wrap { width: 20mm; height: 20mm; display:flex; align-items:center; justify-content:center; }
+    .header-block.full .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+    .header-block.full .title-wrap { text-align: center; }
+    .header-block.full .title-wrap h1 {
+        font-size: 18pt; font-weight: 900; color: #0d2c54;
+        letter-spacing: 0.5px; line-height: 1.05;
+        font-family: 'Arial Black', 'Segoe UI', sans-serif;
+        text-transform: uppercase;
+    }
+    .header-block.full .title-wrap .subtitle {
+        font-size: 9pt; font-weight: 700; color: #1e4b8a;
+        letter-spacing: 2px; margin-top: 0.8mm; text-transform: uppercase;
+    }
+    .header-block.full .title-wrap .title-pill {
+        display: inline-block;
+        background: #ffd54a; color: #0d2c54;
+        font-size: 10.5pt; font-weight: 900;
+        letter-spacing: 1.5px; padding: 1mm 8mm;
+        border-radius: 20px; margin-top: 2mm;
+        border: 1.4pt solid #0d2c54;
+        font-family: 'Arial Black', 'Segoe UI', sans-serif;
+        text-transform: uppercase;
+    }
+    .header-block.full .photo-spacer { width: 20mm; height: 20mm; }
+
+    /* ===== HEADER COMPACT ===== */
+    .header-block.compact {
+        border: 1.6pt solid #0d2c54; border-radius: 2mm;
+        background: #fff; margin-bottom: 2.5mm; overflow: hidden;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .header-block.compact::before {
+        content: ''; display: block; height: 1.8mm;
+        background: linear-gradient(90deg, #0d2c54 0%, #1e4b8a 40%, #ffd54a 100%);
+    }
+    .header-block.compact .compact-header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 4mm; padding: 1.6mm 4mm; flex-wrap: wrap;
+    }
+    .header-block.compact .compact-title { font-size: 10pt; color: #0d2c54; font-weight: 800; }
+    .header-block.compact .compact-title strong {
+        font-size: 11pt;
+        font-family: 'Arial Black', 'Segoe UI', sans-serif;
+        text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .header-block.compact .compact-sub {
+        font-size: 8.5pt; color: #1e4b8a; font-weight: 700; margin-left: 1.5mm;
+    }
+    .header-block.compact .compact-meta {
+        display: flex; gap: 3mm; flex-wrap: wrap;
+        font-size: 8pt; color: #0d2c54;
+    }
+    .header-block.compact .compact-meta span {
+        background: #eaf1fb; padding: 0.5mm 2mm;
+        border-radius: 12px; border: 0.6pt solid #b8c8df;
+    }
+    .header-block.compact .compact-meta span b { color: #1e4b8a; }
+
+    /* ===== META STRIP ===== */
+    .meta-strip {
+        margin: 0 4mm 3mm 4mm;
+        border: 1.4pt solid #0d2c54;
+        border-radius: 1.5mm;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        background: #fff;
+    }
+    .meta-strip .meta-cell {
+        padding: 1.4mm 1.6mm;
+        border-right: 0.6pt solid #b8c8df;
+        text-align: center; font-size: 9pt; background: #fff;
+    }
+    .meta-strip .meta-cell:last-child { border-right: none; }
+    .meta-strip .meta-cell .lbl {
+        display: block; font-size: 6.5pt; font-weight: 800;
+        color: #0d2c54; background: #ffd54a;
+        margin: -1.4mm -1.6mm 0.9mm -1.6mm;
+        padding: 0.7mm 1mm;
+        text-transform: uppercase; letter-spacing: 0.5px;
+        border-bottom: 0.6pt solid #0d2c54;
+    }
+    .meta-strip .meta-cell .val {
+        display: block; font-size: 9.4pt; font-weight: 800; color: #0d2c54;
+    }
+
+    /* ===== BODY BLOCK ===== */
+    .body-block {
+        border: 1.8pt solid #0d2c54; border-radius: 2mm;
+        padding: 3mm 4mm; background: #fff;
+        position: relative; min-height: 40mm;
+    }
+    .body-block::before {
+        content: ''; position: absolute; left: 0; right: 0; top: 0;
+        height: 1.2mm;
+        background: linear-gradient(90deg, #0d2c54 0%, #1e4b8a 50%, #ffd54a 100%);
+        border-radius: 2mm 2mm 0 0;
+    }
+    .content { padding-top: 1mm; }
+
+    /* ===== QUESTION BLOCKS ===== */
+    .q-block {
+        margin-bottom: 2.4mm;
+        page-break-inside: avoid; break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+    }
+    .q-header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 3mm;
+        background: linear-gradient(90deg, #eaf1fb 0%, #ffffff 70%, #fff8d9 100%);
+        border-left: 4pt solid #0d2c54;
+        border-top: 0.6pt solid #0d2c54;
+        border-bottom: 0.6pt solid #0d2c54;
+        padding: 1.4mm 3mm; border-radius: 1mm;
+        margin-bottom: 1mm;
+        page-break-after: avoid; break-after: avoid;
+    }
+    .q-title {
+        font-size: 10.8pt; font-weight: 800; color: #0d2c54;
+        letter-spacing: 0.2px;
+    }
+    .q-marks {
+        font-size: 9.6pt; font-weight: 900; color: #0d2c54;
+        background: #ffd54a;
+        border: 1.2pt solid #0d2c54;
+        border-radius: 20px; padding: 0.2mm 3mm;
+        white-space: nowrap;
+    }
+    .q-body { padding-left: 1mm; }
+
+    /* ===== ORDERED LISTS ===== */
+    ol.q-list { list-style: none; padding-left: 3.5mm; counter-reset: qitem; }
+    ol.q-list > li {
+        counter-increment: qitem;
+        position: relative;
+        padding: 0.4mm 0 0.6mm 5.5mm;
+        font-size: 9.9pt; line-height: 1.32; color: #111;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    ol.q-list > li::before {
+        content: counter(qitem) ".";
+        position: absolute; left: 0; top: 0.4mm;
+        font-weight: 800; color: #1e4b8a;
+        font-size: 9.9pt;
+        width: 4.5mm; text-align: right;
+    }
+    .q-line { display: block; }
+    .q-opts {
+        display: flex; flex-wrap: wrap; gap: 1.2mm 5mm;
+        margin-top: 0.5mm; font-size: 9.2pt; color: #333;
+    }
+    .q-opt { white-space: nowrap; }
+
+    /* ===== MATCH TABLE ===== */
+    .match-print {
+        width: 100%; border-collapse: collapse;
+        border: 1.4pt solid #0d2c54;
+        margin-top: 0.5mm; font-size: 9.6pt;
+    }
+    .match-print th {
+        background: #0d2c54; color: #ffd54a;
+        font-size: 9pt; font-weight: 800;
+        text-align: left;
+        padding: 1mm 2.6mm;
+        border: 0.8pt solid #0d2c54;
+        text-transform: uppercase; letter-spacing: 0.6px;
+    }
+    .match-print td {
+        padding: 0.9mm 2.6mm;
+        border: 0.8pt solid #b8c8df;
+        font-size: 9.6pt; color: #111;
+        vertical-align: top;
+    }
+    .match-print td:first-child {
+        width: 50%;
+        border-right: 1.4pt solid #0d2c54;
+        background: #f7faff;
+    }
+    .match-print td:last-child { background: #fffdf2; }
+    .match-print tr { page-break-inside: avoid; break-inside: avoid; }
+
+    /* ===== ODD MAN OUT LINE ===== */
+    .odd-line {
+        display: flex; align-items: baseline;
+        gap: 0.4mm; flex-wrap: wrap;
+        font-size: 10pt; line-height: 1.5;
+    }
+    .odd-item { color: #0d2c54; font-weight: 600; }
+    .odd-sep { color: #1e4b8a; font-weight: 800; padding: 0 1.5mm; }
+    .odd-dbl {
+        color: #0d2c54; font-weight: 900;
+        padding: 0 2.5mm; background: #ffd54a;
+        border-radius: 8px; line-height: 1.4;
+    }
+    .blank-fill {
+        display: inline-block; min-width: 22mm;
+        border-bottom: 1.2pt solid #0d2c54;
+        color: transparent; height: 3mm;
+        vertical-align: middle; margin: 0 1mm;
+    }
+
+    .q-empty { font-size: 9.6pt; color: #888; padding-left: 3.5mm; }
+    .no-questions {
+        text-align: center; padding: 18mm 0;
+        color: #888; font-size: 11.5pt; font-style: italic;
+    }
+
+    /* ===== FOOTER ===== */
+    .paper-footer {
+        margin-top: 2mm;
+        padding: 1.5mm 3mm 0 3mm;
+        border-top: 1.4pt solid #0d2c54;
+        display: flex; align-items: center; justify-content: space-between;
+        font-size: 8pt; color: #0d2c54; font-weight: 700;
+        page-break-inside: avoid; break-inside: avoid;
+    }
+    .paper-footer .left { text-transform: uppercase; letter-spacing: 0.5px; }
+    .paper-footer .right { font-weight: 800; }
+    .page-num {
+        display: inline-block; padding: 0.3mm 3mm;
+        background: #ffd54a; color: #0d2c54;
+        border: 1pt solid #0d2c54;
+        border-radius: 10px;
+        font-size: 7.6pt; font-weight: 900;
+    }
+
+    /* ===== NEW PAGE MARKER (visible on screen only) ===== */
+    .page-separator {
+        display: none;
+    }
+
+    @media print {
+        html, body { background: #fff; }
+        body { padding: 0 !important; background: #fff !important; }
+        .flow {
+            width: auto !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+        .page-frame { border-width: 2pt; page-break-inside: auto; }
+        /* Force each .page-section to start on a fresh page if it would overflow */
+        .page-section { page-break-before: auto; break-before: auto; }
+        .page-section.new-page { page-break-before: always; break-before: page; }
+    }
+</style>
+</head>
+<body>
+    <div class="flow">
+        <div class="page-frame">
+            ${fullHeaderHtml}
+            <div class="body-block">
+                <div class="content" id="content-root">
+                    ${emptyHtml}
+                    ${sectionsHtml}
+                </div>
+            </div>
+            <div class="paper-footer">
+                <div class="left">Universal School — ${escapeHtml(testStr)}</div>
+                <div class="right"><span class="page-num">Page 1</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compact header template for pages 2+ -->
+    <template id="compact-header-template">${compactHeaderHtml}</template>
+</body>
+</html>`;
+}
+
+function printQuestionPaper() {
+    try {
+        syncAllToDraft();
+
+        if (!draft["Std"] || !draft["Subject Name"] || !draft["Test Name"]) {
+            showToast("❌ Please fill Std, Subject Name & Test Name in Exam Information first.", "error");
+            return;
+        }
+        const blocks = buildQuestionBlocks();
+        if (blocks.length === 0) {
+            showToast("⚠️ No questions have been added yet. Empty sections are skipped.", "error");
+            return;
+        }
+
+        const html = generateQuestionPaperHTML();
+        const printWindow = window.open('', '_blank', 'width=900,height=1200,toolbar=yes,scrollbars=yes,resizable=yes,menubar=no');
+        if (!printWindow) {
+            showToast("❌ Please allow pop-ups to print.", "error");
+            return;
+        }
+        printWindow.document.open();
+        printWindow.document.write(html);
+        printWindow.document.close();
+
+        printWindow.onload = function() {
+            try {
+                /* Inject multi-page compact headers where needed */
+                setTimeout(() => {
+                    try { injectMultiPageHeaders(printWindow); } catch (e) { console.warn(e); }
+                    setTimeout(() => {
+                        try { printWindow.focus(); printWindow.print(); } catch (e) {}
+                    }, 300);
+                }, 400);
+            } catch (e) {
+                try { printWindow.focus(); printWindow.print(); } catch (err) {}
+            }
+        };
+
+        showToast("🖨️ Opening print preview...", "success");
+    } catch (err) {
+        console.error('❌ Print error:', err);
+        showToast("❌ Print failed: " + err.message, "error");
+    }
+}
+
+/**
+ * ✅ Multi-page compact header injection.
+ *   Measures the natural height of each section, estimates page breaks based
+ *   on A4 printable height (~1046 px at 96 DPI minus our margins), and inserts
+ *   a compact header + page break at each boundary.
+ */
+function injectMultiPageHeaders(printWindow) {
+    try {
+        const doc = printWindow.document;
+        const content = doc.querySelector('.content');
+        const tpl = doc.getElementById('compact-header-template');
+        const footerPageNum = doc.querySelector('.paper-footer .page-num');
+        if (!content || !tpl) return;
+
+        /* --- Estimate how many A4 pages we'll have ---
+           A4 printable height with our margins ≈ 283mm.
+           At 96 DPI, 1mm ≈ 3.78 px  →  283mm ≈ 1069 px.
+           Each compact header ≈ 65 px.
+           Use 980 px as a safe per-page usable content height. */
+        const PAGE_HEIGHT_PX = 980;
+
+        const sections = Array.from(content.querySelectorAll('.q-block'));
+        if (sections.length === 0) return;
+
+        /* Measure current heights */
+        let acc = 0;
+        const startNewPageAt = [];
+        sections.forEach((sec, i) => {
+            const h = sec.getBoundingClientRect().height || 0;
+            if (acc + h > PAGE_HEIGHT_PX && acc > 0) {
+                startNewPageAt.push(i);
+                acc = h;
+            } else {
+                acc += h;
+            }
+        });
+
+        /* Insert compact header + page break BEFORE each section that starts a new page */
+        startNewPageAt.forEach((sectionIndex) => {
+            const sec = sections[sectionIndex];
+            if (!sec) return;
+
+            const wrapper = doc.createElement('div');
+            wrapper.className = 'compact-header-injection';
+            wrapper.style.pageBreakBefore = 'always';
+            wrapper.style.breakBefore = 'page';
+
+            const clone = tpl.content.cloneNode(true);
+            wrapper.appendChild(clone);
+
+            sec.parentNode.insertBefore(wrapper, sec);
+        });
+
+        /* Update total page count in the footer */
+        if (footerPageNum) {
+            const totalPages = startNewPageAt.length + 1;
+            footerPageNum.textContent = `Page 1 of ${totalPages}`;
+        }
+    } catch (err) {
+        console.warn('Multi-page header injection skipped:', err);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 26 — SAVE / LOAD EXAM
+   ===================================================================== */
+
+async function openEditExamPage(exam) {
+    draftFromExam(exam);
+    refreshExamHeaderInfo();
+    goToCreatePage();
+}
+
+async function openCreateExamPage() {
+    resetDraft();
+    refreshExamHeaderInfo();
+    goToCreatePage();
+}
+
+async function saveExamDraft() {
+    if (saveInProgress) return;
+
+    if (!draft["Date"] || !draft["Std"] || !draft["Subject Name"] || !draft["Test Name"] || !draft["Timing"]) {
+        showModal("⚠️ Please fill the <strong>Exam Information</strong> before saving.", "Incomplete", false, null, 2500);
+        return;
+    }
+
+    saveInProgress = true;
+    const saveBtn = document.getElementById('saveExamDraftBtn');
+    showSpinner(saveBtn, true);
+
+    try {
+        syncAllToDraft();
+        draft["Total Marks"] = calculateTotalMarks();
+        draft["Status"] = draft["Status"] || "Active";
+
+        const params = new URLSearchParams();
+        params.append("action", currentEditRowIndex ? "update" : "insert");
+        params.append("spreadsheetId", SPREADSHEET_ID);
+        params.append("sheetName", SHEET_NAME);
+        if (currentEditRowIndex) params.append("rowIndex", currentEditRowIndex);
+
+        SHEET_HEADERS.forEach(key => {
+            if (key === "Sr. No") {
+                if (draft[key]) params.append(key, draft[key]);
+                return;
+            }
+            const val = draft[key] === undefined || draft[key] === null ? "" : draft[key];
+            params.append(key, String(val));
+        });
+
+        const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: params.toString()
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+            showModal("✅ Exam saved as draft successfully!", "Success", false, null, 1500);
+            invalidateExamCache();
+            await loadExams(true);
+            setTimeout(() => goToListView(), 1200);
+        } else {
+            showModal("❌ Error: " + (result.message || "Unknown error"), "Error");
+        }
+    } catch (err) {
+        showModal("❌ Error: " + err.message, "Error");
+    } finally {
+        saveInProgress = false;
+        showSpinner(saveBtn, false);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 27 — INLINE ERROR HELPERS
+   ===================================================================== */
+
+function setFieldError(fieldId, message) {
+    const errEl = document.getElementById('err-' + fieldId);
+    const inputEl = document.getElementById(fieldId);
+    if (errEl) {
+        if (message) { errEl.textContent = message; errEl.classList.add('show'); }
+        else { errEl.textContent = ''; errEl.classList.remove('show'); }
+    }
+    if (inputEl) {
+        inputEl.classList.toggle('field-invalid', !!message);
+        inputEl.classList.toggle('field-valid', !message && inputEl.value.trim() !== '');
+    }
+}
+
+
+/* =====================================================================
+   SECTION 28 — MOBILE BUTTONS
+   ===================================================================== */
+
+function setupMobileButtons() {
+    const mobileRefreshBtn = document.getElementById('mobileRefreshBtn');
+    const mobileAddBtn = document.getElementById('mobileAddBtn');
+    if (mobileRefreshBtn) mobileRefreshBtn.addEventListener('click', () => {
+        if (dom.refreshBtn) dom.refreshBtn.click(); else refreshData();
+    });
+    if (mobileAddBtn) mobileAddBtn.addEventListener('click', () => {
+        if (dom.addNewBtn) dom.addNewBtn.click(); else openCreateExamPage();
+    });
+}
+
+
+/* =====================================================================
+   SECTION 29 — INITIALIZATION
+   ===================================================================== */
+
+function initApp() {
+    if (initDone) return;
+    initDone = true;
+
+    cacheDomElements();
+    setupMobileButtons();
+    updateAdminBadge();
+    resetDraft();
+    refreshExamHeaderInfo();
+
+    dataLoaded = false;
+    loadExams().catch(err => console.error('Initial load failed:', err));
+
+    dom.searchInput?.addEventListener('input', debounce((e) => scheduleRender(e.target.value), 250));
+
+    dom.refreshBtn?.addEventListener('click', refreshData);
+    dom.addNewBtn?.addEventListener('click', openCreateExamPage);
+    dom.backBtn?.addEventListener('click', goToListView);
+
+    document.getElementById('openExamInfoBtn')?.addEventListener('click', openExamInfoModal);
+    document.getElementById('openFillMarksBtn')?.addEventListener('click', openFillMarksModal);
+    document.getElementById('openFillQuestionsBtn')?.addEventListener('click', openFillQuestionsModal);
+    document.getElementById('openMatchMarksBtn')?.addEventListener('click', openMatchMarksModal);
+    document.getElementById('openMatchQuestionsBtn')?.addEventListener('click', openMatchQuestionsModal);
+    document.getElementById('openTFMarksBtn')?.addEventListener('click', openTFMarksModal);
+    document.getElementById('openTFQuestionsBtn')?.addEventListener('click', openTFQuestionsModal);
+    document.getElementById('openOddMarksBtn')?.addEventListener('click', openOddMarksModal);
+    document.getElementById('openOddQuestionsBtn')?.addEventListener('click', openOddQuestionsModal);
+    document.getElementById('openOSMarksBtn')?.addEventListener('click', openOSMarksModal);
+    document.getElementById('openOSQuestionsBtn')?.addEventListener('click', openOSQuestionsModal);
+    document.getElementById('openDisMarksBtn')?.addEventListener('click', openDisMarksModal);
+    document.getElementById('openDisQuestionsBtn')?.addEventListener('click', openDisQuestionsModal);
+    document.getElementById('openAQMarksBtn')?.addEventListener('click', openAQMarksModal);
+    document.getElementById('openAQQuestionsBtn')?.addEventListener('click', openAQQuestionsModal);
+    document.getElementById('openBQMarksBtn')?.addEventListener('click', openBQMarksModal);
+    document.getElementById('openBQQuestionsBtn')?.addEventListener('click', openBQQuestionsModal);
+
+    document.getElementById('printPaperBtn')?.addEventListener('click', printQuestionPaper);
+    document.getElementById('saveExamDraftBtn')?.addEventListener('click', saveExamDraft);
+    document.getElementById('cancelExamBtn')?.addEventListener('click', goToListView);
+
+    dom.tableBody?.addEventListener('click', handleTableClick);
+
+    document.getElementById('closeGlobalModal')?.addEventListener('click', () => dom.globalModal.classList.remove('active'));
+    document.getElementById('closeFormModalBtn')?.addEventListener('click', closeFormModal);
+    window.onclick = (e) => {
+        if (e.target.classList?.contains('modal-overlay')) {
+            e.target.classList.remove('active');
+            if (cropper) { cropper.destroy(); cropper = null; }
+        }
+    };
+
+    setInterval(() => {
+        if ('requestIdleCallback' in window) requestIdleCallback(refreshDataInBackground, { timeout: 3000 });
+        else refreshDataInBackground();
+    }, 5 * 60 * 1000);
+
+    window.addEventListener('storage', (e) => {
+        if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+    });
+
+    console.log(`✅ Universal School Exam Form Loaded | Sheet: ${SHEET_NAME}`);
+}
+
+
+/* =====================================================================
+   SECTION 30 — BOOTSTRAP
+   ===================================================================== */
+
+(function bootstrap() {
+    const startWhenReady = () => {
+        setTimeout(() => { gateAdminAccess(() => initApp()); }, 800);
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || mainEl.style.display === 'none';
+        if (stillHidden && !initDone) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: auth not verified after 5s');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 31 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.manualClearCache = function() {
+    clearAllCaches(); dataLoaded = false;
+    showToast("🧹 Cache cleared!", "success");
+    setTimeout(() => loadExams(true), 300);
+};
+window.forceRefreshData = function() {
+    dataLoaded = false; clearAllCaches();
+    showToast("🔄 Forcing data refresh...", "info");
+    setTimeout(() => loadExams(true), 300);
+};
+window.updateAdminBadge = updateAdminBadge;
+window.checkAdminAuth = checkAdminAuth;
+window.loadExams = loadExams;
+window.handleRetry = handleRetry;
+window.handleClearCache = handleClearCache;
+window.printQuestionPaper = printQuestionPaper;
+
+console.log('✅ Examform.html script initialized (auth-gated)');
+</script>
+
+</body>
+</html>

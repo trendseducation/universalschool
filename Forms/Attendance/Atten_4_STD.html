@@ -1,0 +1,4535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Attendance Management - 4th STD</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        /* ======================== CSS VARIABLES FOR THEMING ======================== */
+:root {
+    --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bg-secondary: #ffffff;
+    --bg-header: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.98);
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+    --secondary: #f59e0b;
+    --secondary-dark: #d97706;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #fbbf24;
+    --info: #06b6d4;
+    
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --table-header-bg: #f8fafc;
+    --table-row-hover: #f1f5f9;
+    --table-border: #e2e8f0;
+    --header-radius: 60px;
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 500ms ease;
+    --attend-accent: #8b5cf6;
+    --attend-accent-soft: rgba(139, 92, 246, 0.08);
+    --attend-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+}
+
+[data-theme="dark"] {
+    --bg-primary: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
+    --bg-secondary: #1e1e2e;
+    --bg-header: #1e293b;
+    --card-bg: rgba(30, 30, 46, 0.98);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-light: #64748b;
+    --border-color: #334155;
+    --table-header-bg: #1e293b;
+    --table-row-hover: #334155;
+    --table-border: #334155;
+}
+
+/* ================================================================
+   LOADING SPINNER (Admin Auth)
+   ================================================================ */
+#authLoading {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    z-index: 9999;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: background var(--transition-normal);
+}
+
+#authLoading.hidden {
+    display: none !important;
+}
+
+#authLoading .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--attend-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+#authLoading p {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+#authLoading .error-icon {
+    font-size: 3rem;
+    color: var(--danger);
+    margin-bottom: 0.5rem;
+}
+
+#authLoading .error-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+}
+
+#authLoading .error-sub {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+#authLoading .login-link {
+    display: inline-block;
+    padding: 12px 32px;
+    background: var(--attend-gradient);
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+#authLoading .login-link:hover {
+    transform: translateY(-2px);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ================================================================
+   MAIN CONTENT - Hidden until authenticated
+   ================================================================ */
+#mainContent {
+    display: none;
+}
+
+#mainContent.visible {
+    display: block;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ================================================================
+   BASE STYLES
+   ================================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+    
+::-webkit-scrollbar { width: 0; height: 0; display: none; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    min-height: auto;
+    padding: 20px 16px;
+    color: var(--text-primary);
+    transition: background var(--transition-normal), color var(--transition-normal);
+}
+
+.app-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ================================================================
+   SOFT CARD
+   ================================================================ */
+.soft-card {
+    background: var(--card-bg);
+    border-radius: 2rem;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.soft-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* ================================================================
+   CARD HEADER
+   ================================================================ */
+.card-header {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+[data-theme="dark"] .card-header {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+}
+
+.card-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-header h2 i { 
+    color: transparent; 
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+    -webkit-background-clip: text; 
+    background-clip: text; 
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ================================================================
+   DATE BADGE
+   ================================================================ */
+.date-badge {
+    background: var(--table-header-bg);
+    padding: 8px 18px;
+    border-radius: 60px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.date-badge i { color: var(--primary); }
+
+/* ================================================================
+   ACADEMIC YEAR BADGE
+   ================================================================ */
+.academic-year-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 4px 14px;
+    border-radius: 30px;
+    border: 1px solid var(--border-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
+}
+
+.academic-year-badge i {
+    color: var(--primary);
+    font-size: 0.7rem;
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+.btn {
+    border: none;
+    padding: 10px 24px;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before { width: 300px; height: 300px; }
+
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; box-shadow: var(--shadow-sm); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+
+.btn-success { background: linear-gradient(135deg, var(--success), #059669); color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+.btn-success:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+
+.btn-warning { background: linear-gradient(135deg, var(--secondary), var(--secondary-dark)); color: white; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+.btn-warning:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+
+.btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
+.btn-danger:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.btn-info { background: linear-gradient(135deg, var(--info), #0891b2); color: white; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2); }
+.btn-info:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+
+.btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+.btn-outline:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+.btn-whatsapp { background: #25D366; color: white; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+.btn-whatsapp:hover { background: #1da851; transform: translateY(-2px); }
+
+.btn-sm { padding: 6px 16px; font-size: 0.75rem; min-height: 34px; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ================================================================
+   STATS BAR
+   ================================================================ */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--table-header-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 18px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.stat-item i { font-size: 16px; color: var(--primary); width: 20px; text-align: center; }
+.stat-item .stat-value { font-weight: 700; color: var(--text-primary); }
+
+/* ================================================================
+   SEARCH BOX
+   ================================================================ */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 60px;
+    padding: 4px 16px;
+    transition: all var(--transition-fast);
+    gap: 10px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-box:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    background: transparent;
+    width: 100%;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-family: inherit;
+}
+
+.search-box input::placeholder { color: var(--text-light); }
+.search-box i { color: var(--text-light); font-size: 14px; }
+
+/* ================================================================
+   TOOLBAR GRID
+   ================================================================ */
+.toolbar-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+    background: var(--table-header-bg);
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    align-items: center;
+}
+
+.toolbar-grid .left {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.toolbar-grid label {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toolbar-grid label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* ================================================================
+   TABLE
+   ================================================================ */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+    min-width: 450px;
+}
+
+.data-table th {
+    text-align: left;
+    padding: 16px 20px;
+    background: var(--table-header-bg);
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 3px solid var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--table-border);
+    color: var(--text-primary);
+    transition: background var(--transition-fast);
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.data-table tr:hover td { background: var(--table-row-hover); }
+.data-table .sr-col { width: 60px; text-align: center; font-weight: 500; color: var(--text-light); font-size: 13px; }
+.data-table .name-col { font-weight: 500; color: var(--text-primary); }
+
+.data-table .name-col .student-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--table-header-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+/* ================================================================
+   STATUS BADGES
+   ================================================================ */
+.status-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-present { background: #e6f4ef; color: #0f7b5a; }
+.status-absent { background: #fde8e8; color: #b33a3a; }
+.status-half { background: #fef3e0; color: #d4a017; }
+.status-full { background: #fde8e8; color: #b33a3a; }
+.status-holiday { background: #fef3e0; color: #d4a017; border: 1px dashed #d4a017; }
+.status-not-marked { background: var(--table-header-bg); color: var(--text-light); }
+
+[data-theme="dark"] .status-present { background: #1a3a2e; color: #4caf8a; }
+[data-theme="dark"] .status-absent { background: #3a1a1a; color: #e87373; }
+[data-theme="dark"] .status-half { background: #3a2a1a; color: #e8b84c; }
+[data-theme="dark"] .status-full { background: #3a1a1a; color: #e87373; }
+[data-theme="dark"] .status-holiday { background: #2a2a1a; color: #e8b84c; border-color: #d4a017; }
+[data-theme="dark"] .status-not-marked { background: #2a3348; color: #6b7f9a; }
+
+/* ================================================================
+   SELECT DROPDOWN
+   ================================================================ */
+.action-col select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 40px;
+    border: 1.5px solid var(--border-color);
+    background: var(--bg-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2639' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* ================================================================
+   HOLIDAY BUTTON
+   ================================================================ */
+.holiday-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid #d4a017;
+    background: #fef3e0;
+    color: #b8890f;
+    min-height: 40px;
+    white-space: nowrap;
+}
+
+.holiday-btn:hover { background: #d4a017; color: white; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3); }
+.holiday-btn .badge-count { background: #d4a017; color: white; border-radius: 50%; padding: 0 8px; font-size: 11px; line-height: 20px; }
+
+[data-theme="dark"] .holiday-btn { border-color: #d4a017; background: #2a2a1a; color: #e8b84c; }
+[data-theme="dark"] .holiday-btn:hover { background: #d4a017; color: #1a2233; }
+
+.selected-holiday-display {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 16px;
+    background: #fef3e0;
+    border-radius: 40px;
+    border: 1px solid #d4a017;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b8890f;
+}
+
+.selected-holiday-display.active { display: inline-flex; }
+.selected-holiday-display .remove-holiday { cursor: pointer; padding: 0 4px; font-size: 14px; color: #b8890f; transition: 0.2s; }
+.selected-holiday-display .remove-holiday:hover { color: #b33a3a; transform: scale(1.2); }
+
+/* ================================================================
+   FOOTER BAR
+   ================================================================ */
+.footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.info-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--table-header-bg);
+    padding: 6px 16px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.info-item i { color: var(--primary); }
+
+/* ================================================================
+   LOADING & EMPTY STATES
+   ================================================================ */
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid var(--border-color);
+    border-top: 2.5px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.empty-state {
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.empty-state i { font-size: 48px; color: var(--border-color); margin-bottom: 12px; display: block; }
+.empty-state p { font-size: 14px; }
+.empty-state .sub-text { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+/* ================================================================
+   PAGES
+   ================================================================ */
+.page { display: none; animation: fadeSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.page.active-page { display: block; }
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-xl);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 90%;
+    border: 1px solid var(--border-color);
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--success); color: white; border-color: var(--success); }
+.toast.error { background: var(--danger); color: white; border-color: var(--danger); }
+.toast.warning { background: var(--secondary); color: white; border-color: var(--secondary); }
+.toast.info { background: var(--primary); color: white; border-color: var(--primary); }
+
+/* ================================================================
+   POPUP
+   ================================================================ */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.popup-content {
+    background: var(--card-bg);
+    border-radius: 24px;
+    max-width: 500px;
+    width: 100%;
+    padding: 32px 28px;
+    box-shadow: var(--shadow-xl);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+}
+
+.popup-btn {
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    min-width: 100px;
+    border: none;
+}
+
+.popup-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.popup-cancel { border: 1.5px solid var(--border-color); background: transparent; color: var(--text-primary); }
+.popup-cancel:hover { background: var(--table-header-bg); border-color: var(--primary); }
+.popup-confirm { background: var(--primary); color: white; box-shadow: var(--shadow-sm); }
+.popup-confirm:hover { filter: brightness(1.05); }
+
+/* ================================================================
+   MODALS
+   ================================================================ */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all var(--transition-normal);
+}
+
+.modal-overlay.active { visibility: visible; opacity: 1; }
+
+.modal-box {
+    background: var(--card-bg);
+    width: 92%;
+    max-width: 900px;
+    max-height: 85vh;
+    border-radius: 2rem;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    color: white;
+    border-radius: 2rem 2rem 0 0;
+}
+
+.modal-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header h3 i { color: rgba(255, 255, 255, 0.8); }
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+    transition: transform var(--transition-fast);
+    line-height: 1;
+}
+
+.close-modal:hover { transform: rotate(90deg); }
+
+.modal-body { padding: 1.5rem; }
+
+/* ================================================================
+   HOLIDAY GRID
+   ================================================================ */
+.holiday-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.holiday-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--card-bg);
+}
+
+.holiday-option:hover { border-color: #d4a017; background: #fef3e0; transform: translateY(-1px); }
+.holiday-option.selected { border-color: #d4a017; background: #fef3e0; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.2); }
+
+.holiday-option .icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--table-header-bg);
+    flex-shrink: 0;
+}
+
+.holiday-option .info { flex: 1; min-width: 0; }
+.holiday-option .info .name { font-weight: 600; font-size: 13px; color: var(--text-primary); }
+.holiday-option .info .date { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+.holiday-option .info .type { font-size: 10px; background: var(--table-header-bg); padding: 1px 8px; border-radius: 20px; color: var(--text-secondary); display: inline-block; margin-top: 2px; }
+
+.modal-search input {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 60px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.modal-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+.no-results { text-align: center; padding: 40px 20px; color: var(--text-light); grid-column: 1 / -1; }
+.no-results i { font-size: 36px; color: var(--border-color); margin-bottom: 12px; display: block; }
+
+/* ================================================================
+   MODAL FILTER GRID
+   ================================================================ */
+.modal-filter-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.modal-filter-grid .search-box { width: 100%; }
+
+.modal-filter-grid select {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 60px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: all var(--transition-fast);
+    width: 100%;
+    appearance: none;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2639' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.modal-filter-grid select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.modal-table-wrapper {
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    margin-top: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.modal-table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 300px;
+}
+
+.modal-table-wrapper th {
+    background: var(--table-header-bg);
+    color: var(--text-primary);
+    font-weight: 700;
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-table-wrapper td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.modal-table-wrapper tr:hover td { background: var(--table-row-hover); }
+
+.modal-footer {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.modal-footer .btn { min-width: 120px; }
+
+/* ================================================================
+   TODAY STATUS
+   ================================================================ */
+.today-status-container {
+    margin-bottom: 18px;
+    padding: 16px 20px;
+    background: var(--table-header-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+}
+
+.today-status-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.today-status-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.today-status-row .status-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.today-status-row .status-title .status-icon { margin-right: 8px; }
+.today-status-row .status-title .status-icon.present { color: #0f7b5a; }
+.today-status-row .status-title .status-icon.waiting { color: #d4a017; }
+
+.today-status-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.today-status-badge.present { background: #e6f4ef; color: #0f7b5a; }
+.today-status-badge.waiting { background: #fef3e0; color: #d4a017; }
+
+.today-status-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.today-status-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    padding: 6px 16px;
+    border-radius: 40px;
+    border: 1px solid var(--border-color);
+}
+
+.today-status-info i { color: var(--primary); }
+
+/* ================================================================
+   ADVANCE DETAIL PAGE - ENHANCED
+   ================================================================ */
+
+/* Summary Stats Grid */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.summary-stat {
+    background: var(--table-header-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.summary-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-stat .num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.summary-stat .label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.summary-stat.total .num { color: var(--text-primary); }
+.summary-stat.present .num { color: #0f7b5a; }
+.summary-stat.absent .num { color: #b33a3a; }
+.summary-stat.half .num { color: #d4a017; }
+.summary-stat.full .num { color: #b33a3a; }
+
+[data-theme="dark"] .summary-stat.present .num { color: #4caf8a; }
+[data-theme="dark"] .summary-stat.absent .num { color: #e87373; }
+[data-theme="dark"] .summary-stat.half .num { color: #e8b84c; }
+[data-theme="dark"] .summary-stat.full .num { color: #e87373; }
+
+/* Filter Grid */
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    background: var(--table-header-bg);
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 18px;
+    align-items: end;
+}
+
+.filter-grid label {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.filter-grid label i {
+    font-size: 11px;
+    color: var(--primary);
+    margin-right: 4px;
+}
+
+.filter-grid select {
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-color);
+    border-radius: 40px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    width: 100%;
+    appearance: none;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2639' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.filter-grid select:hover { border-color: var(--primary); }
+.filter-grid select:focus { 
+    border-color: var(--primary); 
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); 
+}
+
+.filter-grid .record-count {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 500;
+    padding-top: 8px;
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--border-color);
+    margin-top: 4px;
+    padding-top: 8px;
+}
+
+/* Attendance Grid for Detail Page */
+.attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.attendance-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.attendance-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.attendance-card .date {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.attendance-card .status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 40px;
+    transition: all var(--transition-fast);
+}
+
+.attendance-card .status-dot i {
+    font-size: 11px;
+}
+
+.attendance-card .status-dot.present { 
+    background: #e6f4ef; 
+    color: #0f7b5a; 
+}
+
+.attendance-card .status-dot.absent { 
+    background: #fde8e8; 
+    color: #b33a3a; 
+}
+
+.attendance-card .status-dot.half { 
+    background: #fef3e0; 
+    color: #d4a017; 
+}
+
+.attendance-card .status-dot.full { 
+    background: #fde8e8; 
+    color: #b33a3a; 
+}
+
+.attendance-card .status-dot.holiday { 
+    background: #fef3e0; 
+    color: #d4a017; 
+    border: 1px dashed #d4a017;
+}
+
+.attendance-card .status-dot.not-marked { 
+    background: var(--table-header-bg); 
+    color: var(--text-light); 
+}
+
+[data-theme="dark"] .attendance-card .status-dot.present { 
+    background: #1a3a2e; 
+    color: #4caf8a; 
+}
+
+[data-theme="dark"] .attendance-card .status-dot.absent { 
+    background: #3a1a1a; 
+    color: #e87373; 
+}
+
+[data-theme="dark"] .attendance-card .status-dot.half { 
+    background: #3a2a1a; 
+    color: #e8b84c; 
+}
+
+[data-theme="dark"] .attendance-card .status-dot.full { 
+    background: #3a1a1a; 
+    color: #e87373; 
+}
+
+[data-theme="dark"] .attendance-card .status-dot.holiday { 
+    background: #2a2a1a; 
+    color: #e8b84c; 
+    border-color: #d4a017;
+}
+
+[data-theme="dark"] .attendance-card .status-dot.not-marked { 
+    background: #2a3348; 
+    color: #6b7f9a; 
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 4px 0 14px 0;
+    display: none;
+}
+
+.progress-bar .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+/* ================================================================
+   RESPONSIVE - ADVANCE DETAIL PAGE
+   ================================================================ */
+
+@media (max-width: 1024px) {
+    .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+    
+    .summary-stat .num {
+        font-size: 20px;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+    
+    .filter-grid .record-count {
+        grid-column: 1 / -1;
+    }
+    
+    .attendance-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 0 4px;
+    }
+    
+    .summary-stat {
+        padding: 10px 8px;
+        border-radius: 12px;
+    }
+    
+    .summary-stat .num {
+        font-size: 18px;
+    }
+    
+    .summary-stat .label {
+        font-size: 9px;
+        letter-spacing: 0.2px;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+    
+    .filter-grid label {
+        font-size: 11px;
+    }
+    
+    .filter-grid select {
+        font-size: 12px;
+        padding: 6px 14px;
+        padding-right: 32px;
+    }
+    
+    .filter-grid .record-count {
+        font-size: 11px;
+        text-align: center;
+    }
+    
+    .attendance-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 6px;
+    }
+    
+    .attendance-card {
+        padding: 10px 12px;
+        border-radius: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .attendance-card .date {
+        font-size: 12px;
+    }
+    
+    .attendance-card .status-dot {
+        font-size: 11px;
+        padding: 3px 12px;
+    }
+    
+    .attendance-card .status-dot i {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    
+    .summary-stat {
+        padding: 8px 6px;
+        border-radius: 10px;
+    }
+    
+    .summary-stat .num {
+        font-size: 16px;
+    }
+    
+    .summary-stat .label {
+        font-size: 8px;
+        letter-spacing: 0.1px;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .filter-grid label {
+        font-size: 10px;
+    }
+    
+    .filter-grid select {
+        font-size: 11px;
+        padding: 5px 12px;
+        padding-right: 28px;
+        border-radius: 30px;
+    }
+    
+    .filter-grid .record-count {
+        font-size: 10px;
+        padding-top: 4px;
+        margin-top: 2px;
+    }
+    
+    .attendance-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+    
+    .attendance-card {
+        padding: 8px 10px;
+        border-radius: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .attendance-card .date {
+        font-size: 11px;
+    }
+    
+    .attendance-card .status-dot {
+        font-size: 10px;
+        padding: 2px 10px;
+    }
+    
+    .attendance-card .status-dot i {
+        font-size: 9px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .summary-stats {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+    }
+    
+    .summary-stat {
+        padding: 6px 8px;
+    }
+    
+    .summary-stat .num {
+        font-size: 14px;
+    }
+    
+    .summary-stat .label {
+        font-size: 8px;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+        padding: 8px 12px;
+    }
+    
+    .attendance-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 4px;
+    }
+    
+    .attendance-card {
+        padding: 6px 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .attendance-card .date {
+        font-size: 11px;
+    }
+    
+    .attendance-card .status-dot {
+        font-size: 10px;
+        padding: 2px 8px;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 360px) {
+    .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+    }
+    
+    .summary-stat .num {
+        font-size: 14px;
+    }
+    
+    .summary-stat .label {
+        font-size: 8px;
+    }
+    
+    .attendance-grid {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+    
+    .attendance-card {
+        padding: 6px 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+    }
+}
+
+/* ================================================================
+   MAIN RESPONSIVE - ALL PAGES
+   ================================================================ */
+
+/* Mobile First - Base Styles */
+@media (max-width: 768px) {
+    body { padding: 0; }
+    .app-container { padding: 8px; }
+    .soft-card { border-radius: 18px; }
+    
+    .card-header { 
+        padding: 16px; 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 12px; 
+    }
+    
+    .card-header h2 { font-size: 1.3rem; }
+    
+    .header-right { 
+        width: 100%; 
+        display: grid; 
+        grid-template-columns: 2fr 2fr; 
+        gap: 8px; 
+    }
+    
+    .header-right > * { width: 100%; }
+    .date-badge { justify-content: center; }
+    
+    .toolbar-grid { 
+        grid-template-columns: 1fr; 
+        gap: 8px; 
+        padding: 12px; 
+    }
+    
+    .toolbar-grid .left { 
+        display: grid; 
+        grid-template-columns: 1fr; 
+        gap: 8px; 
+    }
+    
+    .search-box { width: 100%; }
+    
+    .btn { 
+        width: 100%; 
+        justify-content: center; 
+        min-height: 42px; 
+    }
+    
+    .btn-sm { 
+        width: 100%; 
+        min-height: 38px; 
+    }
+    
+    .holiday-btn { 
+        width: 100%; 
+        justify-content: center; 
+    }
+    
+    .selected-holiday-display { 
+        width: 100%; 
+        justify-content: center; 
+    }
+    
+    .stats-bar { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 8px; 
+        padding: 12px; 
+    }
+    
+    .today-status-buttons { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px; 
+        width: 100%; 
+    }
+    
+    .today-status-buttons .btn { width: 100%; }
+    
+    .footer-bar { 
+        display: grid; 
+        grid-template-columns: 1fr; 
+        gap: 12px; 
+    }
+    
+    .footer-bar > div { 
+        width: 100%; 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 8px; 
+    }
+    
+    .data-table { min-width: 360px; font-size: 12px; }
+    .data-table th, .data-table td { padding: 10px; }
+    
+    .modal-box { width: 98%; border-radius: 18px; }
+    .modal-body { padding: 16px; }
+    .holiday-grid { grid-template-columns: 1fr; }
+    .modal-filter-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .app-container { padding: 6px; }
+    .card-header { padding: 14px; }
+    .card-header h2 { font-size: 1.1rem; }
+    .header-right { grid-template-columns: 1fr; }
+    .toolbar-grid { grid-template-columns: 1fr; }
+    .footer-bar > div { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .today-status-buttons { grid-template-columns: 1fr 1fr; }
+    .data-table { min-width: 320px; }
+    .modal-box { width: 100%; max-height: 100vh; border-radius: 14px; }
+}
+
+@media (min-width: 1024px) {
+    .toolbar-grid { grid-template-columns: 2fr 1fr; }
+    .today-status-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+    .today-status-buttons .btn { width: auto; }
+}
+
+/* Hide scrollbars */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar { display: none; }
+body { scrollbar-width: none; -ms-overflow-style: none; }
+body::-webkit-scrollbar { display: none; }
+.table-wrapper, .table-scroll, .modal-box { scrollbar-width: none; -ms-overflow-style: none; }
+.table-wrapper::-webkit-scrollbar, .table-scroll::-webkit-scrollbar, .modal-box::-webkit-scrollbar { display: none; }
+
+/* ================================================================
+   MONTH HEADER IN ATTENDANCE GRID
+   ================================================================ */
+.month-header {
+    grid-column: 1 / -1 !important;
+    margin-top: 12px !important;
+    margin-bottom: 6px !important;
+    padding: 8px 16px !important;
+    background: var(--accent-soft) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+    border-left: 3px solid var(--primary) !important;
+}
+
+.month-header .count-badge {
+    background: var(--primary) !important;
+    color: white !important;
+    padding: 0 12px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    line-height: 22px !important;
+    margin-left: 4px !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .month-header {
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+[data-theme="dark"] .month-header .count-badge {
+    background: var(--primary) !important;
+}
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- LOADING OVERLAY (Admin Auth) -->
+    <!-- ================================================================ -->
+    <div id="authLoading">
+        <div class="spinner"></div>
+        <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT (Hidden until authenticated) -->
+    <!-- ================================================================ -->
+    <div id="mainContent">
+        <div class="app-container">
+
+            <!-- ============================================================ -->
+            <!-- PAGE 1 - DASHBOARD -->
+            <!-- ============================================================ -->
+            <div id="pageDashboard" class="page active-page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clipboard-check"></i> Attendance Dashboard - 4th STD</h2>
+                        <div class="header-right">
+                            <button class="btn btn-outline btn-sm" id="refreshBtnP1"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <div class="date-badge"><i class="far fa-calendar-alt"></i> <span id="headerDate"></span></div>
+                            <span class="academic-year-badge" id="academicYearDisplay">
+                                <i class="far fa-calendar-alt"></i> <span id="academicYearText">2026-27</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem;">
+                        <!-- Stats Bar -->
+                        <div class="stats-bar" id="dashboardStats">
+                            <div class="stat-item"><i class="fas fa-users"></i> <span>Students: <span class="stat-value" id="totalStudents">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-check-circle" style="color:#0f7b5a;"></i> <span>Present: <span class="stat-value" id="presentToday">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> <span>Absent: <span class="stat-value" id="absentToday">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-calendar-alt" style="color:#d4a017;"></i> <span>Month: <span class="stat-value" id="monthDisplay">—</span></span></div>
+                        </div>
+
+                        <!-- Today Status -->
+                        <div class="today-status-container" id="todayStatusContainer">
+                            <div id="todayStatusContent">
+                                <div class="loading-state"><span class="spinner"></span> Loading today's status...</div>
+                            </div>
+                        </div>
+
+                        <!-- Toolbar -->
+                        <div class="toolbar-grid" style="grid-template-columns: 1fr;">
+                            <div class="search-box" style="width:100%;">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="dashboardSearch" placeholder="🔍 Search student by name..." />
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="table-wrapper">
+                            <div class="table-scroll" id="dashboardTable">
+                                <div class="loading-state"><span class="spinner"></span> Loading students...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PAGE 2 - TAKE ATTENDANCE -->
+            <!-- ============================================================ -->
+            <div id="pageTakeAttendance" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clipboard-list"></i> Take Attendance</h2>
+                        <div class="header-right">
+                            <button class="btn btn-outline btn-sm" onclick="switchPage('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                            <div class="date-badge"><i class="far fa-calendar-alt"></i> <span id="takeAttendanceDate"></span></div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem;">
+                        <div class="stats-bar" id="takeStats">
+                            <div class="stat-item"><i class="fas fa-users"></i> <span>Students: <span class="stat-value" id="takeStudentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-check-circle" style="color:#0f7b5a;"></i> <span>Present: <span class="stat-value" id="takePresentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> <span>Absent: <span class="stat-value" id="takeAbsentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-calendar-alt" style="color:#d4a017;"></i> <span>Month: <span class="stat-value" id="takeMonthDisplay">—</span></span></div>
+                        </div>
+
+                        <div class="toolbar-grid">
+                            <div class="left">
+                                <label><input type="checkbox" id="markAllPresent" /> <i class="fas fa-check-double"></i> Mark All Present</label>
+                                <button class="holiday-btn" id="holidayBtn"><i class="fas fa-calendar-day"></i> <span id="holidayBtnText">Holiday</span> <span class="badge-count" id="holidayBadge" style="display:none;">0</span></button>
+                                <span class="selected-holiday-display" id="selectedHolidayDisplay"><i class="fas fa-star"></i> <span id="selectedHolidayName">—</span> <span class="remove-holiday" id="removeHolidayBtn">✕</span></span>
+                            </div>
+                            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                <button class="btn btn-outline btn-sm" id="resetBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <div class="table-scroll" id="takeTable">
+                                <div class="loading-state"><span class="spinner"></span> Loading students...</div>
+                            </div>
+                        </div>
+
+                        <div class="footer-bar">
+                            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                                <span class="info-item"><i class="fas fa-user-graduate"></i> <span id="takeStudentCountFooter">0 students</span></span>
+                                <span class="info-item"><i class="fas fa-calendar-alt"></i> <span id="takeMonthFooter">Month: —</span></span>
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <button class="btn btn-primary" id="previewBtn"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn btn-success" id="submitAttendanceBtn"><i class="fas fa-save"></i> Submit Attendance</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PAGE 3 - UPDATE ATTENDANCE -->
+            <!-- ============================================================ -->
+            <div id="pageUpdateAttendance" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-edit"></i> Update Attendance</h2>
+                        <div class="header-right">
+                            <button class="btn btn-outline btn-sm" onclick="switchPage('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                            <div class="date-badge"><i class="far fa-calendar-alt"></i> <span id="updateAttendanceDate"></span></div>
+                            <div class="date-badge" style="background:#fef3e0; border-color:#d4a017;"><i class="fas fa-calendar-day"></i> <span id="selectedDateText">Select Date</span></div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem;">
+                        <div class="stats-bar" id="updateStats">
+                            <div class="stat-item"><i class="fas fa-users"></i> <span>Students: <span class="stat-value" id="updateStudentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-check-circle" style="color:#0f7b5a;"></i> <span>Present: <span class="stat-value" id="updatePresentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> <span>Absent: <span class="stat-value" id="updateAbsentCount">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-calendar-alt" style="color:#d4a017;"></i> <span>Month: <span class="stat-value" id="updateMonthDisplay">—</span></span></div>
+                        </div>
+
+                        <div class="toolbar-grid">
+                            <div class="left">
+                                <label><input type="checkbox" id="updateMarkAllPresent" /> <i class="fas fa-check-double"></i> Mark All Present</label>
+                                <button class="holiday-btn" id="updateHolidayBtn"><i class="fas fa-calendar-day"></i> <span id="updateHolidayBtnText">Holiday</span> <span class="badge-count" id="updateHolidayBadge" style="display:none;">0</span></button>
+                                <span class="selected-holiday-display" id="updateSelectedHolidayDisplay"><i class="fas fa-star"></i> <span id="updateSelectedHolidayName">—</span> <span class="remove-holiday" id="updateRemoveHolidayBtn">✕</span></span>
+                                <div class="search-box" style="min-width:180px;"><i class="fas fa-search"></i> <input type="text" id="updateSearchInput" placeholder="Search student..." /></div>
+                            </div>
+                            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                <button class="btn btn-outline btn-sm" id="updateResetBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+                                <button class="btn btn-primary btn-sm" id="updateRefreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <div class="table-scroll" id="updateTable">
+                                <div class="loading-state"><span class="spinner"></span> Loading students...</div>
+                            </div>
+                        </div>
+
+                        <div class="footer-bar">
+                            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                                <span class="info-item"><i class="fas fa-user-graduate"></i> <span id="updateStudentCountFooter">0 students</span></span>
+                                <span class="info-item"><i class="fas fa-calendar-alt"></i> <span id="updateMonthFooter">Month: —</span></span>
+                                <span class="info-item"><i class="fas fa-calendar-day"></i> <span id="updateDateFooter">No date selected</span></span>
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <button class="btn btn-warning" id="updatePreviewBtn"><i class="fas fa-eye"></i> Preview</button>
+                                <button class="btn btn-success" id="updateAttendanceBtn"><i class="fas fa-save"></i> Update Attendance</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PAGE 4 - ADVANCE ATTENDANCE -->
+            <!-- ============================================================ -->
+            <div id="pageAdvAttendance" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-pie"></i> Advance Attendance</h2>
+                        <div class="header-right">
+                            <button class="btn btn-outline btn-sm" onclick="switchPage('dashboard')"><i class="fas fa-arrow-left"></i> Back</button>
+                            <div class="date-badge"><i class="far fa-calendar-alt"></i> <span id="advAttendanceDate"></span></div>
+                            <button class="btn btn-primary btn-sm" id="advRefreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem;">
+                        <div class="progress-bar" id="advProgressBar" style="display:none;"><div class="progress-fill" id="advProgressFill"></div></div>
+
+                        <div class="stats-bar" id="advStats">
+                            <div class="stat-item"><i class="fas fa-users"></i> <span>Total: <span class="stat-value" id="advTotalStudents">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-check-circle" style="color:#0f7b5a;"></i> <span>Present: <span class="stat-value" id="advPresentToday">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> <span>Absent: <span class="stat-value" id="advAbsentToday">0</span></span></div>
+                            <div class="stat-item"><i class="fas fa-calendar-alt" style="color:#d4a017;"></i> <span>Month: <span class="stat-value" id="advMonthDisplay">—</span></span></div>
+                        </div>
+
+                        <div class="toolbar-grid">
+                            <div class="search-box"><i class="fas fa-search"></i> <input type="text" id="advSearchInput" placeholder="Search student..." /></div>
+                            <button class="btn btn-primary" id="advRefreshBtn2"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        </div>
+
+                        <div class="table-wrapper">
+                            <div class="table-scroll" id="advTable">
+                                <div class="loading-state"><span class="spinner"></span> Loading students...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PAGE 5 - ADVANCE DETAIL -->
+            <!-- ============================================================ -->
+            <div id="pageAdvDetail" class="page">
+                <div class="soft-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user-graduate"></i> <span id="advDetailName">Student Details</span></h2>
+                        <div class="header-right">
+                            <button class="btn btn-outline btn-sm" id="advDetailBackBtn"><i class="fas fa-arrow-left"></i> Back</button>
+                            <div class="date-badge"><i class="far fa-calendar-alt"></i> <span id="advDetailDate"></span></div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.5rem 2rem;">
+                        <div class="summary-stats" id="advDetailStats">
+                            <div class="summary-stat total"><div class="num" id="advTotalDays">0</div><div class="label">Total Days</div></div>
+                            <div class="summary-stat present"><div class="num" id="advTotalPresent">0</div><div class="label">Present</div></div>
+                            <div class="summary-stat absent"><div class="num" id="advTotalAbsent">0</div><div class="label">Absent</div></div>
+                            <div class="summary-stat half"><div class="num" id="advTotalHoliday">0</div><div class="label">Total Holiday</div></div>
+                            <div class="summary-stat full"><div class="num" id="advTotalFull">0</div><div class="label">Full Leave</div></div>
+                        </div>
+
+                        <div class="filter-grid">
+                            <label><i class="fas fa-filter"></i> Attendance Filter
+                                <select id="advAttendanceFilter">
+                                    <option value="all">All</option>
+                                    <option value="Present">✅ Present</option>
+                                    <option value="Absent">❌ Absent</option>
+                                    <option value="Half Leave">⏳ Half Leave</option>
+                                    <option value="Full Leave">🚫 Full Leave</option>
+                                    <option value="Holiday">🎉 Holiday</option>
+                                </select>
+                            </label>
+                            <label><i class="fas fa-calendar-alt"></i> Month Filter
+                                <select id="advMonthFilter"><option value="all">All Months</option></select>
+                            </label>
+                            <div class="record-count" id="advRecordCount">Showing 0 records</div>
+                        </div>
+
+                        <div class="attendance-grid" id="advAttendanceGrid">
+                            <div class="loading-state"><span class="spinner"></span> Loading attendance records...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- HOLIDAY MODAL -->
+        <!-- ============================================================ -->
+        <div id="holidayModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3><i class="fas fa-calendar-day"></i> Select Holiday</h3>
+                    <button class="close-modal" id="holidayModalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-search"><input type="text" id="holidaySearch" placeholder="Search holidays..." /></div>
+                    <div class="holiday-grid" id="holidayGrid"><div class="loading-state"><span class="spinner"></span> Loading holidays...</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- VIEW TODAY MODAL -->
+        <!-- ============================================================ -->
+        <div id="viewTodayModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3><i class="fas fa-calendar-check"></i> Today Attendance</h3>
+                    <button class="close-modal" id="viewTodayModalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="viewTodayContent">
+                        <div class="loading-state"><span class="spinner"></span> Loading...</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="whatsappCopyBtn"><i class="fab fa-whatsapp"></i> Copy for WhatsApp</button>
+                        <button class="btn btn-outline" id="viewTodayCloseBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- MONTH ATTENDANCE MODAL -->
+        <!-- ============================================================ -->
+        <div id="monthAttendanceModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3><i class="fas fa-calendar-alt"></i> <span id="monthAttendanceTitle">This Month Attendance</span></h3>
+                    <button class="close-modal" id="monthAttendanceModalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-filter-grid">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="monthAttendanceSearch" placeholder="Search student..." />
+                        </div>
+                        <select id="monthAttendanceFilter">
+                            <option value="all">All Months</option>
+                        </select>
+                    </div>
+                    <div id="monthAttendanceContent">
+                        <div class="loading-state"><span class="spinner"></span> Loading attendance data...</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" id="monthAttendanceCloseBtn">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TOAST -->
+        <!-- ============================================================ -->
+        <div class="toast" id="toast"><i class="fas fa-check-circle" id="toastIcon"></i> <span id="toastMessage">Success!</span></div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT - Complete Script -->
+    <!-- ============================================================ -->
+    <script>
+/* =====================================================================
+   Atten_1_STD.html — Enhanced Script with Unified Admin Auth
+   ---------------------------------------------------------------------
+   ✅ Reads Universal_user_type from myaccount.html
+   ✅ 10-day Remember Me support
+   ✅ Automatic redirect to myaccount.html
+   ✅ 5-second failsafe redirect
+   ✅ Admin badge (top of dashboard)
+   ✅ My Account link
+   ✅ All original attendance logic preserved
+   ===================================================================== */
+
+
+/* =====================================================================
+   SECTION 1 — ADMIN AUTHENTICATION GUARD (UNIFIED)
+   ===================================================================== */
+
+const SESSION_KEYS = {
+    USER: 'Universal_user',
+    USER_DATA: 'Universal_user_data',
+    USER_TYPE: 'Universal_user_type',
+    REMEMBER_ME: 'Universal_remember_me',
+    SESSION_EXPIRY: 'Universal_session_expiry'
+};
+
+/**
+ * Reads a session key handling BOTH storage formats:
+ *   - Remember Me  → localStorage → { value, expiry }
+ *   - Normal       → sessionStorage → raw JSON
+ */
+function readMyAccountSession(key) {
+    // 1. Try localStorage (Remember Me)
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+
+    // 2. Try sessionStorage (Normal)
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+
+    return null;
+}
+
+/**
+ * Returns { ok: boolean, userType, user, expiry, reason }
+ */
+function checkAdminAuth() {
+    const userType = readMyAccountSession(SESSION_KEYS.USER_TYPE);
+    const user     = readMyAccountSession(SESSION_KEYS.USER);
+    const expiry   = readMyAccountSession(SESSION_KEYS.SESSION_EXPIRY);
+
+    if (!userType || !user) return { ok: false, reason: 'no-session' };
+    if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+    if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+        // Expired → wipe
+        Object.values(SESSION_KEYS).forEach(k => {
+            localStorage.removeItem(k);
+            sessionStorage.removeItem(k);
+        });
+        return { ok: false, reason: 'expired' };
+    }
+    return { ok: true, userType, user, expiry };
+}
+
+/**
+ * Force redirect to myaccount.html
+ */
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+/**
+ * Shows the admin badge in the dashboard header.
+ */
+function updateAdminBadge() {
+    const userData = readMyAccountSession(SESSION_KEYS.USER_DATA);
+    const user = readMyAccountSession(SESSION_KEYS.USER);
+    const expiry = readMyAccountSession(SESSION_KEYS.SESSION_EXPIRY);
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) {
+        displayName = user;
+    }
+
+    // Find or create the admin badge in the dashboard header
+    const headerRight = document.querySelector('#pageDashboard .header-right');
+    if (!headerRight) return;
+
+    // Remove existing badge if any
+    headerRight.querySelectorAll('.admin-badge-container').forEach(el => el.remove());
+
+    // Build the badge + My Account button
+    const wrap = document.createElement('div');
+    wrap.className = 'admin-badge-container';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:6px;flex-wrap:wrap;';
+
+    const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+    let sessionText = 'Session';
+    let sessionBg = 'rgba(255,255,255,0.15)';
+    let sessionColor = '';
+
+    if (isRememberMe) {
+        const remaining = expiry - Date.now();
+        const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+        const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        sessionText = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+        sessionBg = 'rgba(16,185,129,0.3)';
+        sessionColor = '#34d399';
+    }
+
+    wrap.innerHTML = `
+        <span style="display:inline-flex;align-items:center;gap:6px;
+                     background:rgba(245,158,11,0.15);color:#f59e0b;
+                     padding:5px 12px;border-radius:30px;font-size:0.68rem;
+                     font-weight:700;border:1px solid #f59e0b;white-space:nowrap;">
+            <i class="fas fa-user-shield" style="font-size:0.68rem;"></i>
+            <span>${displayName}</span>
+            <span style="font-size:0.52rem;padding:1px 6px;border-radius:20px;
+                         background:${sessionBg};color:${sessionColor};margin-left:2px;">
+                ${sessionText}
+            </span>
+        </span>
+        <a href="../../Study Material/My Account/myaccount.html"
+           style="display:inline-flex;align-items:center;gap:5px;
+                  background:var(--accent-soft);color:var(--accent);
+                  padding:5px 11px;border-radius:30px;font-size:0.65rem;
+                  font-weight:700;text-decoration:none;
+                  border:1px solid var(--border-color);white-space:nowrap;">
+            <i class="fas fa-user-circle"></i> My Account
+        </a>
+    `;
+    headerRight.appendChild(wrap);
+}
+
+/**
+ * Main auth gate — reveals #mainContent or redirects.
+ */
+function gateAdminAccess(onAuthorized) {
+    const mainEl = document.getElementById('mainContent');
+    const loadingEl = document.getElementById('authLoading');
+
+    const auth = checkAdminAuth();
+
+    if (auth.ok) {
+        console.log('✅ Admin auth verified:', auth.user);
+        if (loadingEl) loadingEl.classList.add('hidden');
+        if (mainEl) {
+            mainEl.style.display = 'block';
+            mainEl.classList.add('visible');
+        }
+        updateAdminBadge();
+        onAuthorized();
+    } else {
+        showAccessDeniedAndRedirect(auth.reason);
+    }
+}
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem; font-family: 'Inter', sans-serif;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem; font-family: 'Inter', sans-serif;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+
+/* =====================================================================
+   SECTION 2 — DARK MODE SYNC (no polling)
+   ===================================================================== */
+
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) { }
+    }
+}
+window.addEventListener('storage', function(e) {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+});
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'themeChange') {
+        const newTheme = event.data.theme;
+        if (newTheme) {
+            document.body.setAttribute('data-theme', newTheme);
+            document.documentElement.setAttribute('data-theme', newTheme);
+        }
+    }
+});
+
+
+/* =====================================================================
+   SECTION 3 — ACADEMIC YEAR DISPLAY
+   ===================================================================== */
+
+function getAcademicYear() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+}
+
+function updateAcademicYearDisplay() {
+    const display = document.getElementById('academicYearText');
+    if (display) display.textContent = getAcademicYear();
+}
+
+
+/* =====================================================================
+   SECTION 4 — ⚡ CONFIGURATION (UNCHANGED)
+   ===================================================================== */
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPxXh-j8tbAX8Sktvj2dCaJ0OMzSnrtRq2jxvwdEUSnBpfhykRljD3TclC0m59xReT/exec";
+const ATTENDANCE_SPREADSHEET_ID = "1O4eBEi3ne4Gx1dJ0c3iJPHj-KfpUY52lEH6dTlKW_3U";
+const STUDENT_SPREADSHEET_ID = "1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8";
+const STUDENT_SHEET_NAME = "STD_4";
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const CACHE_EXPIRY = 2 * 60 * 1000;
+
+
+/* =====================================================================
+   SECTION 5 — HOLIDAYS (UNCHANGED)
+   ===================================================================== */
+
+const HOLIDAYS = [
+    { name: 'Sunday', date: 'Weekly', type: 'Weekly', icon: '📅' },
+    { name: 'Republic Day', date: '26 Jan', type: 'National', icon: '🇮🇳' },
+    { name: 'Independence Day', date: '15 Aug', type: 'National', icon: '🇮🇳' },
+    { name: 'Gandhi Jayanti', date: '02 Oct', type: 'National', icon: '🕊️' },
+    { name: 'Diwali', date: 'Oct-Nov', type: 'Religious', icon: '🪔' },
+    { name: 'Holi', date: 'Mar', type: 'Religious', icon: '🎨' },
+    { name: 'Eid-ul-Fitr', date: 'Apr-May', type: 'Religious', icon: '🌙' },
+    { name: 'Eid-ul-Adha', date: 'Jun-Jul', type: 'Religious', icon: '🐑' },
+    { name: 'Christmas', date: '25 Dec', type: 'Religious', icon: '🎄' },
+    { name: 'Good Friday', date: 'Apr', type: 'Religious', icon: '✝️' },
+    { name: 'Maha Shivaratri', date: 'Feb-Mar', type: 'Religious', icon: '🕉️' },
+    { name: 'Rama Navami', date: 'Mar-Apr', type: 'Religious', icon: '🏹' },
+    { name: 'Krishna Janmashtami', date: 'Aug-Sep', type: 'Religious', icon: '🪈' },
+    { name: 'Ganesh Chaturthi', date: 'Aug-Sep', type: 'Religious', icon: '🐘' },
+    { name: 'Navratri', date: 'Sep-Oct', type: 'Religious', icon: '💃' },
+    { name: 'Dussehra', date: 'Oct', type: 'Religious', icon: '🏹' },
+    { name: 'Buddha Purnima', date: 'May', type: 'Religious', icon: '🧘' },
+    { name: 'Mahavir Jayanti', date: 'Mar-Apr', type: 'Religious', icon: '✋' },
+    { name: 'Guru Nanak Jayanti', date: 'Nov', type: 'Religious', icon: '☬' },
+    { name: "New Year's Day", date: '01 Jan', type: 'International', icon: '🎉' },
+    { name: "Valentine's Day", date: '14 Feb', type: 'International', icon: '💝' },
+    { name: "Women's Day", date: '08 Mar', type: 'International', icon: '👩' },
+    { name: "April Fools' Day", date: '01 Apr', type: 'International', icon: '🤡' },
+    { name: 'Earth Day', date: '22 Apr', type: 'International', icon: '🌍' },
+    { name: 'Labour Day', date: '01 May', type: 'International', icon: '👷' },
+    { name: "Mother's Day", date: 'May', type: 'International', icon: '🌸' },
+    { name: "Father's Day", date: 'Jun', type: 'International', icon: '👔' },
+    { name: 'Halloween', date: '31 Oct', type: 'International', icon: '🎃' },
+    { name: 'Thanksgiving', date: 'Nov', type: 'International', icon: '🦃' },
+    { name: "New Year's Eve", date: '31 Dec', type: 'International', icon: '🥳' },
+    { name: "Children's Day", date: '14 Nov', type: 'National', icon: '🧒' },
+    { name: "Teachers' Day", date: '05 Sep', type: 'National', icon: '🍎' },
+    { name: 'Ambedkar Jayanti', date: '14 Apr', type: 'National', icon: '📚' },
+    { name: 'Vishwakarma Jayanti', date: 'Sep', type: 'Religious', icon: '🔧' },
+    { name: 'Pongal', date: 'Jan', type: 'Religious', icon: '🌾' },
+    { name: 'Onam', date: 'Aug-Sep', type: 'Religious', icon: '🌺' },
+    { name: 'Makar Sankranti', date: '14 Jan', type: 'Religious', icon: '☀️' },
+    { name: 'Baisakhi', date: '13 Apr', type: 'Religious', icon: '🌾' }
+];
+
+const HOLIDAY_MAP = new Map();
+HOLIDAYS.forEach(h => HOLIDAY_MAP.set(h.name, h));
+
+function isHolidayStatus(status) { return HOLIDAY_MAP.has(status); }
+function getHolidayInfo(status) { return HOLIDAY_MAP.get(status); }
+
+
+/* =====================================================================
+   SECTION 6 — HELPERS (UNCHANGED)
+   ===================================================================== */
+
+function getTodayFormatted() {
+    const d = new Date();
+    return `${String(d.getDate()).padStart(2, '0')} ${MONTH_NAMES[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`;
+}
+
+function getTodayDateString() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function getCurrentMonth() { return MONTH_NAMES[new Date().getMonth()]; }
+
+const initialsCache = new Map();
+
+function getInitials(name) {
+    if (!name) return '?';
+    if (initialsCache.has(name)) return initialsCache.get(name);
+    const parts = name.trim().split(' ');
+    let result;
+    if (parts.length === 1) {
+        result = parts[0].charAt(0).toUpperCase();
+    } else {
+        result = (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+    initialsCache.set(name, result);
+    return result;
+}
+
+const statusBadgeCache = new Map();
+
+function getStatusBadge(status) {
+    if (statusBadgeCache.has(status)) return statusBadgeCache.get(status);
+    const map = {
+        'Present': 'status-present',
+        'Absent': 'status-absent',
+        'Half Leave': 'status-half',
+        'Full Leave': 'status-full',
+        'Not marked': 'status-not-marked'
+    };
+    const result = map[status] || 'status-not-marked';
+    statusBadgeCache.set(status, result);
+    return result;
+}
+
+const dateFormatCache = new Map();
+
+function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '—';
+    if (dateFormatCache.has(dateStr)) return dateFormatCache.get(dateStr);
+    let iso = dateStr;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        iso = parseAnyDateToISO_Frontend(dateStr);
+        if (!iso) return dateStr;
+    }
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d.getTime())) return dateStr;
+    const result = `${String(d.getDate()).padStart(2, '0')} ${MONTH_NAMES[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`;
+    dateFormatCache.set(dateStr, result);
+    return result;
+}
+
+function parseAnyDateToISO_Frontend(value) {
+    if (!value) return null;
+    if (value instanceof Date) {
+        return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
+    }
+    const str = String(value).trim();
+    if (!str) return null;
+    const MONTHS_LOWER = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+    let match = str.match(/^(\d{1,2})[-\/\s]([A-Za-z]{3})[-\/\s](\d{2,4})$/);
+    if (match) {
+        const day = parseInt(match[1]);
+        const monthIdx = MONTHS_LOWER.indexOf(match[2].toLowerCase());
+        let year = parseInt(match[3]);
+        if (year < 100) year += 2000;
+        if (monthIdx === -1) return null;
+        return `${year}-${String(monthIdx + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+    match = str.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{2,4})$/);
+    if (match) {
+        const day = parseInt(match[1]);
+        const month = parseInt(match[2]);
+        let year = parseInt(match[3]);
+        if (year < 100) year += 2000;
+        return `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+    match = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (match) {
+        return `${match[1]}-${String(match[2]).padStart(2,'0')}-${String(match[3]).padStart(2,'0')}`;
+    }
+    return null;
+}
+
+function classifyStatus(status) {
+    if (!status || status === 'Not marked') return 'none';
+    const lower = status.toLowerCase();
+    if (lower === 'present' || lower === 'half leave') return 'present';
+    if (lower === 'absent' || lower === 'full leave') return 'absent';
+    if (HOLIDAY_MAP.has(status)) return 'holiday';
+    return 'other';
+}
+
+function getMonthFromDate(dateStr) {
+    if (!dateStr) return '';
+    let iso = dateStr;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        iso = parseAnyDateToISO_Frontend(dateStr);
+    }
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    return isNaN(d.getTime()) ? '' : MONTH_NAMES[d.getMonth()];
+}
+
+
+/* =====================================================================
+   SECTION 7 — TOAST (UNCHANGED)
+   ===================================================================== */
+
+let toastTimeout = null;
+let toastQueue = [];
+
+function showToast(message, type = 'info') {
+    toastQueue.push({ message, type });
+    processToastQueue();
+}
+
+function processToastQueue() {
+    if (toastQueue.length === 0 || toastTimeout) return;
+    const { message, type } = toastQueue.shift();
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.className = 'toast';
+    const icon = toast.querySelector('i');
+    const msgEl = toast.querySelector('span');
+    const map = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    toast.classList.add(type);
+    if (icon) icon.className = `fas ${map[type] || map.info}`;
+    if (msgEl) msgEl.textContent = message;
+    toast.classList.add('show');
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+        toastTimeout = null;
+        processToastQueue();
+    }, 2500);
+}
+
+
+/* =====================================================================
+   SECTION 8 — POPUP (UNCHANGED)
+   ===================================================================== */
+
+function showPopup(message, type = 'info', title = '') {
+    return new Promise((resolve) => {
+        document.querySelectorAll('.popup-overlay').forEach(el => el.remove());
+        const overlay = document.createElement('div');
+        overlay.className = 'popup-overlay';
+        const popup = document.createElement('div');
+        popup.className = 'popup-content';
+        const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️', confirm: '❓' };
+        const colors = { success: '#10b981', error: '#ef4444', warning: '#f59e0b', info: '#3b82f6', confirm: '#3b82f6' };
+        let content = `
+            <div style="text-align:center;margin-bottom:16px;">
+                <div style="font-size:48px;margin-bottom:8px;">${icons[type] || 'ℹ️'}</div>
+                ${title ? `<h3 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">${title}</h3>` : ''}
+                <div style="font-size:15px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;text-align:left;max-height:300px;overflow-y:auto;padding:4px;">${message}</div>
+            </div>
+        `;
+        if (type === 'confirm') {
+            content += `<div style="display:flex;gap:10px;justify-content:center;margin-top:20px;"><button class="popup-btn popup-cancel">Cancel</button><button class="popup-btn popup-confirm" style="background:${colors[type]};color:white;border:none;box-shadow:var(--shadow-sm);">Confirm</button></div>`;
+        } else {
+            content += `<div style="display:flex;justify-content:center;margin-top:20px;"><button class="popup-btn popup-ok" style="background:${colors[type]};color:white;border:none;box-shadow:var(--shadow-sm);padding:10px 32px;">OK</button></div>`;
+        }
+        popup.innerHTML = content;
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+        const close = (result) => { overlay.remove(); resolve(result); };
+        overlay.querySelector('.popup-ok')?.addEventListener('click', () => close(true));
+        overlay.querySelector('.popup-confirm')?.addEventListener('click', () => close(true));
+        overlay.querySelector('.popup-cancel')?.addEventListener('click', () => close(false));
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(false); });
+        const escHandler = (e) => { if (e.key === 'Escape') { close(false); document.removeEventListener('keydown', escHandler); } };
+        document.addEventListener('keydown', escHandler);
+        if (type !== 'confirm') {
+            setTimeout(() => { if (document.body.contains(overlay)) close(true); }, 3000);
+        }
+    });
+}
+
+
+/* =====================================================================
+   SECTION 9 — API CALLS (UNCHANGED)
+   ===================================================================== */
+
+async function fetchFromScript(action, params = {}, timeout = 20000) {
+    try {
+        const queryParams = new URLSearchParams({ action, ...params });
+        const url = `${SCRIPT_URL}?${queryParams.toString()}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(url, {
+            signal: controller.signal,
+            headers: { 'Accept': 'application/json' }
+        });
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+    } catch (err) {
+        if (err.name === 'AbortError') {
+            console.log(`Request ${action} timed out`);
+            return { error: 'Request timed out' };
+        }
+        console.error('API Error:', err);
+        return { error: err.message };
+    }
+}
+
+
+/* =====================================================================
+   SECTION 10 — CACHE (UNCHANGED)
+   ===================================================================== */
+
+const cache = new Map();
+const cacheTimestamps = new Map();
+
+function getCache(key) {
+    if (!cache.has(key)) return null;
+    const timestamp = cacheTimestamps.get(key) || 0;
+    if (Date.now() - timestamp > CACHE_EXPIRY) {
+        cache.delete(key);
+        cacheTimestamps.delete(key);
+        return null;
+    }
+    return cache.get(key);
+}
+
+function setCache(key, data) {
+    cache.set(key, data);
+    cacheTimestamps.set(key, Date.now());
+}
+
+function clearCache(key) {
+    if (key) {
+        if (key.endsWith('_')) {
+            for (const k of [...cache.keys()]) {
+                if (k.startsWith(key)) {
+                    cache.delete(k);
+                    cacheTimestamps.delete(k);
+                }
+            }
+        } else {
+            cache.delete(key);
+            cacheTimestamps.delete(key);
+        }
+    } else {
+        cache.clear();
+        cacheTimestamps.clear();
+    }
+}
+
+let studentAttendanceCache = new Map();
+let studentLoadingState = new Map();
+
+
+/* =====================================================================
+   SECTION 11 — PAGE SWITCHING (UNCHANGED)
+   ===================================================================== */
+
+function switchPage(page) {
+    console.log('🔄 Switching to page:', page);
+    const pages = {
+        dashboard: document.getElementById('pageDashboard'),
+        takeAttendance: document.getElementById('pageTakeAttendance'),
+        updateAttendance: document.getElementById('pageUpdateAttendance'),
+        advAttendance: document.getElementById('pageAdvAttendance'),
+        advDetail: document.getElementById('pageAdvDetail')
+    };
+    Object.values(pages).forEach(el => {
+        if (el) { el.style.display = 'none'; el.classList.remove('active-page'); }
+    });
+    const targetPage = pages[page];
+    if (targetPage) {
+        targetPage.style.display = 'block';
+        void targetPage.offsetHeight;
+        targetPage.classList.add('active-page');
+    }
+}
+
+
+/* =====================================================================
+   SECTION 12 — DASHBOARD (UNCHANGED)
+   ===================================================================== */
+
+let dashboardStudents = [];
+let dashboardTodayMap = {};
+let dashboardHasTodayAttendance = false;
+let dashboardModalData = null;
+let advDataLoaded = false;
+let advStudentsData = [];
+let advAttendanceDataMap = {};
+let dashboardLoadPromise = null;
+
+async function loadDashboard() {
+    if (dashboardLoadPromise) return dashboardLoadPromise;
+    dashboardLoadPromise = (async () => {
+        const today = getTodayDateString();
+        const month = getCurrentMonth();
+        document.getElementById('headerDate').textContent = getTodayFormatted();
+        document.getElementById('monthDisplay').textContent = month;
+        const cacheKey = `dashboard_${month}_${today}`;
+        const cached = getCache(cacheKey);
+        if (cached) {
+            dashboardStudents = cached.students || [];
+            dashboardTodayMap = cached.todayMap || {};
+            dashboardHasTodayAttendance = cached.hasToday || false;
+            dashboardModalData = cached.modalData || null;
+            renderDashboard();
+            renderTodayStatus();
+            setTimeout(() => refreshDashboard(true), 1000);
+            return;
+        }
+        await refreshDashboard(false);
+    })();
+    const result = await dashboardLoadPromise;
+    dashboardLoadPromise = null;
+    return result;
+}
+
+async function refreshDashboard(silent = false) {
+    const today = getTodayDateString();
+    const month = getCurrentMonth();
+    try {
+        const [dashboardResult, todayResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('checkTodayAttendance', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        dashboardStudents = dashboardResult.students || [];
+        dashboardTodayMap = {};
+        dashboardHasTodayAttendance = false;
+        dashboardModalData = null;
+        if (todayResult.students && todayResult.students.length > 0) {
+            dashboardHasTodayAttendance = true;
+            dashboardModalData = todayResult.students;
+            todayResult.students.forEach(s => { dashboardTodayMap[s.name] = s.status || 'Not marked'; });
+        }
+        const cacheKey = `dashboard_${month}_${today}`;
+        setCache(cacheKey, {
+            students: dashboardStudents,
+            todayMap: dashboardTodayMap,
+            hasToday: dashboardHasTodayAttendance,
+            modalData: dashboardModalData
+        });
+        renderDashboard();
+        renderTodayStatus();
+        if (!silent) showToast('✅ Dashboard ready', 'success');
+    } catch (err) {
+        console.error('Dashboard refresh error:', err);
+        if (!silent) showToast('❌ Failed to refresh dashboard', 'error');
+    }
+}
+
+function renderDashboard() {
+    const container = document.getElementById('dashboardTable');
+    const searchQuery = document.getElementById('dashboardSearch').value;
+    let students = dashboardStudents;
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
+        students = students.filter(s => s.name.toLowerCase().includes(q));
+    }
+    document.getElementById('totalStudents').textContent = dashboardStudents.length;
+    let present = 0, absent = 0;
+    dashboardStudents.forEach(s => {
+        const status = dashboardTodayMap[s.name] || 'Not marked';
+        if (status === 'Present' || status === 'Half Leave') present++;
+        if (status === 'Absent' || status === 'Full Leave') absent++;
+    });
+    document.getElementById('presentToday').textContent = present;
+    document.getElementById('absentToday').textContent = absent;
+    if (!students || students.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+        return;
+    }
+    const rows = students.map((s, idx) => {
+        const status = dashboardTodayMap[s.name] || 'Not marked';
+        const badgeClass = getStatusBadge(status);
+        const initials = getInitials(s.name);
+        const recordCount = advAttendanceDataMap[s.name] ? advAttendanceDataMap[s.name].length : 0;
+        return `<tr>
+            <td class="sr-col">${idx + 1}</td>
+            <td class="name-col">
+                <span class="student-avatar">${initials}</span>${s.name}
+                ${recordCount > 0 ? `<span style="font-size:11px;color:var(--text-light);margin-left:8px;">(${recordCount})</span>` : ''}
+            </td>
+            <td class="status-col"><span class="status-badge ${badgeClass}">${status}</span></td>
+            <td class="action-col">
+                <button class="btn btn-info btn-sm" onclick="showDashboardStudentDetail('${s.name.replace(/'/g, "\\'")}')"><i class="fas fa-eye"></i> Details</button>
+            </td>
+        </tr>`;
+    });
+    container.innerHTML = `<table class="data-table"><thead><tr>
+        <th class="sr-col">#</th>
+        <th class="name-col">Student Name</th>
+        <th class="status-col">Today</th>
+        <th class="action-col">Action</th>
+    </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+}
+
+function renderTodayStatus() {
+    const container = document.getElementById('todayStatusContent');
+    const has = dashboardHasTodayAttendance;
+    let html = `
+        <div class="today-status-content">
+            <div class="today-status-row">
+                <span class="status-title">
+                    <span class="status-icon ${has ? 'present' : 'waiting'}">${has ? '✅' : '📋'}</span>
+                    ${has ? 'Attendance Recorded' : 'No Attendance Today'}
+                </span>
+                <span class="today-status-badge ${has ? 'present' : 'waiting'}">${getTodayFormatted()}</span>
+            </div>
+            <div class="today-status-buttons">
+                ${has ?
+                    `<button class="btn btn-warning btn-sm" onclick="navigateToUpdateAttendance()"><i class="fas fa-edit"></i> Update Attendance</button>
+                     <button class="btn btn-success btn-sm" id="whatsappBtn"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                     <button class="btn btn-info btn-sm" id="viewTodayBtn"><i class="fas fa-eye"></i> View Today</button>
+                     <button class="btn btn-primary btn-sm" id="monthAttendanceBtn"><i class="fas fa-calendar-alt"></i> Month Attendance</button>` :
+                    `<button class="btn btn-primary btn-sm" onclick="navigateToTakeAttendance()"><i class="fas fa-clipboard-check"></i> Take Attendance</button>
+                     <button class="btn btn-info btn-sm" onclick="navigateToAdvAttendance()"><i class="fas fa-chart-pie"></i> Advance Attendance</button>`
+                }
+            </div>
+            ${has ? `<div class="today-status-info"><i class="fas fa-users"></i> ${dashboardModalData ? dashboardModalData.length : 0} students recorded</div>` : ''}
+        </div>
+    `;
+    container.innerHTML = html;
+    if (has) {
+        document.getElementById('whatsappBtn')?.addEventListener('click', openViewTodayModal);
+        document.getElementById('viewTodayBtn')?.addEventListener('click', openViewTodayModal);
+        document.getElementById('monthAttendanceBtn')?.addEventListener('click', openMonthAttendanceModal);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 13 — VIEW TODAY MODAL (UNCHANGED)
+   ===================================================================== */
+
+function openViewTodayModal() {
+    const modal = document.getElementById('viewTodayModal');
+    modal.classList.add('active');
+    if (dashboardModalData) {
+        renderViewTodayContent(dashboardModalData);
+    } else {
+        document.getElementById('viewTodayContent').innerHTML = `<div class="empty-state"><i class="fas fa-info-circle"></i><p>No attendance data available</p></div>`;
+    }
+}
+
+function renderViewTodayContent(data) {
+    if (!data || data.length === 0) {
+        document.getElementById('viewTodayContent').innerHTML = `<div class="empty-state"><i class="fas fa-info-circle"></i><p>No attendance data available</p></div>`;
+        return;
+    }
+    const rows = data.map((s, i) => {
+        const badgeClass = getStatusBadge(s.status || 'Not marked');
+        return `<tr>
+            <td>${i + 1}</td>
+            <td><strong>${s.name}</strong></td>
+            <td><span class="status-badge ${badgeClass}">${s.status || 'Not marked'}</span></td>
+        </tr>`;
+    });
+    const present = data.filter(s => s.status === 'Present').length;
+    const absent = data.filter(s => s.status === 'Absent').length;
+    const half = data.filter(s => s.status === 'Half Leave').length;
+    const full = data.filter(s => s.status === 'Full Leave').length;
+    document.getElementById('viewTodayContent').innerHTML = `
+        <div class="modal-table-wrapper"><table>
+            <thead><tr><th>#</th><th>Student Name</th><th>Status</th></tr></thead>
+            <tbody>${rows.join('')}</tbody>
+        </table></div>
+        <div style="margin-top:12px; display:flex; gap:12px; flex-wrap:wrap; padding:4px 0;">
+            <span class="info-item"><i class="fas fa-check-circle" style="color:#0f7b5a;"></i> Present: ${present}</span>
+            <span class="info-item"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> Absent: ${absent}</span>
+            <span class="info-item"><i class="fas fa-clock" style="color:#d4a017;"></i> Half Leave: ${half}</span>
+            <span class="info-item"><i class="fas fa-ban" style="color:#b33a3a;"></i> Full Leave: ${full}</span>
+            <span class="info-item"><i class="fas fa-users"></i> Total: ${data.length}</span>
+        </div>
+    `;
+}
+
+
+/* =====================================================================
+   SECTION 14 — WHATSAPP COPY (UNCHANGED)
+   ===================================================================== */
+
+function copyWhatsAppFromModal() {
+    if (!dashboardModalData || dashboardModalData.length === 0) {
+        showToast('No data to copy', 'error');
+        return;
+    }
+    const nonPresentStudents = dashboardModalData.filter(s => {
+        const status = s.status || 'Not marked';
+        return status === 'Absent' || status === 'Full Leave' || status === 'Half Leave' || isHolidayStatus(status);
+    });
+    const uniqueStudents = [];
+    const seenNames = new Set();
+    nonPresentStudents.forEach(s => {
+        if (!seenNames.has(s.name)) {
+            seenNames.add(s.name);
+            uniqueStudents.push(s);
+        }
+    });
+    uniqueStudents.sort((a, b) => a.name.localeCompare(b.name));
+    if (uniqueStudents.length === 0) {
+        showToast('✅ All students are present! No absentees to report.', 'success');
+        return;
+    }
+    const date = getTodayFormatted();
+    let msg = `📋 *ABSENTEE REPORT*\n📅 *Date:* ${date}\n\n`;
+    msg += `*# | Student Name | Status*\n${'-'.repeat(30)}\n`;
+    uniqueStudents.forEach((s, i) => {
+        const status = s.status || 'Not marked';
+        let emoji;
+        if (status === 'Absent') emoji = '❌';
+        else if (status === 'Full Leave') emoji = '🚫';
+        else if (status === 'Half Leave') emoji = '⏳';
+        else if (isHolidayStatus(status)) emoji = '🎉';
+        else emoji = '⚠️';
+        msg += `${String(i + 1).padStart(2)}. ${s.name.padEnd(20)} ${emoji} ${status}\n`;
+    });
+    const presentCount = dashboardModalData.length - uniqueStudents.length;
+    msg += `\n${'-'.repeat(30)}\n📊 *Summary:*\n`;
+    msg += `❌ Absent/Leave: ${uniqueStudents.length}\n`;
+    navigator.clipboard?.writeText(msg).then(() => {
+        showToast(`✅ Copied ${uniqueStudents.length} absentee(s) to clipboard!`, 'success');
+        document.getElementById('viewTodayModal').classList.remove('active');
+    }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = msg;
+        ta.style.cssText = 'position:fixed;opacity:0;left:-9999px;';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy') ? showToast(`✅ Copied ${uniqueStudents.length} absentee(s)!`, 'success') : showToast('❌ Failed to copy', 'error');
+        document.body.removeChild(ta);
+        document.getElementById('viewTodayModal').classList.remove('active');
+    });
+}
+
+
+/* =====================================================================
+   SECTION 15 — MONTH ATTENDANCE MODAL (UNCHANGED)
+   ===================================================================== */
+
+let monthAttendanceData = [];
+let monthAttendanceLoaded = false;
+
+function openMonthAttendanceModal() {
+    const modal = document.getElementById('monthAttendanceModal');
+    modal.classList.add('active');
+    const currentMonth = getCurrentMonth();
+    document.getElementById('monthAttendanceTitle').textContent = `This ${currentMonth} Month Attendance`;
+    const filter = document.getElementById('monthAttendanceFilter');
+    filter.innerHTML = '<option value="all">All Months</option>';
+    MONTH_NAMES.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        filter.appendChild(opt);
+    });
+    filter.value = currentMonth;
+    document.getElementById('monthAttendanceSearch').value = '';
+    const cached = getCache('monthAttendanceData');
+    if (cached) {
+        monthAttendanceData = cached;
+        monthAttendanceLoaded = true;
+        renderMonthAttendanceTable();
+        showToast('📦 Data loaded', 'info');
+        return;
+    }
+    loadMonthAttendanceData();
+}
+
+async function loadMonthAttendanceData() {
+    const container = document.getElementById('monthAttendanceContent');
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading...</div>`;
+    try {
+        const month = getCurrentMonth();
+        const today = getTodayDateString();
+        const [dashboardResult, datesResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('getAvailableDates', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        const students = dashboardResult.students || [];
+        const availableDates = datesResult.dates || [];
+        if (students.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+            return;
+        }
+        const monthData = await Promise.all(students.map(async (student) => {
+            const name = student.name;
+            const datePromises = availableDates.map(async (dateObj) => {
+                const date = dateObj.date;
+                const attResult = await fetchFromScript('checkTodayAttendance', {
+                    spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+                    month: month,
+                    today: date
+                });
+                if (attResult && attResult.students) {
+                    const found = attResult.students.find(s => s.name === name);
+                    if (found && found.status && found.status !== 'Not marked') {
+                        return { date, status: found.status, formatted: formatDateForDisplay(date) };
+                    }
+                }
+                return null;
+            });
+            const results = await Promise.all(datePromises);
+            const validRecords = results.filter(r => r !== null);
+            let present = 0, absent = 0, holiday = 0;
+            validRecords.forEach(r => {
+                const status = r.status;
+                if (isHolidayStatus(status)) holiday++;
+                else if (status === 'Present' || status === 'Half Leave') present++;
+                else if (status === 'Absent' || status === 'Full Leave') absent++;
+            });
+            return {
+                name: name,
+                present: present,
+                absent: absent,
+                holiday: holiday,
+                total: validRecords.length,
+                records: validRecords
+            };
+        }));
+        monthData.sort((a, b) => a.name.localeCompare(b.name));
+        monthAttendanceData = monthData;
+        monthAttendanceLoaded = true;
+        setCache('monthAttendanceData', monthData);
+        renderMonthAttendanceTable();
+        showToast(`✅ ${monthData.length} students`, 'success');
+    } catch (err) {
+        console.error('Month attendance error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load data</p></div>`;
+    }
+}
+
+function renderMonthAttendanceTable() {
+    const container = document.getElementById('monthAttendanceContent');
+    const searchQuery = document.getElementById('monthAttendanceSearch').value.toLowerCase().trim();
+    const monthFilter = document.getElementById('monthAttendanceFilter').value;
+    let data = [...monthAttendanceData];
+    if (searchQuery) data = data.filter(s => s.name.toLowerCase().includes(searchQuery));
+    if (monthFilter !== 'all' && monthFilter !== getCurrentMonth()) {
+        loadMonthAttendanceDataForMonth(monthFilter);
+        return;
+    }
+    if (!data || data.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p>No students found</p></div>`;
+        return;
+    }
+    data.sort((a, b) => a.name.localeCompare(b.name));
+    const rows = data.map(s => `
+        <tr>
+            <td><strong>${s.name}</strong></td>
+            <td><span class="status-badge status-present">${s.present || 0}</span></td>
+            <td><span class="status-badge status-absent">${s.absent || 0}</span></td>
+            <td><span class="status-badge status-holiday">${s.holiday || 0}</span></td>
+            <td><span class="status-badge status-not-marked">${s.total || 0}</span></td>
+        </tr>
+    `);
+    const totalPresent = data.reduce((sum, s) => sum + (s.present || 0), 0);
+    const totalAbsent = data.reduce((sum, s) => sum + (s.absent || 0), 0);
+    const totalHoliday = data.reduce((sum, s) => sum + (s.holiday || 0), 0);
+    const totalDays = data.reduce((sum, s) => sum + (s.total || 0), 0);
+    container.innerHTML = `
+        <div class="modal-table-wrapper"><table>
+            <thead><tr>
+                <th>Student Name</th>
+                <th>Total Present</th>
+                <th>Total Absent</th>
+                <th>Total Holiday</th>
+                <th>Total Days</th>
+            </tr></thead>
+            <tbody>${rows.join('')}</tbody>
+            <tfoot>
+                <tr style="background:var(--table-header-bg); font-weight:700;">
+                    <td><strong>Total</strong></td>
+                    <td><span class="status-badge status-present">${totalPresent}</span></td>
+                    <td><span class="status-badge status-absent">${totalAbsent}</span></td>
+                    <td><span class="status-badge status-holiday">${totalHoliday}</span></td>
+                    <td><span class="status-badge status-not-marked">${totalDays}</span></td>
+                </tr>
+            </tfoot>
+        </table></div>
+    `;
+}
+
+async function loadMonthAttendanceDataForMonth(month) {
+    const container = document.getElementById('monthAttendanceContent');
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading ${month}...</div>`;
+    try {
+        const today = getTodayDateString();
+        const [dashboardResult, datesResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('getAvailableDates', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        const students = dashboardResult.students || [];
+        const availableDates = datesResult.dates || [];
+        const monthData = await Promise.all(students.map(async (student) => {
+            const name = student.name;
+            const datePromises = availableDates.map(async (dateObj) => {
+                const date = dateObj.date;
+                const attResult = await fetchFromScript('checkTodayAttendance', {
+                    spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+                    month: month,
+                    today: date
+                });
+                if (attResult && attResult.students) {
+                    const found = attResult.students.find(s => s.name === name);
+                    if (found && found.status && found.status !== 'Not marked') {
+                        return { date, status: found.status };
+                    }
+                }
+                return null;
+            });
+            const results = await Promise.all(datePromises);
+            const validRecords = results.filter(r => r !== null);
+            let present = 0, absent = 0, holiday = 0;
+            validRecords.forEach(r => {
+                const status = r.status;
+                if (isHolidayStatus(status)) holiday++;
+                else if (status === 'Present' || status === 'Half Leave') present++;
+                else if (status === 'Absent' || status === 'Full Leave') absent++;
+            });
+            return {
+                name: name,
+                present: present,
+                absent: absent,
+                holiday: holiday,
+                total: validRecords.length
+            };
+        }));
+        monthData.sort((a, b) => a.name.localeCompare(b.name));
+        monthAttendanceData = monthData;
+        monthAttendanceLoaded = true;
+        setCache('monthAttendanceData', monthData);
+        renderMonthAttendanceTable();
+        showToast(`✅ ${monthData.length} students`, 'success');
+    } catch (err) {
+        console.error('Month attendance error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load ${month}</p></div>`;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 16 — STUDENT DETAIL + FETCH (UNCHANGED)
+   ===================================================================== */
+
+function showDashboardStudentDetail(studentName) {
+    if (studentAttendanceCache.has(studentName)) {
+        const cachedData = studentAttendanceCache.get(studentName);
+        window._advAllRecords = cachedData.records;
+        window._advSelectedStudent = studentName;
+        window._studentMonthData = cachedData.monthData || {};
+        showAdvDetailFromDashboard(studentName);
+        return;
+    }
+    if (studentLoadingState.get(studentName) === 'loading') {
+        showToast('⏳ Data is already loading...', 'info');
+        return;
+    }
+    studentLoadingState.set(studentName, 'loading');
+    showAdvDetailWithLoading(studentName);
+    fetchStudentAttendanceAllMonths(studentName);
+}
+
+function showAdvDetailWithLoading(studentName) {
+    document.getElementById('advDetailName').textContent = studentName;
+    document.getElementById('advDetailDate').textContent = getTodayFormatted();
+    document.getElementById('advTotalDays').textContent = '...';
+    document.getElementById('advTotalPresent').textContent = '...';
+    document.getElementById('advTotalAbsent').textContent = '...';
+    document.getElementById('advTotalHoliday').textContent = '...';
+    document.getElementById('advTotalFull').textContent = '...';
+    const monthFilter = document.getElementById('advMonthFilter');
+    monthFilter.innerHTML = '<option value="all">Loading months...</option>';
+    const attendanceFilter = document.getElementById('advAttendanceFilter');
+    if (attendanceFilter) attendanceFilter.innerHTML = '<option value="all">Loading...</option>';
+    const grid = document.getElementById('advAttendanceGrid');
+    grid.innerHTML = `
+        <div class="loading-state" style="grid-column:1/-1;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+            <span class="spinner"></span>
+            <span>Fetching attendance for ${studentName}...</span>
+            <span style="font-size:12px;color:var(--text-light);" id="loadingProgress">Reading spreadsheet...</span>
+        </div>
+    `;
+    document.getElementById('advRecordCount').textContent = 'Loading...';
+    switchPage('advDetail');
+}
+
+async function fetchStudentAttendanceAllMonths(studentName) {
+    const container = document.getElementById('advAttendanceGrid');
+    const progressEl = document.getElementById('loadingProgress');
+    if (progressEl) progressEl.textContent = 'Fetching from Google Sheets...';
+    try {
+        const result = await fetchFromScript('getStudentAllAttendance', {
+            spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+            studentName: studentName
+        }, 25000);
+        if (result.error) throw new Error(result.error);
+        const allRecords = result.records || [];
+        if (allRecords.length === 0) {
+            container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+                <i class="fas fa-user-graduate"></i>
+                <p>No attendance records found for ${studentName}</p>
+                <p class="sub-text">This student may not have attendance marked yet.</p>
+            </div>`;
+            document.getElementById('advTotalDays').textContent = '0';
+            document.getElementById('advTotalPresent').textContent = '0';
+            document.getElementById('advTotalAbsent').textContent = '0';
+            document.getElementById('advTotalHoliday').textContent = '0';
+            document.getElementById('advTotalFull').textContent = '0';
+            document.getElementById('advRecordCount').textContent = 'Showing 0 records';
+            studentLoadingState.delete(studentName);
+            showToast(`No records found for ${studentName}`, 'warning');
+            return;
+        }
+        const monthData = {};
+        allRecords.forEach(r => {
+            const m = r.month;
+            if (!monthData[m]) monthData[m] = [];
+            monthData[m].push(r);
+        });
+        studentAttendanceCache.set(studentName, {
+            records: allRecords,
+            monthData: monthData,
+            timestamp: Date.now()
+        });
+        advAttendanceDataMap[studentName] = allRecords;
+        window._advAllRecords = allRecords;
+        window._advSelectedStudent = studentName;
+        window._studentMonthData = monthData;
+        showAdvDetailFromDashboard(studentName);
+        studentLoadingState.delete(studentName);
+        showToast(`✅ Loaded ${allRecords.length} records for ${studentName}`, 'success');
+    } catch (err) {
+        console.error('Fetch student error:', err);
+        studentLoadingState.delete(studentName);
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load attendance data</p>
+            <p class="sub-text">${err.message}</p>
+            <button class="btn btn-primary btn-sm" onclick="retryFetchStudent('${studentName.replace(/'/g, "\\'")}')" style="margin-top:10px;">
+                <i class="fas fa-redo"></i> Retry
+            </button>
+        </div>`;
+        showToast('❌ Failed to load student data', 'error');
+    }
+}
+
+function retryFetchStudent(studentName) {
+    studentAttendanceCache.delete(studentName);
+    studentLoadingState.delete(studentName);
+    showDashboardStudentDetail(studentName);
+}
+
+function showAdvDetailFromDashboard(studentName) {
+    const allRecords = window._advAllRecords || [];
+    const monthData = window._studentMonthData || {};
+    if (allRecords.length === 0) {
+        document.getElementById('advAttendanceGrid').innerHTML =
+            `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-user-graduate"></i><p>No records found</p></div>`;
+        return;
+    }
+    document.getElementById('advDetailName').textContent = studentName;
+    document.getElementById('advDetailDate').textContent = getTodayFormatted();
+    let totalPresent = 0, totalAbsent = 0, totalFull = 0, totalHoliday = 0;
+    allRecords.forEach(r => {
+        const s = r.status;
+        if (isHolidayStatus(s)) totalHoliday++;
+        else if (s === 'Present') totalPresent++;
+        else if (s === 'Absent') totalAbsent++;
+        else if (s === 'Half Leave') totalPresent++;
+        else if (s === 'Full Leave') totalFull++;
+    });
+    document.getElementById('advTotalDays').textContent = allRecords.length;
+    document.getElementById('advTotalPresent').textContent = totalPresent;
+    document.getElementById('advTotalAbsent').textContent = totalAbsent;
+    document.getElementById('advTotalHoliday').textContent = totalHoliday;
+    document.getElementById('advTotalFull').textContent = totalFull;
+    const monthFilter = document.getElementById('advMonthFilter');
+    monthFilter.innerHTML = '';
+    const allOpt = document.createElement('option');
+    allOpt.value = 'all';
+    allOpt.textContent = `All Months (${allRecords.length})`;
+    monthFilter.appendChild(allOpt);
+    const presentMonths = MONTH_NAMES.filter(m => monthData[m] && monthData[m].length > 0);
+    presentMonths.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = `${m} (${monthData[m].length})`;
+        monthFilter.appendChild(opt);
+    });
+    const attendanceFilter = document.getElementById('advAttendanceFilter');
+    const statusCounts = { Present: 0, Absent: 0, 'Half Leave': 0, 'Full Leave': 0, Holiday: 0 };
+    allRecords.forEach(r => {
+        const s = r.status;
+        if (isHolidayStatus(s)) statusCounts.Holiday++;
+        else if (statusCounts[s] !== undefined) statusCounts[s]++;
+    });
+    const labelMap = {
+        all: `All Statuses (${allRecords.length})`,
+        Present: `✅ Present (${statusCounts.Present})`,
+        Absent: `❌ Absent (${statusCounts.Absent})`,
+        'Half Leave': `⏳ Half Leave (${statusCounts['Half Leave']})`,
+        'Full Leave': `🚫 Full Leave (${statusCounts['Full Leave']})`,
+        Holiday: `🎉 Holiday (${statusCounts.Holiday})`
+    };
+    attendanceFilter.innerHTML = '';
+    Object.keys(labelMap).forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = labelMap[k];
+        attendanceFilter.appendChild(opt);
+    });
+    const currentMonth = getCurrentMonth();
+    if (presentMonths.includes(currentMonth)) {
+        monthFilter.value = currentMonth;
+    } else if (presentMonths.length > 0) {
+        let maxM = presentMonths[0], maxC = 0;
+        presentMonths.forEach(m => {
+            if (monthData[m].length > maxC) { maxC = monthData[m].length; maxM = m; }
+        });
+        monthFilter.value = maxM;
+    } else {
+        monthFilter.value = 'all';
+    }
+    attendanceFilter.value = 'all';
+    applyAdvFiltersFromDashboard();
+}
+
+function updateFilteredStats(records) {
+    let totalPresent = 0, totalAbsent = 0, totalFull = 0, totalHoliday = 0;
+    records.forEach(r => {
+        const status = r.status;
+        if (isHolidayStatus(status)) totalHoliday++;
+        else if (status === 'Present' || status === 'Half Leave') totalPresent++;
+        else if (status === 'Absent') totalAbsent++;
+        else if (status === 'Full Leave') totalFull++;
+    });
+    const total = records.length || 1;
+    document.getElementById('advTotalDays').textContent = records.length;
+    document.getElementById('advTotalPresent').textContent = totalPresent;
+    document.getElementById('advTotalAbsent').textContent = totalAbsent;
+    document.getElementById('advTotalHoliday').textContent = totalHoliday;
+    document.getElementById('advTotalFull').textContent = totalFull;
+    const statCards = document.querySelectorAll('.summary-stat');
+    const labels = ['Total Days', 'Present', 'Absent', 'Holiday', 'Full Leave'];
+    const values = [records.length, totalPresent, totalAbsent, totalHoliday, totalFull];
+    statCards.forEach((card, index) => {
+        const numEl = card.querySelector('.num');
+        const labelEl = card.querySelector('.label');
+        if (numEl) numEl.textContent = values[index] || 0;
+        if (labelEl && index > 0) {
+            const percentage = total > 0 ? Math.round((values[index] / total) * 100) : 0;
+            labelEl.textContent = `${labels[index]} (${percentage}%)`;
+        } else if (labelEl) {
+            labelEl.textContent = labels[index];
+        }
+    });
+}
+
+function renderAdvDetailGridFromDashboard(records) {
+    const grid = document.getElementById('advAttendanceGrid');
+    if (!records || records.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+            <i class="fas fa-calendar-day"></i>
+            <p>No attendance records found for the selected filter</p>
+            <p class="sub-text">Try changing the filter or select a different month</p>
+        </div>`;
+        document.getElementById('advRecordCount').textContent = 'Showing 0 records';
+        return;
+    }
+    const sortedRecords = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const groupedByMonth = {};
+    sortedRecords.forEach(r => {
+        const month = r.month || getMonthFromDate(r.date);
+        if (month) {
+            if (!groupedByMonth[month]) groupedByMonth[month] = [];
+            groupedByMonth[month].push(r);
+        }
+    });
+    let html = '';
+    const monthOrder = MONTH_NAMES.filter(m => groupedByMonth[m]);
+    monthOrder.forEach(month => {
+        const monthRecords = groupedByMonth[month];
+        html += `<div class="month-header" style="grid-column:1/-1;margin-top:12px;margin-bottom:6px;padding:8px 16px;background:var(--accent-soft);border-radius:10px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--primary);border-left:3px solid var(--primary);">
+            <i class="fas fa-calendar-alt"></i>
+            ${month}
+            <span class="count-badge" style="background:var(--primary);color:white;padding:0 12px;border-radius:20px;font-size:11px;line-height:22px;margin-left:4px;font-weight:600;">${monthRecords.length} records</span>
+        </div>`;
+        monthRecords.forEach(r => {
+            const status = r.status;
+            let statusClass, icon;
+            if (isHolidayStatus(status)) { statusClass = 'holiday'; icon = 'fa-star'; }
+            else if (status === 'Present') { statusClass = 'present'; icon = 'fa-check-circle'; }
+            else if (status === 'Absent') { statusClass = 'absent'; icon = 'fa-times-circle'; }
+            else if (status === 'Half Leave') { statusClass = 'half'; icon = 'fa-clock'; }
+            else if (status === 'Full Leave') { statusClass = 'full'; icon = 'fa-ban'; }
+            else { statusClass = 'not-marked'; icon = 'fa-question-circle'; }
+            html += `<div class="attendance-card">
+                <span class="date">${r.formatted || r.date}</span>
+                <span class="status-dot ${statusClass}">
+                    <i class="fas ${icon}"></i> ${status}
+                </span>
+            </div>`;
+        });
+    });
+    grid.innerHTML = html;
+    document.getElementById('advRecordCount').textContent = `Showing ${records.length} records`;
+}
+
+function applyAdvFiltersFromDashboard() {
+    const allRecords = window._advAllRecords || [];
+    const attendanceFilter = document.getElementById('advAttendanceFilter').value;
+    const monthFilter = document.getElementById('advMonthFilter').value;
+    let filteredRecords = [...allRecords];
+    if (attendanceFilter !== 'all') {
+        if (attendanceFilter === 'Holiday') {
+            filteredRecords = filteredRecords.filter(r => isHolidayStatus(r.status));
+        } else {
+            filteredRecords = filteredRecords.filter(r => r.status === attendanceFilter);
+        }
+    }
+    if (monthFilter !== 'all') {
+        filteredRecords = filteredRecords.filter(r => {
+            const month = r.month || getMonthFromDate(r.date);
+            return month === monthFilter;
+        });
+    }
+    window._advFilteredRecords = filteredRecords;
+    updateFilteredStats(filteredRecords);
+    renderAdvDetailGridFromDashboard(filteredRecords);
+    const totalRecords = allRecords.length;
+    const filteredCount = filteredRecords.length;
+    const recordCountEl = document.getElementById('advRecordCount');
+    if (filteredCount === totalRecords) {
+        recordCountEl.textContent = `Showing all ${totalRecords} records`;
+    } else {
+        recordCountEl.textContent = `Showing ${filteredCount} of ${totalRecords} records`;
+    }
+}
+
+
+/* =====================================================================
+   SECTION 17 — NAVIGATION (UNCHANGED)
+   ===================================================================== */
+
+function navigateToTakeAttendance() {
+    switchPage('takeAttendance');
+    setTimeout(() => initTakeAttendance(), 100);
+}
+
+function navigateToUpdateAttendance() {
+    switchPage('updateAttendance');
+    setTimeout(() => initUpdateAttendance(), 100);
+}
+
+function navigateToAdvAttendance() {
+    switchPage('advAttendance');
+    setTimeout(() => initAdvAttendance(), 100);
+}
+
+
+/* =====================================================================
+   SECTION 18 — TAKE ATTENDANCE (UNCHANGED)
+   ===================================================================== */
+
+let takeStudents = [];
+let takeOriginalActions = {};
+let takeSelectedHoliday = null;
+let takeSaveInProgress = false;
+let takeLoadPromise = null;
+
+async function initTakeAttendance() {
+    document.getElementById('takeAttendanceDate').textContent = getTodayFormatted();
+    document.getElementById('takeMonthDisplay').textContent = getCurrentMonth();
+    document.getElementById('takeMonthFooter').textContent = `Month: ${getCurrentMonth()}`;
+    const cached = getCache('takeStudents');
+    if (cached && cached.length > 0) {
+        takeStudents = cached;
+        takeOriginalActions = {};
+        takeStudents.forEach(s => { takeOriginalActions[s.sr] = 'Present'; });
+        renderTakeTable();
+        return;
+    }
+    if (takeLoadPromise) { await takeLoadPromise; return; }
+    takeLoadPromise = loadTakeStudents();
+    await takeLoadPromise;
+    takeLoadPromise = null;
+}
+
+async function loadTakeStudents() {
+    const container = document.getElementById('takeTable');
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading students...</div>`;
+    try {
+        const result = await fetchFromScript('getStudents', {
+            spreadsheetId: STUDENT_SPREADSHEET_ID,
+            sheetName: STUDENT_SHEET_NAME
+        }, 10000);
+        if (result.error) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load students: ${result.error}</p></div>`;
+            showToast('❌ Failed to load students', 'error');
+            return;
+        }
+        const students = result.students || [];
+        if (students.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+            showToast('⚠️ No students found', 'warning');
+            return;
+        }
+        takeStudents = students.map((s, idx) => ({
+            sr: idx + 1,
+            name: s.name || `Student ${idx + 1}`,
+            action: 'Present'
+        }));
+        takeOriginalActions = {};
+        takeStudents.forEach(s => { takeOriginalActions[s.sr] = 'Present'; });
+        setCache('takeStudents', takeStudents);
+        renderTakeTable();
+        showToast(`✅ ${takeStudents.length} students loaded`, 'success');
+    } catch (err) {
+        console.error('❌ Load students error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load students</p></div>`;
+        showToast('❌ Failed to load students', 'error');
+    }
+}
+
+function renderTakeTable() {
+    const container = document.getElementById('takeTable');
+    if (!takeStudents || takeStudents.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+        return;
+    }
+    const rows = takeStudents.map(s => {
+        const initials = getInitials(s.name);
+        const isHoliday = takeSelectedHoliday && takeSelectedHoliday.name === s.action;
+        return `<tr>
+            <td class="sr-col">${s.sr}</td>
+            <td class="name-col"><span class="student-avatar">${initials}</span>${s.name}</td>
+            <td class="action-col">
+                <select data-sr="${s.sr}" class="action-select take-select">
+                    <option value="Present" ${s.action === 'Present' ? 'selected' : ''}>✅ Present</option>
+                    <option value="Half Leave" ${s.action === 'Half Leave' ? 'selected' : ''}>⏳ Half Leave</option>
+                    <option value="Absent" ${s.action === 'Absent' ? 'selected' : ''}>❌ Absent</option>
+                    <option value="Full Leave" ${s.action === 'Full Leave' ? 'selected' : ''}>🚫 Full Leave</option>
+                    ${isHoliday ? `<option value="${s.action}" selected class="holiday-option">🎉 ${s.action}</option>` : ''}
+                </select>
+            </td>
+        </tr>`;
+    });
+    container.innerHTML = `<table class="data-table"><thead><tr>
+        <th class="sr-col">#</th>
+        <th class="name-col">Student Name</th>
+        <th class="action-col">Attendance</th>
+    </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    container.querySelectorAll('.take-select').forEach(sel => {
+        const sr = parseInt(sel.dataset.sr);
+        sel.addEventListener('change', function() {
+            const student = takeStudents.find(s => s.sr === sr);
+            if (student) {
+                student.action = this.value;
+                document.getElementById('markAllPresent').checked = false;
+                updateTakeStats();
+            }
+        });
+    });
+    document.getElementById('markAllPresent').onchange = function() {
+        const isChecked = this.checked;
+        container.querySelectorAll('.take-select').forEach(sel => {
+            const sr = parseInt(sel.dataset.sr);
+            sel.value = isChecked ? 'Present' : (takeOriginalActions[sr] || 'Present');
+            const student = takeStudents.find(s => s.sr === sr);
+            if (student) student.action = sel.value;
+        });
+        updateTakeStats();
+    };
+    document.getElementById('resetBtn').onclick = function() {
+        container.querySelectorAll('.take-select').forEach(sel => {
+            const sr = parseInt(sel.dataset.sr);
+            sel.value = takeOriginalActions[sr] || 'Present';
+            const student = takeStudents.find(s => s.sr === sr);
+            if (student) student.action = sel.value;
+        });
+        document.getElementById('markAllPresent').checked = false;
+        if (takeSelectedHoliday) removeTakeHoliday();
+        updateTakeStats();
+        showToast('↺ Reset', 'info');
+    };
+    updateTakeStats();
+}
+
+function updateTakeStats() {
+    let present = 0, absent = 0;
+    takeStudents.forEach(s => {
+        const cls = classifyStatus(s.action);
+        if (cls === 'present') present++;
+        if (cls === 'absent') absent++;
+    });
+    document.getElementById('takeStudentCount').textContent = takeStudents.length;
+    document.getElementById('takePresentCount').textContent = present;
+    document.getElementById('takeAbsentCount').textContent = absent;
+    document.getElementById('takeStudentCountFooter').textContent = `${takeStudents.length} students`;
+}
+
+
+/* =====================================================================
+   SECTION 19 — HOLIDAY MODAL (UNCHANGED)
+   ===================================================================== */
+
+function renderHolidays(filter = '') {
+    const grid = document.getElementById('holidayGrid');
+    const searchTerm = filter.toLowerCase().trim();
+    let filtered = HOLIDAYS;
+    if (searchTerm) {
+        filtered = HOLIDAYS.filter(h =>
+            h.name.toLowerCase().includes(searchTerm) ||
+            h.date.toLowerCase().includes(searchTerm) ||
+            h.type.toLowerCase().includes(searchTerm)
+        );
+    }
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><p>No holidays found</p></div>`;
+        return;
+    }
+    const items = filtered.map(h => {
+        const isSelected = takeSelectedHoliday && takeSelectedHoliday.name === h.name;
+        return `<div class="holiday-option ${isSelected ? 'selected' : ''}" data-holiday='${JSON.stringify(h)}'>
+            <div class="icon">${h.icon}</div>
+            <div class="info">
+                <div class="name">${h.name}</div>
+                <div class="date">${h.date}</div>
+                <span class="type">${h.type}</span>
+            </div>
+        </div>`;
+    });
+    grid.innerHTML = items.join('');
+    grid.querySelectorAll('.holiday-option').forEach(el => {
+        el.addEventListener('click', function() {
+            const holiday = JSON.parse(this.dataset.holiday);
+            takeSelectedHoliday = holiday;
+            document.getElementById('holidayBtnText').textContent = 'Holiday Set';
+            document.getElementById('holidayBadge').style.display = 'inline-block';
+            document.getElementById('holidayBadge').textContent = '1';
+            document.getElementById('selectedHolidayDisplay').classList.add('active');
+            document.getElementById('selectedHolidayName').textContent = `${holiday.icon} ${holiday.name}`;
+            takeStudents.forEach(s => { s.action = holiday.name; });
+            renderTakeTable();
+            document.getElementById('markAllPresent').checked = false;
+            closeHolidayModal();
+            updateTakeStats();
+            showToast(`✅ Applied "${holiday.name}"`, 'success');
+        });
+    });
+}
+
+function removeTakeHoliday() {
+    takeSelectedHoliday = null;
+    document.getElementById('holidayBtnText').textContent = 'Holiday';
+    document.getElementById('holidayBadge').style.display = 'none';
+    document.getElementById('selectedHolidayDisplay').classList.remove('active');
+    takeStudents.forEach(s => { s.action = 'Present'; });
+    renderTakeTable();
+    updateTakeStats();
+    showToast('↺ Holiday removed', 'info');
+}
+
+function openHolidayModal() {
+    document.getElementById('holidayModal').classList.add('active');
+    document.getElementById('holidaySearch').value = '';
+    renderHolidays('');
+    setTimeout(() => document.getElementById('holidaySearch').focus(), 100);
+}
+
+function closeHolidayModal() {
+    document.getElementById('holidayModal').classList.remove('active');
+}
+
+function previewTakeAttendance() {
+    let msg = '📋 Attendance Preview:\n\n';
+    takeStudents.forEach(s => {
+        const isHoliday = isHolidayStatus(s.action);
+        msg += `${s.name}: ${s.action}${isHoliday ? ' 🎉' : ''}\n`;
+    });
+    let present = 0, absent = 0;
+    takeStudents.forEach(s => {
+        const cls = classifyStatus(s.action);
+        if (cls === 'present') present++;
+        if (cls === 'absent') absent++;
+    });
+    msg += `\n📊 Summary:\n✅ Present: ${present}\n❌ Absent: ${absent}`;
+    showPopup(msg, 'info', '📋 Preview');
+}
+
+async function submitTakeAttendance() {
+    if (takeSaveInProgress) return;
+    const todayFormatted = getTodayFormatted();
+    const todayRaw = getTodayDateString();
+    const currentMonth = getCurrentMonth();
+    const attendanceData = takeStudents.map(s => ({ sr: s.sr, name: s.name, action: s.action }));
+    const confirmed = await showPopup(
+        `Submit attendance for ${takeStudents.length} students?`,
+        'confirm', '⚠️ Confirm Submit'
+    );
+    if (!confirmed) return;
+    takeSaveInProgress = true;
+    const btn = document.getElementById('submitAttendanceBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Saving...';
+    try {
+        const payload = {
+            action: 'saveAttendance',
+            spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+            date: todayFormatted,
+            dateRaw: todayRaw,
+            month: currentMonth,
+            attendance: attendanceData,
+            holidayList: HOLIDAYS,
+            recalculateTotals: true
+        };
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
+        await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        showToast('✅ Attendance submitted!', 'success');
+        clearCache('dashboard_');
+        clearCache('takeStudents');
+        clearCache('advAttendanceData');
+        advDataLoaded = false;
+        setTimeout(() => { switchPage('dashboard'); loadDashboard(); }, 500);
+    } catch (err) {
+        console.error('Submit error:', err);
+        if (err.name === 'AbortError') {
+            showToast('⏳ Request timed out, but may have succeeded', 'warning');
+        } else {
+            showToast('❌ Failed to submit: ' + err.message, 'error');
+        }
+    } finally {
+        takeSaveInProgress = false;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> Submit Attendance';
+    }
+}
+
+
+/* =====================================================================
+   SECTION 20 — UPDATE ATTENDANCE (UNCHANGED)
+   ===================================================================== */
+
+let updateStudents = [];
+let updateOriginalActions = {};
+let updateSelectedHoliday = null;
+let updateSelectedDate = null;
+let updateAvailableDates = [];
+let updateIsUpdating = false;
+let updateLoadPromise = null;
+
+async function initUpdateAttendance() {
+    document.getElementById('updateAttendanceDate').textContent = getTodayFormatted();
+    document.getElementById('updateMonthDisplay').textContent = getCurrentMonth();
+    document.getElementById('updateMonthFooter').textContent = `Month: ${getCurrentMonth()}`;
+    await loadUpdateDates();
+}
+
+async function loadUpdateDates() {
+    const month = getCurrentMonth();
+    const container = document.getElementById('updateTable');
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading dates...</div>`;
+    try {
+        const result = await fetchFromScript('getAvailableDates', {
+            spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+            month: month
+        }, 8000);
+        if (result.error) throw new Error(result.error);
+        updateAvailableDates = result.dates || [];
+        if (updateAvailableDates.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No attendance records found</p><p class="sub-text">Please take attendance first</p></div>`;
+            showToast('📭 No records found', 'warning');
+            return;
+        }
+        const sortedDates = [...updateAvailableDates].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const today = getTodayDateString();
+        const dateDisplay = document.getElementById('selectedDateText');
+        const select = document.createElement('select');
+        select.id = 'updateDateSelector';
+        select.style.cssText = `background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:40px;padding:6px 16px;font-size:13px;font-weight:500;color:var(--text-primary);cursor:pointer;outline:none;min-width:120px;appearance:none;padding-right:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2639' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;`;
+        sortedDates.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.date;
+            opt.textContent = d.formatted || formatDateForDisplay(d.date);
+            if (d.date === today) opt.selected = true;
+            select.appendChild(opt);
+        });
+        dateDisplay.innerHTML = '';
+        dateDisplay.appendChild(select);
+        updateSelectedDate = select.value;
+        document.getElementById('updateDateFooter').textContent = formatDateForDisplay(updateSelectedDate);
+        select.addEventListener('change', function() {
+            updateSelectedDate = this.value;
+            document.getElementById('updateDateFooter').textContent = formatDateForDisplay(updateSelectedDate);
+            if (updateSelectedHoliday) removeUpdateHoliday();
+            loadUpdateAttendance(updateSelectedDate);
+        });
+        const cacheKey = `updateAttendance_${month}_${updateSelectedDate}`;
+        const cached = getCache(cacheKey);
+        if (cached) {
+            updateStudents = cached;
+            updateOriginalActions = {};
+            updateStudents.forEach(s => { updateOriginalActions[s.sr] = s.action; });
+            renderUpdateTable();
+            return;
+        }
+        await loadUpdateAttendance(updateSelectedDate);
+    } catch (err) {
+        console.error('Load dates error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load dates</p></div>`;
+        showToast('❌ Failed to load dates', 'error');
+    }
+}
+
+async function loadUpdateAttendance(date) {
+    const month = getCurrentMonth();
+    const container = document.getElementById('updateTable');
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading attendance...</div>`;
+    try {
+        const cacheKey = `updateAttendance_${month}_${date}`;
+        let attendanceData = getCache(cacheKey);
+        if (!attendanceData) {
+            const [studentList, attendanceResult] = await Promise.all([
+                fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today: getTodayDateString() }),
+                fetchFromScript('checkTodayAttendance', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today: date })
+            ]);
+            if (studentList.error) throw new Error(studentList.error);
+            const statusMap = {};
+            if (attendanceResult.students) {
+                attendanceResult.students.forEach(s => { statusMap[s.name] = s.status || 'Not marked'; });
+            }
+            const allStudents = (studentList.students || []).map((s, idx) => {
+                const currentStatus = statusMap[s.name] || 'Not marked';
+                if (isHolidayStatus(currentStatus) && !updateSelectedHoliday) {
+                    const holiday = HOLIDAYS.find(h => h.name === currentStatus);
+                    if (holiday) {
+                        updateSelectedHoliday = holiday;
+                        document.getElementById('updateHolidayBtnText').textContent = 'Holiday Set';
+                        document.getElementById('updateHolidayBadge').style.display = 'inline-block';
+                        document.getElementById('updateHolidayBadge').textContent = '1';
+                        document.getElementById('updateSelectedHolidayDisplay').classList.add('active');
+                        document.getElementById('updateSelectedHolidayName').textContent = `${holiday.icon} ${holiday.name}`;
+                    }
+                }
+                return { sr: idx + 1, name: s.name, currentStatus, action: currentStatus };
+            });
+            attendanceData = allStudents;
+            setCache(cacheKey, attendanceData);
+        }
+        updateStudents = attendanceData;
+        updateOriginalActions = {};
+        updateStudents.forEach(s => { updateOriginalActions[s.sr] = s.action; });
+        renderUpdateTable();
+    } catch (err) {
+        console.error('Load attendance error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load data</p></div>`;
+        showToast('❌ Failed to load attendance', 'error');
+    }
+}
+
+function renderUpdateTable() {
+    const container = document.getElementById('updateTable');
+    const searchQuery = document.getElementById('updateSearchInput').value;
+    let students = updateStudents;
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
+        students = students.filter(s => s.name.toLowerCase().includes(q));
+    }
+    if (!students || students.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p>No matching students found</p></div>`;
+        return;
+    }
+    const rows = students.map(s => {
+        const initials = getInitials(s.name);
+        const badgeClass = getStatusBadge(s.currentStatus || 'Not marked');
+        const isChanged = s.currentStatus !== s.action;
+        const isHoliday = isHolidayStatus(s.action);
+        return `<tr>
+            <td class="sr-col">${s.sr}</td>
+            <td class="name-col"><span class="student-avatar">${initials}</span>${s.name}${isChanged ? '<span style="color:#d4a017;font-size:11px;margin-left:8px;">🔄 changed</span>' : ''}${isHoliday ? '<span style="color:#d4a017;font-size:11px;margin-left:8px;">🎉</span>' : ''}</td>
+            <td class="status-col"><span class="status-badge ${badgeClass}">${s.currentStatus || 'Not marked'}</span></td>
+            <td class="action-col">
+                <select data-sr="${s.sr}" class="action-select update-select">
+                    <option value="Present" ${s.action === 'Present' ? 'selected' : ''}>✅ Present</option>
+                    <option value="Absent" ${s.action === 'Absent' ? 'selected' : ''}>❌ Absent</option>
+                    <option value="Half Leave" ${s.action === 'Half Leave' ? 'selected' : ''}>⏳ Half Leave</option>
+                    <option value="Full Leave" ${s.action === 'Full Leave' ? 'selected' : ''}>🚫 Full Leave</option>
+                    <option value="Not marked" ${s.action === 'Not marked' ? 'selected' : ''}>⬜ Not marked</option>
+                    ${isHoliday ? `<option value="${s.action}" selected class="holiday-option">🎉 ${s.action}</option>` : ''}
+                </select>
+            </td>
+        </tr>`;
+    });
+    container.innerHTML = `<table class="data-table"><thead><tr>
+        <th class="sr-col">#</th>
+        <th class="name-col">Student Name</th>
+        <th class="status-col">Current Status</th>
+        <th class="action-col">Update Status</th>
+    </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    container.querySelectorAll('.update-select').forEach(sel => {
+        const sr = parseInt(sel.dataset.sr);
+        sel.addEventListener('change', function() {
+            const student = updateStudents.find(s => s.sr === sr);
+            if (student) {
+                student.action = this.value;
+                document.getElementById('updateMarkAllPresent').checked = false;
+                updateUpdateStats();
+                renderUpdateTable();
+            }
+        });
+    });
+    document.getElementById('updateMarkAllPresent').onchange = function() {
+        const isChecked = this.checked;
+        container.querySelectorAll('.update-select').forEach(sel => {
+            const sr = parseInt(sel.dataset.sr);
+            sel.value = isChecked ? 'Present' : (updateOriginalActions[sr] || 'Present');
+            const student = updateStudents.find(s => s.sr === sr);
+            if (student) student.action = sel.value;
+        });
+        updateUpdateStats();
+    };
+    document.getElementById('updateResetBtn').onclick = function() {
+        updateStudents.forEach(s => { s.action = s.currentStatus || 'Not marked'; });
+        container.querySelectorAll('.update-select').forEach(sel => {
+            const sr = parseInt(sel.dataset.sr);
+            const student = updateStudents.find(s => s.sr === sr);
+            if (student) sel.value = student.action;
+        });
+        document.getElementById('updateMarkAllPresent').checked = false;
+        if (updateSelectedHoliday) removeUpdateHoliday();
+        updateUpdateStats();
+        renderUpdateTable();
+        showToast('↺ Reset', 'info');
+    };
+    document.getElementById('updateRefreshBtn').onclick = function() {
+        if (updateSelectedDate) {
+            const cacheKey = `updateAttendance_${getCurrentMonth()}_${updateSelectedDate}`;
+            clearCache(cacheKey);
+            loadUpdateAttendance(updateSelectedDate);
+            showToast('🔄 Refreshed', 'info');
+        }
+    };
+    updateUpdateStats();
+}
+
+function updateUpdateStats() {
+    let present = 0, absent = 0;
+    updateStudents.forEach(s => {
+        const cls = classifyStatus(s.action);
+        if (cls === 'present') present++;
+        if (cls === 'absent') absent++;
+    });
+    document.getElementById('updateStudentCount').textContent = updateStudents.length;
+    document.getElementById('updatePresentCount').textContent = present;
+    document.getElementById('updateAbsentCount').textContent = absent;
+    document.getElementById('updateStudentCountFooter').textContent = `${updateStudents.length} students`;
+}
+
+function applyUpdateHoliday(holiday) {
+    updateSelectedHoliday = holiday;
+    document.getElementById('updateHolidayBtnText').textContent = 'Holiday Set';
+    document.getElementById('updateHolidayBadge').style.display = 'inline-block';
+    document.getElementById('updateHolidayBadge').textContent = '1';
+    document.getElementById('updateSelectedHolidayDisplay').classList.add('active');
+    document.getElementById('updateSelectedHolidayName').textContent = `${holiday.icon} ${holiday.name}`;
+    updateStudents.forEach(s => { s.action = holiday.name; });
+    renderUpdateTable();
+    document.getElementById('updateMarkAllPresent').checked = false;
+    closeHolidayModal();
+    updateUpdateStats();
+    showToast(`✅ Applied "${holiday.name}"`, 'success');
+}
+
+function removeUpdateHoliday() {
+    updateSelectedHoliday = null;
+    document.getElementById('updateHolidayBtnText').textContent = 'Holiday';
+    document.getElementById('updateHolidayBadge').style.display = 'none';
+    document.getElementById('updateSelectedHolidayDisplay').classList.remove('active');
+    updateStudents.forEach(s => { s.action = s.currentStatus || 'Not marked'; });
+    renderUpdateTable();
+    updateUpdateStats();
+    showToast('↺ Holiday removed', 'info');
+}
+
+function previewUpdateAttendance() {
+    const changed = updateStudents.filter(s => s.currentStatus !== s.action);
+    if (changed.length === 0) { showPopup('No changes detected.', 'info', '📋 Preview'); return; }
+    let msg = `🔄 ${changed.length} student(s) will be updated:\n\n`;
+    changed.forEach(s => {
+        const isHoliday = isHolidayStatus(s.action);
+        msg += `${s.name}: ${s.currentStatus} → ${s.action}${isHoliday ? ' 🎉' : ''}\n`;
+    });
+    showPopup(msg, 'info', '📋 Update Preview');
+}
+
+async function submitUpdateAttendance() {
+    if (!updateSelectedDate) { showToast('⚠️ Select a date first', 'warning'); return; }
+    if (updateIsUpdating) return;
+    const changed = updateStudents.filter(s => s.currentStatus !== s.action);
+    if (changed.length === 0) { showToast('ℹ️ No changes to update', 'info'); return; }
+    const confirmed = await showPopup(
+        `Update ${changed.length} student(s)?`,
+        'confirm', '⚠️ Confirm Update'
+    );
+    if (!confirmed) return;
+    updateIsUpdating = true;
+    const btn = document.getElementById('updateAttendanceBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Updating...';
+    const month = getCurrentMonth();
+    try {
+        const updates = changed.map(s => ({ name: s.name, status: s.action }));
+        const params = new URLSearchParams({
+            action: 'bulkUpdateAttendance',
+            spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+            month: month,
+            today: updateSelectedDate,
+            updates: JSON.stringify(updates)
+        });
+        const url = `${SCRIPT_URL}?${params.toString()}`;
+        const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
+        const result = await response.json();
+        if (result.error) throw new Error(result.error);
+        const successCount = result.successCount || 0;
+        const errorCount = result.errorCount || 0;
+        if (errorCount === 0) {
+            showToast(`✅ ${successCount} student(s) updated!`, 'success');
+            const cacheKey = `updateAttendance_${month}_${updateSelectedDate}`;
+            clearCache(cacheKey);
+            clearCache('dashboard_');
+            clearCache('advAttendanceData');
+            advDataLoaded = false;
+            await loadUpdateAttendance(updateSelectedDate);
+            setTimeout(() => { switchPage('dashboard'); loadDashboard(); }, 500);
+        } else {
+            showToast(`⚠️ ${successCount} updated, ${errorCount} failed`, 'warning');
+            await loadUpdateAttendance(updateSelectedDate);
+        }
+    } catch (err) {
+        console.error('Update error:', err);
+        showToast('❌ Failed to update: ' + err.message, 'error');
+    } finally {
+        updateIsUpdating = false;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> Update Attendance';
+    }
+}
+
+
+/* =====================================================================
+   SECTION 21 — ADVANCE ATTENDANCE (UNCHANGED)
+   ===================================================================== */
+
+let advStudents = [];
+let advAttendanceData = {};
+let advSelectedStudent = null;
+let advFilteredRecords = [];
+let advLoadPromise = null;
+
+async function initAdvAttendance() {
+    document.getElementById('advAttendanceDate').textContent = getTodayFormatted();
+    document.getElementById('advMonthDisplay').textContent = getCurrentMonth();
+    const cached = getCache('advAttendanceData');
+    if (cached && cached.students && cached.students.length > 0) {
+        advStudents = cached.students || [];
+        advAttendanceData = cached.attendanceData || {};
+        renderAdvTable();
+        setTimeout(() => refreshAdvData(), 2000);
+        return;
+    }
+    if (advLoadPromise) { await advLoadPromise; return; }
+    advLoadPromise = refreshAdvData();
+    await advLoadPromise;
+    advLoadPromise = null;
+}
+
+async function refreshAdvData() {
+    const month = getCurrentMonth();
+    const today = getTodayDateString();
+    const progressBar = document.getElementById('advProgressBar');
+    const progressFill = document.getElementById('advProgressFill');
+    const container = document.getElementById('advTable');
+    progressBar.style.display = 'block';
+    progressFill.style.width = '0%';
+    container.innerHTML = `<div class="loading-state"><span class="spinner"></span> Loading students...</div>`;
+    try {
+        progressFill.style.width = '20%';
+        const [dashboardResult, datesResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('getAvailableDates', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        const studentList = dashboardResult.students || [];
+        const availableDates = datesResult.dates || [];
+        progressFill.style.width = '40%';
+        if (studentList.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+            progressBar.style.display = 'none';
+            showToast('⚠️ No students found', 'warning');
+            return;
+        }
+        const allResults = [];
+        const batchSize = 15;
+        for (let i = 0; i < studentList.length; i += batchSize) {
+            const batch = studentList.slice(i, i + batchSize);
+            const batchPromises = batch.map(async (student) => {
+                const name = student.name;
+                const datePromises = availableDates.map(async (dateObj) => {
+                    const date = dateObj.date;
+                    const attResult = await fetchFromScript('checkTodayAttendance', {
+                        spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+                        month: month,
+                        today: date
+                    });
+                    if (attResult && attResult.students) {
+                        const found = attResult.students.find(s => s.name === name);
+                        if (found && found.status && found.status !== 'Not marked') {
+                            return { date, status: found.status, formatted: formatDateForDisplay(date), month: month };
+                        }
+                    }
+                    return null;
+                });
+                const results = await Promise.all(datePromises);
+                const validRecords = results.filter(r => r !== null);
+                validRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+                return { name, records: validRecords };
+            });
+            const batchResults = await Promise.all(batchPromises);
+            allResults.push(...batchResults);
+            progressFill.style.width = `${40 + (i / studentList.length) * 50}%`;
+        }
+        const attendanceData = {};
+        allResults.forEach(result => { attendanceData[result.name] = result.records; });
+        progressFill.style.width = '90%';
+        advStudents = studentList;
+        advAttendanceData = attendanceData;
+        setCache('advAttendanceData', { students: advStudents, attendanceData: advAttendanceData });
+        progressFill.style.width = '100%';
+        setTimeout(() => { progressBar.style.display = 'none'; progressFill.style.width = '0%'; }, 300);
+        renderAdvTable();
+        showToast(`✅ ${advStudents.length} students loaded`, 'success');
+    } catch (err) {
+        console.error('Refresh error:', err);
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load data</p></div>`;
+        showToast('❌ Failed to load data', 'error');
+        progressBar.style.display = 'none';
+        progressFill.style.width = '0%';
+    }
+}
+
+function renderAdvTable() {
+    const container = document.getElementById('advTable');
+    const searchQuery = document.getElementById('advSearchInput').value;
+    let students = advStudents;
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
+        students = students.filter(s => s.name.toLowerCase().includes(q));
+    }
+    if (!students || students.length === 0) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students found</p></div>`;
+        return;
+    }
+    const today = getTodayDateString();
+    let present = 0, absent = 0;
+    const rows = students.map((s, idx) => {
+        const records = advAttendanceData[s.name] || [];
+        const todayRecord = records.find(r => r.date === today);
+        const status = todayRecord ? todayRecord.status : 'Not marked';
+        const badgeClass = getStatusBadge(status);
+        const initials = getInitials(s.name);
+        if (status === 'Present' || status === 'Half Leave') present++;
+        if (status === 'Absent' || status === 'Full Leave') absent++;
+        return `<tr>
+            <td class="sr-col">${idx + 1}</td>
+            <td class="name-col"><span class="student-avatar">${initials}</span>${s.name}<span style="font-size:11px;color:var(--text-light);margin-left:8px;">(${records.length})</span></td>
+            <td class="status-col"><span class="status-badge ${badgeClass}">${status}</span></td>
+            <td class="action-col"><button class="btn btn-info btn-sm" onclick="showAdvDetail('${s.name.replace(/'/g, "\\'")}')"><i class="fas fa-eye"></i> Details</button></td>
+        </tr>`;
+    });
+    container.innerHTML = `<table class="data-table"><thead><tr>
+        <th class="sr-col">#</th>
+        <th class="name-col">Student Name</th>
+        <th class="status-col">Today</th>
+        <th class="action-col">Action</th>
+    </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    document.getElementById('advTotalStudents').textContent = advStudents.length;
+    document.getElementById('advPresentToday').textContent = present;
+    document.getElementById('advAbsentToday').textContent = absent;
+    document.getElementById('advMonthDisplay').textContent = getCurrentMonth();
+}
+
+function showAdvDetail(studentName) {
+    showDashboardStudentDetail(studentName);
+}
+
+
+/* =====================================================================
+   SECTION 22 — BACKGROUND ADVANCE DATA LOADING (UNCHANGED)
+   ===================================================================== */
+
+async function loadAdvanceDataInBackground() {
+    if (advDataLoaded) {
+        setTimeout(() => refreshAdvanceDataInBackground(), 30000);
+        return;
+    }
+    try {
+        const month = getCurrentMonth();
+        const today = getTodayDateString();
+        const [dashboardResult, datesResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('getAvailableDates', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        const studentList = dashboardResult.students || [];
+        const availableDates = datesResult.dates || [];
+        const allResults = [];
+        const batchSize = 20;
+        for (let i = 0; i < studentList.length; i += batchSize) {
+            const batch = studentList.slice(i, i + batchSize);
+            const batchPromises = batch.map(async (student) => {
+                const name = student.name;
+                const datePromises = availableDates.map(async (dateObj) => {
+                    const date = dateObj.date;
+                    const attResult = await fetchFromScript('checkTodayAttendance', {
+                        spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+                        month: month,
+                        today: date
+                    });
+                    if (attResult && attResult.students) {
+                        const found = attResult.students.find(s => s.name === name);
+                        if (found && found.status && found.status !== 'Not marked') {
+                            return { date, status: found.status, formatted: formatDateForDisplay(date), month: month };
+                        }
+                    }
+                    return null;
+                });
+                const results = await Promise.all(datePromises);
+                const validRecords = results.filter(r => r !== null);
+                validRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+                return { name, records: validRecords };
+            });
+            const batchResults = await Promise.all(batchPromises);
+            allResults.push(...batchResults);
+        }
+        const attendanceData = {};
+        allResults.forEach(result => { attendanceData[result.name] = result.records; });
+        advStudentsData = studentList;
+        advAttendanceDataMap = attendanceData;
+        advDataLoaded = true;
+        setCache('advAttendanceData', {
+            students: advStudentsData,
+            attendanceData: advAttendanceDataMap,
+            timestamp: Date.now()
+        });
+        setTimeout(() => refreshAdvanceDataInBackground(), 5 * 60 * 1000);
+    } catch (err) {
+        console.error('Background advance data load error:', err);
+        setTimeout(() => loadAdvanceDataInBackground(), 60000);
+    }
+}
+
+async function refreshAdvanceDataInBackground() {
+    try {
+        const month = getCurrentMonth();
+        const today = getTodayDateString();
+        const [dashboardResult, datesResult] = await Promise.all([
+            fetchFromScript('getDashboardData', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month, today }),
+            fetchFromScript('getAvailableDates', { spreadsheetId: ATTENDANCE_SPREADSHEET_ID, month })
+        ]);
+        if (dashboardResult.error) throw new Error(dashboardResult.error);
+        const studentList = dashboardResult.students || [];
+        const availableDates = datesResult.dates || [];
+        const allResults = [];
+        const batchSize = 15;
+        for (let i = 0; i < studentList.length; i += batchSize) {
+            const batch = studentList.slice(i, i + batchSize);
+            const batchPromises = batch.map(async (student) => {
+                const name = student.name;
+                const datePromises = availableDates.map(async (dateObj) => {
+                    const date = dateObj.date;
+                    const attResult = await fetchFromScript('checkTodayAttendance', {
+                        spreadsheetId: ATTENDANCE_SPREADSHEET_ID,
+                        month: month,
+                        today: date
+                    });
+                    if (attResult && attResult.students) {
+                        const found = attResult.students.find(s => s.name === name);
+                        if (found && found.status && found.status !== 'Not marked') {
+                            return { date, status: found.status, formatted: formatDateForDisplay(date), month: month };
+                        }
+                    }
+                    return null;
+                });
+                const results = await Promise.all(datePromises);
+                const validRecords = results.filter(r => r !== null);
+                validRecords.sort((a, b) => new Date(a.date) - new Date(b.date));
+                return { name, records: validRecords };
+            });
+            const batchResults = await Promise.all(batchPromises);
+            allResults.push(...batchResults);
+        }
+        const attendanceData = {};
+        allResults.forEach(result => { attendanceData[result.name] = result.records; });
+        advStudentsData = studentList;
+        advAttendanceDataMap = attendanceData;
+        advDataLoaded = true;
+        setCache('advAttendanceData', {
+            students: advStudentsData,
+            attendanceData: advAttendanceDataMap,
+            timestamp: Date.now()
+        });
+        setTimeout(() => refreshAdvanceDataInBackground(), 5 * 60 * 1000);
+    } catch (err) {
+        console.error('Background refresh error:', err);
+        setTimeout(() => refreshAdvanceDataInBackground(), 120000);
+    }
+}
+
+
+/* =====================================================================
+   SECTION 23 — DEBOUNCE (UNCHANGED)
+   ===================================================================== */
+
+function debounce(fn, delay) {
+    let timeoutId = null;
+    return function(...args) {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            fn.apply(this, args);
+            timeoutId = null;
+        }, delay);
+    };
+}
+
+
+/* =====================================================================
+   SECTION 24 — INITIALIZATION + BOOTSTRAP WITH AUTH GATE
+   ===================================================================== */
+
+function initApp() {
+    console.log('🚀 4th STD Attendance Loading...');
+
+    syncThemeWithParent();
+    updateAcademicYearDisplay();
+
+    // ── Event Bindings ──
+    document.getElementById('refreshBtnP1').addEventListener('click', () => refreshDashboard(false));
+    document.getElementById('dashboardSearch').addEventListener('input', debounce(renderDashboard, 300));
+
+    document.getElementById('holidayBtn').addEventListener('click', openHolidayModal);
+    document.getElementById('holidayModalClose').addEventListener('click', closeHolidayModal);
+    document.getElementById('removeHolidayBtn').addEventListener('click', removeTakeHoliday);
+    document.getElementById('holidayModal').addEventListener('click', function(e) {
+        if (e.target === this) closeHolidayModal();
+    });
+    document.getElementById('holidaySearch').addEventListener('input', debounce(function() {
+        renderHolidays(this.value);
+    }, 250));
+    document.getElementById('previewBtn').addEventListener('click', previewTakeAttendance);
+    document.getElementById('submitAttendanceBtn').addEventListener('click', submitTakeAttendance);
+
+    document.getElementById('updateHolidayBtn').addEventListener('click', function() {
+        document.getElementById('holidayModal').classList.add('active');
+        document.getElementById('holidaySearch').value = '';
+        renderHolidays('');
+        document.querySelectorAll('.holiday-option').forEach(el => {
+            el.removeEventListener('click', applyUpdateHoliday);
+            el.addEventListener('click', function() {
+                applyUpdateHoliday(JSON.parse(this.dataset.holiday));
+            });
+        });
+        setTimeout(() => document.getElementById('holidaySearch').focus(), 100);
+    });
+    document.getElementById('updateRemoveHolidayBtn').addEventListener('click', removeUpdateHoliday);
+    document.getElementById('updatePreviewBtn').addEventListener('click', previewUpdateAttendance);
+    document.getElementById('updateAttendanceBtn').addEventListener('click', submitUpdateAttendance);
+    document.getElementById('updateSearchInput').addEventListener('input', debounce(renderUpdateTable, 300));
+
+    document.getElementById('advRefreshBtn').addEventListener('click', () => { clearCache('advAttendanceData'); refreshAdvData(); });
+    document.getElementById('advRefreshBtn2').addEventListener('click', () => { clearCache('advAttendanceData'); refreshAdvData(); });
+    document.getElementById('advSearchInput').addEventListener('input', debounce(renderAdvTable, 300));
+
+    document.getElementById('advDetailBackBtn').addEventListener('click', function() {
+        window._advAllRecords = null;
+        window._advSelectedStudent = null;
+        window._advFilteredRecords = null;
+        window._studentMonthData = null;
+        switchPage('dashboard');
+        loadDashboard();
+    });
+
+    document.getElementById('advAttendanceFilter').addEventListener('change', function() {
+        if (document.getElementById('pageAdvDetail').classList.contains('active-page')) {
+            applyAdvFiltersFromDashboard();
+        }
+    });
+    document.getElementById('advMonthFilter').addEventListener('change', function() {
+        if (document.getElementById('pageAdvDetail').classList.contains('active-page')) {
+            applyAdvFiltersFromDashboard();
+        }
+    });
+
+    document.getElementById('monthAttendanceModalClose').addEventListener('click', function() {
+        document.getElementById('monthAttendanceModal').classList.remove('active');
+    });
+    document.getElementById('monthAttendanceCloseBtn').addEventListener('click', function() {
+        document.getElementById('monthAttendanceModal').classList.remove('active');
+    });
+    document.getElementById('monthAttendanceModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+    document.getElementById('monthAttendanceSearch').addEventListener('input', debounce(renderMonthAttendanceTable, 300));
+    document.getElementById('monthAttendanceFilter').addEventListener('change', function() {
+        const selectedMonth = this.value;
+        if (selectedMonth === 'all') {
+            renderMonthAttendanceTable();
+        } else {
+            loadMonthAttendanceDataForMonth(selectedMonth);
+        }
+    });
+
+    document.getElementById('viewTodayModalClose').addEventListener('click', function() {
+        document.getElementById('viewTodayModal').classList.remove('active');
+    });
+    document.getElementById('viewTodayCloseBtn').addEventListener('click', function() {
+        document.getElementById('viewTodayModal').classList.remove('active');
+    });
+    document.getElementById('viewTodayModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+    document.getElementById('whatsappCopyBtn').addEventListener('click', copyWhatsAppFromModal);
+
+    // ── Keyboard shortcuts ──
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'r') {
+            e.preventDefault();
+            const activePage = document.querySelector('.page.active-page');
+            if (activePage) {
+                const id = activePage.id;
+                if (id === 'pageDashboard') refreshDashboard(false);
+                else if (id === 'pageTakeAttendance') loadTakeStudents();
+                else if (id === 'pageUpdateAttendance') {
+                    if (updateSelectedDate) {
+                        const cacheKey = `updateAttendance_${getCurrentMonth()}_${updateSelectedDate}`;
+                        clearCache(cacheKey);
+                        loadUpdateAttendance(updateSelectedDate);
+                    }
+                } else if (id === 'pageAdvAttendance') { clearCache('advAttendanceData'); refreshAdvData(); }
+            }
+        }
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('holidayModal');
+            if (modal.classList.contains('active')) {
+                closeHolidayModal();
+            } else {
+                const viewTodayModal = document.getElementById('viewTodayModal');
+                if (viewTodayModal.classList.contains('active')) {
+                    viewTodayModal.classList.remove('active');
+                    return;
+                }
+                const monthModal = document.getElementById('monthAttendanceModal');
+                if (monthModal.classList.contains('active')) {
+                    monthModal.classList.remove('active');
+                    return;
+                }
+                const activePage = document.querySelector('.page.active-page');
+                if (activePage) {
+                    const id = activePage.id;
+                    if (id === 'pageTakeAttendance' || id === 'pageUpdateAttendance' || id === 'pageAdvDetail') {
+                        switchPage('dashboard');
+                        loadDashboard();
+                    } else if (id === 'pageAdvAttendance') {
+                        switchPage('dashboard');
+                        loadDashboard();
+                    }
+                }
+            }
+        }
+    });
+
+    // ── Initial data loads ──
+    loadDashboard();
+    setTimeout(() => loadAdvanceDataInBackground(), 1000);
+}
+
+
+(function bootstrap() {
+    syncThemeWithParent();
+
+    const startWhenReady = () => {
+        setTimeout(() => {
+            gateAdminAccess(() => initApp());
+        }, 800);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    // Failsafe redirect
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 5000);
+})();
+
+
+/* =====================================================================
+   SECTION 25 — WINDOW EXPORTS
+   ===================================================================== */
+
+window.switchPage = switchPage;
+window.navigateToTakeAttendance = navigateToTakeAttendance;
+window.navigateToUpdateAttendance = navigateToUpdateAttendance;
+window.navigateToAdvAttendance = navigateToAdvAttendance;
+window.showAdvDetail = showAdvDetail;
+window.applyUpdateHoliday = applyUpdateHoliday;
+window.removeUpdateHoliday = removeUpdateHoliday;
+window.closeHolidayModal = closeHolidayModal;
+window.openHolidayModal = openHolidayModal;
+window.renderHolidays = renderHolidays;
+window.removeTakeHoliday = removeTakeHoliday;
+window.copyWhatsApp = copyWhatsAppFromModal;
+window.showDashboardStudentDetail = showDashboardStudentDetail;
+window.syncThemeWithParent = syncThemeWithParent;
+window.applyAdvFiltersFromDashboard = applyAdvFiltersFromDashboard;
+window.retryFetchStudent = retryFetchStudent;
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+
+console.log('✅ Attendance Management System loaded successfully');
+console.log(`📋 ${HOLIDAYS.length} holidays loaded`);
+</script>
+
+</body>
+</html>

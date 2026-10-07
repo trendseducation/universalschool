@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<title>📝 Universal School | Add Manual Marks</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<script>
+/* Prevent FOUC — shares key with TeacherDashboard.html */
+(function () {
+    try {
+        var t = localStorage.getItem('user-theme-preference') || 'light';
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+</script>
+
+<style>
+/* ============================================================
+   THEME VARIABLES — Teacher Green / Yellow / White
+   ============================================================ */
+:root {
+    --bg-body:      #f3faf8;
+    --bg-card:      #ffffff;
+    --bg-header:    #ffffff;
+    --bg-soft:      #f0f8f6;
+    --text-main:    #0f172a;
+    --text-muted:   #5b6e8c;
+    --text-light:   #94a3b8;
+    --border-light: #d9e8e5;
+
+    --shadow-sm:    0 10px 28px -12px rgba(13, 148, 136, 0.14);
+    --shadow-hover: 0 22px 44px -18px rgba(13, 148, 136, 0.26);
+
+    --accent:       #0d9488;
+    --accent-2:     #14b8a6;
+    --accent-soft:  rgba(13, 148, 136, 0.10);
+    --accent-glow:  rgba(13, 148, 136, 0.35);
+
+    --gold:         #f59e0b;
+    --gold-2:       #fbbf24;
+    --gold-soft:    rgba(245, 158, 11, 0.12);
+    --gold-border:  rgba(245, 158, 11, 0.45);
+
+    --success:      #10b981;
+    --success-soft: rgba(16, 185, 129, 0.12);
+    --danger:       #ef4444;
+    --danger-soft:  rgba(239, 68, 68, 0.10);
+
+    --card-border:  1px solid rgba(13, 148, 136, 0.08);
+    --input-bg:     #f6faf9;
+    --input-border: #d9e8e5;
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+}
+[data-theme="dark"] {
+    --bg-body:      #061714;
+    --bg-card:      #0f2624;
+    --bg-header:    #0b1f1d;
+    --bg-soft:      #0b1f1d;
+    --text-main:    #f1f5f9;
+    --text-muted:   #9ca3af;
+    --text-light:   #64748b;
+    --border-light: #1e3b38;
+
+    --shadow-sm:    0 10px 30px -12px rgba(0, 0, 0, 0.6);
+    --shadow-hover: 0 22px 44px -18px rgba(0, 0, 0, 0.85);
+
+    --accent:       #14b8a6;
+    --accent-2:     #2dd4bf;
+    --accent-soft:  rgba(20, 184, 166, 0.18);
+    --accent-glow:  rgba(20, 184, 166, 0.45);
+
+    --gold:         #fbbf24;
+    --gold-2:       #fcd34d;
+    --gold-soft:    rgba(251, 191, 36, 0.18);
+    --gold-border:  rgba(251, 191, 36, 0.5);
+
+    --success:      #10b981;
+    --success-soft: rgba(16, 185, 129, 0.18);
+    --danger:       #ef4444;
+    --danger-soft:  rgba(239, 68, 68, 0.18);
+
+    --card-border:  1px solid rgba(20, 184, 166, 0.10);
+    --input-bg:     #143531;
+    --input-border: #1e3b38;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    transition: background var(--transition-normal), color var(--transition-normal);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes stdFocusPulse {
+    0%   { box-shadow: 0 0 0 0 var(--gold-border), 0 0 0 4px var(--accent-soft); }
+    70%  { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0), 0 0 0 4px var(--accent-soft); }
+    100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0), 0 0 0 4px var(--accent-soft); }
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 3px solid var(--border-light);
+    border-top: 3px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app-wrapper { max-width: 960px; margin: 0 auto; animation: fadeIn 0.4s ease-out; }
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: var(--bg-header);
+    padding: 0.6rem 1.5rem;
+    border-radius: 60px;
+    border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.6rem;
+    transition: background var(--transition-normal);
+    position: sticky;
+    top: 8px;
+    z-index: 100;
+}
+.brand-area { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-logo { height: 42px; width: auto; object-fit: contain; flex-shrink: 0; }
+[data-theme="dark"] .brand-logo { filter: brightness(0) invert(1); }
+.brand-text {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -0.015em;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.teacher-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-soft); color: var(--accent);
+    padding: 0.25rem 0.85rem; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.5px; border: 1px solid var(--accent-soft);
+}
+.teacher-badge i { color: var(--accent-2); }
+.top-actions { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+
+.my-account-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-soft); border: 1px solid var(--border-light);
+    border-radius: 999px; padding: 3px 12px 3px 3px;
+    cursor: pointer; transition: all 260ms ease; color: var(--text-main);
+    flex-shrink: 0; font-size: 0.78rem; font-weight: 700;
+}
+.my-account-pill:hover {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    transform: translateY(-2px); box-shadow: 0 10px 24px -10px var(--accent-glow);
+}
+.my-account-pill .pill-thumb {
+    width: 28px; height: 28px; border-radius: 50%; object-fit: cover;
+    background: var(--bg-soft); border: 2px solid var(--bg-card); flex-shrink: 0;
+}
+.my-account-pill:hover .pill-thumb { border-color: rgba(255,255,255,0.6); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+    border: none; padding: 0.7rem 1.5rem; border-radius: 40px;
+    font-weight: 700; font-size: 0.88rem; cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex; align-items: center; gap: 8px;
+    position: relative; overflow: hidden; font-family: inherit; text-decoration: none;
+}
+.btn::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 0; height: 0; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%); transition: width 0.6s, height 0.6s;
+}
+.btn:active::before { width: 300px; height: 300px; }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white; box-shadow: 0 8px 20px -10px var(--accent-glow);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -10px var(--accent-glow); }
+
+.btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+.btn-outline:hover { background: var(--accent); color: white; transform: translateY(-2px); }
+.btn-sm { padding: 0.45rem 1rem; font-size: 0.75rem; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+
+/* ============================================================
+   PAGE HERO
+   ============================================================ */
+.page-hero {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 55%, var(--gold) 140%);
+    color: #ffffff; border-radius: 28px;
+    padding: 1.6rem 1.8rem; margin-bottom: 1.4rem;
+    position: relative; overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.page-hero::after {
+    content: ''; position: absolute; right: -70px; top: -70px;
+    width: 240px; height: 240px; background: rgba(255,255,255,0.10); border-radius: 50%;
+}
+.page-hero h1 {
+    font-size: clamp(1.35rem, 2.6vw, 1.8rem); font-weight: 800;
+    letter-spacing: -0.02em; display: flex; align-items: center; gap: 12px;
+    position: relative; z-index: 1;
+}
+.page-hero h1 i {
+    background: rgba(255,255,255,0.20); width: 46px; height: 46px;
+    border-radius: 14px; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 1.25rem;
+    border: 1px solid rgba(255,255,255,0.28);
+}
+.page-hero p {
+    margin-top: 6px; font-size: 0.88rem; opacity: 0.95;
+    position: relative; z-index: 1; max-width: 640px;
+}
+
+/* ============================================================
+   FORM CARD
+   ============================================================ */
+.form-card {
+    background: var(--bg-card); border-radius: 28px;
+    border: var(--card-border); box-shadow: var(--shadow-sm);
+    padding: 1.6rem 1.6rem 1.8rem;
+    animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.form-section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.82rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--accent); margin: 0.4rem 0 1rem;
+}
+.form-section-title i {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;
+}
+.form-divider {
+    height: 1px; background: var(--border-light);
+    margin: 1.2rem 0 1.4rem; border: 0;
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-grid .fullwidth { grid-column: 1 / -1; }
+
+.form-group {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 0.2rem;
+}
+.form-group label {
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--accent);
+    display: flex; align-items: center; gap: 5px;
+}
+.form-group label small {
+    font-weight: 600; text-transform: none; letter-spacing: 0;
+    color: var(--text-light); font-size: 0.68rem;
+}
+.form-group input,
+.form-group select {
+    padding: 0.7rem 1rem; border-radius: 14px;
+    border: 2px solid var(--input-border); background: var(--input-bg);
+    color: var(--text-main); font-size: 0.95rem;
+    transition: all var(--transition-fast); font-family: inherit; width: 100%;
+}
+.form-group input:focus,
+.form-group select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.form-group input:disabled,
+.form-group input[readonly] { cursor: not-allowed; }
+
+.form-group.calc-readonly input,
+.form-group.calc-readonly select {
+    background: var(--accent-soft) !important;
+    font-weight: 800; cursor: not-allowed; color: var(--accent);
+}
+.form-group input.status-pass-input { color: var(--success) !important; font-weight: 800 !important; }
+.form-group input.status-fail-input { color: var(--danger)  !important; font-weight: 800 !important; }
+.form-group input.remarks-input { font-weight: 600 !important; }
+
+/* ✨ NEW: Std field focus pulse */
+.form-group.std-focus-pulse input {
+    animation: stdFocusPulse 1.4s ease-out 1;
+    border-color: var(--gold) !important;
+}
+
+.student-select-btn { display: flex; gap: 8px; align-items: stretch; }
+.student-select-btn input {
+    flex: 1; cursor: pointer; background: var(--accent-soft); font-weight: 700;
+}
+.student-select-btn .btn {
+    padding: 0.6rem 1.1rem; border-radius: 14px; flex: 0 0 auto;
+}
+
+.form-actions {
+    display: flex; gap: 0.8rem; justify-content: flex-end;
+    margin-top: 1.6rem; flex-wrap: wrap;
+}
+.form-actions .btn { min-width: 140px; justify-content: center; }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(10px);
+    z-index: 2000; display: none; align-items: center; justify-content: center;
+    padding: 1.5rem; visibility: hidden; opacity: 0;
+    transition: all var(--transition-normal);
+}
+.modal-overlay.active { display: flex; visibility: visible; opacity: 1; }
+
+.modal-box {
+    background: var(--bg-card); border-radius: 32px;
+    max-width: 640px; width: 100%; max-height: 90vh;
+    overflow: hidden; border: var(--card-border);
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.45);
+    animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex; flex-direction: column;
+}
+.modal-header {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    padding: 1.1rem 1.4rem; display: flex; justify-content: space-between;
+    align-items: center; color: white; flex-shrink: 0;
+}
+.modal-header h3 { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.modal-close {
+    background: rgba(255,255,255,0.18); border: none; font-size: 1.4rem;
+    cursor: pointer; color: white;
+    transition: transform var(--transition-fast), background var(--transition-fast);
+    line-height: 1; width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { transform: rotate(90deg); background: rgba(255,255,255,0.32); }
+.modal-body { padding: 1.4rem; overflow-y: auto; }
+
+.search-wrapper { position: relative; }
+.search-wrapper input {
+    width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border-radius: 60px; border: 2px solid var(--input-border);
+    background: var(--input-bg); color: var(--text-main);
+    font-size: 0.9rem; font-family: inherit; transition: all var(--transition-fast);
+}
+.search-wrapper input:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.search-wrapper i {
+    position: absolute; left: 0.9rem; top: 50%;
+    transform: translateY(-50%); color: var(--text-light);
+    font-size: 0.85rem; pointer-events: none;
+}
+
+.student-list {
+    max-height: 400px; overflow-y: auto; margin-top: 1rem;
+    border-radius: 16px; border: 1px solid var(--border-light);
+}
+.student-item {
+    padding: 0.85rem 1rem; border-bottom: 1px solid var(--border-light);
+    cursor: pointer; transition: all var(--transition-fast);
+    display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
+}
+.student-item:last-child { border-bottom: none; }
+.student-item:hover { background: var(--accent-soft); }
+.student-item .std-badge {
+    font-size: 0.7rem; padding: 3px 10px; border-radius: 20px;
+    background: var(--gold-soft); color: var(--gold); font-weight: 800;
+    border: 1px solid var(--gold-border); white-space: nowrap;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.alert-popup {
+    position: fixed; bottom: 40px; right: 30px;
+    background: var(--bg-card); border-left: 5px solid var(--accent);
+    padding: 16px 24px; box-shadow: var(--shadow-hover);
+    border-radius: 0 16px 16px 0; font-weight: 700; font-size: 0.95rem;
+    z-index: 3000; display: none; animation: slideIn 0.3s ease-out;
+    color: var(--text-main); max-width: 400px;
+}
+.alert-popup.success { border-left-color: var(--success); }
+.alert-popup.error   { border-left-color: var(--danger); }
+.alert-popup.warning { border-left-color: var(--gold); }
+
+/* ============================================================
+   LOADING / EMPTY
+   ============================================================ */
+.loading-container, .empty-container {
+    text-align: center; padding: 24px 20px; color: var(--text-muted);
+}
+.loading-spinner {
+    width: 34px; height: 34px; border: 4px solid var(--border-light);
+    border-top: 4px solid var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 10px;
+}
+.empty-icon { font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.6; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 820px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .top-bar { padding: 0.6rem 1rem; border-radius: 32px; }
+    .brand-text { font-size: 1.1rem; }
+    .brand-logo { height: 36px; }
+    .form-card { padding: 1.3rem 1.15rem 1.5rem; border-radius: 24px; }
+    .page-hero { border-radius: 24px; padding: 1.3rem 1.4rem; }
+    .alert-popup { bottom: 70px; right: 15px; left: 15px; max-width: none; }
+}
+@media (max-width: 480px) {
+    body { padding: 12px; }
+    .top-bar { padding: 0.4rem 0.8rem; border-radius: 24px; }
+    .brand-text { font-size: 0.98rem; }
+    .brand-logo { height: 32px; }
+    .teacher-badge { display: none; }
+    .modal-box { border-radius: 26px; }
+    .modal-header { padding: 1rem 1.2rem; }
+    .modal-header h3 { font-size: 1rem; }
+    .modal-body { padding: 1.1rem; }
+    .btn { padding: 0.6rem 1.1rem; font-size: 0.82rem; }
+    .form-actions .btn { min-width: 0; flex: 1; }
+    .form-actions { flex-direction: row-reverse; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+    <!-- ===================== TOP BAR ===================== -->
+    <header class="top-bar">
+        <div class="brand-area">
+            <img class="brand-logo"
+                 src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                 alt="Universal School logo">
+            <span class="brand-text">Universal School</span>
+            <span class="teacher-badge"><i class="fas fa-chalkboard-teacher"></i> Teacher</span>
+        </div>
+        <div class="top-actions">
+            <button onclick="handleLogout()" class="btn btn-outline btn-sm" type="button">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            <a href="../../Study Material/My Account/myaccount.html"
+               class="my-account-pill" title="My Account">
+                <img class="pill-thumb"
+                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%230d9488'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%23fff' opacity='0.85'/%3E%3Cellipse cx='20' cy='34' rx='12' ry='10' fill='%23fff' opacity='0.85'/%3E%3C/svg%3E"
+                     alt="Me" width="28" height="28">
+                <span>My Account</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===================== PAGE HERO ===================== -->
+    <section class="page-hero">
+        <h1><i class="fas fa-pen-fancy"></i> Add Manual Marks</h1>
+        <p>Enter exam details and subject-wise marks for 8<sup>th</sup>, 9<sup>th</sup> or 10<sup>th</sup> standard students.
+           Obtain Marks, Percentage, Status and Remarks are calculated automatically.</p>
+    </section>
+
+    <!-- ===================== FORM CARD ===================== -->
+    <section class="form-card">
+        <form id="examForm">
+
+            <div class="form-section-title">
+                <i class="fas fa-info-circle"></i> Exam Details
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Date *</label>
+                    <input type="date" id="f_Date" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-file-alt"></i> Test Name *</label>
+                    <input type="text" id="f_Test_Name"
+                           placeholder="e.g. Unit Test 1, Prelim, Final" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-user-graduate"></i> Student Name *</label>
+                    <div class="student-select-btn">
+                        <input type="text" id="f_Student_Name"
+                               placeholder="Click to select student"
+                               readonly required>
+                        <button type="button" class="btn btn-outline btn-sm" id="selectStudentBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group" id="stdFieldGroup">
+                    <label><i class="fas fa-graduation-cap"></i> Std *</label>
+                    <input type="text" id="f_Std" readonly required
+                           style="background:var(--accent-soft);font-weight:800;color:var(--accent);">
+                </div>
+
+                <div class="form-group calc-readonly fullwidth">
+                    <label><i class="fas fa-flag"></i> Status <small>(auto)</small></label>
+                    <select id="f_Status">
+                        <option value="">— Auto —</option>
+                        <option value="Pass">Pass</option>
+                        <option value="Fail">Fail</option>
+                    </select>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+
+            <div class="form-section-title">
+                <i class="fas fa-book-open"></i> Subject Marks
+            </div>
+
+            <div class="form-grid" id="subjectFieldsContainer">
+                <!-- Subject fields injected by JS -->
+            </div>
+
+            <hr class="form-divider">
+
+            <div class="form-section-title">
+                <i class="fas fa-calculator"></i> Result Summary
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group calc-readonly">
+                    <label><i class="fas fa-star"></i> Obtain Marks <small>(auto-sum)</small></label>
+                    <input type="number" step="0.01" id="f_Obtain_Marks"
+                           placeholder="Auto-calculated" readonly>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-star-half-alt"></i> Total Marks</label>
+                    <input type="number" step="0.01" id="f_Total_Marks"
+                           placeholder="Enter total marks">
+                </div>
+
+                <div class="form-group calc-readonly">
+                    <label><i class="fas fa-percent"></i> Percentage (%) <small>(auto)</small></label>
+                    <input type="text" id="f_Percentage"
+                           placeholder="Auto-calculated" readonly>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-comment-dots"></i> Remarks <small>(auto — editable)</small></label>
+                    <input type="text" id="f_Remarks" class="remarks-input"
+                           placeholder="Auto-generated">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="resetFormBtn" class="btn btn-outline">
+                    <i class="fas fa-rotate-left"></i> Reset
+                </button>
+                <button type="submit" id="saveFormBtn" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Record
+                </button>
+            </div>
+        </form>
+    </section>
+
+</div>
+
+<!-- ===================== STUDENT SELECTOR MODAL ===================== -->
+<div id="studentSelectorModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-graduate"></i> Select Student</h3>
+            <button class="modal-close" id="closeStudentSelectorBtn" type="button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="studentSearchInput" placeholder="Search student by name...">
+            </div>
+            <div id="studentListContainer" class="student-list">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading students...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== TOAST ===================== -->
+<div id="alertBox" class="alert-popup" role="status" aria-live="polite">Message...</div>
+
+<script>
+'use strict';
+// ================================================================
+// 📝 Universal School | Add Manual Marks — Teacher Edition v2
+// ================================================================
+// ✨ Enhancements:
+//   • Student pick → auto-focus + pulse Std field, then Tab flows
+//     directly into the first subject input.
+//   • Reworked SUBJECT_CONFIG: subjectsByStd whitelist + smart
+//     resolveStdKey() that accepts STD_8 / 8th Std / 8th_Std / VIII…
+// ================================================================
+
+// ================================================================
+// 🔐 TEACHER AUTH (shares session with TeacherDashboard.html)
+// ================================================================
+const SESSION_KEYS = {
+    USER: 'Universal_user',
+    USER_DATA: 'Universal_user_data',
+    USER_TYPE: 'Universal_user_type',
+    REMEMBER_ME: 'Universal_remember_me',
+    SESSION_EXPIRY: 'Universal_session_expiry'
+};
+const THEME_KEY = 'user-theme-preference';
+
+function readSessionValue(key) {
+    const localRaw = localStorage.getItem(key);
+    if (localRaw) {
+        try {
+            const parsed = JSON.parse(localRaw);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key);
+                    return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        } catch (e) { return localRaw; }
+    }
+    const s = sessionStorage.getItem(key);
+    if (s) { try { return JSON.parse(s); } catch (e) { return s; } }
+    return null;
+}
+
+function normalizeEmail(v) { return (v || '').toString().trim().toLowerCase(); }
+
+function isRememberMeActive() {
+    const rememberMe = localStorage.getItem(SESSION_KEYS.REMEMBER_ME);
+    if (rememberMe) {
+        try {
+            const parsed = JSON.parse(rememberMe);
+            return parsed.value === true && Date.now() < parsed.expiry;
+        } catch (e) { return false; }
+    }
+    return false;
+}
+function getSessionExpiryTime() {
+    const expiryData = localStorage.getItem(SESSION_KEYS.SESSION_EXPIRY);
+    if (expiryData) {
+        try {
+            const parsed = JSON.parse(expiryData);
+            if (Date.now() < parsed.expiry) return parsed.value;
+        } catch (e) {}
+    }
+    return null;
+}
+function clearAllSessionData() {
+    Object.values(SESSION_KEYS).forEach(key => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+    });
+}
+function checkTeacherAuth() {
+    const userType = readSessionValue(SESSION_KEYS.USER_TYPE);
+    const email = normalizeEmail(readSessionValue(SESSION_KEYS.USER) || '');
+
+    if (userType !== 'teacher' || !email) {
+        if (userType === 'admin' || userType === 'student') {
+            showToast('⚠️ Teacher login required.', 'warning');
+        }
+        try { sessionStorage.setItem('redirect_after_login', window.location.href); } catch (e) {}
+        setTimeout(() => {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }, 1400);
+        return false;
+    }
+    return true;
+}
+function handleLogout() {
+    clearAllSessionData();
+    window.location.href = '../../Study Material/My Account/myaccount.html';
+}
+setInterval(() => {
+    const expiry = getSessionExpiryTime();
+    if (expiry && Date.now() > expiry) {
+        clearAllSessionData();
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}, 60000);
+
+// ================================================================
+// 🎨 THEME
+// ================================================================
+function applyTheme(theme) {
+    const t = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+    document.body.setAttribute('data-theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#061714' : '#0d9488');
+}
+function syncTheme() {
+    const localTheme = localStorage.getItem(THEME_KEY) || 'light';
+    applyTheme(localTheme);
+}
+window.addEventListener('storage', (e) => {
+    if (e.key === THEME_KEY && e.newValue) applyTheme(e.newValue);
+});
+window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'themeChange' && e.data.theme) applyTheme(e.data.theme);
+});
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        const latest = localStorage.getItem(THEME_KEY);
+        if (latest) applyTheme(latest);
+    }
+});
+
+// ================================================================
+// ✅ CONFIG
+// ================================================================
+const CONFIG = {
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec',
+    SPREADSHEET_ID: '1YfaWnYWui_khZno0E2zfbPdQtFXCBrc0Y65zc1xoNsE',
+    SHEET_NAME: '8-9-10_Std',
+    STUDENT_SHEETS: ['STD_8', 'STD_9', 'STD_10'],
+    STUDENT_SPREADSHEET_ID: '1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8'
+};
+
+// ================================================================
+// ✅ ENHANCED SUBJECT CONFIGURATION
+// ================================================================
+// Keyed by canonical std key ('8th_Std' etc). resolveStdKey() maps
+// any variation (STD_8, 8th Std, VIII, 8) to a canonical key.
+// ================================================================
+const SUBJECT_CONFIG = {
+    // Master list of every subject the school ever uses.
+    allSubjects: [
+        'English', 'Hindi', 'Marathi',
+        'History & Civics', 'History', 'Political Science', 'Geography',
+        'Science', 'Science Part 1', 'Science Part 2',
+        'Maths', 'Maths Part 1', 'Maths Part 2'
+    ],
+
+    // 🎯 Whitelist per std — cleaner than subtracting a hidden list.
+    subjectsByStd: {
+        '8th_Std': [
+            'English', 'Hindi', 'Marathi',
+            'History & Civics', 'Geography',
+            'Science', 'Maths'
+        ],
+        '9th_Std': [
+            'English', 'Hindi', 'Marathi',
+            'History & Civics', 'Geography',
+            'Science', 'Maths'
+        ],
+        '10th_Std': [
+            'English', 'Hindi', 'Marathi',
+            'Geography',
+            'History', 'Political Science',
+            'Science Part 1', 'Science Part 2',
+            'Maths Part 1', 'Maths Part 2'
+        ]
+    },
+
+    // Kept for backwards compatibility — anything here is *removed*
+    // from allSubjects when the std is unknown.
+    hiddenSubjects: {
+        '8th_Std':  ['History', 'Political Science', 'Science Part 1', 'Science Part 2', 'Maths Part 1', 'Maths Part 2'],
+        '9th_Std':  ['History', 'Political Science', 'Science Part 1', 'Science Part 2', 'Maths Part 1', 'Maths Part 2'],
+        '10th_Std': ['History & Civics', 'Science', 'Maths']
+    },
+
+    // Pretty labels + emoji icons for each subject
+    displayNames: {
+        'English':          'English',
+        'Hindi':            'Hindi',
+        'Marathi':          'Marathi',
+        'History & Civics': 'History & Civics',
+        'History':          'History',
+        'Political Science':'Political Science',
+        'Geography':        'Geography',
+        'Science':          'Science',
+        'Science Part 1':   'Science Part 1',
+        'Science Part 2':   'Science Part 2',
+        'Maths':            'Maths',
+        'Maths Part 1':     'Maths Part 1',
+        'Maths Part 2':     'Maths Part 2'
+    },
+
+    // Canonical aliases — every variation maps to a canonical key.
+    stdAliases: {
+        '8': '8th_Std', '8th': '8th_Std', 'viii': '8th_Std',
+        'std8': '8th_Std', 'std_8': '8th_Std', '8th_std': '8th_Std',
+        '8th std': '8th_Std', '8 std': '8th_Std',
+        '9': '9th_Std', '9th': '9th_Std', 'ix': '9th_Std',
+        'std9': '9th_Std', 'std_9': '9th_Std', '9th_std': '9th_Std',
+        '9th std': '9th_Std', '9 std': '9th_Std',
+        '10': '10th_Std', '10th': '10th_Std', 'x': '10th_Std',
+        'std10': '10th_Std', 'std_10': '10th_Std', '10th_std': '10th_Std',
+        '10th std': '10th_Std', '10 std': '10th_Std'
+    },
+
+    // 🌟 Resolve any std string to a canonical key.
+    resolveStdKey(input) {
+        if (!input) return '';
+        const raw = String(input).trim().toLowerCase();
+        if (!raw) return '';
+        if (SUBJECT_CONFIG.stdAliases[raw]) return SUBJECT_CONFIG.stdAliases[raw];
+
+        // Also try stripping spaces / dashes / dots
+        const compact = raw.replace(/[\s._-]/g, '');
+        if (SUBJECT_CONFIG.stdAliases[compact]) return SUBJECT_CONFIG.stdAliases[compact];
+
+        // Fallback: look for a bare number
+        const m = raw.match(/\b(8|9|10)\b/);
+        if (m) return m[1] + 'th_Std';
+
+        return '';
+    },
+
+    // 🌟 Return the ordered list of subjects for a std (whitelist first,
+    //    then subtractive fallback if the std is unknown).
+    getSubjects(std) {
+        const key = SUBJECT_CONFIG.resolveStdKey(std);
+        if (key && SUBJECT_CONFIG.subjectsByStd[key]) {
+            // Keep master order intact
+            const allowed = SUBJECT_CONFIG.subjectsByStd[key];
+            return SUBJECT_CONFIG.allSubjects.filter(s => allowed.includes(s));
+        }
+        // Unknown std → use all, minus hidden if we somehow know it
+        const hidden = (key && SUBJECT_CONFIG.hiddenSubjects[key]) || [];
+        return SUBJECT_CONFIG.allSubjects.filter(s => !hidden.includes(s));
+    },
+
+    // 🌟 Get the pretty label for a subject
+    getDisplayName(subject) {
+        return SUBJECT_CONFIG.displayNames[subject] || subject;
+    }
+};
+
+// ================================================================
+// STD DISPLAY HELPERS
+// ================================================================
+const STD_DISPLAY_MAP = {
+    'STD_8': '8th Std', 'STD_9': '9th Std', 'STD_10': '10th Std',
+    '8th Std': '8th Std', '9th Std': '9th Std', '10th Std': '10th Std',
+    '8th_Std': '8th Std', '9th_Std': '9th Std', '10th_Std': '10th Std'
+};
+function stdDisplayName(std) {
+    if (!std) return '—';
+    return STD_DISPLAY_MAP[std] || std;
+}
+
+// ================================================================
+// STATE
+// ================================================================
+let allStudents = {};
+let selectedStudent = null;
+let selectedStd = '';
+let saveInProgress = false;
+let searchDebounceTimer = null;
+let studentSelectorResolve = null;
+
+// ================================================================
+// DOM
+// ================================================================
+const $ = (id) => document.getElementById(id);
+const dom = {
+    form: $('examForm'),
+    date: $('f_Date'),
+    testName: $('f_Test_Name'),
+    studentName: $('f_Student_Name'),
+    std: $('f_Std'),
+    stdFieldGroup: $('stdFieldGroup'),
+    status: $('f_Status'),
+    obtainMarks: $('f_Obtain_Marks'),
+    totalMarks: $('f_Total_Marks'),
+    percentage: $('f_Percentage'),
+    remarks: $('f_Remarks'),
+    subjectContainer: $('subjectFieldsContainer'),
+    selectStudentBtn: $('selectStudentBtn'),
+    resetFormBtn: $('resetFormBtn'),
+    saveFormBtn: $('saveFormBtn'),
+    studentSelectorModal: $('studentSelectorModal'),
+    studentListContainer: $('studentListContainer'),
+    studentSearchInput: $('studentSearchInput'),
+    closeStudentSelectorBtn: $('closeStudentSelectorBtn'),
+    alertBox: $('alertBox')
+};
+
+// ================================================================
+// UTILITIES
+// ================================================================
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+}
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4200);
+}
+function showSpinner(element, show, customHtml = null) {
+    if (!element) return;
+    if (show) {
+        element.disabled = true;
+        const originalText = element.innerHTML;
+        element.setAttribute('data-original-text', originalText);
+        element.innerHTML = customHtml || '<span class="spinner"></span> Loading...';
+    } else {
+        element.disabled = false;
+        const original = element.getAttribute('data-original-text');
+        if (original) element.innerHTML = original;
+    }
+}
+
+// ================================================================
+// ✨ STD FOCUS HELPER
+// ================================================================
+// When a student is picked we pulse + focus the Std field so the
+// teacher immediately sees their standard, and Tab flows straight
+// into the first subject input.
+function focusStdField() {
+    const stdEl = dom.std;
+    const group = dom.stdFieldGroup;
+    if (!stdEl) return;
+
+    // Add pulse animation class, remove after it finishes
+    if (group) {
+        group.classList.remove('std-focus-pulse');
+        // Force reflow so the animation can restart
+        void group.offsetWidth;
+        group.classList.add('std-focus-pulse');
+        setTimeout(() => group.classList.remove('std-focus-pulse'), 1600);
+    }
+
+    // Focus + select so typing overrides immediately
+    try {
+        stdEl.focus({ preventScroll: false });
+        stdEl.select?.();
+    } catch (e) { /* focus() with options is unsupported on old browsers */ }
+
+    // Smooth-scroll the Std field into view if it's off screen
+    try {
+        stdEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (e) { /* noop */ }
+}
+
+// ================================================================
+// ✨ FOCUS FIRST SUBJECT (for after Std confirmation / Enter)
+// ================================================================
+function focusFirstSubject() {
+    const container = dom.subjectContainer;
+    if (!container) return;
+    const firstInput = container.querySelector('input[type="number"]');
+    if (firstInput) {
+        try {
+            firstInput.focus();
+            firstInput.select?.();
+        } catch (e) {}
+    }
+}
+
+// ================================================================
+// AUTO-CALC
+// ================================================================
+const PASS_PERCENTAGE = 40;
+
+function calculateObtainMarks(std) {
+    const subjects = SUBJECT_CONFIG.getSubjects(std);
+    let total = 0;
+    subjects.forEach(subject => {
+        const inputId = 'f_' + subject.replace(/[& ]/g, '_');
+        const el = document.getElementById(inputId);
+        if (!el) return;
+        const v = parseFloat(el.value);
+        if (!isNaN(v) && v > 0) total += v;
+    });
+    return total;
+}
+function calculateStatus(obtain, total) {
+    const o = parseFloat(obtain);
+    const t = parseFloat(total);
+    if (isNaN(o) || isNaN(t) || t <= 0) return '';
+    return ((o / t) * 100) >= PASS_PERCENTAGE ? 'Pass' : 'Fail';
+}
+function calculatePercentage(obtain, total) {
+    const o = parseFloat(obtain);
+    const t = parseFloat(total);
+    if (isNaN(o) || isNaN(t) || t <= 0) return '';
+    return ((o / t) * 100).toFixed(2);
+}
+function calculateRemarks(obtain, total) {
+    const o = parseFloat(obtain);
+    const t = parseFloat(total);
+    if (isNaN(o) || isNaN(t) || t <= 0) return '';
+    const pct = (o / t) * 100;
+    if (pct < 30) return 'Need more hard work and dedication, make improvement';
+    if (pct < 40) return 'Need hard work and dedication to achieve';
+    if (pct < 60) return 'Achieve more need improvement and dedication';
+    if (pct < 80) return 'You are on the right Path but dedication was week, Achieve more';
+    return 'Excellent! You Achieved but keep Going need to successful person';
+}
+function recalculateFormFields() {
+    const std = dom.std ? dom.std.value.trim() : '';
+    if (!dom.obtainMarks || !dom.totalMarks || !dom.status) return;
+
+    const computedObtain = calculateObtainMarks(std);
+    dom.obtainMarks.value = computedObtain > 0 ? computedObtain : '';
+
+    const obtainVal = parseFloat(dom.obtainMarks.value) || 0;
+    const totalVal  = parseFloat(dom.totalMarks.value) || 0;
+
+    if (dom.percentage) {
+        const pct = calculatePercentage(obtainVal, totalVal);
+        dom.percentage.value = pct ? pct + ' %' : '';
+    }
+
+    const status = calculateStatus(obtainVal, totalVal);
+    if (status) {
+        dom.status.value = status;
+        dom.status.classList.toggle('status-pass-input', status === 'Pass');
+        dom.status.classList.toggle('status-fail-input', status === 'Fail');
+    } else {
+        dom.status.value = '';
+        dom.status.classList.remove('status-pass-input', 'status-fail-input');
+    }
+
+    if (dom.remarks) {
+        const r = calculateRemarks(obtainVal, totalVal);
+        if (!dom.remarks.dataset.userEdited) dom.remarks.value = r;
+    }
+}
+
+// ================================================================
+// SUBJECT FIELD RENDERING
+// ================================================================
+function renderSubjectFields(std, values = {}) {
+    const container = dom.subjectContainer;
+    if (!container) return;
+
+    // Empty state — no student picked yet
+    if (!std) {
+        container.innerHTML = `
+            <div class="fullwidth" style="grid-column:1/-1;">
+                <div class="empty-container">
+                    <span class="empty-icon">🎓</span>
+                    <p>Select a student to load subject fields</p>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const subjects = SUBJECT_CONFIG.getSubjects(std);
+    if (subjects.length === 0) {
+        container.innerHTML = `
+            <div class="fullwidth" style="grid-column:1/-1;">
+                <div class="empty-container">
+                    <span class="empty-icon">⚠️</span>
+                    <p>No subjects configured for this standard</p>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    subjects.forEach(subject => {
+        const displayName = SUBJECT_CONFIG.getDisplayName(subject);
+        const val = values[subject] || '';
+        const inputId = 'f_' + subject.replace(/[& ]/g, '_');
+        html += `
+            <div class="form-group subject-field" data-subject="${escapeHtml(subject)}">
+                <label>${escapeHtml(displayName)}</label>
+                <input type="number" step="0.01" id="${inputId}"
+                       value="${escapeHtml(val)}" placeholder="Enter marks"
+                       inputmode="decimal">
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('input[type="number"]').forEach(el => {
+        el.addEventListener('input', recalculateFormFields);
+        el.addEventListener('change', recalculateFormFields);
+    });
+
+    recalculateFormFields();
+}
+
+// ================================================================
+// STUDENT FETCH
+// ================================================================
+async function fetchAllStudents(forceRefresh = false) {
+    if (!forceRefresh && Object.keys(allStudents).length > 0) return allStudents;
+    const result = {};
+    for (const sheetName of CONFIG.STUDENT_SHEETS) {
+        try {
+            const url = `${CONFIG.SCRIPT_URL}?spreadsheetId=${CONFIG.STUDENT_SPREADSHEET_ID}&sheetName=${sheetName}&_=${Date.now()}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.status === 'success' && Array.isArray(data.data)) {
+                result[sheetName] = data.data.map((row, idx) => ({
+                    ...row, _rowIndex: idx + 2, _sheet: sheetName
+                }));
+            } else {
+                result[sheetName] = [];
+            }
+        } catch (err) {
+            console.error(`Error fetching ${sheetName}:`, err);
+            result[sheetName] = [];
+        }
+    }
+    allStudents = result;
+    return result;
+}
+
+// ================================================================
+// STUDENT SELECTOR
+// ================================================================
+function openStudentSelector() {
+    return new Promise((resolve) => {
+        studentSelectorResolve = resolve;
+        dom.studentSelectorModal.classList.add('active');
+        dom.studentListContainer.innerHTML = `
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Loading students...</p>
+            </div>
+        `;
+        // Auto-focus the search box for keyboard users
+        setTimeout(() => {
+            try { dom.studentSearchInput?.focus(); } catch (e) {}
+        }, 150);
+
+        fetchAllStudents().then(studentsData => {
+            allStudents = studentsData;
+            renderStudentList('');
+        }).catch(err => {
+            dom.studentListContainer.innerHTML = `
+                <div class="empty-container">
+                    <span class="empty-icon">⚠️</span>
+                    <p>Failed to load students</p>
+                    <p style="font-size:0.8rem;opacity:0.7;">${escapeHtml(err.message)}</p>
+                </div>
+            `;
+        });
+    });
+}
+
+function renderStudentList(search = '') {
+    const container = dom.studentListContainer;
+    const searchLower = search.toLowerCase().trim();
+
+    let items = [];
+    for (const [sheet, students] of Object.entries(allStudents)) {
+        students.forEach(s => {
+            const fullName = s['Full Name'] || s['First Name'] || '';
+            if (fullName) items.push({ name: fullName, std: sheet, data: s });
+        });
+    }
+
+    if (searchLower) {
+        items = items.filter(it => it.name.toLowerCase().includes(searchLower));
+    }
+
+    if (items.length === 0) {
+        container.innerHTML = `
+            <div class="empty-container">
+                <span class="empty-icon">🔍</span>
+                <p>${search ? 'No matching students found' : 'No students available'}</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    items.forEach(item => {
+        html += `
+            <div class="student-item"
+                 data-name="${escapeHtml(item.name)}"
+                 data-std="${escapeHtml(item.std)}"
+                 data-data='${JSON.stringify(item.data).replace(/'/g, "&#39;")}'>
+                <span><strong>${escapeHtml(item.name)}</strong></span>
+                <span class="std-badge">${escapeHtml(stdDisplayName(item.std))}</span>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+
+    container.querySelectorAll('.student-item').forEach(el => {
+        el.addEventListener('click', function() {
+            const name = this.getAttribute('data-name');
+            const std = this.getAttribute('data-std');
+            const dataStr = this.getAttribute('data-data');
+            try {
+                const data = JSON.parse(dataStr);
+                selectedStudent = data;
+                selectedStd = std;
+
+                dom.studentName.value = name;
+                dom.std.value = stdDisplayName(std);
+
+                // 🔄 Rebuild subject fields using the new std config
+                renderSubjectFields(stdDisplayName(std));
+
+                // Close the modal first
+                dom.studentSelectorModal.classList.remove('active');
+                if (studentSelectorResolve) {
+                    studentSelectorResolve({ name, std, data });
+                    studentSelectorResolve = null;
+                }
+
+                // ✨ NEW: focus + pulse the Std field so teacher confirms it,
+                //    then Tab flows into the first subject input.
+                setTimeout(() => {
+                    focusStdField();
+
+                    // Keyboard convenience: Enter or Tab on Std → jump to
+                    // the first subject input (only once per focus).
+                    const handler = (e) => {
+                        if (e.key === 'Enter' || e.key === 'Tab') {
+                            if (e.key === 'Enter') e.preventDefault();
+                            dom.std.removeEventListener('keydown', handler);
+                            setTimeout(focusFirstSubject, 0);
+                        }
+                    };
+                    dom.std.addEventListener('keydown', handler, { once: false });
+                }, 120);
+
+            } catch (err) {
+                console.error('Error parsing student data:', err);
+            }
+        });
+    });
+}
+
+function closeStudentSelector() {
+    dom.studentSelectorModal.classList.remove('active');
+    if (studentSelectorResolve) {
+        studentSelectorResolve(null);
+        studentSelectorResolve = null;
+    }
+}
+
+// ================================================================
+// FORM RESET
+// ================================================================
+function resetForm() {
+    selectedStudent = null;
+    selectedStd = '';
+    dom.form.reset();
+    dom.remarks.dataset.userEdited = '';
+    dom.status.classList.remove('status-pass-input', 'status-fail-input');
+    renderSubjectFields('', {});
+    if (dom.totalMarks) dom.totalMarks.value = '';
+    if (dom.obtainMarks) dom.obtainMarks.value = '';
+    if (dom.percentage) dom.percentage.value = '';
+    if (dom.status) dom.status.value = '';
+    if (dom.remarks) dom.remarks.value = '';
+}
+
+// ================================================================
+// FORM SUBMIT
+// ================================================================
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    if (saveInProgress) return;
+
+    const std = dom.std.value.trim();
+    const subjects = SUBJECT_CONFIG.getSubjects(std);
+    let anySubjectFilled = false;
+    subjects.forEach(subject => {
+        const el = document.getElementById('f_' + subject.replace(/[& ]/g, '_'));
+        if (el && el.value !== '' && parseFloat(el.value) > 0) anySubjectFilled = true;
+    });
+
+    if (!dom.date.value || !dom.testName.value.trim() || !dom.studentName.value.trim() || !std) {
+        showToast('❌ Date, Test Name, Student Name and Std are required', 'error');
+        return;
+    }
+    if (!anySubjectFilled) {
+        showToast('❌ Please enter marks for at least one subject', 'error');
+        return;
+    }
+    if (!dom.totalMarks.value || parseFloat(dom.totalMarks.value) <= 0) {
+        showToast('❌ Please enter valid Total Marks', 'error');
+        return;
+    }
+
+    saveInProgress = true;
+    const saveBtn = dom.saveFormBtn;
+    showSpinner(saveBtn, true, '<span class="spinner"></span> Saving...');
+
+    try {
+        recalculateFormFields();
+
+        const mappedData = {
+            'Date': dom.date.value,
+            'Test Name': dom.testName.value.trim(),
+            'Student Name': dom.studentName.value.trim(),
+            'Std': std,
+            'English':            getSubjectVal('English'),
+            'Hindi':              getSubjectVal('Hindi'),
+            'Marathi':            getSubjectVal('Marathi'),
+            'History & Civics':   getSubjectVal('History & Civics'),
+            'History':            getSubjectVal('History'),
+            'Political Science':  getSubjectVal('Political Science'),
+            'Geography':          getSubjectVal('Geography'),
+            'Science':            getSubjectVal('Science'),
+            'Science Part 1':     getSubjectVal('Science Part 1'),
+            'Science Part 2':     getSubjectVal('Science Part 2'),
+            'Maths':              getSubjectVal('Maths'),
+            'Maths Part 1':       getSubjectVal('Maths Part 1'),
+            'Maths Part 2':       getSubjectVal('Maths Part 2'),
+            'Obtain Marks':       dom.obtainMarks.value || '',
+            'Total Marks':        dom.totalMarks.value || '',
+            'Status':             dom.status.value || '',
+            'Percentage (%)':     (dom.percentage.value || '').replace(/\s*%\s*$/, ''),
+            'Remarks':            dom.remarks.value || ''
+        };
+
+        const params = new URLSearchParams();
+        params.append('action', 'insert');
+        params.append('spreadsheetId', CONFIG.SPREADSHEET_ID);
+        params.append('sheetName', CONFIG.SHEET_NAME);
+        for (const [key, value] of Object.entries(mappedData)) {
+            params.append(key, value);
+        }
+
+        const response = await fetch(CONFIG.SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            showToast(`✅ Marks saved for ${mappedData['Student Name']}`, 'success');
+            const keepDate = dom.date.value;
+            const keepTestName = dom.testName.value;
+            resetForm();
+            dom.date.value = keepDate;
+            dom.testName.value = keepTestName;
+            // Focus back to the student field for the next entry
+            setTimeout(() => {
+                try { dom.studentName?.focus(); } catch (e) {}
+            }, 120);
+        } else {
+            showToast('❌ Error: ' + (result.message || 'Unknown error'), 'error');
+        }
+    } catch (err) {
+        console.error('Save error:', err);
+        showToast('❌ Error: ' + err.message, 'error');
+    } finally {
+        saveInProgress = false;
+        showSpinner(saveBtn, false);
+    }
+}
+
+function getSubjectVal(subject) {
+    const id = 'f_' + subject.replace(/[& ]/g, '_');
+    const el = document.getElementById(id);
+    return el ? el.value : '';
+}
+
+// ================================================================
+// INIT
+// ================================================================
+function init() {
+    syncTheme();
+    if (!checkTeacherAuth()) return;
+
+    // Today's date
+    const today = new Date();
+    const y = today.getFullYear();
+    const mo = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    dom.date.value = `${y}-${mo}-${d}`;
+
+    // Empty subject state
+    renderSubjectFields('', {});
+
+    // Remarks tracking
+    dom.remarks.addEventListener('input', function() {
+        this.dataset.userEdited = 'true';
+    });
+
+    // Total Marks recalculation
+    dom.totalMarks.addEventListener('input', recalculateFormFields);
+    dom.totalMarks.addEventListener('change', recalculateFormFields);
+
+    // Student picker
+    dom.selectStudentBtn.addEventListener('click', openStudentSelector);
+    dom.studentName.addEventListener('click', openStudentSelector);
+
+    // Student search
+    dom.studentSearchInput.addEventListener('input', (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => renderStudentList(e.target.value), 200);
+    });
+
+    // Close modal
+    dom.closeStudentSelectorBtn.addEventListener('click', closeStudentSelector);
+    dom.studentSelectorModal.addEventListener('click', function(e) {
+        if (e.target === this) closeStudentSelector();
+    });
+
+    // Reset
+    dom.resetFormBtn.addEventListener('click', resetForm);
+
+    // Submit
+    dom.form.addEventListener('submit', handleFormSubmit);
+
+    console.log('✅ Add Manual Marks — v2 ready');
+    console.log(`📊 Target Sheet: ${CONFIG.SHEET_NAME}`);
+    console.log('📚 subjectsByStd whitelist active');
+    console.log('🎯 Auto-focus Std on student pick');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(init, 50);
+});
+</script>
+
+</body>
+</html>
