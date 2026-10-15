@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>School Management System - Complete Academic Records</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .form-container { max-width: 1600px; width: 100%; background: white; border-radius: 2rem; box-shadow: 0 25px 45px -12px rgba(0,0,0,0.35); overflow: hidden; }
+        
+        /* Scrollable tabs for mobile/tablet */
+        .page-tabs-wrapper { width: 100%; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+        .page-tabs { display: flex; background: #f8fafc; padding: 0 1rem; gap: 0.25rem; min-width: min-content; white-space: nowrap; }
+        .tab-btn { background: transparent; border: none; padding: 1rem 1.2rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; color: #475569; transition: 0.2s; border-radius: 1.5rem 1.5rem 0 0; margin-bottom: -2px; display: inline-block; }
+        .tab-btn.active { color: #1e40af; background: white; border-bottom: 3px solid #1e40af; }
+        
+        .page-content { display: none; padding: 2rem; animation: fade 0.25s ease; }
+        .page-content.active-page { display: block; }
+        @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+        h2 { font-size: 1.7rem; margin-top: 0; margin-bottom: 1.5rem; color: #0f172a; border-left: 6px solid #2563eb; padding-left: 1rem; }
+        h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 1rem; color: #1e40af; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem 1.8rem; margin-bottom: 2rem; }
+        .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .field-group label { font-weight: 600; color: #1e293b; font-size: 0.85rem; }
+        input, select, textarea { padding: 0.7rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 14px; font-size: 0.9rem; transition: 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+        .action-buttons { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        button { background: #1e40af; color: white; border: none; padding: 0.7rem 1.8rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button.next-btn, button.submit-btn { background: #2563eb; }
+        button.prev-btn { background: #64748b; }
+        button.small-btn { padding: 0.4rem 1rem; font-size: 0.8rem; background: #8b5cf6; }
+        button:hover { filter: brightness(1.05); transform: translateY(-1px); }
+        .table-wrapper { overflow-x: auto; border-radius: 20px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
+        .marks-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .marks-table th, .marks-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #e2edf2; }
+        .marks-table th { background: #f1f5f9; font-weight: 700; }
+        .marks-table input { width: 100px; padding: 8px; border-radius: 12px; }
+        .total-row { background: #f8fafc; font-weight: bold; }
+        .action-row { background: #fef3c7; }
+        .action-cell { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .result-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
+        .result-pass { background: #dcfce7; color: #15803d; }
+        .result-fail { background: #fee2e2; color: #b91c1c; }
+        .reopen-section { margin-top: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 16px; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .reopen-section label { font-weight: 600; }
+        
+        /* New styles for percentage and grade card */
+        .stats-card { background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%); border-radius: 20px; padding: 1rem 1.5rem; margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: space-between; border: 1px solid #c7d2fe; }
+        .stats-item { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+        .stats-label { font-weight: 800; color: #1e3a8a; background: #dbeafe; padding: 0.25rem 0.75rem; border-radius: 40px; font-size: 0.8rem; }
+        .stats-value { font-size: 1.6rem; font-weight: 800; color: #0f172a; letter-spacing: 1px; }
+        .stats-unit { font-size: 0.9rem; font-weight: normal; color: #475569; margin-left: 4px; }
+        .grade-pill { background: #1e40af; color: white; padding: 0.3rem 1rem; border-radius: 40px; font-weight: bold; font-size: 1.2rem; min-width: 70px; text-align: center; }
+        
+        .attendance-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; background: white; }
+        .attendance-table th, .attendance-table td { border: 1px solid #cbd5e1; padding: 10px 6px; text-align: center; vertical-align: middle; }
+        .attendance-table th { background: #1e40af; color: white; font-weight: 600; position: sticky; top: 0; }
+        .attendance-table td input { width: 85px; padding: 6px; text-align: center; border: 1px solid #cbd5e1; border-radius: 8px; }
+        .attendance-table .row-label { background: #f1f5f9; font-weight: 700; text-align: left; position: sticky; left: 0; }
+        .section-header { background: #2563eb; color: white; font-size: 0.85rem; }
+        .attendance-table .sub-header { background: #3b82f6; color: white; font-size: 0.75rem; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); justify-content: center; align-items: center; }
+        .modal-content { background: white; border-radius: 28px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); animation: modalPop 0.3s ease; }
+        @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content h3 { margin-top: 0; color: #1e40af; }
+        .modal-content textarea { width: 100%; padding: 0.8rem; border-radius: 16px; border: 1px solid #cbd5e1; margin: 1rem 0; font-size: 1rem; }
+        .modal-buttons { display: flex; gap: 1rem; justify-content: flex-end; }
+        .modal-buttons button { padding: 0.5rem 1.2rem; }
+        .close-modal { background: #e2e8f0; color: #1e293b; }
+        .success-msg { color: #15803d; background: #dcfce7; padding: 1rem; border-radius: 16px; margin-top: 1rem; }
+        .error-msg { color: #b91c1c; background: #fee2e2; padding: 1rem; border-radius: 16px; margin-top: 1rem; }
+        .info-msg { color: #1e40af; background: #dbeafe; padding: 1rem; border-radius: 16px; margin-top: 1rem; }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .info-note { background: #fef3c7; padding: 0.5rem; border-radius: 8px; font-size: 0.75rem; color: #92400e; margin-top: 0.5rem; }
+        @media (max-width: 1200px) { .attendance-table { font-size: 0.7rem; } .attendance-table td input { width: 60px; } }
+        @media (max-width: 760px) { .form-grid { grid-template-columns: 1fr; } .page-content { padding: 1.2rem; } .stats-value { font-size: 1.2rem; } .grade-pill { font-size: 1rem; } }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="page-tabs-wrapper">
+        <div class="page-tabs">
+            <button class="tab-btn active" data-page="1">📄 Page 1: Student Profile</button>
+            <button class="tab-btn" data-page="2">📖 Page 2: First Semester</button>
+            <button class="tab-btn" data-page="3">📚 Page 3: Second Semester</button>
+            <button class="tab-btn" data-page="4">✅ Page 4: Attendance & Submit</button>
+        </div>
+    </div>
+
+    <!-- PAGE 1 - STUDENT PROFILE -->
+    <div class="page-content active-page" id="page1">
+        <h2>🎓 Student Profile</h2>
+        <div class="form-grid">
+            <div class="field-group"><label>🔢 Sr. No</label><input type="text" id="srNo" readonly value="Auto" style="background:#f3f4f6;"></div>
+            <div class="field-group"><label>📅 Academic Year</label><input type="text" id="academicYear" readonly style="background:#f3f4f6;"></div>
+            <div class="field-group"><label>👤 Student Name *</label><input type="text" id="Student Name" required></div>
+            <div class="field-group"><label>🆔 G.R. No</label><input type="text" id="G.R. No"></div>
+            <div class="field-group"><label>📚 Std</label><select id="Std"><option>JR. KG</option><option>SR. KG</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option></select></div>
+            <div class="field-group"><label>🔤 Div</label><select id="Div"><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+            <div class="field-group"><label>🔢 Roll No.</label><input type="number" id="Roll No"></div>
+            <div class="field-group"><label>👨 Father Name</label><input type="text" id="Father Name"></div>
+            <div class="field-group"><label>💼 Occupation</label><input type="text" id="Occupation"></div>
+            <div class="field-group"><label>👩 Mother Name</label><input type="text" id="Mother Name"></div>
+            <div class="field-group"><label>🌐 Medium</label><select id="Medium"><option value="English" selected>English</option><option value="Semi-English">Semi-English</option><option value="Hindi">Hindi</option><option value="Marathi">Marathi</option></select></div>
+            <div class="field-group"><label>🎂 Birth Date</label><input type="date" id="Birth Date"></div>
+            <div class="field-group full-width"><label>🏠 Address</label><textarea id="Address" rows="2"></textarea></div>
+            <div class="field-group"><label>📞 Tel No (10 digits, start 6-9)</label><input type="tel" id="Tel No" maxlength="10"></div>
+            <div class="field-group"><label>⚖️ Weight</label><input type="number" id="Weight" step="any"></div>
+            <div class="field-group"><label>📏 Height</label><input type="number" id="Height" step="any"></div>
+        </div>
+        <div class="action-buttons"><button type="button" class="next-btn" onclick="goToPage(2)">Next ➡️</button></div>
+    </div>
+
+    <!-- PAGE 2 - FIRST SEMESTER -->
+    <div class="page-content" id="page2">
+        <h2>📘 First Semester Details</h2>
+        <!-- Percentage & Grade Display -->
+        <div class="stats-card" id="fsStatsCard">
+            <div class="stats-item"><span class="stats-label">📊 FS Percentage</span><span class="stats-value" id="fsPercentageValue">0.00</span><span class="stats-unit">%</span></div>
+            <div class="stats-item"><span class="stats-label">🏅 FS Grade</span><span class="grade-pill" id="fsGradeValue">N/A</span></div>
+        </div>
+        <div class="table-wrapper">
+            <table class="marks-table" id="fsTable">
+                <thead><tr><th>#</th><th>Subject</th><th>Total Marks</th><th>Actual Marks</th><th style="width:180px">Actions</th></tr></thead>
+                <tbody id="fsTbody"></tbody>
+                <tfoot>
+                    <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td id="fsTotalMarksCell">0</td><td id="fsActualTotalCell">0</td><td id="fsResultCell"><span class="result-badge" id="fsResultBadge">Pending</span></td></tr>
+                    <tr class="action-row"><td colspan="5"><div class="action-cell">
+                        <button type="button" class="small-btn" onclick="openModal('FS', 'Special Progress')">⭐ Special Progress</button>
+                        <button type="button" class="small-btn" onclick="openModal('FS', 'Good')">👍 Good</button>
+                        <button type="button" class="small-btn" onclick="openModal('FS', 'Remarks')">📝 Remarks</button>
+                    </div></td></tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="reopen-section">
+            <label>📅 Reopen Date (Future date only):</label>
+            <input type="date" id="FSReopenDate" min="">
+            <span style="font-size:0.8rem; color:#64748b;">Select a future date for reopening</span>
+        </div>
+        <div class="action-buttons"><button type="button" class="prev-btn" onclick="goToPage(1)">◀ Previous</button><button type="button" class="next-btn" onclick="goToPage(3)">Next ➡️</button></div>
+    </div>
+
+    <!-- PAGE 3 - SECOND SEMESTER -->
+    <div class="page-content" id="page3">
+        <h2>📗 Second Semester Details</h2>
+        <!-- Percentage & Grade Display -->
+        <div class="stats-card" id="ssStatsCard">
+            <div class="stats-item"><span class="stats-label">📊 SS Percentage</span><span class="stats-value" id="ssPercentageValue">0.00</span><span class="stats-unit">%</span></div>
+            <div class="stats-item"><span class="stats-label">🏅 SS Grade</span><span class="grade-pill" id="ssGradeValue">N/A</span></div>
+        </div>
+        <div class="table-wrapper">
+            <table class="marks-table" id="ssTable">
+                <thead><tr><th>#</th><th>Subject</th><th>Total Marks</th><th>Actual Marks</th><th style="width:180px">Actions</th></td></thead>
+                <tbody id="ssTbody"></tbody>
+                <tfoot>
+                    <tr class="total-row"><td colspan="2"><strong>Total</strong></td><td id="ssTotalMarksCell">0</td><td id="ssActualTotalCell">0</td><td id="ssResultCell"><span class="result-badge" id="ssResultBadge">Pending</span></td></tr>
+                    <tr class="action-row"><td colspan="5"><div class="action-cell">
+                        <button type="button" class="small-btn" onclick="openModal('SS', 'Special Progress')">⭐ Special Progress</button>
+                        <button type="button" class="small-btn" onclick="openModal('SS', 'Good')">👍 Good</button>
+                        <button type="button" class="small-btn" onclick="openModal('SS', 'Remarks')">📝 Remarks</button>
+                    </div></td></tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="reopen-section">
+            <label>📅 Reopen Date (Future date only):</label>
+            <input type="date" id="SSReopenDate" min="">
+            <span style="font-size:0.8rem; color:#64748b;">Select a future date for reopening</span>
+        </div>
+        <div class="action-buttons"><button type="button" class="prev-btn" onclick="goToPage(2)">◀ Previous</button><button type="button" class="next-btn" onclick="goToPage(4)">Next ➡️</button></div>
+    </div>
+
+    <!-- PAGE 4 - ATTENDANCE & SUBMIT -->
+    <div class="page-content" id="page4">
+        <h2>📋 Student Attendance & Academic Progress</h2>
+        
+        <!-- Attendance Table -->
+        <h3>📅 Monthly Attendance Record</h3>
+        <div class="info-note">
+            💡 Note: Working Day 1,2,3 / Present Day 1,2,3 / Class T. Sign 1,2,3 columns will store the term labels ("Term 1", "Term 2", "Term 3"). Individual month values are saved separately.
+        </div>
+        <div class="table-wrapper">
+            <table class="attendance-table" id="attendanceTable">
+                <thead>
+                    <tr><th rowspan="2">Category</th><th colspan="3">Term 1</th><th colspan="3">Term 2</th><th colspan="6">Term 3</th></tr>
+                    <tr class="sub-header"><th>June</th><th>July</th><th>August</th><th>September</th><th>October</th><th>November</th><th>December</th><th>January</th><th>February</th><th>March</th><th>April</th><th>May</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-label">📆 Working Days</td>
+                        <td><input type="number" id="WD_June" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_July" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_August" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Sept" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Oct" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Nov" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Dec" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Jan" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Feb" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Mar" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_Apr" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="WD_May" class="wd-input" placeholder="Days" min="0" max="31"></td>
+                    </tr>
+                    <tr><td class="row-label">✅ Present Days</td>
+                        <td><input type="number" id="PD_June" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_July" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_August" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Sept" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Oct" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Nov" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Dec" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Jan" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Feb" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Mar" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_Apr" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                        <td><input type="number" id="PD_May" class="pd-input" placeholder="Days" min="0" max="31"></td>
+                    </tr>
+                    <tr><td class="row-label">✍️ Class T. Sign</td>
+                        <td><input type="text" id="CS_June" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_July" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_August" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Sept" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Oct" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Nov" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Dec" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Jan" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Feb" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Mar" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_Apr" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                        <td><input type="text" id="CS_May" class="sign-input" placeholder="Sign" maxlength="50"></td>
+                    </tr>
+                    <tr><td class="row-label">👨‍🏫 Gr. Sign</td>
+                        <td colspan="3"><input type="text" id="GS_1" class="sign-input" placeholder="Grade Signatory - Term 1" style="width:95%"></td>
+                        <td colspan="3"><input type="text" id="GS_2" class="sign-input" placeholder="Grade Signatory - Term 2" style="width:95%"></td>
+                        <td colspan="6"><input type="text" id="GS_3" class="sign-input" placeholder="Grade Signatory - Term 3" style="width:97%"></td>
+                    </tr>
+                    <tr><td class="row-label">🏫 H.M</td>
+                        <td colspan="3"><input type="text" id="HM_1" class="sign-input" placeholder="Head Master Sign - Term 1" style="width:95%"></td>
+                        <td colspan="3"><input type="text" id="HM_2" class="sign-input" placeholder="Head Master Sign - Term 2" style="width:95%"></td>
+                        <td colspan="6"><input type="text" id="HM_3" class="sign-input" placeholder="Head Master Sign - Term 3" style="width:97%"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="background:#f1f5f9; padding:1.5rem; border-radius:24px; margin:1rem 0;">
+            <p>✅ Review all information before submitting.</p>
+            <p>📊 Spreadsheet: <strong>School</strong> | ID: 1orVfIC1ArrRKCAoklxHBNqWRUu1I448ZHY-FOfC5nJ0</p>
+            <p>🔗 Click submit to save all data to Google Sheets.</p>
+        </div>
+        <div class="action-buttons"><button type="button" class="prev-btn" onclick="goToPage(3)">◀ Back</button><button type="button" class="submit-btn" id="submitBtn">🚀 Submit to Google Sheet</button></div>
+        <div id="messageArea"></div>
+    </div>
+</div>
+
+<!-- Modal Popup -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Enter Details</h3>
+        <textarea id="modalInput" rows="4" placeholder="Type your content here..."></textarea>
+        <div class="modal-buttons">
+            <button class="close-modal" onclick="closeModal()">Cancel</button>
+            <button id="modalSaveBtn" style="background:#2563eb;">Save</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxA-H3KQdMENKawx1QQtL_XAX1RJTJUITZziK0WVw1MPP1vUPxoY2mvRAAHRp9LR2Dm/exec";
+    const SPREADSHEET_ID = "1-T1L6QbnAhkL4woinvGOrlwOoJDofQXiiZNMJLsooTs";
+    const SHEET_NAME = "Result";
+    
+    const subjects = [
+        { name: "English", total: 70 },
+        { name: "Poem", total: 10 },
+        { name: "Dictation", total: 20 },
+        { name: "Mathematics", total: 100 },
+        { name: "General Knowledge", total: 30 },
+        { name: "Conversation", total: 20 },
+        { name: "Arts", total: 50 },
+        { name: "Work Experience", total: 50 },
+        { name: "Physical Education", total: 50 }
+    ];
+
+    let fsInputs = [];
+    let ssInputs = [];
+    
+    let modalContext = { semester: '', field: '' };
+    
+    let fsSpecialProgress = '', fsGood = '', fsRemarks = '';
+    let ssSpecialProgress = '', ssGood = '', ssRemarks = '';
+
+    // Grade calculation based on percentage
+    function getGradeFromPercentage(percentage) {
+        if (percentage >= 91) return "A1";
+        if (percentage >= 81) return "A2";
+        if (percentage >= 71) return "B1";
+        if (percentage >= 61) return "B2";
+        if (percentage >= 51) return "C1";
+        if (percentage >= 41) return "C2";
+        if (percentage >= 33) return "D";
+        if (percentage >= 21) return "E1";
+        return "E2";
+    }
+
+    function updatePercentageAndGrade(isFS) {
+        const totalMarks = parseInt(isFS ? document.getElementById('fsTotalMarksCell').innerText : document.getElementById('ssTotalMarksCell').innerText);
+        const actualMarks = parseInt(isFS ? document.getElementById('fsActualTotalCell').innerText : document.getElementById('ssActualTotalCell').innerText);
+        let percentage = 0;
+        if (totalMarks > 0) percentage = (actualMarks / totalMarks) * 100;
+        const formattedPercent = percentage.toFixed(2);
+        const grade = getGradeFromPercentage(percentage);
+        
+        if (isFS) {
+            document.getElementById('fsPercentageValue').innerText = formattedPercent;
+            document.getElementById('fsGradeValue').innerText = grade;
+        } else {
+            document.getElementById('ssPercentageValue').innerText = formattedPercent;
+            document.getElementById('ssGradeValue').innerText = grade;
+        }
+        return { percentage: formattedPercent, grade };
+    }
+
+    function getAcademicYear() { const now = new Date(); const year = now.getFullYear(); const month = now.getMonth(); return month >= 3 ? `${year}-${year+1}` : `${year-1}-${year}`; }
+    function setMaxBirthDate() { document.getElementById('Birth Date').setAttribute('max', new Date().toISOString().split('T')[0]); }
+    function setReopenMinDates() { const today = new Date().toISOString().split('T')[0]; document.getElementById('FSReopenDate').setAttribute('min', today); document.getElementById('SSReopenDate').setAttribute('min', today); }
+
+    function buildTable(tbodyId, inputsArray, isFS) {
+        const tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = '';
+        inputsArray.length = 0;
+        subjects.forEach((sub, idx) => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = idx + 1;
+            row.insertCell(1).innerText = sub.name;
+            row.insertCell(2).innerText = sub.total;
+            const actualCell = row.insertCell(3);
+            const input = document.createElement('input');
+            input.type = 'number'; input.min = 0; input.max = sub.total; input.value = 0; input.step = 0.5;
+            input.addEventListener('input', () => { updateTotal(isFS); updatePercentageAndGrade(isFS); });
+            actualCell.appendChild(input);
+            row.insertCell(4).innerText = '';
+            inputsArray.push(input);
+        });
+        updateTotal(isFS);
+        updatePercentageAndGrade(isFS);
+    }
+
+    function calculatePassFail(actualTotal, totalMax) { if (totalMax === 0) return 'Pending'; const percentage = (actualTotal / totalMax) * 100; return percentage >= 35 ? 'Pass' : 'Fail'; }
+    
+    function updateResultBadge(isFS) {
+        const totalMax = parseInt(isFS ? document.getElementById('fsTotalMarksCell').innerText : document.getElementById('ssTotalMarksCell').innerText);
+        const actualTotal = parseInt(isFS ? document.getElementById('fsActualTotalCell').innerText : document.getElementById('ssActualTotalCell').innerText);
+        const result = calculatePassFail(actualTotal, totalMax);
+        const badgeId = isFS ? 'fsResultBadge' : 'ssResultBadge';
+        const badge = document.getElementById(badgeId);
+        badge.innerText = result;
+        badge.className = `result-badge ${result === 'Pass' ? 'result-pass' : result === 'Fail' ? 'result-fail' : ''}`;
+        return result;
+    }
+
+    function updateTotal(isFS) {
+        let totalActual = 0, totalMax = 0;
+        const inputs = isFS ? fsInputs : ssInputs;
+        subjects.forEach((sub, idx) => {
+            let val = parseFloat(inputs[idx]?.value) || 0;
+            if (val > sub.total) { inputs[idx].value = sub.total; val = sub.total; }
+            if (val < 0) { inputs[idx].value = 0; val = 0; }
+            totalActual += val;
+            totalMax += sub.total;
+        });
+        if (isFS) { document.getElementById('fsActualTotalCell').innerText = totalActual; document.getElementById('fsTotalMarksCell').innerText = totalMax; } 
+        else { document.getElementById('ssActualTotalCell').innerText = totalActual; document.getElementById('ssTotalMarksCell').innerText = totalMax; }
+        updateResultBadge(isFS);
+    }
+
+    function openModal(semester, field) {
+        modalContext = { semester, field };
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalInput = document.getElementById('modalInput');
+        let existingValue = '';
+        if (semester === 'FS') { if (field === 'Special Progress') existingValue = fsSpecialProgress; else if (field === 'Good') existingValue = fsGood; else if (field === 'Remarks') existingValue = fsRemarks; } 
+        else { if (field === 'Special Progress') existingValue = ssSpecialProgress; else if (field === 'Good') existingValue = ssGood; else if (field === 'Remarks') existingValue = ssRemarks; }
+        modalTitle.innerText = `${semester} Semester - ${field}`;
+        modalInput.value = existingValue || '';
+        modal.style.display = 'flex';
+        document.getElementById('modalSaveBtn').onclick = () => saveModalData();
+    }
+    
+    function saveModalData() {
+        const value = document.getElementById('modalInput').value;
+        const { semester, field } = modalContext;
+        if (semester === 'FS') { if (field === 'Special Progress') fsSpecialProgress = value; else if (field === 'Good') fsGood = value; else if (field === 'Remarks') fsRemarks = value; } 
+        else { if (field === 'Special Progress') ssSpecialProgress = value; else if (field === 'Good') ssGood = value; else if (field === 'Remarks') ssRemarks = value; }
+        closeModal();
+        alert(`${field} saved successfully!`);
+    }
+    
+    function closeModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('modalInput').value = ''; }
+
+    function buildFormData() {
+        const telNo = document.getElementById('Tel No').value;
+        if (telNo && !/^[6-9][0-9]{9}$/.test(telNo)) { alert("Tel No must be 10 digits starting with 6,7,8,9"); return null; }
+        const studentName = document.getElementById('Student Name').value;
+        if (!studentName.trim()) { alert("Student Name is required"); return null; }
+
+        const fsActualTotal = parseInt(document.getElementById('fsActualTotalCell').innerText) || 0;
+        const fsTotalMarks = parseInt(document.getElementById('fsTotalMarksCell').innerText) || 0;
+        const fsPercentVal = fsTotalMarks ? ((fsActualTotal / fsTotalMarks) * 100).toFixed(2) : "0.00";
+        const fsGradeVal = getGradeFromPercentage(parseFloat(fsPercentVal));
+        
+        const ssActualTotal = parseInt(document.getElementById('ssActualTotalCell').innerText) || 0;
+        const ssTotalMarks = parseInt(document.getElementById('ssTotalMarksCell').innerText) || 0;
+        const ssPercentVal = ssTotalMarks ? ((ssActualTotal / ssTotalMarks) * 100).toFixed(2) : "0.00";
+        const ssGradeVal = getGradeFromPercentage(parseFloat(ssPercentVal));
+
+        const formData = new URLSearchParams();
+        formData.append('action', 'insert'); formData.append('spreadsheetId', SPREADSHEET_ID); formData.append('sheetName', SHEET_NAME);
+        formData.append('Academic Year', getAcademicYear()); formData.append('Student Name', studentName); formData.append('G.R. No', document.getElementById('G.R. No').value);
+        formData.append('Std', document.getElementById('Std').value); formData.append('Div', document.getElementById('Div').value); formData.append('Roll No', document.getElementById('Roll No').value);
+        formData.append('Father Name', document.getElementById('Father Name').value); formData.append('Occupation', document.getElementById('Occupation').value); formData.append('Mother Name', document.getElementById('Mother Name').value);
+        formData.append('Medium', document.getElementById('Medium').value); formData.append('Birth Date', document.getElementById('Birth Date').value); formData.append('Address', document.getElementById('Address').value);
+        formData.append('Tel No', telNo); formData.append('Weight', document.getElementById('Weight').value); formData.append('Height', document.getElementById('Height').value);
+        
+        // FS marks & extra
+        formData.append('FS English', 'English');
+        formData.append('FS Eng Total Marks', subjects[0].total);
+        formData.append('FS Eng Actual Marks', fsInputs[0]?.value || 0);
+        
+        formData.append('FS Poem', 'Poem');
+        formData.append('FS Poem Total Marks', subjects[1].total);
+        formData.append('FS Poem Actual Marks', fsInputs[1]?.value || 0);
+        
+        formData.append('FS Dictation', 'Dictation');
+        formData.append('FS Dic Total Marks', subjects[2].total);
+        formData.append('FS Dic Actual Marks', fsInputs[2]?.value || 0);
+        
+        formData.append('FS Mathematics', 'Mathematics');
+        formData.append('FS Maths Total Marks', subjects[3].total);
+        formData.append('FS Maths Actual Marks', fsInputs[3]?.value || 0);
+        
+        formData.append('FS General Knowledge', 'General Knowledge');
+        formData.append('FS GK Total Marks', subjects[4].total);
+        formData.append('FS GK Actual Marks', fsInputs[4]?.value || 0);
+        
+        formData.append('FS Conversation', 'Conversation');
+        formData.append('FS Con Total Marks', subjects[5].total);
+        formData.append('FS Con Actual Marks', fsInputs[5]?.value || 0);
+        
+        formData.append('FS Arts', 'Arts');
+        formData.append('FS Arts Total Marks', subjects[6].total);
+        formData.append('FS Arts Actual Marks', fsInputs[6]?.value || 0);
+        
+        formData.append('FS Work Experience', 'Work Experience');
+        formData.append('FS WE Total Marks', subjects[7].total);
+        formData.append('FS WE Actual Marks', fsInputs[7]?.value || 0);
+        
+        formData.append('FS Physical Education', 'Physical Education');
+        formData.append('FS PE Total Marks', subjects[8].total);
+        formData.append('FS PE Actual Marks', fsInputs[8]?.value || 0);
+        
+        formData.append('FS Total Marks', fsTotalMarks);
+        formData.append('FS Actual Marks', fsActualTotal);
+        formData.append('FS Result', calculatePassFail(fsActualTotal, fsTotalMarks));
+        formData.append('FS Percentage', fsPercentVal);
+        formData.append('FS Grade', fsGradeVal);
+        formData.append('FS Special Progress', fsSpecialProgress);
+        formData.append('FS Good', fsGood);
+        formData.append('FS Remarks', fsRemarks);
+        formData.append('FS Reopen', document.getElementById('FSReopenDate').value || '');
+        
+        // SS marks & extra
+        formData.append('SS English', 'English');
+        formData.append('SS Eng Total Marks', subjects[0].total);
+        formData.append('SS Eng Actual Marks', ssInputs[0]?.value || 0);
+        
+        formData.append('SS Poem', 'Poem');
+        formData.append('SS Poem Total Marks', subjects[1].total);
+        formData.append('SS Poem Actual Marks', ssInputs[1]?.value || 0);
+        
+        formData.append('SS Dictation', 'Dictation');
+        formData.append('SS Dic Total Marks', subjects[2].total);
+        formData.append('SS Dic Actual Marks', ssInputs[2]?.value || 0);
+        
+        formData.append('SS Mathematics', 'Mathematics');
+        formData.append('SS Maths Total Marks', subjects[3].total);
+        formData.append('SS Maths Actual Marks', ssInputs[3]?.value || 0);
+        
+        formData.append('SS General Knowledge', 'General Knowledge');
+        formData.append('SS GK Total Marks', subjects[4].total);
+        formData.append('SS GK Actual Marks', ssInputs[4]?.value || 0);
+        
+        formData.append('SS Conversation', 'Conversation');
+        formData.append('SS Con Total Marks', subjects[5].total);
+        formData.append('SS Con Actual Marks', ssInputs[5]?.value || 0);
+        
+        formData.append('SS Arts', 'Arts');
+        formData.append('SS Arts Total Marks', subjects[6].total);
+        formData.append('SS Arts Actual Marks', ssInputs[6]?.value || 0);
+        
+        formData.append('SS Work Experience', 'Work Experience');
+        formData.append('SS WE Total Marks', subjects[7].total);
+        formData.append('SS WE Actual Marks', ssInputs[7]?.value || 0);
+        
+        formData.append('SS Physical Education', 'Physical Education');
+        formData.append('SS PE Total Marks', subjects[8].total);
+        formData.append('SS PE Actual Marks', ssInputs[8]?.value || 0);
+        
+        formData.append('SS Total Marks', ssTotalMarks);
+        formData.append('SS Actual Marks', ssActualTotal);
+        formData.append('SS Result', calculatePassFail(ssActualTotal, ssTotalMarks));
+        formData.append('SS Percentage', ssPercentVal);
+        formData.append('SS Grade', ssGradeVal);
+        formData.append('SS Special Progress', ssSpecialProgress);
+        formData.append('SS Good', ssGood);
+        formData.append('SS Remarks', ssRemarks);
+        formData.append('SS Reopen', document.getElementById('SSReopenDate').value || '');
+        
+        // Attendance fields unchanged but included
+        formData.append('Working Day 1', 'Term 1 (June, July, August)');
+        formData.append('Working Day 2', 'Term 2 (September, October, November)');
+        formData.append('Working Day 3', 'Term 3 (December, January, February, March, April, May)');
+        ['WD_June','WD_July','WD_August','WD_Sept','WD_Oct','WD_Nov','WD_Dec','WD_Jan','WD_Feb','WD_Mar','WD_Apr','WD_May'].forEach(id => formData.append(id.replace('_',' '), document.getElementById(id)?.value || ''));
+        
+        formData.append('Present Day 1', 'Term 1 (June, July, August)');
+        formData.append('Present Day 2', 'Term 2 (September, October, November)');
+        formData.append('Present Day 3', 'Term 3 (December, January, February, March, April, May)');
+        ['PD_June','PD_July','PD_August','PD_Sept','PD_Oct','PD_Nov','PD_Dec','PD_Jan','PD_Feb','PD_Mar','PD_Apr','PD_May'].forEach(id => formData.append(id.replace('_',' '), document.getElementById(id)?.value || ''));
+        
+        formData.append('Class T. Sign 1', 'Term 1 (June, July, August)');
+        formData.append('Class T. Sign 2', 'Term 2 (September, October, November)');
+        formData.append('Class T. Sign 3', 'Term 3 (December, January, February, March, April, May)');
+        ['CS_June','CS_July','CS_August','CS_Sept','CS_Oct','CS_Nov','CS_Dec','CS_Jan','CS_Feb','CS_Mar','CS_Apr','CS_May'].forEach(id => formData.append(id.replace('_',' '), document.getElementById(id)?.value || ''));
+        
+        formData.append('Gr. Sign 1', document.getElementById('GS_1')?.value || '');
+        formData.append('Gr. Sign 2', document.getElementById('GS_2')?.value || '');
+        formData.append('Gr. Sign 3', document.getElementById('GS_3')?.value || '');
+        
+        formData.append('H.M 1', document.getElementById('HM_1')?.value || '');
+        formData.append('H.M 2', document.getElementById('HM_2')?.value || '');
+        formData.append('H.M 3', document.getElementById('HM_3')?.value || '');
+        
+        return formData;
+    }
+
+    async function submitToSheet() {
+        const submitBtn = document.getElementById('submitBtn'); const msgDiv = document.getElementById('messageArea');
+        const formData = buildFormData(); if (!formData) return;
+        submitBtn.disabled = true; submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting...';
+        msgDiv.innerHTML = '<div class="info-msg">⏳ Sending data to Google Sheet... Please wait.</div>';
+        try { 
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData.toString() }); 
+            msgDiv.innerHTML = '<div class="success-msg">✅ Data sent successfully to Google Sheet "School"!<br><br>📌 Please check your spreadsheet to verify the new entry (including correct FS/SS Subject Total Marks, FS Percentage, FS Grade, SS Percentage, SS Grade).<br><br>📊 Working Day 1,2,3 / Present Day 1,2,3 / Class T. Sign 1,2,3 columns now contain term labels.<br>Individual month values are saved in their respective columns.</div>'; 
+            setTimeout(() => { if (confirm("Submit another student record?")) resetAllForms(); }, 1000); 
+        } 
+        catch (error) { console.error('Submission error:', error); msgDiv.innerHTML = '<div class="error-msg">❌ Submission failed. Please check script URL and internet connection.</div>'; } 
+        finally { submitBtn.disabled = false; submitBtn.innerHTML = "🚀 Submit to Google Sheet"; }
+    }
+
+    function resetAllForms() {
+        document.getElementById('Student Name').value = ''; document.getElementById('G.R. No').value = ''; document.getElementById('Roll No').value = ''; document.getElementById('Father Name').value = ''; document.getElementById('Occupation').value = ''; document.getElementById('Mother Name').value = ''; document.getElementById('Address').value = ''; document.getElementById('Tel No').value = ''; document.getElementById('Weight').value = ''; document.getElementById('Height').value = ''; document.getElementById('Birth Date').value = ''; document.getElementById('Std').value = 'JR. KG'; document.getElementById('Div').value = 'A'; document.getElementById('Medium').value = 'English';
+        fsInputs.forEach(inp => inp.value = 0); ssInputs.forEach(inp => inp.value = 0);
+        fsSpecialProgress = ''; fsGood = ''; fsRemarks = ''; ssSpecialProgress = ''; ssGood = ''; ssRemarks = '';
+        document.getElementById('FSReopenDate').value = ''; document.getElementById('SSReopenDate').value = '';
+        document.querySelectorAll('#attendanceTable input').forEach(input => input.value = '');
+        updateTotal(true); updateTotal(false); updatePercentageAndGrade(true); updatePercentageAndGrade(false);
+        document.getElementById('messageArea').innerHTML = '';
+    }
+
+    let currentPage = 1;
+    function goToPage(pageNum) { document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page')); document.getElementById(`page${pageNum}`).classList.add('active-page'); document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.querySelector(`.tab-btn[data-page="${pageNum}"]`).classList.add('active'); currentPage = pageNum; }
+
+    window.onload = () => {
+        setMaxBirthDate(); setReopenMinDates();
+        document.getElementById('academicYear').value = getAcademicYear();
+        buildTable('fsTbody', fsInputs, true); buildTable('ssTbody', ssInputs, false);
+        document.getElementById('submitBtn').addEventListener('click', submitToSheet);
+        const telInput = document.getElementById('Tel No'); telInput.addEventListener('input', function(e) { this.value = this.value.replace(/[^0-9]/g, '').slice(0,10); if(this.value.length === 1 && !/[6-9]/.test(this.value)) this.value = ''; });
+        window.onclick = function(event) { const modal = document.getElementById('modal'); if (event.target === modal) closeModal(); };
+        updatePercentageAndGrade(true); updatePercentageAndGrade(false);
+    };
+    window.goToPage = goToPage; window.openModal = openModal; window.closeModal = closeModal;
+</script>
+</body>
+</html>
