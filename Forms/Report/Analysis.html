@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Visitor Analytics · Ujjwal Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- ⭐ loginadmin.js — handles authentication -->
+    <script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --bg-body: #f4f7fc; --bg-card: #ffffff; --bg-header: #ffffff;
+            --text-main: #1e293b; --text-muted: #5b6e8c; --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb; --accent-soft: rgba(37,99,235,0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+            --total-color: #3b82f6; --visitor-color: #10b981;
+            --total-bg: rgba(59,130,246,0.1); --visitor-bg: rgba(16,185,129,0.1);
+        }
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c; --bg-card: #1e293b; --bg-header: #111827;
+            --text-main: #f1f5f9; --text-muted: #9ca3af; --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --total-color: #60a5fa; --visitor-color: #34d399;
+            --total-bg: rgba(96,165,250,0.12); --visitor-bg: rgba(52,211,153,0.12);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body); color: var(--text-main);
+            transition: background 0.25s, color 0.25s;
+            min-height: 100vh; padding: 1.2rem;
+        }
+        ::-webkit-scrollbar { width:6px; height:6px; }
+        ::-webkit-scrollbar-track { background:var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background:var(--accent); border-radius:10px; }
+        .app-wrapper { max-width:1400px; margin:0 auto; }
+
+        /* ================================================================
+           AUTH LOADING OVERLAY (Admin Auth Gate)
+           ================================================================ */
+        #authLoading {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-body);
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        #authLoading.hidden { display: none !important; }
+        #authLoading .auth-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        #authLoading p {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Main content hidden until authenticated */
+        #mainContent { display: none; }
+        #mainContent.visible {
+            display: block;
+            animation: fadeInAuth 0.5s ease-out;
+        }
+        @keyframes fadeInAuth {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Admin badge + My Account */
+        .admin-badge {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid #f59e0b;
+            white-space: nowrap;
+        }
+        .admin-badge.visible { display: inline-flex; }
+        .admin-badge .session-pill {
+            font-size: 0.65rem;
+            padding: 1px 5px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            margin-left: 2px;
+        }
+
+        .btn-my-account {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .btn-my-account:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .header-left i {
+            font-size: 2rem;
+            color: var(--accent);
+            background: var(--accent-soft);
+            padding: 12px;
+            border-radius: 14px;
+        }
+        .header-left h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .header-left h1 span {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .header-right .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--bg-body);
+            padding: 0.2rem 0.2rem 0.2rem 0.8rem;
+            border-radius: 40px;
+            border: 1px solid var(--border-light);
+        }
+        .header-right .filter-group i {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .header-right select {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 0.8rem 0.5rem 0.2rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+        }
+        .header-right select option { background: var(--bg-card); color: var(--text-main); }
+        .refresh-btn {
+            background: var(--accent-soft);
+            border: 1px solid var(--border-light);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .refresh-btn:hover { background: var(--accent); color: white; border-color: var(--accent); transform: translateY(-2px); }
+        .refresh-btn i { color: var(--accent); }
+        .refresh-btn:hover i { color: white; }
+        .refresh-btn.loading { opacity:0.7; pointer-events:none; }
+        .refresh-btn.loading i { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            transition: 0.25s ease;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-card .stat-label i { font-size: 0.9rem; }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 4px;
+            letter-spacing: -0.5px;
+        }
+        .stat-card .stat-change {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .stat-change.up { color: var(--success); background: rgba(16,185,129,0.1); }
+        .stat-change.down { color: var(--danger); background: rgba(239,68,68,0.1); }
+        .stat-change.neutral { color: var(--warning); background: rgba(245,158,11,0.1); }
+        .stat-card.total .stat-value { color: var(--total-color); }
+        .stat-card.unique .stat-value { color: var(--visitor-color); }
+        .stat-card.avg .stat-value { color: var(--warning); }
+        .stat-card.peak .stat-value { color: var(--danger); }
+
+        /* CHARTS */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+        }
+        .chart-card .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chart-card .chart-title i { color: var(--accent); }
+        .chart-container { position: relative; width: 100%; height: 280px; }
+        .chart-container canvas { width: 100% !important; height: 100% !important; }
+
+        /* TABLE */
+        .table-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .table-header .table-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .table-header .table-title i { color: var(--accent); }
+        .table-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .table-controls input,
+        .table-controls select {
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .table-controls input:focus,
+        .table-controls select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        thead { background: var(--bg-body); }
+        thead th {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-light);
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+        }
+        thead th:hover { color: var(--accent); }
+        thead th i { font-size: 0.7rem; margin-left: 4px; }
+        tbody td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-main);
+        }
+        tbody tr { transition: 0.15s; }
+        tbody tr:hover { background: var(--accent-soft); }
+        tbody tr:last-child td { border-bottom: none; }
+        .badge-total { background: var(--total-bg); color: var(--total-color); padding: 2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+        .badge-unique { background: var(--visitor-bg); color: var(--visitor-color); padding: 2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; }
+        .no-data { text-align:center; padding:2rem; color:var(--text-muted); }
+        .no-data i { font-size:2.5rem; display:block; margin-bottom:0.8rem; opacity:0.4; }
+
+        /* LOADING OVERLAY (data fetch) */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        .loading-overlay.show { display: flex; }
+        .loading-spinner {
+            background: var(--bg-card);
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+        }
+        .loading-spinner i { font-size:2.5rem; color:var(--accent); animation: spin 1s linear infinite; }
+        .loading-spinner p { margin-top:0.8rem; color:var(--text-muted); font-weight:500; }
+
+        /* CUSTOM DATE POPUP (RANGE) */
+        .date-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .date-popup-overlay.show { display: flex; }
+        .date-popup {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            border: var(--card-border);
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .date-popup h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .date-popup h3 i { color: var(--accent); }
+        .date-popup p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .date-popup .range-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .date-popup .range-group label {
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .date-popup .range-group input[type="date"] {
+            width: 100%;
+            padding: 0.7rem 0.8rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .date-popup .range-group input[type="date"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+        .date-popup .popup-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+        }
+        .date-popup .popup-actions button {
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .date-popup .popup-actions .btn-cancel {
+            background: var(--bg-body);
+            color: var(--text-muted);
+            border: 1px solid var(--border-light);
+        }
+        .date-popup .popup-actions .btn-cancel:hover { background: var(--border-light); }
+        .date-popup .popup-actions .btn-apply {
+            background: var(--accent);
+            color: white;
+        }
+        .date-popup .popup-actions .btn-apply:hover { background: #1d4ed8; transform: translateY(-2px); }
+
+        /* TOAST */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 400px;
+            font-family: 'Inter', sans-serif;
+        }
+        .toast-notification.show { transform: translateY(0); opacity: 1; }
+        .toast-notification.success { background: #10b981; color: white; }
+        .toast-notification.error { background: #ef4444; color: white; }
+        .toast-notification.warning { background: #f59e0b; color: #1e293b; }
+
+        /* RESPONSIVE */
+        @media (max-width:1024px) {
+            .charts-grid { grid-template-columns:1fr; }
+            .chart-container { height:240px; }
+        }
+        @media (max-width:768px) {
+            body { padding:0.8rem; }
+            .header { padding:1rem 1.2rem; flex-direction:column; align-items:stretch; gap:0.8rem; }
+            .header-left { gap:10px; }
+            .header-left i { font-size:1.4rem; padding:10px; }
+            .header-left h1 { font-size:1.2rem; }
+            .header-right { justify-content:stretch; flex-wrap:wrap; }
+            .header-right .filter-group { flex:1; justify-content:space-between; padding:0.2rem 0.2rem 0.2rem 1rem; }
+            .header-right .refresh-btn { flex:1; justify-content:center; padding:0.5rem 0.8rem; font-size:0.8rem; }
+            .stats-grid { grid-template-columns:repeat(2,1fr); gap:0.8rem; }
+            .stat-card { padding:0.8rem 1rem; }
+            .stat-card .stat-value { font-size:1.4rem; }
+            .stat-card .stat-label { font-size:0.65rem; }
+            .chart-card { padding:1rem; }
+            .chart-container { height:200px; }
+            .table-card { padding:1rem; }
+            .table-header { flex-direction:column; align-items:stretch; }
+            .table-controls { flex-wrap:wrap; }
+            .table-controls input, .table-controls select { flex:1; min-width:120px; }
+            thead th, tbody td { padding:0.5rem 0.6rem; font-size:0.75rem; }
+            .badge-total, .badge-unique { font-size:0.6rem; padding:1px 8px; }
+            .date-popup { padding:1.5rem; }
+            .date-popup .range-group { grid-template-columns:1fr; }
+        }
+        @media (max-width:480px) {
+            .stats-grid { grid-template-columns:1fr 1fr; gap:0.6rem; }
+            .stat-card { padding:0.6rem 0.8rem; }
+            .stat-card .stat-value { font-size:1.2rem; }
+            .stat-card .stat-label { font-size:0.6rem; }
+            .stat-card .stat-change { font-size:0.6rem; padding:1px 8px; }
+            .chart-container { height:170px; }
+            .table-wrapper { margin:0 -0.5rem; }
+            table { font-size:0.7rem; }
+            thead th, tbody td { padding:0.4rem 0.5rem; }
+        }
+        @media (max-width:380px) {
+            .stats-grid { grid-template-columns:1fr 1fr; gap:0.4rem; }
+            .stat-card .stat-value { font-size:1rem; }
+            .stat-card .stat-label { font-size:0.55rem; }
+            .header-left h1 { font-size:1rem; }
+            .header-left i { font-size:1.2rem; padding:8px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- AUTH LOADING OVERLAY (Admin gate) -->
+<!-- ================================================================ -->
+<div id="authLoading">
+    <div class="auth-spinner"></div>
+    <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+</div>
+
+<!-- LOADING (data fetch) -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <i class="fas fa-spinner"></i>
+        <p>Loading Analytics...</p>
+    </div>
+</div>
+
+<!-- CUSTOM DATE POPUP (RANGE) -->
+<div class="date-popup-overlay" id="datePopupOverlay">
+    <div class="date-popup">
+        <h3><i class="fas fa-calendar-alt"></i> Select Date Range</h3>
+        <p>Choose a start and end date to view analytics for that period.</p>
+        <div class="range-group">
+            <div>
+                <label for="fromDate">From</label>
+                <input type="date" id="fromDate">
+            </div>
+            <div>
+                <label for="toDate">To</label>
+                <input type="date" id="toDate">
+            </div>
+        </div>
+        <div class="popup-actions">
+            <button class="btn-cancel" onclick="closeDatePopup()">Cancel</button>
+            <button class="btn-apply" onclick="applyCustomDateRange()">Apply Range</button>
+        </div>
+    </div>
+</div>
+
+<div id="mainContent">
+<div class="app-wrapper">
+    <!-- HEADER (Refresh + Filter only) -->
+    <header class="header">
+        <div class="header-left">
+            <i class="fas fa-chart-pie"></i>
+            <h1>📊 <span>Visitor Analytics</span></h1>
+        </div>
+        <div class="header-right">
+            <span class="admin-badge" id="adminBadge">
+                <i class="fas fa-user-shield"></i>
+                <span id="adminNameDisplay">Admin</span>
+                <span class="session-pill" id="sessionIndicator">Session</span>
+            </span>
+            <a href="../../Study Material/My Account/myaccount.html" class="btn-my-account">
+                <i class="fas fa-user-circle"></i> My Account
+            </a>
+            <div class="filter-group">
+                <i class="fas fa-calendar-day"></i>
+                <select id="dateFilterSelect" onchange="handleDateFilter()">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="this-month">This Month</option>
+                    <option value="last-30">Last 30 Days</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+            <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+        </div>
+    </header>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card total">
+            <div class="stat-label"><i class="fas fa-chart-line"></i> Total Visits</div>
+            <div class="stat-value" id="totalVisits">—</div>
+            <div class="stat-change neutral" id="totalChange">Loading...</div>
+        </div>
+        <div class="stat-card unique">
+            <div class="stat-label"><i class="fas fa-users"></i> Unique Visitors</div>
+            <div class="stat-value" id="uniqueVisitors">—</div>
+            <div class="stat-change neutral" id="uniqueChange">Loading...</div>
+        </div>
+        <div class="stat-card avg">
+            <div class="stat-label"><i class="fas fa-calculator"></i> Avg Daily Visits</div>
+            <div class="stat-value" id="avgDaily">—</div>
+            <div class="stat-change neutral" id="avgChange">Last 7 days</div>
+        </div>
+        <div class="stat-card peak">
+            <div class="stat-label"><i class="fas fa-fire"></i> Peak Day</div>
+            <div class="stat-value" id="peakDay">—</div>
+            <div class="stat-change neutral" id="peakValue">—</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title"><i class="fas fa-chart-bar"></i> Daily Visitor Trends</div>
+            <div class="chart-container"><canvas id="trendChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title"><i class="fas fa-chart-doughnut"></i> Total vs Unique</div>
+            <div class="chart-container"><canvas id="pieChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+        <div class="table-header">
+            <div class="table-title"><i class="fas fa-table"></i> Visitor Data</div>
+            <div class="table-controls">
+                <input type="text" id="searchInput" placeholder="🔍 Search..." oninput="filterTable()">
+                <select id="sortSelect" onchange="sortTable()">
+                    <option value="date-desc">Date ↓</option>
+                    <option value="date-asc">Date ↑</option>
+                    <option value="total-desc">Total Visit ↓</option>
+                    <option value="total-asc">Total Visit ↑</option>
+                    <option value="unique-desc">Unique Visit ↓</option>
+                    <option value="unique-asc">Unique Visit ↑</option>
+                </select>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTableBy('sr')">Sr. No <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTableBy('date')">Date <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTableBy('total')">Total Visit <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTableBy('unique')">Unique Visit <i class="fas fa-sort"></i></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="4" class="no-data"><i class="fas fa-spinner fa-spin"></i> Loading data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div><!-- /#mainContent -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // ============================================================
+    // SECTION 1 — ADMIN AUTHENTICATION GUARD
+    // ============================================================
+    function readMyAccountSession(key) {
+        try {
+            const rawLocal = localStorage.getItem(key);
+            if (rawLocal) {
+                const parsed = JSON.parse(rawLocal);
+                if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                    if (parsed.expiry && Date.now() >= parsed.expiry) {
+                        localStorage.removeItem(key);
+                        return null;
+                    }
+                    return parsed.value;
+                }
+                return parsed;
+            }
+        } catch (e) {}
+        try {
+            const rawSession = sessionStorage.getItem(key);
+            if (rawSession) return JSON.parse(rawSession);
+        } catch (e) {}
+        return null;
+    }
+
+    function checkAdminAuth() {
+        const userType = readMyAccountSession('Universal_user_type');
+        const user     = readMyAccountSession('Universal_user');
+        const expiry   = readMyAccountSession('Universal_session_expiry');
+
+        if (!userType || !user) return { ok: false, reason: 'no-session' };
+        if (userType !== 'admin') return { ok: false, reason: 'not-admin', userType };
+        if (expiry && typeof expiry === 'number' && Date.now() >= expiry) {
+            ['Universal_user','Universal_user_data','Universal_user_type',
+             'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+                localStorage.removeItem(k);
+                sessionStorage.removeItem(k);
+            });
+            return { ok: false, reason: 'expired' };
+        }
+        return { ok: true, userType, user };
+    }
+
+    function redirectToMyAccount(reason) {
+        console.warn('🔒 Admin auth failed:', reason);
+        try {
+            if (window.top && window.top !== window) {
+                window.top.location.href = '../../Study Material/My Account/myaccount.html';
+            } else {
+                window.location.href = '../../Study Material/My Account/myaccount.html';
+            }
+        } catch (e) {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    }
+
+    function updateAdminBadge() {
+        const userData = readMyAccountSession('Universal_user_data');
+        const user = readMyAccountSession('Universal_user');
+        const expiry = readMyAccountSession('Universal_session_expiry');
+
+        const badge = document.getElementById('adminBadge');
+        const nameDisplay = document.getElementById('adminNameDisplay');
+        const indicator = document.getElementById('sessionIndicator');
+
+        let displayName = 'Admin';
+        if (userData) {
+            if (userData['User Name']) displayName = userData['User Name'];
+            else if (userData['Full Name']) displayName = userData['Full Name'];
+            else if (userData['First Name']) {
+                displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+            }
+        } else if (user) {
+            displayName = user;
+        }
+
+        if (nameDisplay) nameDisplay.textContent = displayName;
+        if (badge) badge.classList.add('visible');
+
+        if (indicator) {
+            const isRememberMe = !!expiry && (expiry - Date.now()) > 60000;
+            if (isRememberMe) {
+                const remaining = expiry - Date.now();
+                const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
+                const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+                indicator.style.background = 'rgba(16,185,129,0.3)';
+                indicator.style.color = '#34d399';
+            } else {
+                indicator.textContent = 'Session';
+                indicator.style.background = 'rgba(255,255,255,0.15)';
+                indicator.style.color = '';
+            }
+        }
+    }
+
+    function revealMainContent() {
+        const main = document.getElementById('mainContent');
+        const loading = document.getElementById('authLoading');
+        if (loading) loading.classList.add('hidden');
+        if (main) {
+            main.style.display = 'block';
+            main.classList.add('visible');
+        }
+    }
+
+    function gateAdminAccess(onAuthorized) {
+        const mainEl = document.getElementById('mainContent');
+        const loadingEl = document.getElementById('authLoading');
+        const alreadyRevealed = mainEl &&
+            (mainEl.style.display === 'block' || mainEl.classList.contains('visible'));
+        const loadingHidden = loadingEl && loadingEl.classList.contains('hidden');
+
+        if (alreadyRevealed || loadingHidden) {
+            console.log('✅ loginadmin.js already authorized this session');
+            onAuthorized();
+            return;
+        }
+
+        const auth = checkAdminAuth();
+        if (auth.ok) {
+            console.log('✅ Admin auth verified via session keys:', auth.user);
+            revealMainContent();
+            onAuthorized();
+        } else {
+            showAccessDeniedAndRedirect(auth.reason);
+        }
+    }
+
+    function showAccessDeniedAndRedirect(reason) {
+        const loadingEl = document.getElementById('authLoading');
+        if (loadingEl) {
+            loadingEl.innerHTML = `
+                <div style="text-align:center; padding: 2rem;">
+                    <div style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;">🔒</div>
+                    <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                    <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        ${reason === 'not-admin'
+                            ? 'You are logged in as a student. Please login as admin.'
+                            : reason === 'expired'
+                            ? 'Your session has expired. Please login again.'
+                            : 'Please login as admin to access this page.'}
+                    </p>
+                    <div class="auth-spinner" style="margin: 0 auto;"></div>
+                    <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                        Redirecting to My Account...
+                    </p>
+                </div>
+            `;
+        }
+        setTimeout(() => redirectToMyAccount(reason), 1500);
+    }
+
+    // ============================================================
+    // THEME SYNC (matches ExamDashboard / JRKG pattern)
+    // ============================================================
+    function syncThemeWithParent() {
+        const localTheme = localStorage.getItem('user-theme-preference');
+        if (localTheme) {
+            document.body.setAttribute('data-theme', localTheme);
+            document.documentElement.setAttribute('data-theme', localTheme);
+        } else {
+            try {
+                if (window.parent && window.parent.document.body) {
+                    const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                    if (parentTheme) {
+                        document.body.setAttribute('data-theme', parentTheme);
+                        document.documentElement.setAttribute('data-theme', parentTheme);
+                    }
+                }
+            } catch (e) { }
+        }
+    }
+    window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+    window.addEventListener('storage', function (e) {
+        if (e.key === 'user-theme-preference') syncThemeWithParent();
+        if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+    });
+    window.addEventListener('message', function (event) {
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme;
+            if (newTheme) {
+                document.body.setAttribute('data-theme', newTheme);
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        }
+    });
+
+    // ============================================================
+    // CONFIG
+    // ============================================================
+    const CONFIG = {
+        scriptUrl: 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec',
+        spreadsheetId: '1hMIJWJRA6Iu9SXS8K-rD_6bUjTL-Hh1dI-OfKvmALuA',
+        sheetName: 'Visitor',
+        cacheKey: 'visitor_analytics_cache',
+        cacheExpiry: 5 * 60 * 1000,
+        bgSyncInterval: 30000
+    };
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let allData = [];
+    let filteredData = [];
+    let trendChart = null;
+    let pieChart = null;
+    let customFromDate = '';
+    let customToDate = '';
+
+    // ============================================================
+    // DOM REFS
+    // ============================================================
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const totalVisitsEl = document.getElementById('totalVisits');
+    const uniqueVisitorsEl = document.getElementById('uniqueVisitors');
+    const avgDailyEl = document.getElementById('avgDaily');
+    const peakDayEl = document.getElementById('peakDay');
+    const peakValueEl = document.getElementById('peakValue');
+    const tableBody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const dateFilterSelect = document.getElementById('dateFilterSelect');
+    const datePopupOverlay = document.getElementById('datePopupOverlay');
+    const fromDateInput = document.getElementById('fromDate');
+    const toDateInput = document.getElementById('toDate');
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function formatNumber(num) { return num.toLocaleString('en-IN'); }
+
+    function getTodayDate() {
+        const d = new Date();
+        return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    }
+
+    function getYesterdayDate() {
+        const d = new Date();
+        d.setDate(d.getDate() - 1);
+        return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    }
+
+    function parseDate(dateStr) {
+        if (!dateStr) return null;
+        try {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) return new Date(parts[2], parts[1]-1, parts[0]);
+            return new Date(dateStr);
+        } catch(e) { return null; }
+    }
+
+    function formatDateDisplay(dateStr) {
+        if (!dateStr) return '—';
+        try {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                const d = new Date(parts[2], parts[1]-1, parts[0]);
+                return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+            }
+            return dateStr;
+        } catch(e) { return dateStr; }
+    }
+
+    function formatDateForInput(dateStr) {
+        if (!dateStr) return '';
+        try {
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+            }
+            return '';
+        } catch(e) { return ''; }
+    }
+
+    function getStartOfMonth() {
+        const d = new Date();
+        d.setDate(1);
+        return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    }
+
+    function getLast30DaysStart() {
+        const d = new Date();
+        d.setDate(d.getDate() - 29);
+        return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    }
+
+    function isDateInRange(dateStr, fromStr, toStr) {
+        const d = parseDate(dateStr);
+        const from = parseDate(fromStr);
+        const to = parseDate(toStr);
+        if (!d || !from || !to) return false;
+        return d >= from && d <= to;
+    }
+
+    // ============================================================
+    // CACHE
+    // ============================================================
+    function getCachedData() {
+        try {
+            const raw = localStorage.getItem(CONFIG.cacheKey);
+            if (!raw) return null;
+            const cached = JSON.parse(raw);
+            if (Date.now() - cached.timestamp < CONFIG.cacheExpiry) {
+                return cached.data;
+            }
+            return null;
+        } catch(e) { return null; }
+    }
+
+    function setCachedData(data) {
+        try {
+            localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
+        } catch(e) {}
+    }
+
+    // ============================================================
+    // DATA FETCH
+    // ============================================================
+    async function fetchData(force = false, showLoader = true) {
+        if (!force) {
+            const cached = getCachedData();
+            if (cached && cached.length) {
+                allData = cached;
+                applyFilterAndRender();
+                if (showLoader) showToast('Data loaded from cache', 'success');
+                return;
+            }
+        }
+
+        if (showLoader) {
+            showLoading(true);
+            refreshBtn.classList.add('loading');
+        }
+
+        try {
+            const url = `${CONFIG.scriptUrl}?spreadsheetId=${CONFIG.spreadsheetId}&sheetName=${CONFIG.sheetName}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network error');
+            const result = await response.json();
+
+            if (result.status === 'success' && result.data) {
+                allData = result.data
+                    .filter(row => row['Date'] && row['Total Visit'] !== undefined && row['Unique Visit'] !== undefined)
+                    .map((row, index) => ({
+                        sr: index + 1,
+                        date: row['Date'] || '',
+                        total: parseInt(row['Total Visit']) || 0,
+                        unique: parseInt(row['Unique Visit']) || 0
+                    }))
+                    .sort((a,b) => {
+                        const da = parseDate(a.date), db = parseDate(b.date);
+                        if (da && db) return da - db;
+                        return 0;
+                    });
+
+                setCachedData(allData);
+                applyFilterAndRender();
+                if (showLoader) showToast('Data refreshed successfully!', 'success');
+            } else {
+                throw new Error(result.message || 'Failed to fetch');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            if (showLoader) showToast('Error loading data: ' + error.message, 'error');
+            const stale = localStorage.getItem(CONFIG.cacheKey);
+            if (stale) {
+                try {
+                    const parsed = JSON.parse(stale);
+                    if (parsed.data && parsed.data.length) {
+                        allData = parsed.data;
+                        applyFilterAndRender();
+                        if (showLoader) showToast('Using stale cached data', 'warning');
+                    }
+                } catch(e) {}
+            }
+        } finally {
+            if (showLoader) {
+                showLoading(false);
+                refreshBtn.classList.remove('loading');
+            }
+        }
+    }
+
+    async function forceRefresh() {
+        await fetchData(true, true);
+    }
+
+    // ============================================================
+    // FILTER LOGIC
+    // ============================================================
+    function applyFilterAndRender() {
+        const filter = dateFilterSelect.value;
+        let filtered = [];
+
+        if (filter === 'today') {
+            const todayStr = getTodayDate();
+            filtered = allData.filter(row => row.date === todayStr);
+            if (!filtered.length) {
+                showToast(`No data available for today (${todayStr})`, 'warning');
+            }
+        } else if (filter === 'yesterday') {
+            const yesterdayStr = getYesterdayDate();
+            filtered = allData.filter(row => row.date === yesterdayStr);
+            if (!filtered.length) {
+                showToast(`No data available for yesterday (${yesterdayStr})`, 'warning');
+            }
+        } else if (filter === 'this-month') {
+            const startOfMonth = getStartOfMonth();
+            const todayStr = getTodayDate();
+            filtered = allData.filter(row => isDateInRange(row.date, startOfMonth, todayStr));
+            if (!filtered.length) {
+                showToast(`No data available for this month`, 'warning');
+            }
+        } else if (filter === 'last-30') {
+            const start30 = getLast30DaysStart();
+            const todayStr = getTodayDate();
+            filtered = allData.filter(row => isDateInRange(row.date, start30, todayStr));
+            if (!filtered.length) {
+                showToast(`No data available for last 30 days`, 'warning');
+            }
+        } else if (filter === 'custom') {
+            if (customFromDate && customToDate) {
+                filtered = allData.filter(row => isDateInRange(row.date, customFromDate, customToDate));
+                if (!filtered.length) {
+                    showToast(`No data available for selected range (${customFromDate} - ${customToDate})`, 'warning');
+                }
+            } else {
+                filtered = allData.filter(row => row.date === getTodayDate());
+            }
+        }
+
+        filteredData = filtered.length ? filtered : [];
+        updateStats();
+        updateCharts();
+        renderTable();
+    }
+
+    // ============================================================
+    // DATE FILTER HANDLER
+    // ============================================================
+    function handleDateFilter() {
+        const val = dateFilterSelect.value;
+        if (val === 'custom') {
+            openDatePopup();
+        } else {
+            customFromDate = '';
+            customToDate = '';
+            applyFilterAndRender();
+        }
+    }
+
+    function openDatePopup() {
+        const today = new Date();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        fromDateInput.value = sevenDaysAgo.toISOString().split('T')[0];
+        toDateInput.value = today.toISOString().split('T')[0];
+        datePopupOverlay.classList.add('show');
+    }
+
+    function closeDatePopup() {
+        datePopupOverlay.classList.remove('show');
+        const current = dateFilterSelect.value;
+        if (current === 'custom' && (!customFromDate || !customToDate)) {
+            dateFilterSelect.value = 'today';
+            applyFilterAndRender();
+        }
+    }
+
+    function applyCustomDateRange() {
+        const fromVal = fromDateInput.value;
+        const toVal = toDateInput.value;
+        if (!fromVal || !toVal) {
+            showToast('Please select both From and To dates', 'warning');
+            return;
+        }
+        if (fromVal > toVal) {
+            showToast('From date cannot be after To date', 'warning');
+            return;
+        }
+        const fromParts = fromVal.split('-');
+        const toParts = toVal.split('-');
+        customFromDate = `${fromParts[2]}/${fromParts[1]}/${fromParts[0]}`;
+        customToDate = `${toParts[2]}/${toParts[1]}/${toParts[0]}`;
+        datePopupOverlay.classList.remove('show');
+        dateFilterSelect.value = 'custom';
+        applyFilterAndRender();
+        showToast(`Showing data from ${customFromDate} to ${customToDate}`, 'success');
+    }
+
+    datePopupOverlay.addEventListener('click', function(e) {
+        if (e.target === this) closeDatePopup();
+    });
+
+    // ============================================================
+    // UPDATE STATS
+    // ============================================================
+    function updateStats() {
+        const data = filteredData.length ? filteredData : allData;
+        if (!data.length) {
+            totalVisitsEl.textContent = '—';
+            uniqueVisitorsEl.textContent = '—';
+            avgDailyEl.textContent = '—';
+            peakDayEl.textContent = '—';
+            peakValueEl.textContent = '—';
+            document.getElementById('totalChange').textContent = 'No data';
+            document.getElementById('totalChange').className = 'stat-change neutral';
+            document.getElementById('uniqueChange').textContent = 'No data';
+            document.getElementById('uniqueChange').className = 'stat-change neutral';
+            return;
+        }
+
+        const total = data.reduce((s, r) => s + r.total, 0);
+        const unique = data.reduce((s, r) => s + r.unique, 0);
+        totalVisitsEl.textContent = formatNumber(total);
+        uniqueVisitorsEl.textContent = formatNumber(unique);
+
+        const sorted = [...data].sort((a,b) => {
+            const da = parseDate(a.date), db = parseDate(b.date);
+            if (da && db) return db - da;
+            return 0;
+        });
+        const last7 = sorted.slice(0, 7);
+        const avg7 = last7.length ? Math.round(last7.reduce((s,r) => s + r.total, 0) / last7.length) : 0;
+        avgDailyEl.textContent = formatNumber(avg7);
+        document.getElementById('avgChange').textContent = `Last ${last7.length} days`;
+
+        let maxTotal = 0, peakDate = '';
+        data.forEach(row => { if (row.total > maxTotal) { maxTotal = row.total; peakDate = row.date; } });
+        peakDayEl.textContent = peakDate ? formatDateDisplay(peakDate) : '—';
+        peakValueEl.textContent = peakDate ? formatNumber(maxTotal) + ' visits' : '—';
+
+        const sortedDates = [...data].sort((a,b) => {
+            const da = parseDate(a.date), db = parseDate(b.date);
+            if (da && db) return db - da;
+            return 0;
+        });
+        if (sortedDates.length >= 2) {
+            const todayRow = sortedDates[0];
+            const yesterdayRow = sortedDates[1] || sortedDates[0];
+            const totalChange = todayRow.total - yesterdayRow.total;
+            const uniqueChange = todayRow.unique - yesterdayRow.unique;
+            updateChangeDisplay('totalChange', totalChange);
+            updateChangeDisplay('uniqueChange', uniqueChange);
+        } else {
+            document.getElementById('totalChange').textContent = 'No change data';
+            document.getElementById('totalChange').className = 'stat-change neutral';
+            document.getElementById('uniqueChange').textContent = 'No change data';
+            document.getElementById('uniqueChange').className = 'stat-change neutral';
+        }
+    }
+
+    function updateChangeDisplay(elId, change) {
+        const el = document.getElementById(elId);
+        if (change > 0) {
+            el.textContent = `↑ +${formatNumber(change)} from previous`;
+            el.className = 'stat-change up';
+        } else if (change < 0) {
+            el.textContent = `↓ ${formatNumber(change)} from previous`;
+            el.className = 'stat-change down';
+        } else {
+            el.textContent = '↔ No change';
+            el.className = 'stat-change neutral';
+        }
+    }
+
+    // ============================================================
+    // CHARTS
+    // ============================================================
+    function updateCharts() {
+        if (typeof Chart === 'undefined') return;
+        const data = filteredData.length ? filteredData : allData;
+        const sorted = [...data].sort((a,b) => {
+            const da = parseDate(a.date), db = parseDate(b.date);
+            if (da && db) return da - db;
+            return 0;
+        });
+
+        const labels = sorted.map(row => formatDateDisplay(row.date));
+        const totalData = sorted.map(row => row.total);
+        const uniqueData = sorted.map(row => row.unique);
+
+        const ctx1 = document.getElementById('trendChart').getContext('2d');
+        const ctx2 = document.getElementById('pieChart').getContext('2d');
+
+        if (trendChart) trendChart.destroy();
+        if (pieChart) pieChart.destroy();
+
+        trendChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Total Visits', data: totalData, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#3b82f6', borderWidth: 2 },
+                    { label: 'Unique Visitors', data: uniqueData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#10b981', borderWidth: 2 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 12, usePointStyle: true, pointStyle: 'circle' } } },
+                scales: { y: { beginAtZero: true, ticks: { callback: v => formatNumber(v) } }, x: { ticks: { maxRotation: 45, minRotation: 0 } } }
+            }
+        });
+
+        const totalSum = data.reduce((s, r) => s + r.total, 0);
+        const uniqueSum = data.reduce((s, r) => s + r.unique, 0);
+        pieChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Total Visits', 'Unique Visitors'],
+                datasets: [{ data: [totalSum, uniqueSum], backgroundColor: ['#3b82f6', '#10b981'], borderColor: ['#2563eb', '#059669'], borderWidth: 2 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, usePointStyle: true, pointStyle: 'circle' } } }, cutout: '60%' }
+        });
+    }
+
+    // ============================================================
+    // TABLE
+    // ============================================================
+    function renderTable() {
+        const data = filteredData.length ? filteredData : allData;
+        if (!data.length) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="no-data"><i class="fas fa-inbox"></i> No data available</td></tr>`;
+            return;
+        }
+        let html = '';
+        data.forEach((row, index) => {
+            html += `<tr><td>${index + 1}</td><td>${formatDateDisplay(row.date)}</td><td><span class="badge-total">${formatNumber(row.total)}</span></td><td><span class="badge-unique">${formatNumber(row.unique)}</span></td></tr>`;
+        });
+        tableBody.innerHTML = html;
+    }
+
+    function filterTable() {
+        const query = searchInput.value.toLowerCase().trim();
+        if (!query) {
+            filteredData = [...allData];
+        } else {
+            filteredData = allData.filter(row =>
+                row.date.toLowerCase().includes(query) ||
+                row.sr.toString().includes(query) ||
+                row.total.toString().includes(query) ||
+                row.unique.toString().includes(query)
+            );
+        }
+        renderTable();
+    }
+
+    function sortTable() {
+        const [key, direction] = sortSelect.value.split('-');
+        filteredData.sort((a,b) => {
+            let va, vb;
+            if (key === 'date') { va = parseDate(a.date); vb = parseDate(b.date); }
+            else if (key === 'sr') { va = a.sr; vb = b.sr; }
+            else if (key === 'total') { va = a.total; vb = b.total; }
+            else if (key === 'unique') { va = a.unique; vb = b.unique; }
+            if (va < vb) return direction === 'asc' ? -1 : 1;
+            if (va > vb) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+        renderTable();
+    }
+
+    function sortTableBy(column) {
+        const [currentKey, currentDir] = sortSelect.value.split('-');
+        const newDir = (currentKey === column && currentDir === 'asc') ? 'desc' : 'asc';
+        sortSelect.value = `${column}-${newDir}`;
+        sortTable();
+    }
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(message, type = 'success') {
+        const existing = document.querySelector('.toast-notification');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => { toast.classList.add('show'); });
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 400);
+        }, 4000);
+    }
+
+    // ============================================================
+    // LOADING
+    // ============================================================
+    function showLoading(show) { loadingOverlay.classList.toggle('show', show); }
+
+    // ============================================================
+    // BACKGROUND SYNC
+    // ============================================================
+    let isBackgroundSyncing = false;
+    let lastSyncTime = 0;
+
+    async function backgroundSync() {
+        if (isBackgroundSyncing) return;
+        isBackgroundSyncing = true;
+        try {
+            const url = `${CONFIG.scriptUrl}?spreadsheetId=${CONFIG.spreadsheetId}&sheetName=${CONFIG.sheetName}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network error');
+            const result = await response.json();
+            if (result.status === 'success' && result.data) {
+                const freshData = result.data
+                    .filter(row => row['Date'] && row['Total Visit'] !== undefined && row['Unique Visit'] !== undefined)
+                    .map((row, index) => ({
+                        sr: index + 1,
+                        date: row['Date'] || '',
+                        total: parseInt(row['Total Visit']) || 0,
+                        unique: parseInt(row['Unique Visit']) || 0
+                    }))
+                    .sort((a,b) => {
+                        const da = parseDate(a.date), db = parseDate(b.date);
+                        if (da && db) return da - db;
+                        return 0;
+                    });
+                const cached = getCachedData();
+                let hasChanged = false;
+                if (!cached || cached.length !== freshData.length) {
+                    hasChanged = true;
+                } else if (freshData.length > 0 && cached.length > 0) {
+                    const firstFresh = freshData[0]?.date;
+                    const lastFresh = freshData[freshData.length-1]?.date;
+                    const firstCached = cached[0]?.date;
+                    const lastCached = cached[cached.length-1]?.date;
+                    if (firstFresh !== firstCached || lastFresh !== lastCached) {
+                        hasChanged = true;
+                    }
+                }
+                if (hasChanged) {
+                    allData = freshData;
+                    setCachedData(allData);
+                    applyFilterAndRender();
+                    showToast('📢 Data updated in background', 'success');
+                } else {
+                    setCachedData(cached || allData);
+                }
+                lastSyncTime = Date.now();
+            }
+        } catch (error) {
+            console.warn('Background sync error:', error);
+        } finally {
+            isBackgroundSyncing = false;
+        }
+    }
+
+    // ============================================================
+    // SECTION — INITIALIZATION (runs after auth gate passes)
+    // ============================================================
+    function initApp() {
+        updateAdminBadge();
+        fetchData(false, true);
+        setInterval(backgroundSync, CONFIG.bgSyncInterval);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && Date.now() - lastSyncTime > CONFIG.bgSyncInterval) {
+                backgroundSync();
+            }
+        });
+        console.log('📊 Visitor Analytics ready (auth-gated)');
+    }
+
+    // ============================================================
+    // SECTION — BOOTSTRAP WITH AUTH GATE
+    // ============================================================
+    (function bootstrap() {
+        syncThemeWithParent();
+
+        const startWhenReady = () => {
+            setTimeout(() => {
+                gateAdminAccess(() => initApp());
+            }, 800);
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startWhenReady);
+        } else {
+            startWhenReady();
+        }
+
+        // Safety net: 5s redirect if still unauthorized
+        setTimeout(() => {
+            const mainEl = document.getElementById('mainContent');
+            const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+            const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+            if (stillHidden && !loadingHidden) {
+                const auth = checkAdminAuth();
+                if (!auth.ok) {
+                    console.warn('⏰ Safety net: redirecting');
+                    redirectToMyAccount(auth.reason);
+                }
+            }
+        }, 5000);
+    })();
+
+    // ============================================================
+    // WINDOW EXPORTS
+    // ============================================================
+    window.checkAdminAuth = checkAdminAuth;
+    window.updateAdminBadge = updateAdminBadge;
+</script>
+</body>
+</html>
