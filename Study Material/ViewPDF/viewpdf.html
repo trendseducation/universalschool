@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>View PDF · Universal School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --logo-filter: none;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --admin-gold: #f59e0b;
+            --teacher-teal: #0d9488;
+            --overlay-color: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-header: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --logo-filter: brightness(0) invert(1);
+            --overlay-color: rgba(255, 255, 255, 0.05);
+            --teacher-teal: #14b8a6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        * {
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-touch-callout: none !important;
+        }
+
+        input, textarea, [contenteditable="true"] {
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+        }
+
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem 2.5rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            background: var(--bg-header);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            transition: background var(--transition-normal);
+        }
+
+        .brand-area { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 44px; width: auto; filter: var(--logo-filter); object-fit: contain; }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* ⭐ Role badge */
+        .role-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid currentColor;
+            white-space: nowrap;
+        }
+        .role-badge.student { color: #2563eb; background: rgba(37, 99, 235, 0.12); }
+        .role-badge.teacher { color: var(--teacher-teal); background: rgba(13, 148, 136, 0.12); }
+        .role-badge.admin   { color: var(--admin-gold); background: rgba(245, 158, 11, 0.15); }
+
+        [data-theme="dark"] .role-badge.student { color: #60a5fa; background: rgba(59, 130, 246, 0.2); }
+        [data-theme="dark"] .role-badge.teacher { color: #14b8a6; background: rgba(20, 184, 166, 0.2); }
+        [data-theme="dark"] .role-badge.admin   { color: #fbbf24; background: rgba(245, 158, 11, 0.2); }
+
+        .right-actions .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* PDF Container */
+        .pdf-container {
+            background: var(--bg-card);
+            border-radius: 32px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 80vh;
+            position: relative;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .pdf-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.02) 2px,
+                    rgba(0, 0, 0, 0.02) 4px
+                );
+            background-size: 8px 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pdf-container.protected::before {
+            opacity: 1;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.15) 2px,
+                    rgba(0, 0, 0, 0.15) 4px
+                );
+        }
+
+        .pdf-container .protection-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 60;
+            background: #000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .pdf-container .protection-overlay i {
+            font-size: 4rem;
+            color: #f59e0b;
+        }
+
+        .pdf-container .protection-overlay .sub-text {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        .pdf-container.protected .protection-overlay {
+            display: flex !important;
+        }
+
+        .pdf-container .watermark-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 45;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(37, 99, 235, 0.03) 40px,
+                rgba(37, 99, 235, 0.03) 41px
+            );
+        }
+
+        .pdf-container .watermark-overlay .watermark-text {
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(37, 99, 235, 0.06);
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            transform: rotate(-30deg);
+            white-space: nowrap;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .pdf-container.protected .watermark-overlay {
+            opacity: 1;
+        }
+
+        .pdf-container.protected .watermark-overlay .watermark-text {
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        .pdf-header {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 2px solid var(--border-light);
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pdf-header .pdf-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pdf-header .pdf-title i {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .pdf-header .pdf-title h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .pdf-header .pdf-title .chapter-name {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .pdf-header .pdf-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .pdf-body {
+            flex: 1;
+            padding: 1.5rem 2.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pdf-loading {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .pdf-loading .spinner-large {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .pdf-loading p {
+            font-size: 1.1rem;
+        }
+
+        .pdf-loading .sub-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .pdf-iframe-wrapper {
+            width: 100%;
+            flex: 1;
+            min-height: 70vh;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            background: var(--bg-body);
+            position: relative;
+        }
+
+        .pdf-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 70vh;
+            border: none;
+            background: var(--bg-body);
+            -webkit-user-select: none;
+            user-select: none;
+            pointer-events: auto;
+        }
+
+        .pdf-error {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .pdf-error i {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .pdf-error h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .pdf-error p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .pdf-error .btn {
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .top-bar { border-radius: 32px; padding: 0.6rem 1.2rem; }
+            .brand-text { font-size: 1.1rem; }
+            .brand-logo { height: 32px; }
+            .app-wrapper { padding: 0.8rem 1rem 2rem; }
+
+            .right-actions .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                border-radius: 30px;
+            }
+            .right-actions .btn i { font-size: 0.8rem; }
+            .role-badge { font-size: 0.6rem; padding: 0.28rem 0.7rem; }
+
+            .pdf-header {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+
+            .pdf-header .pdf-title h2 { font-size: 1.1rem; }
+            .pdf-header .pdf-title .chapter-name { font-size: 0.85rem; display: block; margin-top: 2px; }
+
+            .pdf-header .pdf-actions { width: 100%; justify-content: stretch; }
+            .pdf-header .pdf-actions .btn {
+                flex: 1;
+                justify-content: center;
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .pdf-body { padding: 1rem 1.5rem 1.5rem; min-height: 100vh; }
+            .pdf-iframe-wrapper { min-height: 100vh; }
+            .pdf-iframe-wrapper iframe { min-height: 100vh; }
+
+            .pdf-container .protection-overlay { font-size: 1.2rem; }
+            .pdf-container .protection-overlay i { font-size: 3rem; }
+            .pdf-container .watermark-overlay .watermark-text { font-size: 2rem; letter-spacing: 4px; }
+        }
+
+        @media (max-width: 600px) {
+            .app-wrapper { padding: 0.5rem 0.6rem 1.5rem; }
+            .top-bar { padding: 0.4rem 0.8rem; border-radius: 24px; gap: 0.5rem; }
+            .brand-text { font-size: 0.85rem; }
+            .brand-logo { height: 28px; }
+
+            .right-actions .btn { padding: 0.3rem 0.6rem; font-size: 0.65rem; border-radius: 20px; }
+            .right-actions .btn i { font-size: 0.7rem; }
+            .role-badge { font-size: 0.55rem; padding: 0.22rem 0.55rem; }
+
+            .pdf-header { padding: 0.8rem 1rem; }
+            .pdf-header .pdf-title i { font-size: 1.4rem; }
+            .pdf-header .pdf-title h2 { font-size: 0.95rem; }
+            .pdf-header .pdf-title .chapter-name { font-size: 0.75rem; }
+            .pdf-header .pdf-actions .btn { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
+
+            .pdf-body { padding: 0.8rem 0.8rem 1rem; min-height: 100vh; }
+            .pdf-iframe-wrapper { min-height: 100vh; border-radius: 12px; }
+            .pdf-iframe-wrapper iframe { min-height: 100vh; }
+
+            .pdf-loading .spinner-large { width: 40px; height: 40px; }
+            .pdf-loading p { font-size: 0.95rem; }
+            .pdf-error i { font-size: 3rem; }
+            .pdf-error h3 { font-size: 1.2rem; }
+            .pdf-error p { font-size: 0.9rem; }
+
+            .pdf-container .protection-overlay { font-size: 1rem; }
+            .pdf-container .protection-overlay i { font-size: 2.5rem; }
+            .pdf-container .watermark-overlay .watermark-text { font-size: 1.5rem; letter-spacing: 2px; }
+        }
+
+        @media (max-width: 480px) {
+            .pdf-header .pdf-actions { flex-direction: column; }
+            .pdf-header .pdf-actions .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="top-bar">
+            <div class="brand-area">
+                <img class="brand-logo"
+                     src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                     alt="Universal School logo"
+                     onerror="this.style.display='none'">
+                <span class="brand-text">Universal School</span>
+            </div>
+            <div class="right-actions">
+                <!-- ⭐ Role badge (populated after auth) -->
+                <span class="role-badge" id="roleBadge" style="display: none;">
+                    <i class="fas fa-user" id="roleBadgeIcon"></i>
+                    <span id="roleBadgeText">User</span>
+                </span>
+
+                <a href="../../My Account/myaccount.html" class="btn btn-outline">
+                    <i class="fas fa-user"></i> My Account
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="pdf-container" id="pdfContainer">
+                <!-- Screenshot Protection: Watermark Layer -->
+                <div class="watermark-overlay" id="watermarkOverlay">
+                    <span class="watermark-text">Universal School</span>
+                </div>
+
+                <!-- Screenshot Protection: Full Black Overlay -->
+                <div class="protection-overlay" id="protectionOverlay">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Screenshot Detected</span>
+                    <span class="sub-text">Content is protected</span>
+                </div>
+
+                <!-- PDF Header -->
+                <div class="pdf-header">
+                    <div class="pdf-title">
+                        <i class="fas fa-file-pdf"></i>
+                        <div>
+                            <h2 id="chapterTitle">Loading Chapter...</h2>
+                            <span class="chapter-name" id="chapterSubtitle"></span>
+                        </div>
+                    </div>
+                    <div class="pdf-actions">
+                        <button class="btn btn-outline" id="openNewTabBtn" onclick="openInNewTab()">
+                            <i class="fas fa-external-link-alt"></i> Open Full Screen
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PDF Body -->
+                <div class="pdf-body">
+                    <!-- Loading State -->
+                    <div id="pdfLoading" class="pdf-loading">
+                        <div class="spinner-large"></div>
+                        <p>Loading PDF...</p>
+                        <p class="sub-text">Please wait while we load your document</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="pdfError" class="pdf-error" style="display: none;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Unable to Load PDF</h3>
+                        <p id="errorMessage">The PDF link could not be loaded. Please try again.</p>
+                        <a href="javascript:history.back()" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Go Back
+                        </a>
+                    </div>
+
+                    <!-- PDF Iframe -->
+                    <div id="pdfIframeWrapper" class="pdf-iframe-wrapper" style="display: none;">
+                        <iframe id="pdfIframe" src="" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoDds81u8M5N8micA_hoIBgCS7aCFm0NUmwW6XLH4m_fRJ8R9pGqjgFGMeBxBd2dSL/exec";
+const SPREADSHEET_ID = "1ZCKJ_LYfk_kZ9afgtpOtAQ9-g7-3ZSsS_byQ3F_Rip0";
+const SHEET_NAME = "English";
+
+// ============================================================
+// ⭐ AUTH KEYS — MUST MATCH myaccount.html exactly
+// ============================================================
+const AUTH_KEYS = {
+    USER: 'Universal_user',
+    USER_DATA: 'Universal_user_data',
+    USER_TYPE: 'Universal_user_type',
+    REMEMBER_ME: 'Universal_remember_me',
+    SESSION_EXPIRY: 'Universal_session_expiry'
+};
+
+// Login redirect — adjust if your folder depth differs
+const LOGIN_REDIRECT = '../../My Account/myaccount.html';
+
+// ============================================================
+// ⭐ AUTH HELPERS
+// ============================================================
+
+function parseStoredAuth(raw) {
+    if (!raw) return { value: null, expiry: null };
+    try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+            return { value: parsed.value, expiry: parsed.expiry || null };
+        }
+        return { value: parsed, expiry: null };
+    } catch (e) {
+        return { value: raw, expiry: null };
+    }
+}
+
+function readAuthKey(key) {
+    // 1) localStorage (Remember Me)
+    let raw = null;
+    try { raw = localStorage.getItem(key); } catch (e) {}
+
+    if (raw) {
+        const parsed = parseStoredAuth(raw);
+        if (parsed.expiry && Date.now() >= parsed.expiry) {
+            try { localStorage.removeItem(key); } catch (e) {}
+        } else {
+            return parsed.value;
+        }
+    }
+
+    // 2) sessionStorage
+    try {
+        raw = sessionStorage.getItem(key);
+    } catch (e) {
+        raw = null;
+    }
+
+    if (!raw) return null;
+
+    const parsed = parseStoredAuth(raw);
+    if (parsed.expiry && Date.now() >= parsed.expiry) {
+        try { sessionStorage.removeItem(key); } catch (e) {}
+        return null;
+    }
+    return parsed.value;
+}
+
+function clearAllAuthKeys() {
+    Object.values(AUTH_KEYS).forEach(key => {
+        try { localStorage.removeItem(key); } catch (e) {}
+        try { sessionStorage.removeItem(key); } catch (e) {}
+    });
+}
+
+/**
+ * ⭐ UNIFIED LOGIN CHECK — recognizes Student / Teacher / Admin.
+ */
+function checkAuthStatus() {
+    const user = readAuthKey(AUTH_KEYS.USER);
+    const userData = readAuthKey(AUTH_KEYS.USER_DATA);
+    const userTypeRaw = readAuthKey(AUTH_KEYS.USER_TYPE);
+
+    if (!user) {
+        return { loggedIn: false, role: null, user: null };
+    }
+
+    let role = 'student';
+    if (userTypeRaw) {
+        const t = String(userTypeRaw).toLowerCase().trim();
+        if (t === 'admin') role = 'admin';
+        else if (t === 'teacher') role = 'teacher';
+        else role = 'student';
+    }
+
+    if (!userData) {
+        return { loggedIn: false, role: null, user: null };
+    }
+
+    return { loggedIn: true, role: role, user: user };
+}
+
+function checkLoginStatus() {
+    return checkAuthStatus().loggedIn;
+}
+
+// ============================================================
+// ⭐ ROLE BADGE UI
+// ============================================================
+function renderRoleBadge(auth) {
+    const badge = document.getElementById('roleBadge');
+    const icon = document.getElementById('roleBadgeIcon');
+    const text = document.getElementById('roleBadgeText');
+    if (!badge || !icon || !text) return;
+
+    let label = 'Student';
+    let iconClass = 'fas fa-user-graduate';
+    let cls = 'student';
+
+    if (auth.role === 'admin') {
+        label = 'Admin'; iconClass = 'fas fa-user-shield'; cls = 'admin';
+    } else if (auth.role === 'teacher') {
+        label = 'Teacher'; iconClass = 'fas fa-chalkboard-teacher'; cls = 'teacher';
+    }
+
+    const data = readAuthKey(AUTH_KEYS.USER_DATA) || {};
+    const firstName =
+        data['First Name'] || data['Name'] || data['Teacher Name'] || data['User Name'] || '';
+    const lastName = data['Last Name'] || '';
+    const fullName = (firstName + ' ' + lastName).trim();
+    const displayName = fullName || data['Email Id'] || auth.user || '';
+
+    text.textContent = displayName ? (label + ' · ' + displayName) : label;
+    icon.className = iconClass;
+
+    badge.classList.remove('student', 'teacher', 'admin');
+    badge.classList.add(cls);
+    badge.style.display = 'inline-flex';
+}
+
+function hideRoleBadge() {
+    const badge = document.getElementById('roleBadge');
+    if (badge) badge.style.display = 'none';
+}
+
+// ============================================================
+// THEME SYNC
+// ============================================================
+function getStoredTheme() {
+    try {
+        return localStorage.getItem('user-theme-preference') || 'light';
+    } catch (e) {
+        return 'light';
+    }
+}
+
+function applyTheme(theme) {
+    try {
+        document.body.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('user-theme-preference', theme);
+
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.content = theme === 'dark' ? '#0a0f1c' : '#f4f7fc';
+        }
+
+        try {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'themeChange',
+                    theme: theme,
+                    source: 'viewpdf.html'
+                }, '*');
+            }
+        } catch (e) {}
+    } catch (e) {
+        console.error('Error applying theme:', e);
+    }
+}
+
+function syncThemeWithParent() {
+    try {
+        const localTheme = localStorage.getItem('user-theme-preference');
+        if (localTheme) {
+            applyTheme(localTheme);
+            return;
+        }
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    applyTheme(parentTheme);
+                    return;
+                }
+            }
+        } catch (e) {}
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    } catch (e) {
+        console.error('Error syncing theme:', e);
+        applyTheme('light');
+    }
+}
+
+window.addEventListener('message', function (event) {
+    try {
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme;
+            if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+                applyTheme(newTheme);
+            }
+        }
+    } catch (e) {}
+});
+
+window.addEventListener('storage', function (e) {
+    if (e.key === 'user-theme-preference') {
+        const newTheme = e.newValue;
+        if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+            applyTheme(newTheme);
+        }
+    }
+
+    // ⭐ Cross-tab auth sync — if user logs out elsewhere, redirect to login
+    if (e.key === AUTH_KEYS.USER && e.newValue === null) {
+        if (!checkLoginStatus()) {
+            window.location.href = LOGIN_REDIRECT;
+        }
+    }
+});
+
+if (window.matchMedia) {
+    const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMedia.addEventListener('change', function (e) {
+        if (!localStorage.getItem('user-theme-preference')) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+}
+
+// ============================================================
+// SCREENSHOT PROTECTION
+// ============================================================
+const protection = {
+    isProtected: false,
+    container: null,
+    protectionTimer: null,
+
+    init() {
+        this.container = document.getElementById('pdfContainer');
+        this.setupVisibilityAPI();
+        this.setupKeyboardShortcuts();
+        this.setupContextMenu();
+        this.setupPrintProtection();
+        this.setupCopyProtection();
+        this.setupDragProtection();
+    },
+
+    setupVisibilityAPI() {
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.activateProtection('Screenshot detected');
+            } else {
+                this.deactivateProtection();
+            }
+        });
+    },
+
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'PrintScreen' || e.key === 'Print') {
+                e.preventDefault();
+                this.activateProtection('Print Screen detected');
+                return false;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                this.activateProtection('Save As detected');
+                return false;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                this.activateProtection('Save detected');
+                return false;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+                e.preventDefault();
+                this.activateProtection('Print detected');
+                return false;
+            }
+
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+                const target = e.target;
+                if (!target.closest('input') && !target.closest('textarea')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+        });
+    },
+
+    setupContextMenu() {
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            this.activateProtection('Right-click detected');
+            return false;
+        });
+
+        const container = document.getElementById('pdfContainer');
+        if (container) {
+            container.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                return false;
+            });
+        }
+    },
+
+    setupPrintProtection() {
+        window.addEventListener('beforeprint', (e) => {
+            e.preventDefault();
+            this.activateProtection('Print detected');
+            return false;
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                body * { display: none !important; }
+                body::after {
+                    content: "Printing is not allowed on this document.";
+                    display: block;
+                    font-size: 24px;
+                    color: red;
+                    text-align: center;
+                    padding: 50px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    },
+
+    setupCopyProtection() {
+        document.addEventListener('copy', (e) => {
+            const target = e.target;
+            if (!target.closest('input') && !target.closest('textarea')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        document.addEventListener('cut', (e) => {
+            const target = e.target;
+            if (!target.closest('input') && !target.closest('textarea')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        document.addEventListener('selectstart', (e) => {
+            const target = e.target;
+            if (!target.closest('input') && !target.closest('textarea')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    },
+
+    setupDragProtection() {
+        document.addEventListener('dragstart', (e) => {
+            e.preventDefault();
+            return false;
+        });
+    },
+
+    activateProtection(reason = 'Protection activated') {
+        if (this.isProtected) return;
+
+        this.isProtected = true;
+        const container = this.container;
+
+        container.classList.add('protected');
+
+        const overlay = document.getElementById('protectionOverlay');
+        if (overlay) {
+            overlay.style.display = 'flex';
+        }
+
+        console.log(`🛡️ Protection activated: ${reason}`);
+
+        clearTimeout(this.protectionTimer);
+        this.protectionTimer = setTimeout(() => {
+            this.deactivateProtection();
+        }, 3000);
+    },
+
+    deactivateProtection() {
+        if (!this.isProtected) return;
+
+        this.isProtected = false;
+        const container = this.container;
+
+        container.classList.remove('protected');
+
+        const overlay = document.getElementById('protectionOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    },
+
+    triggerProtection() {
+        this.activateProtection('Manual trigger');
+    }
+};
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const dom = {};
+
+function cacheDomElements() {
+    dom.chapterTitle = document.getElementById('chapterTitle');
+    dom.chapterSubtitle = document.getElementById('chapterSubtitle');
+    dom.pdfLoading = document.getElementById('pdfLoading');
+    dom.pdfError = document.getElementById('pdfError');
+    dom.errorMessage = document.getElementById('errorMessage');
+    dom.pdfIframeWrapper = document.getElementById('pdfIframeWrapper');
+    dom.pdfIframe = document.getElementById('pdfIframe');
+    dom.openNewTabBtn = document.getElementById('openNewTabBtn');
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        link: params.get('link') || '',
+        chapter: params.get('chapter') || 'Chapter'
+    };
+}
+
+function showToast(msg, type = 'info') {
+    console.log(`📢 ${type}: ${msg}`);
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ============================================================
+// PDF VIEWER FUNCTIONS
+// ============================================================
+let currentLink = '';
+let currentChapter = '';
+
+function loadPDF(link, chapter) {
+    currentLink = link;
+    currentChapter = chapter;
+
+    dom.chapterTitle.textContent = chapter || 'Chapter';
+    dom.chapterSubtitle.textContent = 'Read in PDF';
+
+    if (!link || link.trim() === '') {
+        showError('No PDF link available for this chapter.');
+        return;
+    }
+
+    let finalUrl = link.trim();
+
+    if (finalUrl.includes('drive.google.com') || finalUrl.includes('docs.google.com')) {
+        const fileIdMatch = finalUrl.match(/[-\w]{25,}/);
+        if (fileIdMatch) {
+            const fileId = fileIdMatch[0];
+            finalUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+        }
+    }
+
+    dom.pdfLoading.style.display = 'none';
+    dom.pdfError.style.display = 'none';
+    dom.pdfIframeWrapper.style.display = 'block';
+
+    dom.pdfIframe.src = finalUrl;
+
+    dom.openNewTabBtn.onclick = function () {
+        openInNewTab(finalUrl, chapter);
+    };
+}
+
+function showError(message) {
+    dom.pdfLoading.style.display = 'none';
+    dom.pdfError.style.display = 'block';
+    dom.pdfIframeWrapper.style.display = 'none';
+    dom.errorMessage.textContent = message || 'The PDF link could not be loaded. Please try again.';
+}
+
+function openInNewTab(link, chapter) {
+    const url = link || currentLink;
+    const name = chapter || currentChapter || 'document';
+
+    if (!url) {
+        showToast('No PDF link available to open.', 'error');
+        return;
+    }
+
+    try {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        showToast(`Opening: ${name}`, 'success');
+    } catch (err) {
+        console.error('Open new tab error:', err);
+        showToast('Failed to open PDF in new tab.', 'error');
+    }
+}
+
+// ============================================================
+// FETCH CHAPTER LINK FROM GOOGLE SHEET (Fallback)
+// ============================================================
+async function fetchChapterLinkFromSheet(chapterName) {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${SHEET_NAME}&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        if (data.status === 'success' && data.data) {
+            const chapter = data.data.find(row => {
+                const name = row['Chapter Name'] || '';
+                return name.toLowerCase().trim() === chapterName.toLowerCase().trim();
+            });
+
+            if (chapter && chapter['Link']) {
+                return chapter['Link'];
+            }
+        }
+        return null;
+    } catch (err) {
+        console.error('Error fetching chapter link:', err);
+        return null;
+    }
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', function (e) {
+    // ESC → go back
+    if (e.key === 'Escape') {
+        window.location.href = 'javascript:history.back()';
+    }
+
+    // F → fullscreen
+    if (e.key === 'f' || e.key === 'F') {
+        if (dom.pdfIframeWrapper) {
+            if (dom.pdfIframeWrapper.requestFullscreen) {
+                dom.pdfIframeWrapper.requestFullscreen();
+            }
+        }
+    }
+});
+
+// ============================================================
+// INITIALIZE PAGE
+// ============================================================
+async function init() {
+    cacheDomElements();
+
+    syncThemeWithParent();
+    protection.init();
+
+    // ⭐ Unified auth check — Student / Teacher / Admin all allowed
+    const auth = checkAuthStatus();
+
+    if (!auth.loggedIn) {
+        window.location.href = LOGIN_REDIRECT;
+        return;
+    }
+
+    // Show role badge
+    renderRoleBadge(auth);
+
+    // ⭐ Periodic re-check — if session ends mid-view, redirect to login
+    setInterval(() => {
+        if (!checkLoginStatus()) {
+            window.location.href = LOGIN_REDIRECT;
+        }
+    }, 15000);
+
+    const params = getUrlParams();
+    let link = params.link;
+    const chapter = params.chapter;
+
+    if (!link || link.trim() === '') {
+        const fetchedLink = await fetchChapterLinkFromSheet(chapter);
+        if (fetchedLink) {
+            link = fetchedLink;
+        }
+    }
+
+    if (link && link.trim() !== '') {
+        loadPDF(link, chapter);
+    } else {
+        showError('No PDF link found for this chapter. Please contact support.');
+    }
+
+    // ============================================================
+    // Canvas screenshot detection (extended tamper detection)
+    // ============================================================
+    try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        canvas.style.position = 'absolute';
+        canvas.style.left = '-9999px';
+        canvas.style.top = '-9999px';
+        canvas.style.opacity = '0';
+        canvas.style.pointerEvents = 'none';
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, 1, 1);
+
+        const data = imageData.data;
+        data[0] = 123;
+        data[1] = 45;
+        data[2] = 67;
+        data[3] = 255;
+        ctx.putImageData(imageData, 0, 0);
+
+        setInterval(() => {
+            try {
+                const checkData = ctx.getImageData(0, 0, 1, 1);
+                const d = checkData.data;
+                if (d[0] !== 123 || d[1] !== 45 || d[2] !== 67) {
+                    protection.activateProtection('Canvas tampering detected');
+                }
+            } catch (e) {
+                protection.activateProtection('Canvas access blocked');
+            }
+        }, 1000);
+    } catch (e) {
+        // Canvas protection not available
+    }
+
+    // ============================================================
+    // Window blur detection
+    // ============================================================
+    window.addEventListener('blur', function () {
+        setTimeout(() => {
+            if (!document.hasFocus()) {
+                protection.activateProtection('Window lost focus');
+            }
+        }, 100);
+    });
+}
+
+// ============================================================
+// START APP
+// ============================================================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
