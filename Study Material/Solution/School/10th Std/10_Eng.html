@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>10th Std English · Universal School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #f4f7fc;
+            --bg-card: #ffffff;
+            --bg-header: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #5b6e8c;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --card-border: 1px solid rgba(0,0,0,0.04);
+            --logo-filter: none;
+            --overlay-bg: rgba(0,0,0,0.3);
+            --input-bg: #f8fafc;
+            --input-border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --admin-gold: #f59e0b;
+            --teacher-teal: #0d9488;
+            --transition-fast: 150ms ease;
+            --transition-normal: 300ms ease;
+            --unit-bg: rgba(37, 99, 235, 0.06);
+            --subchapter-bg: transparent;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0a0f1c;
+            --bg-card: #1e293b;
+            --bg-header: #111827;
+            --text-main: #f1f5f9;
+            --text-muted: #9ca3af;
+            --text-light: #64748b;
+            --border-light: #1f2a3e;
+            --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+            --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+            --accent: #3b82f6;
+            --accent-soft: rgba(59, 130, 246, 0.15);
+            --card-border: 1px solid rgba(255,255,255,0.04);
+            --logo-filter: brightness(0) invert(1);
+            --overlay-bg: rgba(0,0,0,0.6);
+            --input-bg: #1e293b;
+            --input-border: #334155;
+            --teacher-teal: #14b8a6;
+            --unit-bg: rgba(59, 130, 246, 0.12);
+            --subchapter-bg: rgba(255,255,255,0.02);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background var(--transition-normal), color var(--transition-normal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem 2.5rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+            background: var(--bg-header);
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.8rem;
+            transition: background var(--transition-normal);
+        }
+
+        .brand-area { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 44px; width: auto; filter: var(--logo-filter); object-fit: contain; }
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        /* ⭐ Role badge */
+        .role-badge {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0.35rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid currentColor;
+            white-space: nowrap;
+        }
+        .role-badge.student { color: #2563eb; background: rgba(37, 99, 235, 0.12); }
+        .role-badge.teacher { color: var(--teacher-teal); background: rgba(13, 148, 136, 0.12); }
+        .role-badge.admin   { color: var(--admin-gold); background: rgba(245, 158, 11, 0.15); }
+
+        [data-theme="dark"] .role-badge.student { color: #60a5fa; background: rgba(59, 130, 246, 0.2); }
+        [data-theme="dark"] .role-badge.teacher { color: #14b8a6; background: rgba(20, 184, 166, 0.2); }
+        [data-theme="dark"] .role-badge.admin   { color: #fbbf24; background: rgba(245, 158, 11, 0.2); }
+
+        .right-actions .btn {
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .welcome-section {
+            background: var(--bg-card);
+            border-radius: 32px;
+            padding: 2rem 2.5rem;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .welcome-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome-section .sub-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .welcome-section .sub-text .highlight-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-container {
+            background: var(--bg-card);
+            border-radius: 32px;
+            border: var(--card-border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .chapter-header {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 2px solid var(--border-light);
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chapter-header h2 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chapter-header h2 i { color: var(--accent); }
+
+        .chapter-header .badge {
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .search-section {
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-card);
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+            min-width: 200px;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border-radius: 16px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-input::placeholder { color: var(--text-light); }
+
+        .search-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-soft);
+            color: var(--text-main);
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before { width: 300px; height: 300px; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.8rem; }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-block { width: 100%; justify-content: center; }
+
+        .fa-spin-custom { animation: fa-spin 1s linear infinite; }
+
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .chapter-content { padding: 0 2.5rem 2rem; }
+
+        .loading-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .loading-state .spinner-large {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chapter-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 500px;
+        }
+
+        .chapter-table thead {
+            background: var(--accent-soft);
+            border-radius: 12px;
+        }
+
+        .chapter-table th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .chapter-table td {
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+            line-height: 1.6;
+        }
+
+        .chapter-table tr:last-child td { border-bottom: none; }
+
+        .chapter-table .unit-row td {
+            background: var(--unit-bg);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 1rem 1.2rem;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .chapter-table .unit-row .unit-name { color: var(--accent); }
+
+        .chapter-table .subchapter-row td {
+            padding-left: 3.5rem;
+            background: var(--subchapter-bg);
+        }
+
+        .chapter-table .subchapter-row .chapter-name-cell {
+            font-weight: 500;
+            position: relative;
+        }
+
+        .chapter-table .subchapter-row .chapter-name-cell::before {
+            content: '▸';
+            position: absolute;
+            left: -1.8rem;
+            color: var(--accent);
+            font-weight: 400;
+            opacity: 0.6;
+        }
+
+        .chapter-table .subchapter-row:hover { background: var(--accent-soft); }
+
+        .chapter-table .sr-cell {
+            font-weight: 700;
+            color: var(--accent);
+            width: 80px;
+            text-align: center;
+        }
+
+        .chapter-table .unit-row .sr-cell { font-size: 1.1rem; }
+
+        .chapter-table .action-cell {
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .chapter-table .no-results td {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+
+        .login-overlay.active {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            border-radius: 40px;
+            padding: 2.5rem 3rem;
+            max-width: 420px;
+            width: 100%;
+            border: var(--card-border);
+            box-shadow: 0 40px 80px -20px rgba(0,0,0,0.4);
+            text-align: center;
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .login-box .icon {
+            font-size: 4rem;
+            color: var(--warning);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .login-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .login-box p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .login-box .btn {
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .alert-popup {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-hover);
+            border-radius: 0 16px 16px 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 2000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            color: var(--text-main);
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-popup.success { border-left-color: var(--success); }
+        .alert-popup.error { border-left-color: var(--danger); }
+        .alert-popup.warning { border-left-color: var(--warning); }
+        .alert-popup.info { border-left-color: var(--accent); }
+
+        .bg-loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 9999;
+            background: var(--bg-body);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bg-loading-indicator.active { opacity: 1; }
+
+        .bg-loading-indicator .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #7c3aed, var(--accent));
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            transition: width 0.3s ease;
+            border-radius: 0 2px 2px 0;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Card View for Mobile */
+        .chapter-card-view {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .chapter-card-view .unit-card {
+            background: var(--unit-bg);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .chapter-card-view .subchapter-item {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all var(--transition-fast);
+            margin-left: 1rem;
+        }
+
+        .chapter-card-view .subchapter-item:hover { border-color: var(--accent); }
+
+        .chapter-card-view .subchapter-item .chapter-info { flex: 1; }
+
+        .chapter-card-view .subchapter-item .chapter-info .chapter-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .chapter-card-view .subchapter-item .chapter-info .chapter-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .chapter-card-view .subchapter-item .btn {
+            font-size: 0.75rem;
+            padding: 0.4rem 1rem;
+            flex-shrink: 0;
+        }
+
+        .highlight-match {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 0 2px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 820px) {
+            .top-bar { border-radius: 32px; padding: 0.6rem 1.2rem; }
+            .brand-text { font-size: 1.1rem; }
+            .brand-logo { height: 32px; }
+            .app-wrapper { padding: 0.8rem 1rem 2rem; }
+            .role-badge { font-size: 0.6rem; padding: 0.28rem 0.7rem; }
+
+            .right-actions .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                border-radius: 30px;
+            }
+
+            .welcome-section { padding: 1.5rem; }
+            .welcome-section h1 { font-size: 1.5rem; }
+            .welcome-section .sub-text { font-size: 1rem; }
+
+            .chapter-header { padding: 1rem 1.5rem; }
+            .chapter-header h2 { font-size: 1.1rem; }
+
+            .search-section { padding: 1rem 1.5rem; }
+            .search-wrapper { display: flex; gap: 0.8rem; align-items: center; flex-wrap: nowrap; }
+
+            .search-input-wrapper { flex: 1; min-width: 0; position: relative; }
+            .search-input-wrapper i { left: 0.8rem; font-size: 0.9rem; }
+            .search-input { padding: 0.6rem 1rem 0.6rem 2.5rem; border-radius: 14px; font-size: 0.9rem; }
+
+            .search-actions .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                white-space: nowrap;
+                border-radius: 30px;
+            }
+
+            .chapter-content { padding: 0 1.5rem 1.5rem; }
+
+            .chapter-table { display: none !important; }
+            .chapter-card-view { display: flex !important; }
+            #tableView { display: none !important; }
+            #cardView { display: flex !important; }
+
+            .btn { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
+
+            .alert-popup {
+                bottom: 70px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                font-size: 0.85rem;
+                padding: 12px 16px;
+            }
+
+            .login-box { padding: 2rem 1.5rem; }
+            .login-box .icon { font-size: 3rem; }
+            .login-box h2 { font-size: 1.2rem; }
+        }
+
+        @media (min-width: 821px) {
+            .chapter-table { display: table !important; }
+            .chapter-card-view { display: none !important; }
+            #tableView { display: block !important; }
+            #cardView { display: none !important; }
+        }
+
+        @media (max-width: 600px) {
+            .app-wrapper { padding: 0.5rem 0.6rem 1.5rem; }
+            .top-bar { padding: 0.4rem 0.8rem; border-radius: 24px; gap: 0.5rem; }
+            .brand-text { font-size: 0.85rem; }
+            .brand-logo { height: 28px; }
+            .role-badge { font-size: 0.55rem; padding: 0.22rem 0.55rem; }
+
+            .right-actions .btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.65rem;
+                border-radius: 20px;
+            }
+
+            .welcome-section { padding: 1.2rem; border-radius: 24px; }
+            .welcome-section h1 { font-size: 1.2rem; }
+            .welcome-section .sub-text { font-size: 0.9rem; }
+
+            .chapter-header { padding: 0.8rem 1rem; }
+            .chapter-header h2 { font-size: 1rem; }
+            .chapter-header .badge { font-size: 0.7rem; padding: 0.3rem 0.8rem; }
+
+            .search-section { padding: 0.8rem 1rem; }
+            .search-wrapper { display: flex; gap: 0.5rem; align-items: center; flex-wrap: nowrap; }
+            .search-input-wrapper i { left: 0.6rem; font-size: 0.8rem; }
+            .search-input { padding: 0.5rem 0.8rem 0.5rem 2.2rem; font-size: 0.85rem; border-radius: 12px; }
+            .search-actions .btn { padding: 0.5rem 0.8rem; font-size: 0.75rem; gap: 4px; }
+            .search-actions .btn i { font-size: 0.75rem; }
+
+            .chapter-content { padding: 0 1rem 1rem; }
+
+            .chapter-card-view .subchapter-item { padding: 0.8rem 1rem; margin-left: 0.5rem; }
+            .chapter-card-view .subchapter-item .chapter-info .chapter-name { font-size: 0.85rem; }
+            .chapter-card-view .subchapter-item .btn { font-size: 0.7rem; padding: 0.3rem 0.8rem; }
+            .chapter-card-view .unit-card { padding: 0.8rem 1rem; font-size: 1rem; }
+
+            .btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+            .login-box { padding: 1.5rem 1rem; border-radius: 28px; }
+            .login-box .icon { font-size: 2.5rem; }
+            .login-box h2 { font-size: 1rem; }
+            .login-box p { font-size: 0.9rem; }
+        }
+
+        @media (max-width: 480px) {
+            .chapter-card-view .subchapter-item { flex-wrap: wrap; }
+            .chapter-card-view .subchapter-item .chapter-info { flex: 1 1 100%; order: 1; }
+            .chapter-card-view .subchapter-item .btn { order: 2; width: 100%; justify-content: center; }
+
+            .search-wrapper { gap: 0.4rem; }
+            .search-actions .btn { padding: 0.4rem 0.6rem; font-size: 0.7rem; }
+            .search-actions .btn i { font-size: 0.7rem; }
+            .search-input { padding: 0.4rem 0.6rem 0.4rem 2rem; font-size: 0.8rem; }
+            .search-input-wrapper i { left: 0.5rem; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Loading Indicator -->
+    <div class="bg-loading-indicator" id="bgLoadingIndicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Login Required Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <span class="icon">🔒</span>
+            <h2>Please Login!</h2>
+            <p>You need to be logged in as a <strong>Student</strong>, <strong>Teacher</strong>, or <strong>Admin</strong> to access the Solutions chapters.</p>
+            <a href="../../../My Account/myaccount.html" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        </div>
+    </div>
+
+    <div class="app-wrapper" id="appWrapper" style="display: none;">
+        <header class="top-bar">
+            <div class="brand-area">
+                <img class="brand-logo"
+                     src="https://lh3.googleusercontent.com/d/1Vug3CcEFge9XYr24jhBZwk-_C4gWaar_"
+                     alt="Universal School logo"
+                     onerror="this.style.display='none'">
+                <span class="brand-text">Universal School</span>
+            </div>
+            <div class="right-actions">
+                <!-- ⭐ Role badge (populated after auth) -->
+                <span class="role-badge" id="roleBadge" style="display: none;">
+                    <i class="fas fa-user" id="roleBadgeIcon"></i>
+                    <span id="roleBadgeText">User</span>
+                </span>
+
+                <a href="../../../My Account/myaccount.html" class="btn btn-primary">
+                    <i class="fas fa-user"></i> My Account
+                </a>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="welcome-section" id="welcomeSection">
+                <h1>📚 10th Std English <span class="highlight">Solutions</span></h1>
+                <p class="sub-text">
+                    Maharashtra State Board <span class="highlight-name">Chapters</span>
+                </p>
+            </div>
+
+            <div class="chapter-container">
+                <div class="chapter-header">
+                    <h2><i class="fas fa-book"></i> Chapter List</h2>
+                    <span class="badge" id="chapterCount">Loading...</span>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-wrapper">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input
+                                type="text"
+                                class="search-input"
+                                id="searchInput"
+                                placeholder="Search by chapter name or unit..."
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn btn-primary" id="refreshBtn" title="Refresh chapters">
+                                <i class="fas fa-sync-alt" id="refreshIcon"></i>
+                                <span id="refreshText">Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chapter-content">
+                    <!-- Loading State -->
+                    <div id="loadingState" class="loading-state">
+                        <div class="spinner-large"></div>
+                        <p>Loading chapters...</p>
+                    </div>
+
+                    <!-- Table View (Desktop) -->
+                    <div class="table-wrapper" id="tableView" style="display: none;">
+                        <table class="chapter-table">
+                            <thead>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th>Chapter Name</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="chapterTableBody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Card View (Mobile) -->
+                    <div class="chapter-card-view" id="cardView" style="display: none;">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alertBox" class="alert-popup">Message...</div>
+
+    <script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoDds81u8M5N8micA_hoIBgCS7aCFm0NUmwW6XLH4m_fRJ8R9pGqjgFGMeBxBd2dSL/exec";
+const SPREADSHEET_ID = "1I1caJAVPielSEty1wZht4rV4S_Y1-YmQQqb-A6XEQ8U";
+const SHEET_NAME = "10_Eng";
+
+// Cache settings
+const CACHE_DURATION = 60000;
+const BG_UPDATE_INTERVAL = 30000;
+
+// Namespaced cache keys
+const STORAGE_KEY = 'universal_10_eng_chapters';
+const STORAGE_TIMESTAMP_KEY = 'universal_10_eng_timestamp';
+
+// ============================================================
+// ⭐ AUTH KEYS — MUST MATCH myaccount.html exactly
+// ============================================================
+const AUTH_KEYS = {
+    USER: 'Universal_user',
+    USER_DATA: 'Universal_user_data',
+    USER_TYPE: 'Universal_user_type',
+    REMEMBER_ME: 'Universal_remember_me',
+    SESSION_EXPIRY: 'Universal_session_expiry'
+};
+
+// ============================================================
+// ⭐ AUTH HELPERS
+// ============================================================
+
+function parseStoredAuth(raw) {
+    if (!raw) return { value: null, expiry: null };
+    try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+            return { value: parsed.value, expiry: parsed.expiry || null };
+        }
+        return { value: parsed, expiry: null };
+    } catch (e) {
+        return { value: raw, expiry: null };
+    }
+}
+
+function readAuthKey(key) {
+    // 1) localStorage (Remember Me)
+    let raw = null;
+    try { raw = localStorage.getItem(key); } catch (e) {}
+
+    if (raw) {
+        const parsed = parseStoredAuth(raw);
+        if (parsed.expiry && Date.now() >= parsed.expiry) {
+            try { localStorage.removeItem(key); } catch (e) {}
+        } else {
+            return parsed.value;
+        }
+    }
+
+    // 2) sessionStorage
+    try { raw = sessionStorage.getItem(key); } catch (e) { raw = null; }
+    if (!raw) return null;
+
+    const parsed = parseStoredAuth(raw);
+    if (parsed.expiry && Date.now() >= parsed.expiry) {
+        try { sessionStorage.removeItem(key); } catch (e) {}
+        return null;
+    }
+    return parsed.value;
+}
+
+function clearAllAuthKeys() {
+    Object.values(AUTH_KEYS).forEach(key => {
+        try { localStorage.removeItem(key); } catch (e) {}
+        try { sessionStorage.removeItem(key); } catch (e) {}
+    });
+}
+
+/**
+ * ⭐ UNIFIED LOGIN CHECK — Student / Teacher / Admin.
+ */
+function checkAuthStatus() {
+    const user = readAuthKey(AUTH_KEYS.USER);
+    const userData = readAuthKey(AUTH_KEYS.USER_DATA);
+    const userTypeRaw = readAuthKey(AUTH_KEYS.USER_TYPE);
+
+    if (!user) {
+        return { loggedIn: false, role: null, user: null };
+    }
+
+    let role = 'student';
+    if (userTypeRaw) {
+        const t = String(userTypeRaw).toLowerCase().trim();
+        if (t === 'admin') role = 'admin';
+        else if (t === 'teacher') role = 'teacher';
+        else role = 'student';
+    }
+
+    if (!userData) {
+        return { loggedIn: false, role: null, user: null };
+    }
+
+    return { loggedIn: true, role: role, user: user };
+}
+
+function checkLoginStatus() {
+    return checkAuthStatus().loggedIn;
+}
+
+// ============================================================
+// ⭐ ROLE BADGE UI
+// ============================================================
+function renderRoleBadge(auth) {
+    const badge = document.getElementById('roleBadge');
+    const icon = document.getElementById('roleBadgeIcon');
+    const text = document.getElementById('roleBadgeText');
+    if (!badge || !icon || !text) return;
+
+    let label = 'Student';
+    let iconClass = 'fas fa-user-graduate';
+    let cls = 'student';
+
+    if (auth.role === 'admin') {
+        label = 'Admin'; iconClass = 'fas fa-user-shield'; cls = 'admin';
+    } else if (auth.role === 'teacher') {
+        label = 'Teacher'; iconClass = 'fas fa-chalkboard-teacher'; cls = 'teacher';
+    }
+
+    const data = readAuthKey(AUTH_KEYS.USER_DATA) || {};
+    const firstName =
+        data['First Name'] || data['Name'] || data['Teacher Name'] || data['User Name'] || '';
+    const lastName = data['Last Name'] || '';
+    const fullName = (firstName + ' ' + lastName).trim();
+    const displayName = fullName || data['Email Id'] || auth.user || '';
+
+    text.textContent = displayName ? (label + ' · ' + displayName) : label;
+    icon.className = iconClass;
+
+    badge.classList.remove('student', 'teacher', 'admin');
+    badge.classList.add(cls);
+    badge.style.display = 'inline-flex';
+}
+
+function hideRoleBadge() {
+    const badge = document.getElementById('roleBadge');
+    if (badge) badge.style.display = 'none';
+}
+
+// ============================================================
+// THEME SYNC
+// ============================================================
+function getStoredTheme() {
+    try { return localStorage.getItem('user-theme-preference') || 'light'; }
+    catch (e) { return 'light'; }
+}
+
+function applyTheme(theme) {
+    try {
+        document.body.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('user-theme-preference', theme);
+
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.content = theme === 'dark' ? '#0a0f1c' : '#f4f7fc';
+        }
+
+        try {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'themeChange',
+                    theme: theme,
+                    source: '10_Eng.html'
+                }, '*');
+            }
+        } catch (e) {}
+    } catch (e) {
+        console.error('Error applying theme:', e);
+    }
+}
+
+function syncThemeWithParent() {
+    try {
+        const localTheme = localStorage.getItem('user-theme-preference');
+        if (localTheme) { applyTheme(localTheme); return; }
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) { applyTheme(parentTheme); return; }
+            }
+        } catch (e) {}
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    } catch (e) {
+        console.error('Error syncing theme:', e);
+        applyTheme('light');
+    }
+}
+
+window.addEventListener('message', function (event) {
+    try {
+        if (event.data && event.data.type === 'themeChange') {
+            const newTheme = event.data.theme;
+            if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+                applyTheme(newTheme);
+            }
+        }
+    } catch (e) {}
+});
+
+window.addEventListener('storage', function (e) {
+    if (e.key === 'user-theme-preference') {
+        const newTheme = e.newValue;
+        if (newTheme && (newTheme === 'light' || newTheme === 'dark')) {
+            applyTheme(newTheme);
+        }
+    }
+
+    // ⭐ Cross-tab auth sync
+    if (e.key === AUTH_KEYS.USER && e.newValue === null) {
+        if (!checkLoginStatus()) {
+            showLoginRequired();
+        }
+    }
+});
+
+if (window.matchMedia) {
+    const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMedia.addEventListener('change', function (e) {
+        if (!localStorage.getItem('user-theme-preference')) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+}
+
+// ============================================================
+// DOM REFS
+// ============================================================
+const dom = {};
+
+function cacheDomElements() {
+    dom.alertBox = document.getElementById('alertBox');
+    dom.appWrapper = document.getElementById('appWrapper');
+    dom.loginOverlay = document.getElementById('loginOverlay');
+    dom.chapterTableBody = document.getElementById('chapterTableBody');
+    dom.cardView = document.getElementById('cardView');
+    dom.tableView = document.getElementById('tableView');
+    dom.loadingState = document.getElementById('loadingState');
+    dom.chapterCount = document.getElementById('chapterCount');
+    dom.bgLoadingIndicator = document.getElementById('bgLoadingIndicator');
+    dom.progressBar = document.getElementById('progressBar');
+    dom.searchInput = document.getElementById('searchInput');
+    dom.refreshBtn = document.getElementById('refreshBtn');
+    dom.refreshIcon = document.getElementById('refreshIcon');
+    dom.refreshText = document.getElementById('refreshText');
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function showToast(msg, type = 'info') {
+    const box = dom.alertBox;
+    if (!box) return;
+
+    box.textContent = msg;
+    box.className = `alert-popup ${type}`;
+    box.style.display = 'block';
+    clearTimeout(box._timeout);
+    box._timeout = setTimeout(() => { box.style.display = 'none'; }, 4500);
+}
+
+function showBackgroundLoading(progress = 0) {
+    dom.bgLoadingIndicator.classList.add('active');
+    dom.progressBar.style.width = Math.min(progress, 100) + '%';
+}
+
+function hideBackgroundLoading() {
+    dom.bgLoadingIndicator.classList.remove('active');
+    dom.progressBar.style.width = '0%';
+}
+
+function updateProgress(progress) {
+    dom.progressBar.style.width = Math.min(progress, 100) + '%';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function highlightText(text, searchTerm) {
+    if (!searchTerm || !text) return escapeHtml(text);
+
+    const escaped = escapeHtml(text);
+    const term = escapeHtml(searchTerm).trim();
+
+    if (!term) return escaped;
+
+    const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return escaped.replace(regex, '<span class="highlight-match">$1</span>');
+}
+
+// ============================================================
+// CACHE MANAGEMENT
+// ============================================================
+function getCachedChapters() {
+    try {
+        const cached = localStorage.getItem(STORAGE_KEY);
+        const timestamp = localStorage.getItem(STORAGE_TIMESTAMP_KEY);
+
+        if (cached && timestamp) {
+            const age = Date.now() - parseInt(timestamp);
+            if (age < CACHE_DURATION) {
+                return JSON.parse(cached);
+            }
+        }
+        return null;
+    } catch (e) {
+        console.error('Error reading cache:', e);
+        return null;
+    }
+}
+
+function setCachedChapters(chapters) {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chapters));
+        localStorage.setItem(STORAGE_TIMESTAMP_KEY, Date.now().toString());
+    } catch (e) {
+        console.error('Error caching data:', e);
+    }
+}
+
+function clearCache() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_TIMESTAMP_KEY);
+    } catch (e) {
+        console.error('Error clearing cache:', e);
+    }
+}
+
+// ============================================================
+// LOGIN UI HELPERS
+// ============================================================
+function showLoginRequired() {
+    dom.loginOverlay.classList.add('active');
+    dom.appWrapper.style.display = 'none';
+    hideRoleBadge();
+}
+
+function hideLoginRequired() {
+    dom.loginOverlay.classList.remove('active');
+    dom.appWrapper.style.display = 'flex';
+}
+
+// ============================================================
+// PROCESS DATA — Group into Units and Sub-chapters
+// ============================================================
+function processChapterData(rawData) {
+    const units = [];
+    let currentUnit = null;
+
+    rawData.forEach(row => {
+        const srNo = row['Sr. No'] ? parseInt(row['Sr. No']) : null;
+        const chapterName = row['Chapter Name'] ? row['Chapter Name'].toString().trim() : '';
+        const link = row['Link'] || '';
+
+        if (!chapterName) return;
+
+        // Unit row: Sr. No exists AND name contains "UNIT"
+        if (srNo && chapterName.toUpperCase().includes('UNIT')) {
+            currentUnit = {
+                unitNumber: srNo,
+                unitName: chapterName,
+                chapters: []
+            };
+            units.push(currentUnit);
+        }
+        // Sub-chapter: belongs to current unit
+        else if (currentUnit) {
+            currentUnit.chapters.push({
+                chapterName: chapterName,
+                link: link,
+                fullNumber: chapterName.split(' ')[0] || ''
+            });
+        }
+        // No unit yet: create a default unit
+        else {
+            if (!currentUnit) {
+                currentUnit = {
+                    unitNumber: units.length + 1,
+                    unitName: 'UNIT ' + (units.length + 1),
+                    chapters: []
+                };
+                units.push(currentUnit);
+            }
+            currentUnit.chapters.push({
+                chapterName: chapterName,
+                link: link,
+                fullNumber: chapterName.split(' ')[0] || ''
+            });
+        }
+    });
+
+    return units;
+}
+
+// ============================================================
+// FETCH CHAPTERS
+// ============================================================
+let isFetching = false;
+
+async function fetchChapters(forceRefresh = false) {
+    if (!forceRefresh) {
+        const cached = getCachedChapters();
+        if (cached && cached.length > 0) {
+            return cached;
+        }
+    }
+
+    if (isFetching) {
+        return new Promise((resolve) => {
+            const checkFetch = setInterval(() => {
+                if (!isFetching) {
+                    clearInterval(checkFetch);
+                    const cached = getCachedChapters();
+                    resolve(cached || []);
+                }
+            }, 100);
+        });
+    }
+
+    isFetching = true;
+    showBackgroundLoading(10);
+
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${encodeURIComponent(SHEET_NAME)}&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        updateProgress(70);
+
+        if (data.status === 'success' && data.data) {
+            const processed = processChapterData(data.data);
+            setCachedChapters(processed);
+
+            updateProgress(100);
+            setTimeout(hideBackgroundLoading, 300);
+            return processed;
+        }
+
+        hideBackgroundLoading();
+        return [];
+    } catch (err) {
+        console.error('Error fetching chapters:', err);
+        hideBackgroundLoading();
+        showToast('❌ Error loading chapters: ' + err.message, 'error');
+        return [];
+    } finally {
+        isFetching = false;
+    }
+}
+
+// ============================================================
+// BACKGROUND SYNC
+// ============================================================
+let isBackgroundSyncing = false;
+
+async function backgroundSync() {
+    if (isBackgroundSyncing) return;
+    if (!checkLoginStatus()) return;
+
+    isBackgroundSyncing = true;
+
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${SPREADSHEET_ID}&sheetName=${encodeURIComponent(SHEET_NAME)}&_=${Date.now()}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        if (data.status === 'success' && data.data) {
+            const newUnits = processChapterData(data.data);
+            const cached = getCachedChapters();
+
+            if (JSON.stringify(cached) !== JSON.stringify(newUnits)) {
+                setCachedChapters(newUnits);
+                const currentSearch = dom.searchInput.value.trim();
+                renderChapters(newUnits, currentSearch);
+                showToast('📚 Chapters updated in background', 'info');
+            }
+        }
+    } catch (err) {
+        console.error('Background sync error:', err);
+    } finally {
+        isBackgroundSyncing = false;
+    }
+}
+
+// ============================================================
+// RENDER CHAPTERS (Grouped by Unit)
+// ============================================================
+function renderChapters(units, searchTerm = '') {
+    const tableBody = dom.chapterTableBody;
+    const cardView = dom.cardView;
+    const chapterCount = dom.chapterCount;
+
+    let searchLower = searchTerm.toLowerCase().trim();
+
+    let filteredUnits = units;
+    if (searchLower) {
+        filteredUnits = units.map(unit => {
+            const filteredChapters = unit.chapters.filter(ch =>
+                ch.chapterName.toLowerCase().includes(searchLower) ||
+                unit.unitName.toLowerCase().includes(searchLower) ||
+                ch.fullNumber.includes(searchLower)
+            );
+            return { ...unit, chapters: filteredChapters };
+        }).filter(unit => unit.chapters.length > 0);
+    }
+
+    const totalChapters = units.reduce((sum, u) => sum + u.chapters.length, 0);
+    const filteredCount = filteredUnits.reduce((sum, u) => sum + u.chapters.length, 0);
+
+    chapterCount.textContent = filteredCount === totalChapters ?
+        `${totalChapters} Chapters` :
+        `${filteredCount} of ${totalChapters} Chapters`;
+
+    if (filteredUnits.length === 0 || filteredCount === 0) {
+        const noResultsHtml = `
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 3rem;">
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No Results Found</h3>
+                        <p>No chapters match "${escapeHtml(searchTerm)}". Try a different search.</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML = noResultsHtml;
+        cardView.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>No Results Found</h3>
+                <p>No chapters match "${escapeHtml(searchTerm)}". Try a different search.</p>
+            </div>
+        `;
+        return;
+    }
+
+    let tableHtml = '';
+    let cardHtml = '';
+
+    filteredUnits.forEach((unit) => {
+        const unitName = unit.unitName;
+        const unitNumber = unit.unitNumber;
+        const highlightedUnit = searchLower ? highlightText(unitName, searchTerm) : escapeHtml(unitName);
+
+        tableHtml += `
+            <tr class="unit-row">
+                <td class="sr-cell">${unitNumber}</td>
+                <td colspan="2" class="unit-name">📂 ${highlightedUnit}</td>
+            </tr>
+        `;
+
+        cardHtml += `
+            <div class="unit-card">📂 ${highlightedUnit}</div>
+        `;
+
+        unit.chapters.forEach((chapter) => {
+            const chapterName = chapter.chapterName;
+            const link = chapter.link || '';
+            const highlightedName = searchLower ? highlightText(chapterName, searchTerm) : escapeHtml(chapterName);
+
+            tableHtml += `
+                <tr class="subchapter-row">
+                    <td></td>
+                    <td class="chapter-name-cell">${highlightedName}</td>
+                    <td class="action-cell">
+                        ${link ? `
+                            <button class="btn btn-primary btn-sm view-btn" data-link="${escapeHtml(link)}" data-chapter="${escapeHtml(chapterName)}">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        ` : `
+                            <span style="color: var(--text-light); font-size: 0.8rem;">No link</span>
+                        `}
+                    </td>
+                </tr>
+            `;
+
+            cardHtml += `
+                <div class="subchapter-item">
+                    <div class="chapter-info">
+                        <div class="chapter-name">${highlightedName}</div>
+                        <div class="chapter-meta">${link ? '📄 Available' : '🔒 No link'}</div>
+                    </div>
+                    ${link ? `
+                        <button class="btn btn-primary btn-sm view-btn" data-link="${escapeHtml(link)}" data-chapter="${escapeHtml(chapterName)}">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    ` : `
+                        <span style="color: var(--text-light); font-size: 0.7rem;">N/A</span>
+                    `}
+                </div>
+            `;
+        });
+    });
+
+    tableBody.innerHTML = tableHtml;
+    cardView.innerHTML = cardHtml;
+}
+
+// ============================================================
+// HANDLE VIEW BUTTON CLICK
+// ============================================================
+function handleViewButtonClick(e) {
+    const btn = e.target.closest('.view-btn');
+    if (!btn) return;
+
+    const link = btn.dataset.link;
+    const chapter = btn.dataset.chapter || 'Chapter';
+
+    if (!link) {
+        showToast('❌ No link available for this chapter', 'warning');
+        return;
+    }
+
+    try {
+        sessionStorage.setItem('viewpdf_chapter', chapter);
+        sessionStorage.setItem('viewpdf_link', link);
+    } catch (e) {}
+
+    window.location.href = `../../../ViewPDF/viewpdf.html?link=${encodeURIComponent(link)}&chapter=${encodeURIComponent(chapter)}`;
+}
+
+// ============================================================
+// REFRESH HANDLER
+// ============================================================
+let isRefreshing = false;
+
+async function handleRefresh() {
+    if (isRefreshing) return;
+
+    isRefreshing = true;
+    dom.refreshBtn.disabled = true;
+    dom.refreshIcon.className = 'fas fa-sync-alt fa-spin-custom';
+    dom.refreshText.textContent = 'Refreshing...';
+
+    try {
+        clearCache();
+        const units = await fetchChapters(true);
+        const searchTerm = dom.searchInput.value.trim();
+        renderChapters(units, searchTerm);
+        showToast('✅ Chapters refreshed successfully!', 'success');
+    } catch (err) {
+        showToast('❌ Refresh failed: ' + err.message, 'error');
+    } finally {
+        isRefreshing = false;
+        dom.refreshBtn.disabled = false;
+        dom.refreshIcon.className = 'fas fa-sync-alt';
+        dom.refreshText.textContent = 'Refresh';
+    }
+}
+
+// ============================================================
+// SEARCH HANDLER
+// ============================================================
+let searchTimeout = null;
+
+function handleSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const searchTerm = dom.searchInput.value.trim();
+        const cached = getCachedChapters();
+        if (cached) {
+            renderChapters(cached, searchTerm);
+        }
+    }, 300);
+}
+
+// ============================================================
+// INITIALIZE PAGE
+// ============================================================
+async function init() {
+    cacheDomElements();
+
+    syncThemeWithParent();
+
+    // ⭐ Unified auth check — Student / Teacher / Admin
+    const auth = checkAuthStatus();
+
+    if (!auth.loggedIn) {
+        showLoginRequired();
+        return;
+    }
+
+    hideLoginRequired();
+    renderRoleBadge(auth);
+
+    dom.loadingState.style.display = 'block';
+    dom.tableView.style.display = 'none';
+    dom.cardView.style.display = 'none';
+
+    const cachedUnits = getCachedChapters();
+    let units = cachedUnits || [];
+
+    if (units.length > 0) {
+        dom.loadingState.style.display = 'none';
+        dom.tableView.style.display = 'block';
+        dom.cardView.style.display = 'flex';
+        renderChapters(units, '');
+
+        showBackgroundLoading(10);
+        setTimeout(async () => {
+            const freshUnits = await fetchChapters(true);
+            if (freshUnits.length > 0) {
+                const searchTerm = dom.searchInput.value.trim();
+                renderChapters(freshUnits, searchTerm);
+            }
+            hideBackgroundLoading();
+        }, 500);
+    } else {
+        units = await fetchChapters(false);
+        dom.loadingState.style.display = 'none';
+        dom.tableView.style.display = 'block';
+        dom.cardView.style.display = 'flex';
+        renderChapters(units, '');
+    }
+
+    document.addEventListener('click', handleViewButtonClick);
+    dom.searchInput.addEventListener('input', handleSearch);
+    dom.refreshBtn.addEventListener('click', handleRefresh);
+
+    document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            handleRefresh();
+        }
+        if (e.key === 'Escape' && dom.searchInput.value) {
+            dom.searchInput.value = '';
+            handleSearch();
+            dom.searchInput.blur();
+        }
+    });
+
+    // ⭐ Periodic auth re-check — if session ends mid-view, show overlay
+    setInterval(() => {
+        if (!checkLoginStatus()) {
+            showLoginRequired();
+        }
+    }, 15000);
+
+    setInterval(backgroundSync, BG_UPDATE_INTERVAL);
+}
+
+// ============================================================
+// START APP
+// ============================================================
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
