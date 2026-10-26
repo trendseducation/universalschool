@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Universal School – Profit &amp; Loss Statement</title>
+
+<!-- ===== PREVENT THEME FLASH (follows Dashboard.html) ===== -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('user-theme-preference')
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ===== HIDDEN SCROLLBARS ===== */
+::-webkit-scrollbar { width:0; height:0; background:transparent; display:none; }
+* { scrollbar-width:none; -ms-overflow-style:none; }
+html, body { -ms-overflow-style:none; scrollbar-width:none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
+
+/* ======================== CSS VARIABLES (White + Yellow theme) ======================== */
+:root {
+  --bg-primary:#fdfcf7;         /* warm white */
+  --bg-secondary:#faf7ee;
+  --bg-card:#ffffff;
+  --bg-elev:#fffdf7;
+  --text-main:#1a1a1a;
+  --text-muted:#5c5c5c;
+  --text-dim:#9a9a9a;
+
+  --accent-primary:#f5b400;     /* golden yellow */
+  --accent-primary-soft:#fef3c7;
+  --accent-primary-dark:#b45309;
+  --accent-glow:rgba(245,180,0,.18);
+  --accent-glow-strong:rgba(245,180,0,.35);
+
+  --income:#16a34a;             /* green */
+  --income-bg:rgba(22,163,74,.08);
+  --expense:#dc2626;            /* red */
+  --expense-bg:rgba(220,38,38,.08);
+  --profit:#d97706;             /* amber for profit */
+  --loss:#b91c1c;
+
+  --border-light:#f0ead7;
+  --border-med:#e8dfc4;
+
+  --card-shadow:0 12px 30px -14px rgba(180,140,20,.15);
+  --card-shadow-hover:0 18px 40px -16px rgba(180,140,20,.25);
+  --card-border:1px solid var(--border-light);
+
+  --transition:.25s ease;
+  --gradient-yellow:linear-gradient(135deg, #ffd54f 0%, #f5b400 100%);
+  --gradient-yellow-soft:linear-gradient(135deg, #fff8e1, #fef3c7);
+  --gradient-accent:linear-gradient(135deg, #f5b400, #d97706);
+}
+[data-theme="dark"] {
+  --bg-primary:#0a0a0a;
+  --bg-secondary:#121212;
+  --bg-card:#1a1a1a;
+  --bg-elev:#222222;
+  --text-main:#f5f5f5;
+  --text-muted:#a0a0a0;
+  --text-dim:#6b6b6b;
+
+  --accent-primary:#fbbf24;
+  --accent-primary-soft:rgba(251,191,36,.12);
+  --accent-primary-dark:#f59e0b;
+  --accent-glow:rgba(251,191,36,.2);
+  --accent-glow-strong:rgba(251,191,36,.4);
+
+  --income:#34d399;
+  --income-bg:rgba(52,211,153,.12);
+  --expense:#f87171;
+  --expense-bg:rgba(248,113,113,.12);
+  --profit:#fbbf24;
+  --loss:#f87171;
+
+  --border-light:#2a2a2a;
+  --border-med:#333333;
+
+  --card-shadow:0 12px 30px -14px rgba(0,0,0,.6);
+  --card-shadow-hover:0 18px 40px -16px rgba(0,0,0,.75);
+  --card-border:1px solid rgba(255,255,255,.06);
+
+  --gradient-yellow:linear-gradient(135deg, #f59e0b, #b45309);
+  --gradient-yellow-soft:linear-gradient(135deg, #2a2415, #1f1a0d);
+  --gradient-accent:linear-gradient(135deg, #fbbf24, #d97706);
+}
+html, body { transition: background var(--transition), color var(--transition); }
+body {
+  font-family:'Inter', sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-main);
+  min-height:100vh; margin:0; padding:0;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ======================== LAYOUT ======================== */
+.page-wrap {
+  max-width:1180px;
+  margin:0 auto;
+  padding:1.75rem 1.25rem 3rem;
+}
+
+/* Header */
+.top-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem;
+}
+.title-block h1 {
+  font-size:1.6rem; font-weight:800; letter-spacing:-.5px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  line-height:1.25;
+}
+.title-block h1 .title-icon {
+  width:44px; height:44px; border-radius:14px;
+  background:var(--gradient-yellow);
+  color:#1a1a1a; display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; flex-shrink:0;
+  box-shadow:0 6px 16px -6px rgba(245,180,0,.5);
+}
+.title-block .sub {
+  font-size:.85rem; color:var(--text-muted); font-weight:500;
+  margin-top:.5rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.ay-badge {
+  background:var(--gradient-yellow); color:#1a1a1a;
+  padding:3px 12px; border-radius:40px; font-size:.75rem; font-weight:700;
+  box-shadow:0 4px 10px -4px rgba(245,180,0,.4);
+}
+
+.header-actions { display:flex; align-items:center; gap:.6rem; }
+
+.refresh-btn {
+  background:var(--bg-card);
+  border:var(--card-border);
+  height:44px; padding:0 16px;
+  border-radius:14px;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  cursor:pointer; color:var(--text-main);
+  box-shadow:var(--card-shadow); transition:all .2s;
+  font-size:.88rem; font-family:inherit; font-weight:600;
+}
+.refresh-btn:hover {
+  transform:translateY(-2px);
+  color:var(--accent-primary-dark);
+  box-shadow:var(--card-shadow-hover);
+  border-color:var(--accent-primary);
+}
+.refresh-btn.spinning i { animation:spin .8s linear infinite; }
+.refresh-btn:disabled { opacity:.6; cursor:not-allowed; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ======================== SUMMARY CARDS ======================== */
+.summary-row {
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  gap:1rem; margin-bottom:1.5rem;
+}
+.sum-card {
+  background:var(--bg-card); border-radius:22px;
+  border:var(--card-border);
+  padding:1.4rem 1.5rem;
+  box-shadow:var(--card-shadow);
+  position:relative; overflow:hidden;
+  transition:transform .2s, box-shadow .2s;
+}
+.sum-card:hover { transform:translateY(-3px); box-shadow:var(--card-shadow-hover); }
+.sum-card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+}
+.sum-card.income::after { background:linear-gradient(90deg, var(--income), #4ade80); }
+.sum-card.expense::after { background:linear-gradient(90deg, var(--expense), #f87171); }
+.sum-card.profit::after { background:var(--gradient-yellow); }
+.sum-card.loss::after { background:linear-gradient(90deg, var(--loss), #ef4444); }
+
+.sum-card .icon-wrap {
+  width:46px; height:46px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25rem; margin-bottom:.9rem;
+}
+.sum-card.income .icon-wrap { background:var(--income-bg); color:var(--income); }
+.sum-card.expense .icon-wrap { background:var(--expense-bg); color:var(--expense); }
+.sum-card.profit .icon-wrap { background:var(--accent-primary-soft); color:var(--accent-primary-dark); }
+.sum-card.loss .icon-wrap { background:var(--expense-bg); color:var(--loss); }
+
+.sum-card .lbl {
+  font-size:.7rem; text-transform:uppercase; letter-spacing:.6px;
+  font-weight:700; color:var(--text-muted);
+  margin-bottom:.4rem; display:block;
+}
+.sum-card .val {
+  font-weight:800; font-size:1.6rem; letter-spacing:-.8px;
+  font-variant-numeric:tabular-nums;
+  display:flex; align-items:baseline; gap:2px;
+}
+.sum-card.income .val { color:var(--income); }
+.sum-card.expense .val { color:var(--expense); }
+.sum-card.profit .val { color:var(--accent-primary-dark); }
+.sum-card.loss .val { color:var(--loss); }
+.sum-card .val .cur { font-size:1.1rem; font-weight:600; opacity:.75; }
+
+.sum-card .watermark {
+  position:absolute; right:-10px; bottom:-14px;
+  font-size:5rem; opacity:.06; pointer-events:none;
+}
+
+/* ======================== MAIN STATEMENT BLOCK ======================== */
+.statement {
+  background:var(--bg-card);
+  border-radius:26px;
+  border:var(--card-border);
+  box-shadow:var(--card-shadow);
+  overflow:hidden;
+}
+.statement-header {
+  padding:1.25rem 1.5rem;
+  background:var(--gradient-yellow-soft);
+  border-bottom:1px solid var(--border-med);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:.75rem;
+}
+.statement-header h2 {
+  font-size:1.05rem; font-weight:800; letter-spacing:-.2px;
+  display:flex; align-items:center; gap:10px;
+}
+.statement-header h2 i { color:var(--accent-primary-dark); }
+.statement-header .update-badge {
+  font-size:.72rem; font-weight:600;
+  color:var(--accent-primary-dark);
+  display:inline-flex; align-items:center; gap:5px;
+  opacity:0; transition:opacity .3s;
+}
+.statement-header .update-badge.show { opacity:1; }
+.update-badge i { animation:spin 1s linear infinite; }
+
+/* ======================== SECTION BLOCKS ======================== */
+.section {
+  padding:1.25rem 1.5rem;
+  border-bottom:1px solid var(--border-light);
+}
+.section:last-child { border-bottom:none; }
+
+.section-title {
+  display:flex; align-items:center; gap:12px;
+  font-size:.95rem; font-weight:800; letter-spacing:-.1px;
+  margin-bottom:1rem;
+  padding-bottom:.75rem;
+  border-bottom:2px solid var(--border-light);
+}
+.section-title .num {
+  width:32px; height:32px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; font-weight:800; flex-shrink:0;
+}
+.section-title.income-title .num {
+  background:var(--income-bg); color:var(--income);
+}
+.section-title.expense-title .num {
+  background:var(--expense-bg); color:var(--expense);
+}
+.section-title .sub-tag {
+  margin-left:auto;
+  font-size:.72rem; font-weight:600;
+  color:var(--text-muted);
+  background:var(--bg-secondary);
+  padding:3px 10px; border-radius:40px;
+}
+
+/* Subsection */
+.subsection { margin-bottom:1.25rem; }
+.subsection:last-child { margin-bottom:0; }
+.subsection-title {
+  font-size:.82rem; font-weight:700;
+  color:var(--text-muted); text-transform:uppercase;
+  letter-spacing:.5px; margin-bottom:.75rem;
+  display:flex; align-items:center; gap:8px;
+}
+.subsection-title i { color:var(--accent-primary); font-size:.75rem; }
+.subsection-title .badge {
+  margin-left:auto; font-size:.68rem; font-weight:700;
+  background:var(--accent-primary-soft);
+  color:var(--accent-primary-dark);
+  padding:2px 9px; border-radius:40px;
+  text-transform:none; letter-spacing:0;
+}
+
+/* Line items grid */
+.items-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+  gap:.6rem;
+}
+.line-item {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.5rem;
+  padding:.75rem 1rem;
+  background:var(--bg-secondary);
+  border-radius:14px;
+  border:1px solid transparent;
+  transition:all .18s;
+  font-size:.86rem;
+}
+.line-item:hover {
+  background:var(--bg-elev);
+  border-color:var(--accent-primary);
+  transform:translateY(-1px);
+  box-shadow:0 6px 14px -8px var(--accent-glow-strong);
+}
+.line-item .item-label {
+  color:var(--text-muted); font-weight:600;
+  display:flex; align-items:center; gap:6px;
+}
+.line-item .item-label .dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent-primary); flex-shrink:0;
+}
+.line-item .item-amount {
+  font-weight:800; color:var(--text-main);
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.2px; font-size:.88rem;
+  white-space:nowrap;
+}
+.line-item .item-amount.zero { color:var(--text-dim); font-weight:600; }
+
+/* Total row */
+.total-row {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem;
+  padding:1rem 1.25rem;
+  background:var(--gradient-yellow-soft);
+  border-radius:16px;
+  margin-top:1rem;
+  border:1px solid var(--border-med);
+  position:relative; overflow:hidden;
+}
+.total-row::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:4px; background:var(--gradient-yellow);
+}
+.total-row .total-label {
+  font-weight:800; font-size:.92rem;
+  color:var(--text-main);
+  display:flex; align-items:center; gap:8px;
+}
+.total-row .total-label i {
+  color:var(--accent-primary-dark); font-size:.9rem;
+}
+.total-row .total-value {
+  font-weight:800; font-size:1.25rem;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.5px;
+  color:var(--accent-primary-dark);
+}
+.total-row.expense .total-value { color:var(--expense); }
+.total-row.expense::before { background:linear-gradient(180deg, var(--expense), #f87171); }
+
+/* Final P&L row */
+.final-row {
+  padding:1.5rem;
+  background:var(--gradient-yellow);
+  color:#1a1a1a;
+  border-radius:0;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; flex-wrap:wrap;
+  position:relative; overflow:hidden;
+}
+.final-row::before {
+  content:'\f201';
+  font-family:'Font Awesome 6 Free'; font-weight:900;
+  position:absolute; right:20px; bottom:-30px;
+  font-size:6rem; opacity:.08; pointer-events:none;
+}
+.final-row.loss-mode {
+  background:linear-gradient(135deg, #ef4444, #b91c1c);
+  color:#fff;
+}
+.final-row .final-label {
+  font-size:1rem; font-weight:800; letter-spacing:-.2px;
+  display:flex; align-items:center; gap:10px;
+}
+.final-row .final-label i { font-size:1.3rem; }
+.final-row .final-value {
+  font-size:2rem; font-weight:800;
+  letter-spacing:-1.2px;
+  font-variant-numeric:tabular-nums;
+  display:flex; align-items:baseline; gap:4px;
+}
+.final-row .final-value .cur { font-size:1.3rem; font-weight:600; opacity:.85; }
+.final-row .final-note {
+  width:100%; font-size:.75rem; font-weight:600;
+  opacity:.85; margin-top:.25rem;
+  display:flex; align-items:center; gap:6px;
+}
+
+/* ======================== STATES ======================== */
+.state-box {
+  padding:3rem 1.5rem; text-align:center; color:var(--text-muted);
+}
+.state-box i { font-size:2.5rem; margin-bottom:1rem; opacity:.45; display:block; }
+.state-box h4 { font-size:1rem; margin-bottom:.4rem; color:var(--text-main); }
+.state-box p { font-size:.85rem; }
+.spinner-lg {
+  display:inline-block; width:38px; height:38px;
+  border:3px solid var(--border-light);
+  border-top-color:var(--accent-primary);
+  border-radius:50%; animation:spin .8s linear infinite;
+  margin-bottom:1rem;
+}
+
+/* Skeleton loading */
+.skeleton {
+  background:linear-gradient(90deg, var(--bg-secondary) 0%, var(--bg-elev) 50%, var(--bg-secondary) 100%);
+  background-size:200% 100%;
+  animation:shimmer 1.3s infinite;
+  border-radius:8px;
+  height:1em;
+}
+@keyframes shimmer {
+  0% { background-position:200% 0; }
+  100% { background-position:-200% 0; }
+}
+
+/* ======================== RESPONSIVE ======================== */
+@media (max-width: 860px) {
+  .summary-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap:.7rem;
+    margin-bottom:2rem;
+  }
+  .sum-card { padding:1.1rem 1.2rem; display:flex; align-items:center; gap:1rem; }
+  .sum-card .icon-wrap { margin-bottom:0; width:42px; height:42px; font-size:1.1rem; }
+  .sum-card .lbl { margin-bottom:.15rem; font-size:.66rem; }
+  .sum-card .val { font-size:1.35rem; }
+  .sum-card .watermark { font-size:3.5rem; right:-5px; bottom:-10px; }
+}
+@media (max-width: 640px) {
+.summary-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap:.7rem;
+    margin-bottom:2rem;
+  }
+  .page-wrap { padding:1.1rem .85rem 2.5rem; }
+  .title-block h1 { font-size:1.2rem; }
+  .title-block h1 .title-icon { width:38px; height:38px; font-size:1rem; }
+  .title-block .sub { font-size:.76rem; }
+  .ay-badge { font-size:.7rem; }
+  .refresh-btn .label { display:none; }
+  .refresh-btn { width:44px; padding:0; }
+  .section { padding:1rem 1rem; }
+  .section-title { font-size:.88rem; }
+  .section-title .num { width:28px; height:28px; font-size:.8rem; }
+  .items-grid { grid-template-columns:1fr 1fr; gap:.5rem; }
+  .line-item { flex-direction:column; align-items:flex-start; gap:.25rem; padding:.65rem .75rem; }
+  .line-item .item-amount { font-size:.92rem; align-self:flex-end; }
+  .total-row { padding:.9rem 1rem; }
+  .total-row .total-value { font-size:1.1rem; }
+  .final-row { padding:1.2rem 1rem; }
+  .final-row .final-value { font-size:1.6rem; }
+  .final-row .final-label { font-size:.9rem; }
+  .final-row .final-label i { font-size:1.1rem; }
+}
+@media (max-width: 380px) {
+  .items-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= GUARD SCREEN ================= -->
+<div id="guardScreen" class="state-box" style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+  <div class="spinner-lg"></div>
+  <h4>Verifying admin access…</h4>
+  <p>Please wait a moment.</p>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div class="page-wrap" id="appWrap" style="display:none;">
+
+  <!-- Header -->
+  <div class="top-header">
+    <div class="title-block">
+      <h1>
+        <span class="title-icon"><i class="fa-solid fa-scale-balanced"></i></span>
+        <span>Profit &amp; Loss Statement</span>
+      </h1>
+      <div class="sub">
+        <i class="fa-regular fa-calendar"></i>
+        Universal English Medium School • Academic Year: 
+        <span class="ay-badge" id="academicYearBadge">—</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+        <i class="fa-solid fa-rotate-right"></i>
+        <span class="label">Refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Summary Cards -->
+  <div class="summary-row">
+    <div class="sum-card income">
+      <div class="icon-wrap"><i class="fa-solid fa-arrow-trend-up"></i></div>
+      <div>
+        <span class="lbl">Total Income Received</span>
+        <div class="val" id="kpiIncome">₹0</div>
+      </div>
+      <i class="fa-solid fa-coins watermark"></i>
+    </div>
+    <div class="sum-card expense">
+      <div class="icon-wrap"><i class="fa-solid fa-arrow-trend-down"></i></div>
+      <div>
+        <span class="lbl">Total Expenses</span>
+        <div class="val" id="kpiExpense">₹0</div>
+      </div>
+      <i class="fa-solid fa-receipt watermark"></i>
+    </div>
+    <div class="sum-card profit" id="kpiProfitCard">
+      <div class="icon-wrap" id="kpiProfitIcon"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div>
+        <span class="lbl" id="kpiProfitLabel">Net Profit</span>
+        <div class="val" id="kpiProfit">₹0</div>
+      </div>
+      <i class="fa-solid fa-chart-line watermark"></i>
+    </div>
+  </div>
+
+  <!-- Main Statement Card -->
+  <div class="statement">
+    <div class="statement-header">
+      <h2>
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        Detailed Statement
+        <span class="update-badge" id="updateBadge">
+          <i class="fa-solid fa-circle-notch"></i> updating…
+        </span>
+      </h2>
+      <span style="font-size:.78rem; color:var(--text-muted); font-weight:500;" id="lastUpdatedText">—</span>
+    </div>
+
+    <div id="statementState" class="state-box" style="display:none;"></div>
+
+    <div id="statementContent" style="display:none;">
+
+      <!-- ============ A. INCOME SECTION ============ -->
+      <div class="section">
+        <div class="section-title income-title">
+          <span class="num"><i class="fa-solid fa-plus"></i></span>
+          <span>A. Income</span>
+          <span class="sub-tag" id="incomeSubTag">—</span>
+        </div>
+
+        <!-- I. Fees Received -->
+        <div class="subsection">
+          <div class="subsection-title">
+            <i class="fa-solid fa-graduation-cap"></i> I. Fees Received
+            <span class="badge" id="feesBadge">—</span>
+          </div>
+          <div class="items-grid" id="feesItems">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <!-- II. Other Income -->
+        <div class="subsection">
+          <div class="subsection-title">
+            <i class="fa-solid fa-wallet"></i> II. Other Income
+            <span class="badge" id="otherIncomeBadge">—</span>
+          </div>
+          <div class="items-grid">
+            <div class="line-item">
+              <span class="item-label"><span class="dot"></span>Misc. Income</span>
+              <span class="item-amount" id="otherIncomeAmount">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Income -->
+        <div class="total-row">
+          <div class="total-label">
+            <i class="fa-solid fa-circle-check"></i>
+            Total Income Received (I + II)
+          </div>
+          <div class="total-value" id="totalIncomeAmount">₹0</div>
+        </div>
+      </div>
+
+      <!-- ============ B. EXPENSES SECTION ============ -->
+      <div class="section">
+        <div class="section-title expense-title">
+          <span class="num"><i class="fa-solid fa-minus"></i></span>
+          <span>B. Expenses</span>
+          <span class="sub-tag" id="expenseSubTag">—</span>
+        </div>
+
+        <div class="subsection">
+          <div class="items-grid">
+            <div class="line-item">
+              <span class="item-label"><span class="dot"></span>I. Teacher Payment</span>
+              <span class="item-amount" id="teacherPayAmount">₹0</span>
+            </div>
+            <div class="line-item">
+              <span class="item-label"><span class="dot"></span>II. Staff Payment</span>
+              <span class="item-amount" id="staffPayAmount">₹0</span>
+            </div>
+            <div class="line-item">
+              <span class="item-label"><span class="dot"></span>III. Other Expenses</span>
+              <span class="item-amount" id="otherExpenseAmount">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Expenses -->
+        <div class="total-row expense">
+          <div class="total-label">
+            <i class="fa-solid fa-circle-minus"></i>
+            Total Expenses (I + II + III)
+          </div>
+          <div class="total-value" id="totalExpenseAmount">₹0</div>
+        </div>
+      </div>
+
+      <!-- ============ FINAL P&L ============ -->
+      <div class="final-row" id="finalRow">
+        <div class="final-label">
+          <i class="fa-solid fa-trophy" id="finalIcon"></i>
+          <span id="finalLabel">Total Profit</span>
+        </div>
+        <div class="final-value" id="finalValue">
+          <span class="cur">₹</span><span id="finalAmount">0</span>
+        </div>
+        <div class="final-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <span id="finalNote">Calculated as: Total Income Received − Total Expenses</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================================================================
+   CONFIG
+   ================================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec';
+
+const FEES_SPREADSHEET_ID    = '1oSgbGG5NmYXV5AVR7uvmLnp5pQx83QFQsqCf1u3YFo0';
+const INCOME_EXP_SPREADSHEET = '19D6rg5Co3665dPIFurTHEs3EV2mwRdfgmauX4VNixr4';
+
+const FEE_SHEETS = [
+  { sheet:'JR_KG',   label:'JR KG'   },
+  { sheet:'SR_KG',   label:'SR KG'   },
+  { sheet:'STD_1',   label:'1st Std' },
+  { sheet:'STD_2',   label:'2nd Std' },
+  { sheet:'STD_3',   label:'3rd Std' },
+  { sheet:'STD_4',   label:'4th Std' },
+  { sheet:'STD_5',   label:'5th Std' },
+  { sheet:'STD_6',   label:'6th Std' },
+  { sheet:'STD_7',   label:'7th Std' },
+  { sheet:'STD_8',   label:'8th Std' },
+  { sheet:'STD_9',   label:'9th Std' },
+  { sheet:'STD_10',  label:'10th Std'}
+];
+
+const CACHE_KEY   = 'profitLoss_cache_v1';
+const CACHE_TTL_MS = 10 * 60 * 1000;
+
+/* ================================================================
+   SESSION / AUTH  (mirrors Dashboard.html)
+   ================================================================ */
+const SESSION_KEYS = {
+  USER:'Universal_user',
+  USER_DATA:'Universal_user_data',
+  USER_TYPE:'Universal_user_type',
+  REMEMBER_ME:'Universal_remember_me'
+};
+
+function getSessionData(key) {
+  const localData = localStorage.getItem(key);
+  if (localData) {
+    try {
+      const parsed = JSON.parse(localData);
+      if (parsed && parsed.value !== undefined) {
+        if (parsed.expiry && Date.now() > parsed.expiry) return null;
+        return parsed.value;
+      }
+      return parsed;
+    } catch (e) { return localData; }
+  }
+  const sessionData = sessionStorage.getItem(key);
+  if (sessionData) { try { return JSON.parse(sessionData); } catch(e){ return sessionData; } }
+  return null;
+}
+
+function isRememberMeActive() {
+  const raw = localStorage.getItem(SESSION_KEYS.REMEMBER_ME);
+  if (!raw) return false;
+  try {
+    const p = JSON.parse(raw);
+    return p.value === true && Date.now() < p.expiry;
+  } catch (e) { return false; }
+}
+
+function syncSessionFromRememberMe() {
+  if (isRememberMeActive()) {
+    const user = getSessionData(SESSION_KEYS.USER);
+    const userData = getSessionData(SESSION_KEYS.USER_DATA);
+    const userType = getSessionData(SESSION_KEYS.USER_TYPE);
+    if (user && userData) {
+      sessionStorage.setItem(SESSION_KEYS.USER, JSON.stringify(user));
+      sessionStorage.setItem(SESSION_KEYS.USER_DATA, JSON.stringify(userData));
+      if (userType) sessionStorage.setItem(SESSION_KEYS.USER_TYPE, JSON.stringify(userType));
+      return true;
+    }
+  }
+  return false;
+}
+
+function getCurrentUser() {
+  syncSessionFromRememberMe();
+  let user     = getSessionData(SESSION_KEYS.USER);
+  let userData = getSessionData(SESSION_KEYS.USER_DATA);
+  let userType = getSessionData(SESSION_KEYS.USER_TYPE);
+  if (!user) {
+    user = sessionStorage.getItem(SESSION_KEYS.USER) || localStorage.getItem(SESSION_KEYS.USER);
+    if (user) { try { user = JSON.parse(user); } catch(e){} }
+  }
+  if (!userData) {
+    userData = sessionStorage.getItem(SESSION_KEYS.USER_DATA) || localStorage.getItem(SESSION_KEYS.USER_DATA);
+    if (userData) { try { userData = JSON.parse(userData); } catch(e){} }
+  }
+  if (!userType) {
+    userType = sessionStorage.getItem(SESSION_KEYS.USER_TYPE) || localStorage.getItem(SESSION_KEYS.USER_TYPE);
+    if (userType) { try { userType = JSON.parse(userType); } catch(e){} }
+  }
+  if (!user || !userData) return null;
+  try {
+    if (typeof userData === 'string') userData = JSON.parse(userData);
+    const firstName = userData['First Name'] || userData['User Name'] || '';
+    const lastName  = userData['Last Name'] || '';
+    const fullName  = `${firstName} ${lastName}`.trim() || (userData['User Name'] || 'Admin');
+    const email     = userData['Email Id'] || user;
+    return { username:user, email, data:userData, type:userType || null, fullName };
+  } catch (e) { return null; }
+}
+
+function checkAdminAuth() {
+  const user = getCurrentUser();
+  if (!user || user.type !== 'admin') {
+    window.location.replace('../../Study Material/My Account/myaccount.html');
+    return null;
+  }
+  window._currentAdmin = user;
+  return user;
+}
+
+/* ================================================================
+   ⭐ SECURITY-CODE GATE
+   ----------------------------------------------------------------
+   AccountDashboard.html writes localStorage['FinDash_unlocked_v1']
+   as a future timestamp on successful code entry (20-min window).
+   This page refuses to load unless that window is still active.
+   ================================================================ */
+const UNLOCK_KEY = 'FinDash_unlocked_v1';
+
+function isSecurityCodeCleared() {
+  try {
+    const raw = localStorage.getItem(UNLOCK_KEY);
+    if (raw) {
+      const expiresAt = Number(raw);
+      if (!isNaN(expiresAt)) {
+        if (expiresAt > Date.now()) return true;
+        localStorage.removeItem(UNLOCK_KEY);   // expired → clean up
+        return false;
+      }
+    }
+    // Backwards compat with old boolean flag
+    if (sessionStorage.getItem(UNLOCK_KEY) === '1') return true;
+  } catch (e) {}
+  return false;
+}
+
+function showSecurityGateAndRedirect() {
+  const guard = document.getElementById('guardScreen');
+  if (guard) {
+    guard.innerHTML = `
+      <div style="font-size:3rem; color:var(--loss); margin-bottom:1rem;">🔒</div>
+      <h4>Security code required</h4>
+      <p>Please verify the security code before accessing this page.</p>
+      <div class="spinner-lg" style="margin-top:1.5rem;"></div>
+      <p style="opacity:.6; font-size:.8rem; margin-top:.75rem;">Redirecting…</p>
+    `;
+  }
+  setTimeout(() => {
+    window.location.replace('AccountDashboard.html');
+  }, 1800);
+}
+
+/* ================================================================
+   THEME — follows Dashboard.html (read-only)
+   ================================================================ */
+const THEME_KEY = 'user-theme-preference';
+
+function applyThemeFromDashboard(theme) {
+  if (!theme) return;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.body.setAttribute('data-theme', theme);
+}
+function initTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyThemeFromDashboard(stored || (systemDark ? 'dark' : 'light'));
+}
+window.addEventListener('storage', (e) => {
+  if (e.key === THEME_KEY && e.newValue) applyThemeFromDashboard(e.newValue);
+  if (e.key === 'theme-change-trigger') applyThemeFromDashboard(localStorage.getItem(THEME_KEY));
+  // If another tab lets the security window expire, lock this page too
+  if (e.key === UNLOCK_KEY && !e.newValue) {
+    console.warn('🔒 Security window cleared in another tab — reloading');
+    window.location.reload();
+  }
+});
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'themeChange' && e.data.theme) {
+    applyThemeFromDashboard(e.data.theme);
+  }
+});
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function getAcademicYear() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const start = m >= 6 ? y : y - 1;
+  return `${start}-${String(start + 1).slice(-2)}`;
+}
+function findHeaderIndex(headers, candidates) {
+  const norm = s => String(s||'').toLowerCase().replace(/[\s._\-]/g,'');
+  const targets = candidates.map(norm);
+  return headers.findIndex(h => targets.includes(norm(h)));
+}
+function parseMoney(v) {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'number') return v;
+  const s = String(v).replace(/[₹,\s]/g,'').replace(/[^0-9.\-]/g,'');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+function formatMoney(n) {
+  if (!isFinite(n)) n = 0;
+  return '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+function formatMoneyParts(n) {
+  if (!isFinite(n)) n = 0;
+  const s = Math.abs(n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  return { sign: n < 0 ? '−' : '', body: s };
+}
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ================================================================
+   DATA FETCH
+   ================================================================ */
+async function fetchSheet(spreadsheetId, sheetName) {
+  const url = `${SCRIPT_URL}?spreadsheetId=${encodeURIComponent(spreadsheetId)}&sheetName=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url, { method:'GET' });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${sheetName}`);
+  const json = await res.json();
+  if (json.status !== 'success') throw new Error(json.message || `Failed: ${sheetName}`);
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+function sumColumn(rows, possibleNames) {
+  if (!rows || !rows.length) return 0;
+  const headers = Object.keys(rows[0]);
+  const idx = findHeaderIndex(headers, possibleNames);
+  if (idx === -1) return 0;
+  const key = headers[idx];
+  return rows.reduce((a, r) => a + parseMoney(r[key]), 0);
+}
+
+/* ================================================================
+   CACHE
+   ================================================================ */
+function readCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw);
+    if (!p || !p.ts || !p.payload) return null;
+    return {
+      fresh: (Date.now() - p.ts) < CACHE_TTL_MS,
+      ageMs: Date.now() - p.ts,
+      payload: p.payload
+    };
+  } catch (e) { return null; }
+}
+function writeCache(payload) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), payload })); }
+  catch (e) { console.warn('Cache write failed:', e); }
+}
+function clearCache() {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch (e) {}
+}
+
+/* ================================================================
+   STATE
+   ================================================================ */
+const state = {
+  payload: null,
+  loading: false,
+  lastSignature: ''
+};
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+function setState(kind, msg) {
+  const el = document.getElementById('statementState');
+  const content = document.getElementById('statementContent');
+  if (kind === 'loading') {
+    el.style.display = 'block';
+    el.innerHTML = `<div class="spinner-lg"></div>
+      <h4>Calculating Profit &amp; Loss…</h4>
+      <p>Fetching fee, income and expense data</p>`;
+    content.style.display = 'none';
+    return;
+  }
+  if (kind === 'error') {
+    el.style.display = 'block';
+    el.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--expense);"></i>
+      <h4>Unable to load data</h4><p>${escapeHtml(msg||'Unknown error')}</p>`;
+    content.style.display = 'none';
+    return;
+  }
+  el.style.display = 'none';
+  content.style.display = '';
+}
+
+function renderStatement(payload) {
+  const d = payload;
+
+  /* ---------- Fees Received items ---------- */
+  const feesItemsEl = document.getElementById('feesItems');
+  feesItemsEl.innerHTML = d.fees.map(f => `
+    <div class="line-item">
+      <span class="item-label"><span class="dot"></span>${escapeHtml(f.label)}</span>
+      <span class="item-amount ${f.amount === 0 ? 'zero' : ''}">${formatMoney(f.amount)}</span>
+    </div>
+  `).join('');
+
+  /* ---------- Badges ---------- */
+  document.getElementById('feesBadge').textContent        = formatMoney(d.feesTotal);
+  document.getElementById('otherIncomeBadge').textContent = formatMoney(d.otherIncome);
+  document.getElementById('incomeSubTag').textContent     = formatMoney(d.totalIncome);
+  document.getElementById('expenseSubTag').textContent    = formatMoney(d.totalExpense);
+
+  document.getElementById('otherIncomeAmount').textContent = formatMoney(d.otherIncome);
+  document.getElementById('otherIncomeAmount').classList.toggle('zero', d.otherIncome === 0);
+
+  document.getElementById('totalIncomeAmount').textContent = formatMoney(d.totalIncome);
+
+  document.getElementById('teacherPayAmount').textContent   = formatMoney(d.teacherPay);
+  document.getElementById('staffPayAmount').textContent     = formatMoney(d.staffPay);
+  document.getElementById('otherExpenseAmount').textContent = formatMoney(d.expenses);
+  document.getElementById('teacherPayAmount').classList.toggle('zero', d.teacherPay === 0);
+  document.getElementById('staffPayAmount').classList.toggle('zero', d.staffPay === 0);
+  document.getElementById('otherExpenseAmount').classList.toggle('zero', d.expenses === 0);
+
+  document.getElementById('totalExpenseAmount').textContent = formatMoney(d.totalExpense);
+
+  /* ---------- Final P&L ---------- */
+  const isProfit = d.profit >= 0;
+  const finalRow = document.getElementById('finalRow');
+  finalRow.classList.toggle('loss-mode', !isProfit);
+
+  document.getElementById('finalIcon').className =
+    isProfit ? 'fa-solid fa-trophy' : 'fa-solid fa-triangle-exclamation';
+  document.getElementById('finalLabel').textContent = isProfit ? 'Total Profit' : 'Total Loss';
+
+  const parts = formatMoneyParts(d.profit);
+  document.getElementById('finalAmount').textContent = parts.body;
+  document.querySelector('#finalValue .cur').textContent = parts.sign === '−' ? '−₹' : '₹';
+
+  document.getElementById('finalNote').textContent = isProfit
+    ? 'Calculated as: Total Income Received − Total Expenses'
+    : 'Expenses exceeded income this period';
+
+  /* ---------- KPI cards ---------- */
+  document.getElementById('kpiIncome').textContent  = formatMoney(d.totalIncome);
+  document.getElementById('kpiExpense').textContent = formatMoney(d.totalExpense);
+
+  const kpiProfitCard = document.getElementById('kpiProfitCard');
+  const kpiProfitVal  = document.getElementById('kpiProfit');
+  const kpiProfitLbl  = document.getElementById('kpiProfitLabel');
+  const kpiProfitIcon = document.getElementById('kpiProfitIcon');
+
+  kpiProfitCard.classList.toggle('loss', !isProfit);
+  kpiProfitCard.classList.toggle('profit', isProfit);
+  kpiProfitLbl.textContent = isProfit ? 'Net Profit' : 'Net Loss';
+  kpiProfitIcon.innerHTML = isProfit
+    ? '<i class="fa-solid fa-sack-dollar"></i>'
+    : '<i class="fa-solid fa-arrow-trend-down"></i>';
+  const kpParts = formatMoneyParts(d.profit);
+  kpiProfitVal.innerHTML = `<span style="font-size:1.1rem; font-weight:600; opacity:.75; margin-right:2px;">${kpParts.sign}₹</span>${kpParts.body}`;
+
+  /* ---------- Last updated ---------- */
+  const dateStr = new Date(d.fetchedAt).toLocaleString('en-IN', {
+    day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'
+  });
+  document.getElementById('lastUpdatedText').textContent = `Updated: ${dateStr}`;
+}
+
+function setUpdateBadge(show) {
+  const el = document.getElementById('updateBadge');
+  if (el) el.classList.toggle('show', !!show);
+}
+
+function dataSignature(p) {
+  return [
+    p.feesTotal, p.otherIncome, p.totalIncome,
+    p.teacherPay, p.staffPay, p.expenses, p.totalExpense, p.profit
+  ].join('|');
+}
+
+function applyPayload(payload, { fromCache }) {
+  const sig = dataSignature(payload);
+  const changed = sig !== state.lastSignature;
+  state.payload = payload;
+  state.lastSignature = sig;
+
+  if (changed || !document.getElementById('statementContent').dataset.rendered) {
+    renderStatement(payload);
+    document.getElementById('statementContent').dataset.rendered = '1';
+    setState('ready');
+    console.log(fromCache ? '📦 Rendered from cache' : '🌐 Rendered fresh data');
+  } else {
+    console.log('♻️ Data unchanged — skipping re-render');
+    setState('ready');
+  }
+}
+
+/* ================================================================
+   BUILD PAYLOAD
+   ================================================================ */
+async function fetchAndBuildAll() {
+  const feesResults = await Promise.allSettled(
+    FEE_SHEETS.map(({ sheet }) =>
+      fetchSheet(FEES_SPREADSHEET_ID, sheet).then(rows => ({ sheet, rows }))
+    )
+  );
+
+  const fees = [];
+  let feesTotal = 0;
+  let feesSuccess = 0;
+  feesResults.forEach((r, i) => {
+    const meta = FEE_SHEETS[i];
+    if (r.status === 'fulfilled' && r.value) {
+      const amount = sumColumn(r.value.rows || [], ['paid fees','paid fee','paid']);
+      fees.push({ label: meta.label, sheet: meta.sheet, amount });
+      feesTotal += amount;
+      feesSuccess++;
+    } else {
+      console.warn(`Fees fetch failed for ${meta.sheet}:`, r.reason);
+      fees.push({ label: meta.label, sheet: meta.sheet, amount: 0 });
+    }
+  });
+
+  const [incomeRes, teacherRes, staffRes, expenseRes] = await Promise.allSettled([
+    fetchSheet(INCOME_EXP_SPREADSHEET, 'Income'),
+    fetchSheet(INCOME_EXP_SPREADSHEET, 'Teacher Payment'),
+    fetchSheet(INCOME_EXP_SPREADSHEET, 'Staff Payment'),
+    fetchSheet(INCOME_EXP_SPREADSHEET, 'Expenses')
+  ]);
+
+  function pick(res) {
+    return res.status === 'fulfilled' && Array.isArray(res.value) ? res.value : [];
+  }
+
+  const otherIncome = sumColumn(pick(incomeRes),  ['amount']);
+  const teacherPay  = sumColumn(pick(teacherRes), ['amount']);
+  const staffPay    = sumColumn(pick(staffRes),   ['amount']);
+  const expenses    = sumColumn(pick(expenseRes), ['amount']);
+
+  const anyIncome = incomeRes.status === 'fulfilled' || teacherRes.status === 'fulfilled'
+                 || staffRes.status === 'fulfilled'  || expenseRes.status === 'fulfilled';
+  if (feesSuccess === 0 && !anyIncome) {
+    throw new Error('Could not fetch any data. Check your connection or script URL.');
+  }
+
+  const totalIncome  = feesTotal + otherIncome;
+  const totalExpense = teacherPay + staffPay + expenses;
+  const profit       = totalIncome - totalExpense;
+
+  return {
+    fees, feesTotal,
+    otherIncome, totalIncome,
+    teacherPay, staffPay, expenses, totalExpense,
+    profit,
+    fetchedAt: Date.now()
+  };
+}
+
+/* ================================================================
+   LOAD (cache + background refresh)
+   ================================================================ */
+async function loadAllData({ force = false } = {}) {
+  if (state.loading) return;
+  state.loading = true;
+
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) { refreshBtn.classList.add('spinning'); refreshBtn.disabled = true; }
+
+  const cached = force ? null : readCache();
+  let rendered = false;
+
+  if (cached) {
+    applyPayload(cached.payload, { fromCache: true });
+    rendered = true;
+    if (cached.fresh) {
+      console.log(`✅ Cache fresh (age ${Math.round(cached.ageMs/1000)}s) — no network call`);
+      state.loading = false;
+      if (refreshBtn) { refreshBtn.classList.remove('spinning'); refreshBtn.disabled = false; }
+      return;
+    }
+    console.log(`⏳ Cache stale — refreshing in background…`);
+    setUpdateBadge(true);
+  }
+
+  if (!rendered) setState('loading');
+
+  try {
+    const payload = await fetchAndBuildAll();
+    writeCache(payload);
+    applyPayload(payload, { fromCache: false });
+  } catch (err) {
+    console.error('Load failed:', err);
+    if (!rendered) setState('error', err.message || 'Failed to load data.');
+  } finally {
+    state.loading = false;
+    setUpdateBadge(false);
+    if (refreshBtn) { refreshBtn.classList.remove('spinning'); refreshBtn.disabled = false; }
+  }
+}
+
+/* ================================================================
+   EVENTS
+   ================================================================ */
+function bindEvents() {
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    clearCache();
+    loadAllData({ force: true });
+  });
+}
+
+/* ================================================================
+   INIT — admin auth → security gate → load
+   ================================================================ */
+function init() {
+  // 1️⃣ Admin auth
+  const user = checkAdminAuth();
+  if (!user) return;
+
+  // 2️⃣ Security code gate
+  if (!isSecurityCodeCleared()) {
+    console.warn('🔒 Security code not verified — redirecting');
+    showSecurityGateAndRedirect();
+    return;
+  }
+
+  // 3️⃣ Proceed
+  initTheme();
+  document.getElementById('academicYearBadge').textContent = getAcademicYear();
+
+  document.getElementById('guardScreen').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
+
+  bindEvents();
+  loadAllData();
+
+  console.log(`✅ P&L page loaded for ${user.fullName}`);
+  console.log(`📌 Security code verified ✓`);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

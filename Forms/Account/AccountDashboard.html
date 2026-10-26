@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+<title>Financial Management | Universal English Medium High School</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="../../Script/loginadmin.js" data-auto-init="true"></script>
+
+<style>
+/* ================================================================
+   CSS VARIABLES — Light & Dark Mode
+   ================================================================ */
+:root {
+    --bg-body: #f4f7fc;
+    --bg-card: #ffffff;
+    --bg-section: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #5b6e8c;
+    --text-light: #94a3b8;
+    --border-light: #e2e8f0;
+    --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.06);
+    --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.12);
+    --accent: #2563eb;
+    --accent-soft: rgba(37,99,235,0.08);
+    --card-border: 1px solid rgba(0,0,0,0.04);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --danger-light: rgba(239,68,68,0.1);
+    --info: #06b6d4;
+    --transition: 0.3s ease;
+
+    --fin-accent: #8b5cf6;
+    --fin-accent-soft: rgba(139,92,246,0.08);
+    --fin-gradient: linear-gradient(135deg,#8b5cf6,#7c3aed);
+    --admin-gold: #f59e0b;
+    --admin-badge-bg: rgba(245,158,11,0.15);
+
+    --fs-title:    clamp(1.15rem, 1rem + 1.5vw, 2rem);
+    --fs-section:  clamp(0.85rem, 0.75rem + 0.6vw, 1.25rem);
+    --fs-sub:      clamp(0.6rem, 0.55rem + 0.25vw, 0.78rem);
+    --fs-card:     clamp(0.72rem, 0.65rem + 0.4vw, 1.05rem);
+    --fs-desc:     clamp(0.58rem, 0.55rem + 0.2vw, 0.75rem);
+    --fs-badge:    clamp(0.45rem, 0.42rem + 0.15vw, 0.62rem);
+    --fs-chip:     clamp(0.6rem, 0.55rem + 0.25vw, 0.78rem);
+
+    --icon-page:    clamp(0.9rem, 0.8rem + 0.6vw, 1.5rem);
+    --icon-section: clamp(0.95rem, 0.85rem + 0.6vw, 1.5rem);
+    --icon-card:    clamp(1rem, 0.9rem + 0.8vw, 1.8rem);
+
+    --pad-page:     clamp(0.5rem, 0.4rem + 1vw, 2rem);
+    --gap-grid:     clamp(0.5rem, 0.4rem + 0.8vw, 1.5rem);
+
+    --icon-box-size: clamp(34px, 28px + 3.5vw, 60px);
+    --icon-box-radius: clamp(9px, 7px + 0.8vw, 16px);
+    --card-radius:  clamp(11px, 8px + 1.2vw, 20px);
+    --card-min-h:   clamp(100px, 80px + 8vw, 180px);
+}
+[data-theme="dark"] {
+    --bg-body: #0a0f1c;
+    --bg-card: #1e293b;
+    --bg-section: #111827;
+    --text-main: #f1f5f9;
+    --text-muted: #9ca3af;
+    --text-light: #64748b;
+    --border-light: #1f2a3e;
+    --shadow-sm: 0 12px 28px -8px rgba(0,0,0,0.6);
+    --shadow-hover: 0 24px 40px -12px rgba(0,0,0,0.8);
+    --accent: #3b82f6;
+    --accent-soft: rgba(59,130,246,0.15);
+    --card-border: 1px solid rgba(255,255,255,0.04);
+    --success: #34d399;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --danger-light: rgba(239,68,68,0.2);
+    --info: #22d3ee;
+    --fin-accent: #a78bfa;
+    --fin-accent-soft: rgba(167,139,250,0.15);
+    --fin-gradient: linear-gradient(135deg,#a78bfa,#8b5cf6);
+    --admin-badge-bg: rgba(245,158,11,0.2);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+::-webkit-scrollbar { width:0; height:0; display:none; }
+* { scrollbar-width:none; -ms-overflow-style:none; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    min-height: 100vh;
+    transition: background-color var(--transition), color var(--transition);
+    display: flex; flex-direction: column; font-size: 16px;
+}
+
+/* ================================================================
+   LOADING OVERLAY
+   ================================================================ */
+#authLoading {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-body); z-index: 9999;
+    flex-direction: column; gap: 1.5rem;
+}
+#authLoading.hidden { display: none !important; }
+#authLoading .spinner {
+    width: 50px; height: 50px;
+    border: 4px solid var(--border-light);
+    border-top: 4px solid var(--fin-accent);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+#authLoading p { color: var(--text-muted); font-weight: 500; font-size: 0.9rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ================================================================
+   MAIN CONTENT
+   ================================================================ */
+#mainContent { display: none; }
+#mainContent.visible { display: block; animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+.main-content {
+    flex: 1; max-width: 1400px; width: 100%;
+    margin: 0 auto 1.5rem auto; padding: var(--pad-page);
+}
+
+/* ================================================================
+   PAGE TITLE
+   ================================================================ */
+.page-title {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: clamp(0.8rem, 0.6rem + 0.6vw, 1.5rem);
+    padding: clamp(0.5rem, 0.4rem + 0.5vw, 1rem) 0;
+    border-bottom: 2px solid var(--border-light);
+}
+.page-title-row-1 {
+    display: flex; align-items: center; gap: 0.5rem;
+    width: 100%; flex-wrap: wrap;
+}
+.page-title h1 {
+    font-size: var(--fs-title); font-weight: 800;
+    background: var(--fin-gradient);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    display: flex; align-items: center; gap: 0.5rem;
+    flex: 1; min-width: 0; line-height: 1.15;
+}
+.page-title h1 i {
+    font-size: var(--icon-page); color: var(--fin-accent);
+    background: var(--fin-accent-soft);
+    padding: clamp(5px, 0.4rem + 0.4vw, 9px);
+    border-radius: clamp(8px, 0.5rem + 0.3vw, 12px);
+    flex-shrink: 0;
+}
+.page-meta-row {
+    display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+}
+.academic-year {
+    font-size: var(--fs-chip); font-weight: 600;
+    color: var(--text-muted); background: var(--bg-card);
+    padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 16px);
+    border-radius: 30px; border: var(--card-border);
+    box-shadow: var(--shadow-sm);
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
+}
+.admin-badge {
+    display: none; align-items: center; gap: 5px;
+    background: var(--admin-badge-bg); color: var(--admin-gold);
+    padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 12px);
+    border-radius: 30px; font-size: var(--fs-chip); font-weight: 700;
+    border: 1px solid var(--admin-gold); white-space: nowrap;
+}
+.admin-badge.visible { display: inline-flex; }
+.admin-badge i { font-size: var(--fs-chip); }
+.admin-badge .session-pill {
+    font-size: calc(var(--fs-chip) * 0.8);
+    padding: 1px 5px; border-radius: 20px;
+    background: rgba(255,255,255,0.15); margin-left: 2px;
+}
+.btn-my-account {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--accent-soft); color: var(--accent);
+    padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 12px);
+    border-radius: 30px; font-size: var(--fs-chip); font-weight: 700;
+    text-decoration: none; border: 1px solid var(--border-light);
+    transition: all var(--transition); white-space: nowrap;
+}
+.btn-my-account:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+.btn-my-account i { font-size: var(--fs-chip); }
+
+/* ================================================================
+   SECTION HEADER
+   ================================================================ */
+.section-header {
+    background: var(--bg-section);
+    border-radius: clamp(11px, 8px + 1vw, 18px);
+    padding: clamp(0.55rem, 0.4rem + 0.5vw, 1rem) clamp(0.7rem, 0.5rem + 0.6vw, 1.5rem);
+    margin: clamp(1rem, 0.8rem + 0.8vw, 2rem) 0 clamp(0.6rem, 0.5rem + 0.4vw, 1rem) 0;
+    border: var(--card-border); box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: clamp(0.5rem, 0.4rem + 0.4vw, 0.9rem);
+}
+.section-header .section-icon {
+    font-size: var(--icon-section); color: var(--fin-accent);
+    background: var(--fin-accent-soft);
+    width: clamp(30px, 26px + 2vw, 46px);
+    height: clamp(30px, 26px + 2vw, 46px);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: clamp(8px, 6px + 0.5vw, 12px);
+    flex-shrink: 0;
+}
+.section-header .section-info { flex: 1; min-width: 0; }
+.section-header .section-title {
+    font-size: var(--fs-section); font-weight: 700;
+    color: var(--text-main); line-height: 1.2;
+}
+.section-header .section-sub {
+    font-size: var(--fs-sub); color: var(--text-muted);
+    font-weight: 500; display: block; margin-top: 1px;
+}
+.section-header .section-badge {
+    background: var(--fin-accent-soft); color: var(--fin-accent);
+    padding: 2px clamp(8px, 0.6rem + 0.4vw, 12px);
+    border-radius: 30px; font-size: var(--fs-badge); font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ================================================================
+   FINANCE GRID
+   ================================================================ */
+.fin-grid {
+    display: grid; gap: var(--gap-grid);
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.card-link { text-decoration: none; display: block; height: 100%; }
+
+.fin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--card-radius);
+    padding: clamp(0.7rem, 0.5rem + 0.8vw, 1.75rem) clamp(0.5rem, 0.4rem + 0.4vw, 1.2rem);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+    height: 100%; min-height: var(--card-min-h);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+}
+.fin-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--fin-gradient);
+    opacity: 0; transition: opacity var(--transition);
+}
+.fin-card:active::before { opacity: 1; }
+.fin-card:active { transform: scale(0.97); }
+
+.card-icon {
+    font-size: var(--icon-card); color: var(--fin-accent);
+    background: var(--fin-accent-soft);
+    width: var(--icon-box-size); height: var(--icon-box-size);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--icon-box-radius);
+    margin: 0 auto clamp(0.3rem, 0.25rem + 0.3vw, 0.8rem);
+    transition: all var(--transition); flex-shrink: 0;
+}
+.card-title {
+    font-size: var(--fs-card); font-weight: 700;
+    color: var(--text-main); margin-bottom: 0.15rem;
+    line-height: 1.2;
+}
+.card-description {
+    font-size: var(--fs-desc); color: var(--text-muted);
+    line-height: 1.3; display: block;
+}
+.card-badge {
+    display: inline-block;
+    margin-top: clamp(0.25rem, 0.2rem + 0.2vw, 0.5rem);
+    font-size: var(--fs-badge); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.3px;
+    padding: 2px clamp(8px, 0.6rem + 0.4vw, 12px);
+    border-radius: 30px;
+    background: var(--fin-accent-soft); color: var(--fin-accent);
+    transition: all var(--transition);
+}
+.fin-card:active .card-badge { background: var(--fin-gradient); color: white; }
+
+.fin-card.login   .card-icon { color:#0ea5e9; background:rgba(14,165,233,0.12); }
+.fin-card.login   .card-badge { background:rgba(14,165,233,0.12); color:#0ea5e9; }
+.fin-card.balance .card-icon { color:var(--success); background:rgba(16,185,129,0.12); }
+.fin-card.balance .card-badge { background:rgba(16,185,129,0.12); color:var(--success); }
+.fin-card.profit  .card-icon { color:var(--warning); background:rgba(245,158,11,0.12); }
+.fin-card.profit  .card-badge { background:rgba(245,158,11,0.12); color:var(--warning); }
+.fin-card.changecode .card-icon { color:var(--danger); background:var(--danger-light); }
+.fin-card.changecode .card-badge { background:var(--danger-light); color:var(--danger); }
+
+/* ================================================================
+   SECURITY CODE MODAL (single + multi-phase)
+   ================================================================ */
+#securityModal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+    animation: modalFadeIn 0.25s ease-out;
+}
+#securityModal.show { display: flex; }
+@keyframes modalFadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-card {
+    background: var(--bg-card);
+    border: var(--card-border);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.4);
+    width: 100%; max-width: 460px;
+    padding: 2rem 1.75rem;
+    position: relative; max-height: 92vh; overflow-y: auto;
+    animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes modalSlideUp {
+    from { opacity:0; transform: translateY(30px) scale(0.95); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+}
+
+.modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--text-muted);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: all var(--transition);
+}
+.modal-close:hover {
+    background: var(--danger-light); color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.modal-icon-wrap {
+    width: 64px; height: 64px; border-radius: 20px;
+    background: var(--fin-gradient);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.6rem;
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 12px 24px -10px rgba(139,92,246,0.5);
+}
+.modal-icon-wrap.danger {
+    background: linear-gradient(135deg,#ef4444,#b91c1c);
+    box-shadow: 0 12px 24px -10px rgba(239,68,68,0.5);
+}
+.modal-title {
+    font-size: 1.2rem; font-weight: 800; text-align: center;
+    color: var(--text-main); margin-bottom: 0.5rem;
+    letter-spacing: -0.3px;
+}
+.modal-sub {
+    font-size: 0.82rem; text-align: center;
+    color: var(--text-muted); margin-bottom: 1.5rem;
+    line-height: 1.45;
+}
+
+/* Multi-phase indicator */
+.phase-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 1.25rem;
+}
+.phase-dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700;
+    background: var(--bg-body); color: var(--text-muted);
+    border: 2px solid var(--border-light);
+    transition: all 0.25s;
+}
+.phase-dot.active {
+    background: var(--fin-gradient); color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 10px -4px rgba(139,92,246,0.5);
+}
+.phase-dot.done {
+    background: var(--success); color: #fff;
+    border-color: transparent;
+}
+.phase-line {
+    width: 24px; height: 2px;
+    background: var(--border-light);
+    transition: background 0.25s;
+}
+.phase-line.done { background: var(--success); }
+
+/* Inputs */
+.code-input-wrap {
+    position: relative;
+    margin-bottom: 0.85rem;
+}
+.code-input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 3rem;
+    font-family: inherit; font-size: 1.15rem; font-weight: 600;
+    letter-spacing: 4px; color: var(--text-main);
+    background: var(--bg-body);
+    border: 2px solid var(--border-light);
+    border-radius: 14px; outline: none;
+    transition: all 0.2s; text-align: center;
+}
+.code-input:focus {
+    border-color: var(--fin-accent);
+    box-shadow: 0 0 0 4px var(--fin-accent-soft);
+    background: var(--bg-card);
+}
+.code-input.shake { animation: shake 0.4s; border-color: var(--danger); }
+.code-input.valid  { border-color: var(--success); }
+.code-input.invalid { border-color: var(--danger); }
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+.lock-icon {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted); font-size: 1rem;
+    pointer-events: none;
+}
+.eye-toggle {
+    position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 10px;
+    background: transparent; color: var(--text-muted);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem; transition: all 0.18s;
+}
+.eye-toggle:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* Rules panel */
+.rules-box {
+    background: var(--bg-body);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 0.7rem 0.85rem;
+    margin: 0.5rem 0 0.85rem;
+    font-size: 0.74rem;
+}
+.rules-box .rule {
+    display: flex; align-items: center; gap: 8px;
+    padding: 3px 0; color: var(--text-muted);
+    transition: color 0.2s;
+}
+.rules-box .rule i {
+    font-size: 0.55rem;
+    color: var(--text-light);
+    width: 14px; text-align: center;
+}
+.rules-box .rule.met { color: var(--success); }
+.rules-box .rule.met i { color: var(--success); }
+.rules-box .rule.unmet { color: var(--danger); }
+.rules-box .rule.unmet i { color: var(--danger); }
+
+/* Field label */
+.field-label {
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin: 0 0 6px 4px; display: block;
+}
+.field-group { margin-bottom: 0.85rem; }
+
+/* Modal message */
+.modal-msg {
+    font-size: 0.78rem; font-weight: 600;
+    text-align: center; min-height: 1.2em;
+    margin-bottom: 0.85rem; transition: color 0.2s;
+}
+.modal-msg.error { color: var(--danger); }
+.modal-msg.success { color: var(--success); }
+.modal-msg.info { color: var(--text-muted); }
+
+/* Buttons */
+.verify-btn, .update-btn, .secondary-btn {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border: none; border-radius: 14px;
+    font-family: inherit; font-size: 0.92rem; font-weight: 700;
+    letter-spacing: 0.2px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; transition: all 0.2s;
+}
+.verify-btn, .update-btn {
+    background: var(--fin-gradient); color: #fff;
+    box-shadow: 0 10px 22px -10px rgba(139,92,246,0.5);
+    margin-bottom: 0.6rem;
+}
+.update-btn {
+    background: linear-gradient(135deg,#10b981,#059669);
+    box-shadow: 0 10px 22px -10px rgba(16,185,129,0.5);
+}
+.verify-btn:hover:not(:disabled), .update-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+.verify-btn:disabled, .update-btn:disabled {
+    opacity: 0.55; cursor: not-allowed; box-shadow: none;
+    transform: none;
+}
+.verify-btn.spinning i, .update-btn.spinning i { animation: spin 0.9s linear infinite; }
+
+.secondary-btn {
+    background: var(--bg-body); color: var(--text-main);
+    border: 1px solid var(--border-light);
+}
+.secondary-btn:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* Hide phases */
+.phase-block { display: none; }
+.phase-block.active { display: block; }
+
+/* ================================================================
+   LARGE SCREEN REFINEMENTS
+   ================================================================ */
+@media (min-width: 1024px) {
+    .fin-grid { grid-template-columns: repeat(4, 1fr); }
+    .fin-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+    .fin-card:hover::before { opacity: 1; }
+    .fin-card:hover .card-icon { transform: scale(1.05); }
+    .fin-card.login:hover .card-icon { background: linear-gradient(135deg,#0ea5e9,#0284c7); color:#fff; }
+    .fin-card.login:hover .card-badge { background: linear-gradient(135deg,#0ea5e9,#0284c7); color:#fff; }
+    .fin-card.balance:hover .card-icon { background: linear-gradient(135deg,#10b981,#059669); color:#fff; }
+    .fin-card.balance:hover .card-badge { background: linear-gradient(135deg,#10b981,#059669); color:#fff; }
+    .fin-card.profit:hover .card-icon { background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+    .fin-card.profit:hover .card-badge { background: linear-gradient(135deg,#f59e0b,#d97706); color:#fff; }
+    .fin-card.changecode:hover .card-icon { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
+    .fin-card.changecode:hover .card-badge { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
+}
+@media (max-width: 600px) {
+    .fin-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+    .fin-grid { grid-template-columns: 1fr 1fr; gap: 0.45rem; }
+    .main-content { padding: 0.6rem; }
+    .modal-card { padding: 1.6rem 1.25rem; }
+    .code-input { font-size: 1rem; letter-spacing: 3px; padding: 0.85rem 2.6rem; }
+}
+@media (min-width: 601px) and (max-width: 1023px) {
+    .fin-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+    .fin-grid { grid-template-columns: repeat(4, 1fr); }
+    .section-header { margin: 0.6rem 0 0.4rem 0; }
+}
+@media (hover: none) {
+    .fin-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+    .fin-card:hover::before { opacity: 0; }
+    .fin-card:active { transform: scale(0.97); }
+    .fin-card:active::before { opacity: 1; }
+}
+/* ===== LOGOUT SECURITY BUTTON ===== */
+.btn-logout-security {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--danger-light);
+    color: var(--danger);
+    padding: clamp(3px, 0.25rem + 0.2vw, 6px) clamp(8px, 0.6rem + 0.4vw, 12px);
+    border-radius: 30px;
+    font-size: var(--fs-chip);
+    font-weight: 700;
+    font-family: inherit;
+    border: 1px solid var(--danger);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+}
+.btn-logout-security:hover {
+    background: var(--danger);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -6px rgba(239, 68, 68, 0.5);
+}
+.btn-logout-security:active {
+    transform: translateY(0) scale(0.97);
+}
+.btn-logout-security i {
+    font-size: var(--fs-chip);
+}
+@media (max-width: 600px) {
+    .btn-logout-security span {
+        display: none;         /* icon-only on small screens */
+    }
+    .btn-logout-security {
+        width: 34px;
+        justify-content: center;
+        padding: clamp(3px, 0.25rem + 0.2vw, 6px);
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- LOADING OVERLAY -->
+<!-- ================================================================ -->
+<div id="authLoading">
+    <div class="spinner"></div>
+    <p><i class="fas fa-shield-alt"></i> Verifying admin access...</p>
+</div>
+
+<!-- ================================================================ -->
+<!-- MAIN CONTENT (Hidden until authenticated + code verified) -->
+<!-- ================================================================ -->
+<div id="mainContent">
+    <main class="main-content">
+        <div class="page-title">
+            <div class="page-title-row-1">
+                <h1>
+                    <i class="fas fa-chart-pie"></i> Financial Management
+                </h1>
+            </div>
+            <div class="page-meta-row">
+    <span class="academic-year" id="academicYearDisplay">
+        <i class="far fa-calendar-alt"></i> —
+    </span>
+
+    <span class="admin-badge" id="adminBadge">
+        <i class="fas fa-user-shield"></i>
+        <span id="adminNameDisplay">Admin</span>
+        <span class="session-pill" id="sessionIndicator">Session</span>
+    </span>
+    <a href="../../Study Material/My Account/myaccount.html" class="btn-my-account">
+        <i class="fas fa-user-circle"></i> My Account
+    </a>
+	<!-- ⭐ NEW: Logout Security button -->
+    <button class="btn-logout-security" id="logoutSecurityBtn" title="Lock now & require security code">
+        <i class="fas fa-right-from-bracket"></i>
+        <span>Logout Security</span>
+    </button>
+</div>
+        </div>
+
+        <div class="section-header">
+            <div class="section-icon"><i class="fas fa-vault"></i></div>
+            <div class="section-info">
+                <div class="section-title">Financial Tools</div>
+                <span class="section-sub">Secure access to student, fees &amp; profit records</span>
+            </div>
+            <span class="section-badge">4</span>
+        </div>
+
+        <div class="fin-grid">
+            <a href="SetLogin.html" class="card-link">
+                <div class="fin-card login">
+                    <div class="card-icon"><i class="fas fa-user-lock"></i></div>
+                    <h3 class="card-title">Set Login</h3>
+                    <p class="card-description">Set Login Id for Student and Teachers</p>
+                    <span class="card-badge">Open</span>
+                </div>
+            </a>
+
+            <a href="CheckBalFees.html" class="card-link">
+                <div class="fin-card balance">
+                    <div class="card-icon"><i class="fas fa-wallet"></i></div>
+                    <h3 class="card-title">Check Balance Fees</h3>
+                    <p class="card-description">View pending &amp; paid fee balances</p>
+                    <span class="card-badge">Open</span>
+                </div>
+            </a>
+
+            <a href="ProfitLoss.html" class="card-link">
+                <div class="fin-card profit">
+                    <div class="card-icon"><i class="fas fa-scale-balanced"></i></div>
+                    <h3 class="card-title">Profit &amp; Loss Summary</h3>
+                    <p class="card-description">Income vs. expense overview</p>
+                    <span class="card-badge">Open</span>
+                </div>
+            </a>
+
+            <!-- ⭐ NEW: Change Security Code (not a link — opens modal) -->
+            <button class="card-link" id="changeCodeBtn" style="background:none;border:none;padding:0;cursor:pointer;text-align:inherit;font-family:inherit;color:inherit;">
+                <div class="fin-card changecode">
+                    <div class="card-icon"><i class="fas fa-key"></i></div>
+                    <h3 class="card-title">Change Security Code</h3>
+                    <p class="card-description">Update the security verification code</p>
+                    <span class="card-badge">Change</span>
+                </div>
+            </button>
+        </div>
+    </main>
+</div>
+
+<!-- ================================================================ -->
+<!-- SECURITY MODAL (multi-phase) -->
+<!-- ================================================================ -->
+<div id="securityModal">
+    <div class="modal-card">
+        <button class="modal-close" id="modalClose" title="Cancel">
+            <i class="fas fa-xmark"></i>
+        </button>
+
+        <!-- ============= PHASE 1: Initial unlock ============= -->
+        <div class="phase-block active" id="phaseUnlock">
+            <div class="modal-icon-wrap">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h2 class="modal-title">Security Verification</h2>
+            <p class="modal-sub">Enter the security code to access financial tools.</p>
+
+            <form id="unlockForm" autocomplete="off">
+                <div class="code-input-wrap">
+                    <i class="fas fa-lock lock-icon"></i>
+                    <input type="password" class="code-input" id="unlockCode"
+                           inputmode="text" maxlength="20"
+                           placeholder="Enter code" autocomplete="off" required>
+                    <button type="button" class="eye-toggle" data-eye-for="unlockCode">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="modal-msg" id="unlockMsg"></div>
+                <button type="submit" class="verify-btn" id="unlockBtn">
+                    <i class="fas fa-unlock-keyhole"></i>
+                    <span>Verify &amp; Unlock</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ============= PHASE 2: Change code — current ============= -->
+        <div class="phase-block" id="phaseCurrent">
+            <div class="phase-row">
+                <span class="phase-dot active">1</span>
+                <span class="phase-line"></span>
+                <span class="phase-dot">2</span>
+                <span class="phase-line"></span>
+                <span class="phase-dot">3</span>
+            </div>
+            <div class="modal-icon-wrap danger">
+                <i class="fas fa-key"></i>
+            </div>
+            <h2 class="modal-title">Change Security Code</h2>
+            <p class="modal-sub">Step 1 of 3 — Enter your <strong>current</strong> security code to continue.</p>
+
+            <form id="currentForm" autocomplete="off">
+                <div class="code-input-wrap">
+                    <i class="fas fa-lock lock-icon"></i>
+                    <input type="password" class="code-input" id="currentCode"
+                           inputmode="text" maxlength="20"
+                           placeholder="Current code" autocomplete="off" required>
+                    <button type="button" class="eye-toggle" data-eye-for="currentCode">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="modal-msg" id="currentMsg"></div>
+                <button type="submit" class="verify-btn" id="currentBtn">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Verify Current Code</span>
+                </button>
+                <button type="button" class="secondary-btn" id="currentBackBtn">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </button>
+            </form>
+        </div>
+
+        <!-- ============= PHASE 3: Change code — new + confirm ============= -->
+        <div class="phase-block" id="phaseNew">
+            <div class="phase-row">
+                <span class="phase-dot done"><i class="fas fa-check" style="font-size:.6rem;"></i></span>
+                <span class="phase-line done"></span>
+                <span class="phase-dot active">2</span>
+                <span class="phase-line"></span>
+                <span class="phase-dot">3</span>
+            </div>
+            <div class="modal-icon-wrap">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2 class="modal-title">Set New Code</h2>
+            <p class="modal-sub">Step 2 of 3 — Choose a new security code.</p>
+
+            <form id="newForm" autocomplete="off">
+                <div class="field-group">
+                    <label class="field-label" for="newCode">New Security Code</label>
+                    <div class="code-input-wrap">
+                        <i class="fas fa-lock lock-icon"></i>
+                        <input type="password" class="code-input" id="newCode"
+                               inputmode="text" maxlength="20"
+                               placeholder="New code" autocomplete="off" required>
+                        <button type="button" class="eye-toggle" data-eye-for="newCode">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="rules-box" id="rulesBox">
+                    <div class="rule" data-rule="upper"><i class="fas fa-circle"></i> At least 1 UPPERCASE letter</div>
+                    <div class="rule" data-rule="lower"><i class="fas fa-circle"></i> At least 1 lowercase letter</div>
+                    <div class="rule" data-rule="digit"><i class="fas fa-circle"></i> At least 1 number</div>
+                    <div class="rule" data-rule="length"><i class="fas fa-circle"></i> Minimum 4 characters</div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="confirmCode">Confirm New Code</label>
+                    <div class="code-input-wrap">
+                        <i class="fas fa-lock lock-icon"></i>
+                        <input type="password" class="code-input" id="confirmCode"
+                               inputmode="text" maxlength="20"
+                               placeholder="Confirm code" autocomplete="off" required>
+                        <button type="button" class="eye-toggle" data-eye-for="confirmCode">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal-msg" id="newMsg"></div>
+
+                <button type="submit" class="update-btn" id="updateBtn" disabled>
+                    <i class="fas fa-circle-check"></i>
+                    <span>Update Security Code</span>
+                </button>
+                <button type="button" class="secondary-btn" id="newBackBtn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </form>
+        </div>
+
+        <!-- ============= PHASE 4: Re-verify with new code ============= -->
+        <div class="phase-block" id="phaseReunlock">
+            <div class="phase-row">
+                <span class="phase-dot done"><i class="fas fa-check" style="font-size:.6rem;"></i></span>
+                <span class="phase-line done"></span>
+                <span class="phase-dot done"><i class="fas fa-check" style="font-size:.6rem;"></i></span>
+                <span class="phase-line done"></span>
+                <span class="phase-dot active">3</span>
+            </div>
+            <div class="modal-icon-wrap" style="background:linear-gradient(135deg,#10b981,#059669);">
+                <i class="fas fa-check-double"></i>
+            </div>
+            <h2 class="modal-title">Code Updated</h2>
+            <p class="modal-sub">Step 3 of 3 — Enter your <strong>new</strong> security code to continue.</p>
+
+            <form id="reunlockForm" autocomplete="off">
+                <div class="code-input-wrap">
+                    <i class="fas fa-lock lock-icon"></i>
+                    <input type="password" class="code-input" id="reunlockCode"
+                           inputmode="text" maxlength="20"
+                           placeholder="New code" autocomplete="off" required>
+                    <button type="button" class="eye-toggle" data-eye-for="reunlockCode">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="modal-msg" id="reunlockMsg"></div>
+                <button type="submit" class="verify-btn" id="reunlockBtn">
+                    <i class="fas fa-unlock-keyhole"></i>
+                    <span>Verify &amp; Continue</span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+  <script>
+/* =====================================================================
+   FinancialDashboard.html — auth + security gate + change code
+   + 20-minute unlock window
+   + Logout Security button (instant re-lock)
+   + Background pre-fetch of security sheet
+   ===================================================================== */
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec';
+const SECURITY_SPREADSHEET_ID = '1D5sgEXtGeNJNpwI6XyAvpt9bcI4eLQVF5Eq2w1rXRQY';
+const SECURITY_SHEET_NAME     = 'Security';
+const UNLOCK_KEY              = 'FinDash_unlocked_v1';
+const UNLOCK_TTL_MS           = 20 * 60 * 1000;   // ⏱ 20-minute window
+
+/* Security-code cache TTL */
+const SEC_CACHE_TTL_MS = 30 * 1000;               // 30 s freshness window
+
+/* =====================================================================
+   MODULE STATE
+   ===================================================================== */
+const state = {
+    __verifiedCurrentCode: null,
+
+    // Security-code cache
+    secCodes: null,
+    secCacheAt: 0,
+    secFetchPromise: null,
+
+    // UI
+    isMainVisible: false
+};
+
+/* =====================================================================
+   SECTION 1 — SESSION / AUTH
+   ===================================================================== */
+function readMyAccountSession(key) {
+    try {
+        const rawLocal = localStorage.getItem(key);
+        if (rawLocal) {
+            const parsed = JSON.parse(rawLocal);
+            if (parsed && typeof parsed === 'object' && 'value' in parsed) {
+                if (parsed.expiry && Date.now() >= parsed.expiry) {
+                    localStorage.removeItem(key); return null;
+                }
+                return parsed.value;
+            }
+            return parsed;
+        }
+    } catch (e) {}
+    try {
+        const rawSession = sessionStorage.getItem(key);
+        if (rawSession) return JSON.parse(rawSession);
+    } catch (e) {}
+    return null;
+}
+
+function checkAdminAuth() {
+    const userType = readMyAccountSession('Universal_user_type');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+    if (!userType || !user) return { ok:false, reason:'no-session' };
+    if (userType !== 'admin') return { ok:false, reason:'not-admin', userType };
+    const exp = Number(expiry);
+    if (expiry && !isNaN(exp) && Date.now() >= exp) {
+        ['Universal_user','Universal_user_data','Universal_user_type',
+         'Universal_remember_me','Universal_session_expiry'].forEach(k => {
+            localStorage.removeItem(k); sessionStorage.removeItem(k);
+        });
+        return { ok:false, reason:'expired' };
+    }
+    return { ok:true, userType, user };
+}
+
+function redirectToMyAccount(reason) {
+    console.warn('🔒 Admin auth failed:', reason);
+    try {
+        if (window.top && window.top !== window) {
+            window.top.location.href = '../../Study Material/My Account/myaccount.html';
+        } else {
+            window.location.href = '../../Study Material/My Account/myaccount.html';
+        }
+    } catch (e) {
+        window.location.href = '../../Study Material/My Account/myaccount.html';
+    }
+}
+
+function updateAdminBadge() {
+    const userData = readMyAccountSession('Universal_user_data');
+    const user     = readMyAccountSession('Universal_user');
+    const expiry   = readMyAccountSession('Universal_session_expiry');
+
+    const badge = document.getElementById('adminBadge');
+    const nameDisplay = document.getElementById('adminNameDisplay');
+    const indicator = document.getElementById('sessionIndicator');
+
+    let displayName = 'Admin';
+    if (userData) {
+        if (userData['User Name']) displayName = userData['User Name'];
+        else if (userData['Full Name']) displayName = userData['Full Name'];
+        else if (userData['First Name']) {
+            displayName = (userData['First Name'] + ' ' + (userData['Last Name'] || '')).trim();
+        }
+    } else if (user) displayName = user;
+
+    if (nameDisplay) nameDisplay.textContent = displayName;
+    if (badge) badge.classList.add('visible');
+
+    if (indicator) {
+        const exp = Number(expiry);
+        const isRememberMe = !!expiry && !isNaN(exp) && (exp - Date.now()) > 60000;
+        if (isRememberMe) {
+            const remaining = exp - Date.now();
+            const days  = Math.floor(remaining / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            indicator.textContent = days > 0 ? `🔒 ${days}d ${hours}h` : `🔒 ${hours}h`;
+            indicator.style.background = 'rgba(16,185,129,0.3)';
+            indicator.style.color = '#34d399';
+        } else {
+            indicator.textContent = 'Session';
+            indicator.style.background = 'rgba(255,255,255,0.15)';
+            indicator.style.color = '';
+        }
+    }
+}
+
+function revealMainContent() {
+    const main = document.getElementById('mainContent');
+    const loading = document.getElementById('authLoading');
+    if (loading) loading.classList.add('hidden');
+    if (main) {
+        main.style.display = 'block';
+        main.classList.add('visible');
+        state.isMainVisible = true;
+    }
+    startUnlockCountdown();
+}
+function hideMainContent() {
+    const main = document.getElementById('mainContent');
+    if (main) {
+        main.classList.remove('visible');
+        main.style.display = 'none';
+        state.isMainVisible = false;
+    }
+    stopUnlockCountdown();
+}
+
+/* =====================================================================
+   SECTION 2 — THEME SYNC
+   ===================================================================== */
+function syncThemeWithParent() {
+    const localTheme = localStorage.getItem('user-theme-preference');
+    if (localTheme) {
+        document.body.setAttribute('data-theme', localTheme);
+        document.documentElement.setAttribute('data-theme', localTheme);
+    } else {
+        try {
+            if (window.parent && window.parent.document.body) {
+                const parentTheme = window.parent.document.body.getAttribute('data-theme');
+                if (parentTheme) {
+                    document.body.setAttribute('data-theme', parentTheme);
+                    document.documentElement.setAttribute('data-theme', parentTheme);
+                }
+            }
+        } catch(e) {}
+    }
+}
+window.addEventListener('DOMContentLoaded', syncThemeWithParent);
+window.addEventListener('storage', (e) => {
+    if (e.key === 'user-theme-preference') syncThemeWithParent();
+    if (e.key && e.key.startsWith('Universal_')) updateAdminBadge();
+    // If another tab clears / extends the unlock, respect it here
+    if (e.key === UNLOCK_KEY) {
+        if (!isUnlocked() && state.isMainVisible) {
+            hideMainContent();
+            showModal('unlock');
+        }
+    }
+});
+window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'themeChange' && event.data.theme) {
+        document.body.setAttribute('data-theme', event.data.theme);
+        document.documentElement.setAttribute('data-theme', event.data.theme);
+    }
+});
+
+/* =====================================================================
+   SECTION 3 — ACADEMIC YEAR
+   ===================================================================== */
+function updateAcademicYear() {
+    function getAcademicYear() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+        return month >= 4 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+    }
+    const display = document.getElementById('academicYearDisplay');
+    if (display) {
+        const ay = getAcademicYear();
+        display.innerHTML = `<i class="far fa-calendar-alt"></i> ${ay}`;
+        document.title = `Financial Management | ${ay}`;
+    }
+}
+
+/* =====================================================================
+   SECTION 4 — UNLOCK FLAG (20-minute timed window)
+   ===================================================================== */
+function setUnlocked() {
+    try {
+        const expiresAt = Date.now() + UNLOCK_TTL_MS;
+        localStorage.setItem(UNLOCK_KEY, String(expiresAt));
+        sessionStorage.setItem(UNLOCK_KEY, '1');   // mirror for legacy checks
+        console.log(`🔓 Unlocked for 20 min (until ${new Date(expiresAt).toLocaleTimeString()})`);
+    } catch (e) {}
+}
+function isUnlocked() {
+    try {
+        const raw = localStorage.getItem(UNLOCK_KEY);
+        if (raw) {
+            const expiresAt = Number(raw);
+            if (!isNaN(expiresAt) && expiresAt > Date.now()) return true;
+            localStorage.removeItem(UNLOCK_KEY);
+            sessionStorage.removeItem(UNLOCK_KEY);
+        }
+        if (sessionStorage.getItem(UNLOCK_KEY) === '1') return true;
+    } catch (e) {}
+    return false;
+}
+function clearUnlocked() {
+    try {
+        localStorage.removeItem(UNLOCK_KEY);
+        sessionStorage.removeItem(UNLOCK_KEY);
+    } catch (e) {}
+}
+function getUnlockRemainingMs() {
+    try {
+        const raw = localStorage.getItem(UNLOCK_KEY);
+        if (!raw) return 0;
+        const expiresAt = Number(raw);
+        if (isNaN(expiresAt)) return 0;
+        return Math.max(0, expiresAt - Date.now());
+    } catch (e) { return 0; }
+}
+
+/* =====================================================================
+   SECTION 5 — UNLOCK COUNTDOWN (auto-lock after 20 min)
+   ===================================================================== */
+let __countdownIntervalId = null;
+
+function startUnlockCountdown() {
+    stopUnlockCountdown();
+    updateUnlockBadge();
+    __countdownIntervalId = setInterval(() => {
+        if (!isUnlocked()) {
+            console.log('⏱ Unlock window expired — locking');
+            stopUnlockCountdown();
+            hideMainContent();
+            showModal('unlock');
+            return;
+        }
+        updateUnlockBadge();
+    }, 30000);
+}
+function stopUnlockCountdown() {
+    if (__countdownIntervalId) {
+        clearInterval(__countdownIntervalId);
+        __countdownIntervalId = null;
+    }
+}
+function updateUnlockBadge() {
+    const badge = document.getElementById('unlockTimerBadge');
+    if (!badge) return;
+    const remaining = getUnlockRemainingMs();
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    badge.textContent = `🔓 ${mins}:${String(secs).padStart(2, '0')}`;
+    badge.style.display = 'inline-flex';
+}
+
+/* =====================================================================
+   SECTION 6 — SECURITY SHEET CACHE + PRE-FETCH
+   ===================================================================== */
+function securityCacheIsFresh() {
+    return Array.isArray(state.secCodes) &&
+           (Date.now() - state.secCacheAt) < SEC_CACHE_TTL_MS;
+}
+
+async function fetchSecuritySheet() {
+    const url = `${SCRIPT_URL}?spreadsheetId=${encodeURIComponent(SECURITY_SPREADSHEET_ID)}`
+              + `&sheetName=${encodeURIComponent(SECURITY_SHEET_NAME)}`;
+    const res = await fetch(url, { method:'GET', cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+        throw new Error(json.message || 'Invalid response');
+    }
+    return json.data;
+}
+
+function findSecurityCodeColumn(rows) {
+    if (!rows.length) return { key: null, idx: -1 };
+    const headers = Object.keys(rows[0]);
+    const target = 'securitycode';
+    const idx = headers.findIndex(h =>
+        String(h).toLowerCase().replace(/[\s._\-]/g, '') === target
+    );
+    return { key: idx === -1 ? null : headers[idx], idx };
+}
+
+async function prefetchSecurityCodes({ force = false } = {}) {
+    if (!force && securityCacheIsFresh()) return state.secCodes;
+    if (state.secFetchPromise) return state.secFetchPromise;
+
+    state.secFetchPromise = (async () => {
+        try {
+            const rows = await fetchSecuritySheet();
+            const { key } = findSecurityCodeColumn(rows);
+            if (!key) {
+                state.secCodes = [];
+            } else {
+                state.secCodes = rows
+                    .map(r => String(r[key] || '').trim())
+                    .filter(Boolean);
+            }
+            state.secCacheAt = Date.now();
+            console.log(`🔐 Security codes cached (${state.secCodes.length})`);
+            return state.secCodes;
+        } catch (e) {
+            console.warn('Security pre-fetch failed:', e);
+            state.secCodes = null;
+            state.secCacheAt = 0;
+            return null;
+        } finally {
+            state.secFetchPromise = null;
+        }
+    })();
+
+    return state.secFetchPromise;
+}
+
+function validateCodeFromCache(code) {
+    if (!securityCacheIsFresh()) return null;
+    const c = String(code || '').trim();
+    return state.secCodes.includes(c);
+}
+function invalidateSecurityCache() {
+    state.secCacheAt = 0;
+    state.secFetchPromise = null;
+}
+
+/* =====================================================================
+   SECTION 7 — CODE VALIDATION (cache → server → client)
+   ===================================================================== */
+async function validateCodeClientSide(code) {
+    try {
+        const cached = validateCodeFromCache(code);
+        if (cached !== null) return cached;
+
+        const rows = await fetchSecuritySheet();
+        const { key } = findSecurityCodeColumn(rows);
+        if (!key) {
+            console.warn('Security Code column not found');
+            return false;
+        }
+        const codeStr = String(code).trim();
+        const all = rows.map(r => String(r[key] || '').trim()).filter(Boolean);
+        state.secCodes = all;
+        state.secCacheAt = Date.now();
+        return all.includes(codeStr);
+    } catch (e) {
+        console.error('Client-side code check failed:', e);
+        return false;
+    }
+}
+
+async function validateCodeServerSide(code) {
+    try {
+        const url = `${SCRIPT_URL}?action=validateSecurityCode`
+                  + `&spreadsheetId=${encodeURIComponent(SECURITY_SPREADSHEET_ID)}`
+                  + `&sheetName=${encodeURIComponent(SECURITY_SHEET_NAME)}`
+                  + `&code=${encodeURIComponent(code)}`;
+        const res = await fetch(url, { method:'GET', cache: 'no-store' });
+        if (!res.ok) return null;
+        const json = await res.json();
+        if (json && typeof json.valid === 'boolean') return json.valid;
+        if (json && json.status === 'success' && typeof json.data === 'boolean') return json.data;
+        return null;
+    } catch (e) { return null; }
+}
+
+async function isCodeValid(code) {
+    const cached = validateCodeFromCache(code);
+    if (cached === true) return true;
+    if (cached === false) {
+        prefetchSecurityCodes({ force: true }).catch(() => {});
+        return false;
+    }
+    let valid = await validateCodeServerSide(code);
+    if (valid === null) {
+        valid = await validateCodeClientSide(code);
+    } else if (valid) {
+        prefetchSecurityCodes().catch(() => {});
+    }
+    return !!valid;
+}
+
+/* =====================================================================
+   SECTION 8 — UPDATE CODE (mirrors SetLogin password-update flow)
+   ===================================================================== */
+async function updateCodeServerSide(newCode, currentCode) {
+    try {
+        const url = `${SCRIPT_URL}?spreadsheetId=${encodeURIComponent(SECURITY_SPREADSHEET_ID)}`
+                  + `&sheetName=${encodeURIComponent(SECURITY_SHEET_NAME)}`;
+        const getRes = await fetch(url, { method: 'GET', cache: 'no-store' });
+        if (!getRes.ok) return { ok:false, message:`HTTP ${getRes.status} (fetch)` };
+        const json = await getRes.json();
+        if (json.status !== 'success' || !Array.isArray(json.data)) {
+            return { ok:false, message: json.message || 'Could not read security sheet' };
+        }
+        const rows = json.data;
+        if (!rows.length) return { ok:false, message: 'Security sheet is empty' };
+
+        const headers = Object.keys(rows[0]);
+        const secKey = headers.find(h =>
+            String(h).toLowerCase().replace(/[\s._\-]/g, '') === 'securitycode'
+        );
+        if (!secKey) return { ok:false, message: 'Security Code column not found in sheet' };
+
+        let targetIdx = -1;
+        const cur = String(currentCode || '').trim();
+        if (cur) {
+            targetIdx = rows.findIndex(r => String(r[secKey] || '').trim() === cur);
+        }
+        if (targetIdx === -1) {
+            targetIdx = rows.findIndex(r => String(r[secKey] || '').trim() !== '');
+        }
+        if (targetIdx === -1) targetIdx = 0;
+
+        const rowIndex = targetIdx + 2;
+
+        const body = new URLSearchParams();
+        body.append('action', 'update');
+        body.append('spreadsheetId', SECURITY_SPREADSHEET_ID);
+        body.append('sheetName', SECURITY_SHEET_NAME);
+        body.append('rowIndex', String(rowIndex));
+        body.append(secKey, newCode);
+        body.append('code', newCode);
+
+        const res = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body.toString()
+        });
+        if (!res.ok) return { ok:false, message:`HTTP ${res.status} (update)` };
+        const upd = await res.json();
+        if (upd && upd.status === 'success') {
+            invalidateSecurityCache();
+            prefetchSecurityCodes({ force: true }).catch(() => {});
+            return { ok: true, rowIndex };
+        }
+        if (upd && upd.status === 'error')  return { ok:false, message: upd.message || 'Update failed' };
+        return { ok:false, message: 'Unexpected response from server' };
+    } catch (e) {
+        return { ok:false, message: e.message || 'Network error' };
+    }
+}
+
+/* =====================================================================
+   SECTION 9 — MODAL MANAGEMENT
+   ===================================================================== */
+const MODAL_PHASES = {
+    unlock:   'phaseUnlock',
+    current:  'phaseCurrent',
+    new:      'phaseNew',
+    reunlock: 'phaseReunlock'
+};
+
+function showModal(phase) {
+    const m = document.getElementById('securityModal');
+    if (m) m.classList.add('show');
+    switchPhase(phase || 'unlock');
+    prefetchSecurityCodes().catch(() => {});
+}
+function hideModal() {
+    const m = document.getElementById('securityModal');
+    if (m) m.classList.remove('show');
+    resetModalFields();
+}
+function switchPhase(phaseName) {
+    Object.values(MODAL_PHASES).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+    const target = document.getElementById(MODAL_PHASES[phaseName]);
+    if (target) target.classList.add('active');
+    setTimeout(() => {
+        const input = target?.querySelector('input.code-input');
+        if (input) input.focus();
+    }, 80);
+}
+function resetModalFields() {
+    ['unlockCode','currentCode','newCode','confirmCode','reunlockCode'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = ''; el.type = 'password'; el.classList.remove('valid','invalid','shake'); }
+    });
+    ['unlockMsg','currentMsg','newMsg','reunlockMsg'].forEach(id => setMsg(id, ''));
+    updateNewCodeRules();
+    const updBtn = document.getElementById('updateBtn');
+    if (updBtn) updBtn.disabled = true;
+    document.querySelectorAll('.eye-toggle i').forEach(i => i.className = 'fas fa-eye');
+}
+
+function setMsg(targetId, text, type = 'info') {
+    const el = typeof targetId === 'string' ? document.getElementById(targetId) : targetId;
+    if (!el) return;
+    el.textContent = text || '';
+    el.className = 'modal-msg ' + (text ? type : '');
+}
+function shakeInput(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 500);
+}
+
+/* =====================================================================
+   SECTION 10 — NEW CODE RULE VALIDATION
+   ===================================================================== */
+function checkNewCodeRules(code) {
+    return {
+        upper:  /[A-Z]/.test(code),
+        lower:  /[a-z]/.test(code),
+        digit:  /[0-9]/.test(code),
+        length: code.length >= 4
+    };
+}
+function updateNewCodeRules() {
+    const newCode     = (document.getElementById('newCode')?.value || '');
+    const confirmCode = (document.getElementById('confirmCode')?.value || '');
+    const rules = checkNewCodeRules(newCode);
+
+    document.querySelectorAll('#rulesBox .rule').forEach(row => {
+        const key = row.getAttribute('data-rule');
+        const met = !!rules[key];
+        row.classList.toggle('met', met);
+        row.classList.toggle('unmet', newCode.length > 0 && !met);
+        const icon = row.querySelector('i');
+        if (icon) icon.className = met ? 'fas fa-circle-check' : 'fas fa-circle';
+    });
+
+    const allMet = Object.values(rules).every(Boolean);
+    const match  = newCode.length > 0 && newCode === confirmCode;
+    const btn = document.getElementById('updateBtn');
+    if (btn) btn.disabled = !(allMet && match);
+
+    if (newCode.length === 0) {
+        setMsg('newMsg', '');
+    } else if (!allMet) {
+        setMsg('newMsg', 'Password does not meet all requirements.', 'error');
+    } else if (confirmCode.length > 0 && !match) {
+        setMsg('newMsg', 'Passwords do not match.', 'error');
+    } else if (allMet && match) {
+        setMsg('newMsg', 'Looks good. Click Update.', 'success');
+    } else {
+        setMsg('newMsg', '');
+    }
+}
+
+/* =====================================================================
+   SECTION 11 — HANDLERS
+   ===================================================================== */
+
+/* --- Phase 1: initial unlock --- */
+async function handleUnlockSubmit(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('unlockCode');
+    const btn   = document.getElementById('unlockBtn');
+    const code  = (input.value || '').trim();
+
+    if (!code) {
+        setMsg('unlockMsg', 'Please enter the security code.', 'error');
+        shakeInput('unlockCode');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('spinning');
+    btn.querySelector('span').textContent = 'Verifying…';
+    setMsg('unlockMsg', 'Checking security code…', 'info');
+
+    const valid = await isCodeValid(code);
+
+    btn.disabled = false;
+    btn.classList.remove('spinning');
+    btn.querySelector('span').textContent = 'Verify & Unlock';
+
+    if (valid) {
+        setMsg('unlockMsg', 'Access granted. Unlocking…', 'success');
+        setUnlocked();                               // ⏱ starts the 20-min window
+        setTimeout(() => {
+            hideModal();
+            revealMainContent();
+            initApp();
+        }, 350);
+    } else {
+        setMsg('unlockMsg', 'Incorrect security code. Please try again.', 'error');
+        shakeInput('unlockCode');
+        input.select();
+    }
+}
+
+/* --- Phase 2: verify current code --- */
+async function handleCurrentSubmit(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('currentCode');
+    const btn   = document.getElementById('currentBtn');
+    const code  = (input.value || '').trim();
+
+    if (!code) {
+        setMsg('currentMsg', 'Please enter the current security code.', 'error');
+        shakeInput('currentCode');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('spinning');
+    btn.querySelector('span').textContent = 'Verifying…';
+    setMsg('currentMsg', 'Checking…', 'info');
+
+    const valid = await isCodeValid(code);
+
+    btn.disabled = false;
+    btn.classList.remove('spinning');
+    btn.querySelector('span').textContent = 'Verify Current Code';
+
+    if (valid) {
+        state.__verifiedCurrentCode = code;
+        setMsg('currentMsg', '', '');
+        const n = document.getElementById('newCode'); n.value = ''; n.type = 'password';
+        const c = document.getElementById('confirmCode'); c.value = ''; c.type = 'password';
+        updateNewCodeRules();
+        switchPhase('new');
+    } else {
+        setMsg('currentMsg', 'Incorrect code. Please try again.', 'error');
+        shakeInput('currentCode');
+        input.select();
+    }
+}
+
+/* --- Phase 3: submit new code --- */
+async function handleNewSubmit(e) {
+    if (e) e.preventDefault();
+    const newCode     = (document.getElementById('newCode')?.value || '').trim();
+    const confirmCode = (document.getElementById('confirmCode')?.value || '').trim();
+    const rules       = checkNewCodeRules(newCode);
+
+    if (!Object.values(rules).every(Boolean)) {
+        setMsg('newMsg', 'New code does not meet all requirements.', 'error');
+        shakeInput('newCode');
+        return;
+    }
+    if (newCode !== confirmCode) {
+        setMsg('newMsg', 'Codes do not match.', 'error');
+        shakeInput('confirmCode');
+        return;
+    }
+
+    const btn = document.getElementById('updateBtn');
+    btn.disabled = true;
+    btn.classList.add('spinning');
+    btn.querySelector('span').textContent = 'Updating…';
+    setMsg('newMsg', 'Updating security code on server…', 'info');
+
+    const result = await updateCodeServerSide(newCode, state.__verifiedCurrentCode);
+
+    btn.classList.remove('spinning');
+    btn.querySelector('span').textContent = 'Update Security Code';
+
+    if (result.ok) {
+        setMsg('newMsg', 'Code updated successfully.', 'success');
+        setTimeout(() => {
+            const r = document.getElementById('reunlockCode');
+            if (r) { r.value = ''; r.type = 'password'; }
+            setMsg('reunlockMsg', '');
+            switchPhase('reunlock');
+        }, 500);
+    } else {
+        btn.disabled = false;
+        setMsg('newMsg', `Update failed: ${result.message || 'Server error'}`, 'error');
+        shakeInput('newCode');
+    }
+}
+
+/* --- Phase 4: re-verify with new code --- */
+async function handleReunlockSubmit(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('reunlockCode');
+    const btn   = document.getElementById('reunlockBtn');
+    const code  = (input.value || '').trim();
+
+    if (!code) {
+        setMsg('reunlockMsg', 'Please enter the new security code.', 'error');
+        shakeInput('reunlockCode');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('spinning');
+    btn.querySelector('span').textContent = 'Verifying…';
+    setMsg('reunlockMsg', 'Checking…', 'info');
+
+    const valid = await isCodeValid(code);
+
+    btn.disabled = false;
+    btn.classList.remove('spinning');
+    btn.querySelector('span').textContent = 'Verify & Continue';
+
+    if (valid) {
+        setMsg('reunlockMsg', 'Verified. Returning to dashboard…', 'success');
+        setUnlocked();                               // ⏱ restarts the 20-min window
+        setTimeout(() => {
+            hideModal();
+            revealMainContent();
+            initApp();
+        }, 500);
+    } else {
+        setMsg('reunlockMsg', 'Incorrect code. Please try again.', 'error');
+        shakeInput('reunlockCode');
+        input.select();
+    }
+}
+
+/* --- Open change-code flow --- */
+function openChangeCodeFlow() {
+    state.__verifiedCurrentCode = null;
+    resetModalFields();
+    switchPhase('current');
+    showModal('current');
+}
+
+/* =====================================================================
+   SECTION 11.5 — LOGOUT SECURITY (instant re-lock)
+   =====================================================================
+   Clears the 20-min unlock flag immediately, hides the dashboard, and
+   brings up the security-code popup for re-verification.
+   ===================================================================== */
+function handleLogoutSecurity() {
+    console.log('🔒 Logout Security clicked — clearing unlock flag');
+
+    // 1. Clear the unlock flag (both local + session copies)
+    clearUnlocked();
+
+    // 2. Stop the countdown and hide the dashboard
+    hideMainContent();
+
+    // 3. Reset modal state and show the unlock phase
+    state.__verifiedCurrentCode = null;
+    resetModalFields();
+    switchPhase('unlock');
+    showModal('unlock');
+}
+
+/* =====================================================================
+   SECTION 12 — EYE TOGGLES
+   ===================================================================== */
+function bindEyeToggles() {
+    document.querySelectorAll('.eye-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-eye-for');
+            const input = document.getElementById(targetId);
+            const icon = btn.querySelector('i');
+            if (!input || !icon) return;
+            const isPwd = input.type === 'password';
+            input.type = isPwd ? 'text' : 'password';
+            icon.className = isPwd ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+    });
+}
+
+/* =====================================================================
+   SECTION 13 — INIT
+   ===================================================================== */
+let _appInited = false;
+function initApp() {
+    if (_appInited) return;
+    _appInited = true;
+    updateAdminBadge();
+    updateAcademicYear();
+    setInterval(updateAdminBadge, 60 * 1000);
+    console.log('✅ Financial Dashboard ready');
+}
+
+/* =====================================================================
+   SECTION 14 — BOOTSTRAP
+   ===================================================================== */
+(function bootstrap() {
+    syncThemeWithParent();
+
+    function waitForAuth(maxWaitMs, onReady) {
+        const start = Date.now();
+        (function poll() {
+            const auth = checkAdminAuth();
+            if (auth.ok || Date.now() - start >= maxWaitMs) onReady(auth);
+            else setTimeout(poll, 150);
+        })();
+    }
+
+    const startWhenReady = () => {
+        // Bind UI handlers
+        bindEyeToggles();
+        document.getElementById('unlockForm').addEventListener('submit', handleUnlockSubmit);
+        document.getElementById('currentForm').addEventListener('submit', handleCurrentSubmit);
+        document.getElementById('newForm').addEventListener('submit', handleNewSubmit);
+        document.getElementById('reunlockForm').addEventListener('submit', handleReunlockSubmit);
+        document.getElementById('newCode').addEventListener('input', updateNewCodeRules);
+        document.getElementById('confirmCode').addEventListener('input', updateNewCodeRules);
+        document.getElementById('currentBackBtn').addEventListener('click', () => {
+            hideModal(); redirectToMyAccount('cancelled');
+        });
+        document.getElementById('newBackBtn').addEventListener('click', () => {
+            switchPhase('current');
+        });
+        document.getElementById('modalClose').addEventListener('click', () => {
+            const onUnlock = document.getElementById('phaseUnlock')?.classList.contains('active');
+            if (onUnlock) { hideModal(); redirectToMyAccount('cancelled'); }
+            else { hideModal(); }
+        });
+        document.getElementById('changeCodeBtn').addEventListener('click', openChangeCodeFlow);
+
+        // ⭐ Bind Logout Security button (guard in case it's missing)
+        const logoutBtn = document.getElementById('logoutSecurityBtn');
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogoutSecurity);
+
+        // 🔥 Pre-fetch security codes in the background
+        prefetchSecurityCodes().catch(() => {});
+
+        waitForAuth(3000, (auth) => {
+            if (!auth.ok) { showAccessDeniedAndRedirect(auth.reason); return; }
+            console.log('✅ Admin auth verified:', auth.user);
+
+            if (isUnlocked()) {
+                console.log('🔓 Session already unlocked — 20-min window active');
+                revealMainContent();
+                initApp();
+            } else {
+                const loadingEl = document.getElementById('authLoading');
+                if (loadingEl) loadingEl.classList.add('hidden');
+                showModal('unlock');
+            }
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startWhenReady);
+    } else {
+        startWhenReady();
+    }
+
+    // Safety net for a stuck auth state
+    setTimeout(() => {
+        const mainEl = document.getElementById('mainContent');
+        const stillHidden = !mainEl || (mainEl.style.display === 'none' && !mainEl.classList.contains('visible'));
+        const modalShown  = document.getElementById('securityModal')?.classList.contains('show');
+        const loadingHidden = document.getElementById('authLoading')?.classList.contains('hidden');
+        if (stillHidden && !modalShown && !loadingHidden) {
+            const auth = checkAdminAuth();
+            if (!auth.ok) {
+                console.warn('⏰ Safety net: redirecting');
+                redirectToMyAccount(auth.reason);
+            }
+        }
+    }, 6000);
+})();
+
+function showAccessDeniedAndRedirect(reason) {
+    const loadingEl = document.getElementById('authLoading');
+    if (loadingEl) {
+        loadingEl.innerHTML = `
+            <div style="text-align:center; padding: 2rem;">
+                <div style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;">🔒</div>
+                <h2 style="color: inherit; margin-bottom: 0.5rem;">Admin Access Required</h2>
+                <p style="color: inherit; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${reason === 'not-admin'
+                        ? 'You are logged in as a student. Please login as admin.'
+                        : reason === 'expired'
+                        ? 'Your session has expired. Please login again.'
+                        : 'Please login as admin to access this page.'}
+                </p>
+                <div class="spinner" style="margin: 0 auto;"></div>
+                <p style="opacity: 0.6; font-size: 0.8rem; margin-top: 1rem;">
+                    Redirecting to My Account...
+                </p>
+            </div>
+        `;
+    }
+    setTimeout(() => redirectToMyAccount(reason), 1500);
+}
+
+/* Exports */
+window.checkAdminAuth = checkAdminAuth;
+window.updateAdminBadge = updateAdminBadge;
+
+console.log('✅ Financial Dashboard script initialised (auth + code gate + 20-min unlock + Logout Security)');
+</script>
+</body>
+</html>

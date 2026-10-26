@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Universal School – Check Balance Fees</title>
+
+<!-- ===== PREVENT THEME FLASH (follows Dashboard.html) ===== -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('user-theme-preference')
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ===== HIDDEN SCROLLBARS ===== */
+::-webkit-scrollbar { width:0; height:0; background:transparent; display:none; }
+* { scrollbar-width:none; -ms-overflow-style:none; }
+html, body { -ms-overflow-style:none; scrollbar-width:none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
+
+/* ======================== CSS VARIABLES ======================== */
+:root {
+  --bg-primary:#f4f7fc; --bg-sidebar:#ffffff; --bg-card:#ffffff;
+  --bg-elev:#ffffff;
+  --text-main:#1e293b; --text-muted:#5b6e8c; --text-dim:#8b9ab4;
+  --accent-primary:#2563eb; --accent-secondary:#7c3aed;
+  --accent-glow:rgba(37,99,235,.15); --accent-hover:#1d4ed8;
+  --border-light:#e2e8f0; --border-soft:#eef2f7;
+  --card-shadow:0 20px 35px -12px rgba(0,0,0,.08);
+  --card-shadow-hover:0 24px 44px -14px rgba(0,0,0,.14);
+   --card-border:1px solid rgba(0,0,0,.05);
+  --transition:.25s ease;
+  --gradient-primary:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  --gradient-accent:linear-gradient(135deg,#2563eb,#7c3aed);
+  --danger:#ef4444; --danger-light:rgba(239,68,68,.1);
+  --success:#10b981; --success-light:rgba(16,185,129,.12);
+  --success-dark:#059669;
+  --warning:#f59e0b; --warning-light:rgba(245,158,11,.12);
+  --warning-dark:#d97706;
+  --info:#0ea5e9; --info-light:rgba(14,165,233,.1);
+  --chip-jr:#ec4899; --chip-jr-bg:rgba(236,72,153,.12);
+  --chip-sr:#f97316; --chip-sr-bg:rgba(249,115,22,.12);
+  --chip-1-4:#10b981; --chip-1-4-bg:rgba(16,185,129,.12);
+  --chip-5-7:#0ea5e9; --chip-5-7-bg:rgba(14,165,233,.12);
+  --chip-8-10:#8b5cf6; --chip-8-10-bg:rgba(139,92,246,.12);
+  /* ===== MOBILE CARD BORDER (amber) =====
+  --mcard-border:#f59e0b;
+  --mcard-glow:rgba(245,158,11,.18); */
+}
+[data-theme="dark"] {
+  --bg-primary:#0a0f1c; --bg-sidebar:#111827; --bg-card:#1e293b;
+  --bg-elev:#243349;
+  --text-main:#f1f5f9; --text-muted:#9ca3af; --text-dim:#64748b;
+  --accent-primary:#3b82f6; --accent-secondary:#8b5cf6;
+  --accent-glow:rgba(59,130,246,.2); --accent-hover:#60a5fa;
+  --border-light:#1f2a3e; --border-soft:#1a2538;
+  --card-shadow:0 20px 30px -12px rgba(0,0,0,.5);
+  --card-shadow-hover:0 24px 40px -14px rgba(0,0,0,.6);
+  --card-border:1px solid rgba(255,255,255,.05);
+  --gradient-primary:linear-gradient(135deg,#1e1e2e 0%,#2d1b4e 100%);
+  --gradient-accent:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  --success:#34d399; --success-light:rgba(52,211,153,.15);
+  --success-dark:#10b981;
+  --warning:#fbbf24; --warning-light:rgba(251,191,36,.15);
+  --warning-dark:#f59e0b;
+  --info:#38bdf8; --info-light:rgba(56,189,248,.12);
+  --chip-jr:#f472b6; --chip-jr-bg:rgba(244,114,182,.15);
+  --chip-sr:#fb923c; --chip-sr-bg:rgba(251,146,60,.15);
+  --chip-1-4:#34d399; --chip-1-4-bg:rgba(52,211,153,.15);
+  --chip-5-7:#38bdf8; --chip-5-7-bg:rgba(56,189,248,.15);
+  --chip-8-10:#a78bfa; --chip-8-10-bg:rgba(167,139,250,.15);
+  /* ===== MOBILE CARD BORDER (amber in dark too) ===== 
+  --mcard-border:#fbbf24;
+  --mcard-glow:rgba(251,191,36,.22); */
+}
+html, body { transition: background var(--transition), color var(--transition); }
+body {
+  font-family:'Inter', sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-main);
+  min-height:100vh;
+  overflow-x:hidden;
+  margin:0; padding:0;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ======================== PAGE LAYOUT ======================== */
+.page-wrap {
+  max-width:1280px;
+  margin:0 auto;
+  padding:1.5rem 1.25rem 3rem;
+}
+
+/* Header */
+.top-header {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; flex-wrap:wrap;
+  margin-bottom:1.5rem;
+}
+.title-block h1 {
+  font-size:1.5rem; font-weight:700; letter-spacing:-.4px;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  line-height:1.25;
+}
+.title-block h1 i {
+  color:var(--accent-primary); font-size:1.3rem;
+  background:var(--accent-glow); padding:.5rem; border-radius:12px;
+}
+.title-block .sub {
+  font-size:.85rem; color:var(--text-muted); font-weight:500;
+  margin-top:.5rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.ay-badge {
+  background:var(--gradient-accent); color:#fff;
+  padding:3px 12px; border-radius:40px; font-size:.75rem; font-weight:600;
+  box-shadow:0 4px 10px -4px rgba(37,99,235,.4);
+}
+
+.header-actions { display:flex; align-items:center; gap:.6rem; }
+
+/* Only refresh button remains — theme button removed */
+.refresh-btn {
+  background:var(--bg-card);
+  border:var(--card-border);
+  height:44px; padding:0 14px;
+  border-radius:14px;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  cursor:pointer; color:var(--text-main);
+  box-shadow:var(--card-shadow); transition:all .2s;
+  font-size:1rem; font-family:inherit; font-weight:600;
+}
+.refresh-btn:hover {
+  transform:translateY(-2px);
+  color:var(--accent-primary);
+  box-shadow:var(--card-shadow-hover);
+}
+.refresh-btn .label { font-size:.82rem; }
+.refresh-btn.spinning i { animation:spin .8s linear infinite; }
+.refresh-btn:disabled { opacity:.6; cursor:not-allowed; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ======================== SEARCH ======================== */
+.search-wrap {
+  position:relative; margin-bottom:1.1rem;
+  background:var(--bg-card); border:var(--card-border);
+  border-radius:18px; box-shadow:var(--card-shadow);
+  transition:box-shadow .2s;
+}
+.search-wrap:focus-within {
+  box-shadow:0 0 0 3px var(--accent-glow), var(--card-shadow);
+}
+.search-wrap i.fa-search {
+  position:absolute; left:18px; top:50%; transform:translateY(-50%);
+  color:var(--text-muted); font-size:1rem; pointer-events:none;
+}
+.search-input {
+  width:100%; padding:1rem 1.25rem 1rem 3.2rem;
+  background:transparent; border:none; outline:none;
+  font-family:inherit; font-size:.95rem; color:var(--text-main);
+}
+.search-input::placeholder { color:var(--text-muted); }
+.search-clear {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  background:var(--bg-primary); border:none; width:28px; height:28px;
+  border-radius:50%; display:none; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--text-muted); font-size:.75rem;
+}
+.search-wrap.has-text .search-clear { display:flex; }
+
+/* ======================== CLASS PILLS ======================== */
+.pills-scroll {
+  display:flex; gap:.5rem; overflow-x:auto;
+  padding:.35rem .1rem .85rem;
+  margin-bottom:1.1rem; scroll-behavior:smooth;
+}
+.pill {
+  flex:0 0 auto; padding:.55rem 1.1rem;
+  border-radius:40px; border:var(--card-border);
+  background:var(--bg-card); color:var(--text-main);
+  font-size:.85rem; font-weight:600; cursor:pointer;
+  transition:all .18s; white-space:nowrap;
+  box-shadow:0 2px 8px -4px rgba(0,0,0,.1);
+}
+.pill:hover { transform:translateY(-1px); color:var(--accent-primary); }
+.pill.active {
+  background:var(--gradient-accent); color:#fff;
+  box-shadow:0 6px 14px -6px rgba(37,99,235,.5);
+}
+
+/* ======================== TABLE CARD (DESKTOP) ======================== */
+.table-card {
+  background:var(--bg-card); border-radius:24px;
+  border:var(--card-border); box-shadow:var(--card-shadow);
+  overflow:hidden; position:relative;
+}
+.table-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.15rem 1.5rem; flex-wrap:wrap; gap:.5rem;
+  border-bottom:1px solid var(--border-light);
+  background:linear-gradient(180deg, var(--bg-card), var(--bg-primary));
+}
+.table-head h2 {
+  font-size:1rem; font-weight:700;
+  display:flex; align-items:center; gap:10px;
+  letter-spacing:-.2px;
+}
+.table-head h2 i { color:var(--accent-primary); }
+.table-head .count {
+  font-size:.75rem; font-weight:700;
+  background:var(--accent-glow); color:var(--accent-primary);
+  padding:4px 12px; border-radius:40px;
+}
+.update-badge {
+  font-size:.7rem; font-weight:600;
+  color:var(--info);
+  display:inline-flex; align-items:center; gap:5px;
+  margin-left:.75rem; opacity:0; transition:opacity .3s;
+}
+.update-badge.show { opacity:1; }
+.update-badge i { animation:spin 1s linear infinite; }
+
+/* Table */
+.table-scroll { width:100%; overflow-x:auto; }
+table.fees-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  font-size:.9rem; min-width:880px;
+}
+table.fees-table thead th {
+  text-align:left; padding:.9rem 1.25rem;
+  font-weight:700; font-size:.72rem; text-transform:uppercase;
+  letter-spacing:.5px; color:var(--text-muted);
+  background:var(--bg-primary);
+  border-bottom:1px solid var(--border-light);
+  white-space:nowrap;
+  position:sticky; top:0; z-index:2;
+}
+table.fees-table tbody td {
+  padding:1rem 1.25rem;
+  border-bottom:1px solid var(--border-soft);
+  vertical-align:middle;
+}
+table.fees-table tbody tr { transition:background .15s; }
+table.fees-table tbody tr:nth-child(even) { background:rgba(0,0,0,.012); }
+[data-theme="dark"] table.fees-table tbody tr:nth-child(even) { background:rgba(255,255,255,.015); }
+table.fees-table tbody tr:hover { background:var(--bg-primary); }
+table.fees-table tbody tr:last-child td { border-bottom:none; }
+
+.sr-cell {
+  color:var(--text-muted); font-weight:700;
+  width:64px; font-variant-numeric:tabular-nums;
+}
+.sr-cell .sr-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:9px;
+  background:var(--bg-primary); color:var(--text-main);
+  font-size:.78rem;
+}
+.student-cell { display:flex; align-items:center; gap:12px; min-width:220px; }
+.avatar {
+  width:38px; height:38px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.85rem; color:#fff; flex-shrink:0;
+  background:var(--gradient-accent);
+  box-shadow:0 4px 10px -4px rgba(37,99,235,.4);
+}
+.student-info { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.student-name {
+  font-weight:700; color:var(--text-main); font-size:.92rem;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  letter-spacing:-.15px;
+}
+.class-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:.66rem; font-weight:700;
+  padding:2px 8px; border-radius:40px;
+  white-space:nowrap; width:fit-content;
+  letter-spacing:.2px;
+}
+.class-chip.jr  { color:var(--chip-jr);   background:var(--chip-jr-bg); }
+.class-chip.sr  { color:var(--chip-sr);   background:var(--chip-sr-bg); }
+.class-chip.c14 { color:var(--chip-1-4);  background:var(--chip-1-4-bg); }
+.class-chip.c57 { color:var(--chip-5-7);  background:var(--chip-5-7-bg); }
+.class-chip.c810{ color:var(--chip-8-10); background:var(--chip-8-10-bg); }
+
+.phone-cell { display:flex; align-items:center; gap:8px; }
+.phone-link {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px; height:28px; border-radius:8px;
+  background:var(--success-light); color:var(--success-dark);
+  text-decoration:none; font-size:.72rem; transition:all .18s;
+  flex-shrink:0;
+}
+.phone-link:hover { background:var(--success); color:#fff; transform:scale(1.05); }
+.phone-text { font-size:.82rem; color:var(--text-main); font-weight:500; font-variant-numeric:tabular-nums; }
+.phone-empty { font-size:.82rem; color:var(--text-dim); font-style:italic; }
+
+.money-cell {
+  font-weight:700; font-variant-numeric:tabular-nums;
+  white-space:nowrap; text-align:right;
+  font-size:.92rem; letter-spacing:-.2px;
+}
+.money-paid { color:var(--success-dark); }
+.money-bal { color:var(--warning-dark); }
+.money-total { color:var(--accent-primary); }
+.money-zero { color:var(--text-dim); font-weight:500; }
+
+/* ======================== MOBILE CARDS ======================== */
+.mobile-list {
+  display:none; padding:.85rem; gap:.85rem; flex-direction:column;
+}
+
+/* 🔶 Amber border for every mobile card */
+.m-card {
+  background:var(--bg-card);
+  border:2px solid var(--mcard-border);
+  border-radius:20px;
+  padding:1rem 1.1rem;
+  position:relative; overflow:hidden;
+  box-shadow:
+    0 6px 18px -10px rgba(0,0,0,.18),
+    0 0 0 3px var(--mcard-glow);
+  transition:transform .18s, box-shadow .18s, border-color .2s;
+}
+.m-card:active {
+  transform:scale(.985);
+  box-shadow:
+    0 3px 10px -6px rgba(0,0,0,.2),
+    0 0 0 4px var(--mcard-glow);
+}
+.m-card::before {
+  content:''; position:absolute; top:0; left:0;
+  width:4px; height:100%;
+  background:var(--mcard-border);
+  border-radius:2px 0 0 2px;
+}
+/* Class accents on the left bar (kept for secondary cue) */
+.m-card.jr::before  { background:var(--chip-jr); }
+.m-card.sr::before  { background:var(--chip-sr); }
+.m-card.c14::before { background:var(--chip-1-4); }
+.m-card.c57::before { background:var(--chip-5-7); }
+.m-card.c810::before{ background:var(--chip-8-10); }
+
+.m-card-top {
+  display:flex; align-items:center; gap:12px;
+  padding-bottom:.9rem;
+  border-bottom:1px dashed var(--border-light);
+}
+.m-card-top .avatar {
+  width:44px; height:44px; border-radius:13px;
+  font-size:.95rem;
+}
+.m-info { flex:1; min-width:0; }
+.m-name {
+  font-weight:700; font-size:1rem; color:var(--text-main);
+  letter-spacing:-.2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.m-meta {
+  display:flex; align-items:center; gap:.5rem;
+  margin-top:4px; flex-wrap:wrap;
+}
+.m-sr {
+  font-size:.68rem; font-weight:700;
+  color:var(--text-muted);
+  background:var(--bg-primary);
+  padding:2px 8px; border-radius:40px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Phone rows */
+.m-phones {
+  display:flex; flex-direction:column; gap:.4rem;
+  padding:.85rem 0;
+  border-bottom:1px dashed var(--border-light);
+}
+.m-phone-row {
+  display:flex; align-items:center; gap:10px;
+  font-size:.85rem;
+}
+.m-phone-row .p-icon {
+  width:26px; height:26px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--info-light); color:var(--info);
+  font-size:.7rem; flex-shrink:0;
+}
+.m-phone-row.alt .p-icon {
+  background:var(--accent-glow); color:var(--accent-primary);
+}
+.m-phone-row .p-label {
+  color:var(--text-muted); font-size:.75rem; font-weight:600;
+  min-width:70px;
+}
+.m-phone-row .p-val {
+  flex:1; text-align:right;
+  color:var(--text-main); font-weight:600;
+  font-variant-numeric:tabular-nums; font-size:.85rem;
+}
+.m-phone-row .p-call {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; border-radius:9px;
+  background:var(--success-light); color:var(--success-dark);
+  text-decoration:none; font-size:.75rem; flex-shrink:0;
+  transition:all .18s;
+}
+.m-phone-row .p-call:active { transform:scale(.92); }
+.m-phone-row .p-na {
+  flex:1; text-align:right;
+  color:var(--text-dim); font-style:italic; font-size:.78rem;
+}
+
+/* Money grid */
+.m-money-grid {
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  gap:.55rem; margin-top:.85rem;
+}
+.m-money-box {
+  background:var(--bg-primary);
+  border-radius:14px;
+  padding:.7rem .4rem;
+  text-align:center;
+  border:1px solid var(--border-soft);
+  transition:transform .15s;
+}
+.m-money-box.paid  { border-color:rgba(16,185,129,.25); }
+.m-money-box.bal   { border-color:rgba(245,158,11,.25); }
+.m-money-box.total { border-color:rgba(37,99,235,.25); }
+
+.m-money-box .lbl {
+  font-size:.62rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.5px;
+  color:var(--text-muted); display:block; margin-bottom:5px;
+}
+.m-money-box .val {
+  font-weight:800; font-size:.88rem;
+  font-variant-numeric:tabular-nums; letter-spacing:-.3px;
+}
+.m-money-box.paid .val  { color:var(--success-dark); }
+.m-money-box.bal .val   { color:var(--warning-dark); }
+.m-money-box.total .val { color:var(--accent-primary); }
+
+/* ======================== SUMMARY ======================== */
+.summary-card {
+  margin-top:1.25rem;
+  background:var(--bg-card); border-radius:24px;
+  border:var(--card-border); box-shadow:var(--card-shadow);
+  padding:1.4rem 1.5rem;
+  position:relative; overflow:hidden;
+}
+.summary-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--gradient-accent);
+}
+.summary-card h3 {
+  font-size:.95rem; font-weight:700; margin-bottom:1rem;
+  display:flex; align-items:center; gap:8px;
+  letter-spacing:-.2px;
+}
+.summary-card h3 i { color:var(--accent-primary); }
+.summary-grid {
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:.85rem;
+}
+.summary-item {
+  background:var(--bg-primary); border-radius:18px;
+  padding:1.1rem 1rem;
+  border:1px solid var(--border-soft);
+  position:relative; overflow:hidden;
+  transition:transform .18s;
+}
+.summary-item:hover { transform:translateY(-2px); }
+.summary-item .ico {
+  position:absolute; right:-8px; bottom:-8px;
+  font-size:3.2rem; opacity:.06;
+}
+.summary-item .lbl {
+  font-size:.68rem; text-transform:uppercase; letter-spacing:.5px;
+  color:var(--text-muted); font-weight:700; display:block; margin-bottom:6px;
+}
+.summary-item .val {
+  font-weight:800; font-size:1.35rem;
+  font-variant-numeric:tabular-nums; letter-spacing:-.5px;
+}
+.summary-item.paid  .val { color:var(--success-dark); }
+.summary-item.bal   .val { color:var(--warning-dark); }
+.summary-item.total .val { color:var(--accent-primary); }
+
+/* ======================== STATES ======================== */
+.state-box {
+  padding:3rem 1.5rem; text-align:center; color:var(--text-muted);
+}
+.state-box i { font-size:2.5rem; margin-bottom:1rem; opacity:.45; display:block; }
+.state-box h4 { font-size:1rem; margin-bottom:.4rem; color:var(--text-main); }
+.state-box p { font-size:.85rem; }
+.spinner-lg {
+  display:inline-block; width:38px; height:38px;
+  border:3px solid var(--border-light);
+  border-top-color:var(--accent-primary);
+  border-radius:50%; animation:spin .8s linear infinite;
+  margin-bottom:1rem;
+}
+
+/* ======================== RESPONSIVE ======================== */
+@media (max-width: 768px) {
+  .page-wrap { padding:1rem .85rem 2.5rem; }
+  .title-block h1 { font-size:1.15rem; line-height:1.3; }
+  .title-block h1 i { font-size:1.1rem; padding:.4rem; }
+  .title-block .sub { font-size:.76rem; }
+  .ay-badge { font-size:.7rem; padding:2px 10px; }
+  .header-actions { margin-left:auto; }
+  .refresh-btn .label { display:none; }
+  .refresh-btn { width:44px; padding:0; }
+  .search-input { font-size:.9rem; padding-top:.85rem; padding-bottom:.85rem; }
+  .summary-grid { grid-template-columns:1fr; gap:.6rem; }
+  .summary-item {
+    padding:.9rem 1rem;
+    display:flex; align-items:center; justify-content:space-between;
+    text-align:left;
+  }
+  .summary-item .lbl { margin-bottom:0; font-size:.72rem; }
+  .summary-item .val { font-size:1.15rem; }
+  .summary-item .ico { font-size:2.4rem; }
+  .table-scroll { display:none; }
+  .mobile-list { display:flex; }
+  .table-head { padding:1rem 1.1rem; }
+  .table-head h2 { font-size:.92rem; }
+}
+@media (max-width: 420px) {
+  .m-money-grid { grid-template-columns:repeat(3,1fr); gap:.4rem; }
+  .m-money-box { padding:.6rem .3rem; }
+  .m-money-box .val { font-size:.78rem; }
+  .m-money-box .lbl { font-size:.56rem; }
+  .m-phone-row .p-label { min-width:60px; font-size:.7rem; }
+  .pill { padding:.45rem .85rem; font-size:.78rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= GUARD SCREEN ================= -->
+<div id="guardScreen" class="state-box" style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+  <div class="spinner-lg"></div>
+  <h4>Verifying admin access…</h4>
+  <p>Please wait a moment.</p>
+</div>
+
+<!-- ================= MAIN APP ================= -->
+<div class="page-wrap" id="appWrap" style="display:none;">
+
+  <!-- Header (theme button removed — follows Dashboard.html) -->
+  <div class="top-header">
+    <div class="title-block">
+      <h1>
+        <i class="fa-solid fa-wallet"></i>
+        <span>Universal School – Check Balance Fees</span>
+      </h1>
+      <div class="sub">
+        <i class="fa-regular fa-calendar"></i>
+        Academic Year: <span class="ay-badge" id="academicYearBadge">—</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+        <i class="fa-solid fa-rotate-right"></i>
+        <span class="label">Refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap" id="searchWrap">
+    <i class="fa-solid fa-search"></i>
+    <input type="text" class="search-input" id="searchInput"
+           placeholder="Search by student name or mobile number…" autocomplete="off">
+    <button class="search-clear" id="searchClear" title="Clear">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- Class pills -->
+  <div class="pills-scroll" id="classPills">
+    <button class="pill active" data-class="ALL">All</button>
+    <button class="pill" data-class="JR_KG">JR KG</button>
+    <button class="pill" data-class="SR_KG">SR KG</button>
+    <button class="pill" data-class="STD_1">1st Std</button>
+    <button class="pill" data-class="STD_2">2nd Std</button>
+    <button class="pill" data-class="STD_3">3rd Std</button>
+    <button class="pill" data-class="STD_4">4th Std</button>
+    <button class="pill" data-class="STD_5">5th Std</button>
+    <button class="pill" data-class="STD_6">6th Std</button>
+    <button class="pill" data-class="STD_7">7th Std</button>
+    <button class="pill" data-class="STD_8">8th Std</button>
+    <button class="pill" data-class="STD_9">9th Std</button>
+    <button class="pill" data-class="STD_10">10th Std</button>
+  </div>
+
+  <!-- Table card -->
+  <div class="table-card">
+    <div class="table-head">
+      <h2>
+        <i class="fa-solid fa-table-list"></i>
+        Fee Records
+        <span class="update-badge" id="updateBadge">
+          <i class="fa-solid fa-circle-notch"></i> updating…
+        </span>
+      </h2>
+      <span class="count" id="recordCount">0 records</span>
+    </div>
+
+    <div id="tableState" class="state-box" style="display:none;"></div>
+
+    <!-- Desktop table -->
+    <div class="table-scroll" id="tableScroll" style="display:none;">
+      <table class="fees-table">
+        <thead>
+          <tr>
+            <th>Sr. No</th>
+            <th>Student</th>
+            <th>Mobile No</th>
+            <th>Alter Mobile No</th>
+            <th style="text-align:right;">Paid Fees</th>
+            <th style="text-align:right;">Balance Fees</th>
+            <th style="text-align:right;">Total Fees</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Mobile list -->
+    <div class="mobile-list" id="mobileList"></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-card" id="summaryCard" style="display:none;">
+    <h3><i class="fa-solid fa-calculator"></i> Total Summary</h3>
+    <div class="summary-grid">
+      <div class="summary-item paid">
+        <i class="fa-solid fa-circle-check ico"></i>
+        <span class="lbl">Total Paid Fees</span>
+        <span class="val" id="sumPaid">₹0</span>
+      </div>
+      <div class="summary-item bal">
+        <i class="fa-solid fa-hourglass-half ico"></i>
+        <span class="lbl">Total Balance Fees</span>
+        <span class="val" id="sumBal">₹0</span>
+      </div>
+      <div class="summary-item total">
+        <i class="fa-solid fa-sack-dollar ico"></i>
+        <span class="lbl">Total Fees</span>
+        <span class="val" id="sumTotal">₹0</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================================================================
+   CONFIG
+   ================================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzEbd10tAnSKJSsg01LOXr8MAgKTFO4cp2sjq9moatjN3_IWZ8ZWF9uViTXE-991Nq/exec';
+const FEES_SPREADSHEET_ID      = '1oSgbGG5NmYXV5AVR7uvmLnp5pQx83QFQsqCf1u3YFo0';
+const ADMISSION_SPREADSHEET_ID = '1STZ_BN_WKH_i88jaRc8ykXsg1wEH6p_bSxEOPAH2AA8';
+
+const SHEET_NAMES = [
+  'JR_KG','SR_KG','STD_1','STD_2','STD_3','STD_4',
+  'STD_5','STD_6','STD_7','STD_8','STD_9','STD_10'
+];
+
+const CLASS_LABELS = {
+  JR_KG:'JR KG', SR_KG:'SR KG',
+  STD_1:'1st Std', STD_2:'2nd Std', STD_3:'3rd Std', STD_4:'4th Std',
+  STD_5:'5th Std', STD_6:'6th Std', STD_7:'7th Std', STD_8:'8th Std',
+  STD_9:'9th Std', STD_10:'10th Std'
+};
+
+const CACHE_KEY = 'balFees_cache_v2';
+const CACHE_TTL_MS = 10 * 60 * 1000;
+
+/* ================================================================
+   SESSION / AUTH
+   ================================================================ */
+const SESSION_KEYS = {
+  USER:'Universal_user',
+  USER_DATA:'Universal_user_data',
+  USER_TYPE:'Universal_user_type',
+  REMEMBER_ME:'Universal_remember_me'
+};
+
+function getSessionData(key) {
+  const localData = localStorage.getItem(key);
+  if (localData) {
+    try {
+      const parsed = JSON.parse(localData);
+      if (parsed && parsed.value !== undefined) {
+        if (parsed.expiry && Date.now() > parsed.expiry) return null;
+        return parsed.value;
+      }
+      return parsed;
+    } catch (e) { return localData; }
+  }
+  const sessionData = sessionStorage.getItem(key);
+  if (sessionData) { try { return JSON.parse(sessionData); } catch(e){ return sessionData; } }
+  return null;
+}
+
+function isRememberMeActive() {
+  const raw = localStorage.getItem(SESSION_KEYS.REMEMBER_ME);
+  if (!raw) return false;
+  try {
+    const p = JSON.parse(raw);
+    return p.value === true && Date.now() < p.expiry;
+  } catch (e) { return false; }
+}
+
+function syncSessionFromRememberMe() {
+  if (isRememberMeActive()) {
+    const user = getSessionData(SESSION_KEYS.USER);
+    const userData = getSessionData(SESSION_KEYS.USER_DATA);
+    const userType = getSessionData(SESSION_KEYS.USER_TYPE);
+    if (user && userData) {
+      sessionStorage.setItem(SESSION_KEYS.USER, JSON.stringify(user));
+      sessionStorage.setItem(SESSION_KEYS.USER_DATA, JSON.stringify(userData));
+      if (userType) sessionStorage.setItem(SESSION_KEYS.USER_TYPE, JSON.stringify(userType));
+      return true;
+    }
+  }
+  return false;
+}
+
+function getCurrentUser() {
+  syncSessionFromRememberMe();
+  let user = getSessionData(SESSION_KEYS.USER);
+  let userData = getSessionData(SESSION_KEYS.USER_DATA);
+  let userType = getSessionData(SESSION_KEYS.USER_TYPE);
+  if (!user) {
+    user = sessionStorage.getItem(SESSION_KEYS.USER) || localStorage.getItem(SESSION_KEYS.USER);
+    if (user) { try { user = JSON.parse(user); } catch(e){} }
+  }
+  if (!userData) {
+    userData = sessionStorage.getItem(SESSION_KEYS.USER_DATA) || localStorage.getItem(SESSION_KEYS.USER_DATA);
+    if (userData) { try { userData = JSON.parse(userData); } catch(e){} }
+  }
+  if (!userType) {
+    userType = sessionStorage.getItem(SESSION_KEYS.USER_TYPE) || localStorage.getItem(SESSION_KEYS.USER_TYPE);
+    if (userType) { try { userType = JSON.parse(userType); } catch(e){} }
+  }
+  if (!user || !userData) return null;
+  try {
+    if (typeof userData === 'string') userData = JSON.parse(userData);
+    const firstName = userData['First Name'] || userData['User Name'] || '';
+    const lastName  = userData['Last Name'] || '';
+    const fullName  = `${firstName} ${lastName}`.trim() || (userData['User Name'] || 'Admin');
+    const email     = userData['Email Id'] || user;
+    return { username:user, email, data:userData, type:userType || null, fullName };
+  } catch (e) { return null; }
+}
+
+function checkAdminAuth() {
+  const user = getCurrentUser();
+  if (!user || user.type !== 'admin') {
+    window.location.replace('../../Study Material/My Account/myaccount.html');
+    return null;
+  }
+  window._currentAdmin = user;
+  return user;
+}
+
+/* ================================================================
+   ⭐ SECURITY-CODE GATE
+   ----------------------------------------------------------------
+   AccountDashboard.html writes sessionStorage['FinDash_unlocked_v1']
+   on successful code entry, and clears it when the user leaves /
+   idles / presses Back. This page must not load unless that flag is
+   present in THIS tab.
+   ================================================================ */
+const UNLOCK_KEY = 'FinDash_unlocked_v1';
+
+function isSecurityCodeCleared() {
+  try { return sessionStorage.getItem(UNLOCK_KEY) === '1'; }
+  catch (e) { return false; }
+}
+
+function showSecurityGateAndRedirect() {
+  const guard = document.getElementById('guardScreen');
+  if (guard) {
+    guard.innerHTML = `
+      <div style="font-size:3rem; color:var(--danger); margin-bottom:1rem;">🔒</div>
+      <h4>Security code required</h4>
+      <p>Please verify the security code before accessing this page.</p>
+      <div class="spinner-lg" style="margin-top:1.5rem;"></div>
+      <p style="opacity:.6; font-size:.8rem; margin-top:.75rem;">Redirecting…</p>
+    `;
+  }
+  setTimeout(() => {
+    window.location.replace('AccountDashboard.html');
+  }, 1800);
+}
+
+/* ================================================================
+   THEME — FOLLOWS DASHBOARD ONLY
+   ================================================================ */
+const THEME_KEY = 'user-theme-preference';
+
+function applyThemeFromDashboard(theme) {
+  if (!theme) return;
+  document.documentElement.setAttribute('data-theme', theme);
+  document.body.setAttribute('data-theme', theme);
+}
+
+function initTheme() {
+  const stored = localStorage.getItem(THEME_KEY);
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = stored || (systemDark ? 'dark' : 'light');
+  applyThemeFromDashboard(theme);
+}
+
+window.addEventListener('storage', (e) => {
+  if (e.key === THEME_KEY && e.newValue) applyThemeFromDashboard(e.newValue);
+  if (e.key === 'theme-change-trigger') applyThemeFromDashboard(localStorage.getItem(THEME_KEY));
+});
+window.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'themeChange' && e.data.theme) {
+    applyThemeFromDashboard(e.data.theme);
+  }
+});
+
+/* ================================================================
+   ACADEMIC YEAR
+   ================================================================ */
+function getAcademicYear() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const start = m >= 6 ? y : y - 1;
+  return `${start}-${String(start + 1).slice(-2)}`;
+}
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function findHeaderIndex(headers, candidates) {
+  const norm = s => String(s||'').toLowerCase().replace(/[\s._\-]/g,'');
+  const targets = candidates.map(norm);
+  return headers.findIndex(h => targets.includes(norm(h)));
+}
+function parseMoney(v) {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'number') return v;
+  const s = String(v).replace(/[₹,\s]/g,'').replace(/[^0-9.\-]/g,'');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+function formatMoney(n) {
+  if (!isFinite(n)) n = 0;
+  return '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+function normName(s) {
+  return String(s||'').trim().toLowerCase().replace(/\s+/g,' ');
+}
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function initials(name) {
+  const parts = String(name||'').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+function chipClass(className) {
+  if (className === 'JR_KG') return 'jr';
+  if (className === 'SR_KG') return 'sr';
+  const m = /STD_(\d+)/.exec(className||'');
+  if (!m) return 'c14';
+  const n = parseInt(m[1], 10);
+  if (n <= 4) return 'c14';
+  if (n <= 7) return 'c57';
+  return 'c810';
+}
+
+/* ================================================================
+   DATA FETCH
+   ================================================================ */
+async function fetchSheet(spreadsheetId, sheetName) {
+  const url = `${SCRIPT_URL}?spreadsheetId=${encodeURIComponent(spreadsheetId)}&sheetName=${encodeURIComponent(sheetName)}`;
+  const res = await fetch(url, { method:'GET' });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${sheetName}`);
+  const json = await res.json();
+  if (json.status !== 'success') throw new Error(json.message || `Failed: ${sheetName}`);
+  return Array.isArray(json.data) ? json.data : [];
+}
+
+function buildAdmissionMap(rows) {
+  const map = new Map();
+  if (!rows.length) return map;
+  const headers = Object.keys(rows[0]);
+  const nameIdx = findHeaderIndex(headers, ['full name','student name','name']);
+  if (nameIdx === -1) return map;
+  const nameKey = headers[nameIdx];
+  const personalKey = headers[findHeaderIndex(headers, ['personal mob no','personal mobile no','personal mobile','personal mob','personal number'])];
+  const parentKey   = headers[findHeaderIndex(headers, ['parent mob no','parent mobile no','parent mobile','parent mob','parents mob no','parent number'])];
+  rows.forEach(r => {
+    const name = normName(r[nameKey]);
+    if (!name) return;
+    map.set(name, {
+      personal: personalKey ? String(r[personalKey] || '').trim() : '',
+      parent:   parentKey   ? String(r[parentKey]   || '').trim() : ''
+    });
+  });
+  return map;
+}
+
+function buildFeeRecords(rows, className, admissionMap) {
+  if (!rows.length) return [];
+  const headers = Object.keys(rows[0]);
+  const nameKey = headers[findHeaderIndex(headers, ['full name','student name','name'])];
+  const paidKey = headers[findHeaderIndex(headers, ['paid fees','paid fee','paid'])];
+  const balKey  = headers[findHeaderIndex(headers, ['balance fees','balance fee','balance','bal fees'])];
+  const totKey  = headers[findHeaderIndex(headers, ['total fees','total fee','total'])];
+  if (!nameKey) return [];
+  const out = [];
+  rows.forEach((r, i) => {
+    const name = String(r[nameKey] || '').trim();
+    if (!name) return;
+    const adm = admissionMap.get(normName(name)) || {};
+    out.push({
+      className, name,
+      mobile: adm.personal || '',
+      altMobile: adm.parent || '',
+      paid: parseMoney(paidKey ? r[paidKey] : 0),
+      balance: parseMoney(balKey ? r[balKey] : 0),
+      total: parseMoney(totKey ? r[totKey] : 0),
+      _row: i
+    });
+  });
+  return out;
+}
+
+/* ================================================================
+   CACHE
+   ================================================================ */
+function readCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.ts || !parsed.payload) return null;
+    return {
+      fresh: (Date.now() - parsed.ts) < CACHE_TTL_MS,
+      ageMs: Date.now() - parsed.ts,
+      payload: parsed.payload
+    };
+  } catch (e) { return null; }
+}
+function writeCache(payload) {
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), payload })); }
+  catch (e) { console.warn('Cache write failed:', e); }
+}
+function clearCache() {
+  try { sessionStorage.removeItem(CACHE_KEY); } catch (e) {}
+}
+
+/* ================================================================
+   STATE
+   ================================================================ */
+const state = {
+  allRecords: [],
+  classIndex: {},
+  currentClass: 'ALL',
+  searchQuery: '',
+  lastSignature: '',
+  loading: false
+};
+
+function dataSignature(payload) {
+  const len = payload.allRecords.length;
+  const total = payload.allRecords.reduce((a, r) =>
+    a + (r.paid||0) + (r.balance||0) + (r.total||0), 0);
+  return `${len}|${total}`;
+}
+
+/* ================================================================
+   RENDER
+   ================================================================ */
+function setState(kind, msg) {
+  const el = document.getElementById('tableState');
+  const tableScroll = document.getElementById('tableScroll');
+  const mobileList = document.getElementById('mobileList');
+  const summaryCard = document.getElementById('summaryCard');
+
+  if (kind === 'loading') {
+    el.style.display = 'block';
+    el.innerHTML = `<div class="spinner-lg"></div><h4>Loading fee records…</h4><p>Fetching data from Google Sheets</p>`;
+    tableScroll.style.display = 'none';
+    mobileList.style.display = 'none';
+    summaryCard.style.display = 'none';
+    return;
+  }
+  if (kind === 'error') {
+    el.style.display = 'block';
+    el.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);"></i>
+      <h4>Unable to load data</h4><p>${escapeHtml(msg||'Unknown error')}</p>`;
+    tableScroll.style.display = 'none';
+    mobileList.style.display = 'none';
+    summaryCard.style.display = 'none';
+    return;
+  }
+  if (kind === 'empty') {
+    el.style.display = 'block';
+    el.innerHTML = `<i class="fa-regular fa-folder-open"></i>
+      <h4>No records found</h4><p>${escapeHtml(msg||'Try a different class or search term.')}</p>`;
+    tableScroll.style.display = 'none';
+    mobileList.style.display = 'none';
+    summaryCard.style.display = 'none';
+    return;
+  }
+  el.style.display = 'none';
+  tableScroll.style.display = '';
+  mobileList.style.display = '';
+  summaryCard.style.display = '';
+}
+
+function getVisibleRecords() {
+  let records = state.currentClass === 'ALL'
+    ? state.allRecords
+    : (state.classIndex[state.currentClass] || []);
+  const q = state.searchQuery.trim().toLowerCase();
+  if (q) {
+    records = records.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      (r.mobile || '').toLowerCase().includes(q) ||
+      (r.altMobile || '').toLowerCase().includes(q)
+    );
+  }
+  return records;
+}
+
+function phoneHref(phone) {
+  const clean = String(phone||'').replace(/[^\d+]/g,'');
+  return clean ? `tel:${clean}` : '#';
+}
+
+function renderTable() {
+  const records = getVisibleRecords();
+  document.getElementById('recordCount').textContent =
+    `${records.length} record${records.length === 1 ? '' : 's'}`;
+
+  if (!records.length) {
+    setState('empty', state.searchQuery
+      ? `No results for "${state.searchQuery}" in ${state.currentClass === 'ALL' ? 'all classes' : CLASS_LABELS[state.currentClass]}.`
+      : 'No fee records available for this class.');
+    return;
+  }
+  setState('ready');
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = records.map((r, i) => {
+    const chip = chipClass(r.className);
+    const label = CLASS_LABELS[r.className] || r.className;
+    const ini = initials(r.name);
+    const paid = r.paid ? `<span class="money-paid">${formatMoney(r.paid)}</span>` : `<span class="money-zero">₹0</span>`;
+    const bal  = r.balance ? `<span class="money-bal">${formatMoney(r.balance)}</span>` : `<span class="money-zero">₹0</span>`;
+    const tot  = r.total ? `<span class="money-total">${formatMoney(r.total)}</span>` : `<span class="money-zero">₹0</span>`;
+    const mobileCell = r.mobile
+      ? `<div class="phone-cell"><a class="phone-link" href="${phoneHref(r.mobile)}" title="Call ${escapeHtml(r.mobile)}"><i class="fa-solid fa-phone"></i></a><span class="phone-text">${escapeHtml(r.mobile)}</span></div>`
+      : `<span class="phone-empty">—</span>`;
+    const altCell = r.altMobile
+      ? `<div class="phone-cell"><a class="phone-link" href="${phoneHref(r.altMobile)}" title="Call ${escapeHtml(r.altMobile)}"><i class="fa-solid fa-phone"></i></a><span class="phone-text">${escapeHtml(r.altMobile)}</span></div>`
+      : `<span class="phone-empty">—</span>`;
+    return `
+    <tr>
+      <td class="sr-cell"><span class="sr-num">${i + 1}</span></td>
+      <td>
+        <div class="student-cell">
+          <div class="avatar">${ini}</div>
+          <div class="student-info">
+            <div class="student-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</div>
+            <span class="class-chip ${chip}">${escapeHtml(label)}</span>
+          </div>
+        </div>
+      </td>
+      <td>${mobileCell}</td>
+      <td>${altCell}</td>
+      <td class="money-cell">${paid}</td>
+      <td class="money-cell">${bal}</td>
+      <td class="money-cell">${tot}</td>
+    </tr>`;
+  }).join('');
+
+  const mlist = document.getElementById('mobileList');
+  mlist.innerHTML = records.map((r, i) => {
+    const chip = chipClass(r.className);
+    const label = CLASS_LABELS[r.className] || r.className;
+    const ini = initials(r.name);
+    const mobileRow = r.mobile
+      ? `<div class="m-phone-row">
+           <span class="p-icon"><i class="fa-solid fa-mobile-screen"></i></span>
+           <span class="p-label">Mobile</span>
+           <span class="p-val">${escapeHtml(r.mobile)}</span>
+           <a class="p-call" href="${phoneHref(r.mobile)}"><i class="fa-solid fa-phone"></i></a>
+         </div>`
+      : `<div class="m-phone-row">
+           <span class="p-icon"><i class="fa-solid fa-mobile-screen"></i></span>
+           <span class="p-label">Mobile</span>
+           <span class="p-na">Not available</span>
+         </div>`;
+    const altRow = r.altMobile
+      ? `<div class="m-phone-row alt">
+           <span class="p-icon"><i class="fa-solid fa-user-group"></i></span>
+           <span class="p-label">Alter No</span>
+           <span class="p-val">${escapeHtml(r.altMobile)}</span>
+           <a class="p-call" href="${phoneHref(r.altMobile)}"><i class="fa-solid fa-phone"></i></a>
+         </div>`
+      : `<div class="m-phone-row alt">
+           <span class="p-icon"><i class="fa-solid fa-user-group"></i></span>
+           <span class="p-label">Alter No</span>
+           <span class="p-na">Not available</span>
+         </div>`;
+    return `
+    <div class="m-card ${chip}">
+      <div class="m-card-top">
+        <div class="avatar">${ini}</div>
+        <div class="m-info">
+          <div class="m-name" title="${escapeHtml(r.name)}">${escapeHtml(r.name)}</div>
+          <div class="m-meta">
+            <span class="m-sr">#${i + 1}</span>
+            <span class="class-chip ${chip}">${escapeHtml(label)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-phones">
+        ${mobileRow}
+        ${altRow}
+      </div>
+      <div class="m-money-grid">
+        <div class="m-money-box paid"><span class="lbl">Paid</span><span class="val">${formatMoney(r.paid)}</span></div>
+        <div class="m-money-box bal"><span class="lbl">Balance</span><span class="val">${formatMoney(r.balance)}</span></div>
+        <div class="m-money-box total"><span class="lbl">Total</span><span class="val">${formatMoney(r.total)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const sumPaid  = records.reduce((a, r) => a + (r.paid || 0), 0);
+  const sumBal   = records.reduce((a, r) => a + (r.balance || 0), 0);
+  const sumTotal = records.reduce((a, r) => a + (r.total || 0), 0);
+  document.getElementById('sumPaid').textContent  = formatMoney(sumPaid);
+  document.getElementById('sumBal').textContent   = formatMoney(sumBal);
+  document.getElementById('sumTotal').textContent = formatMoney(sumTotal);
+}
+
+/* ================================================================
+   DATA LOAD
+   ================================================================ */
+async function fetchAndBuildAll() {
+  const admissionResults = await Promise.allSettled(
+    SHEET_NAMES.map(sn => fetchSheet(ADMISSION_SPREADSHEET_ID, sn).then(rows => ({ sn, rows })))
+  );
+  const admissionByClass = {};
+  admissionResults.forEach(r => {
+    if (r.status === 'fulfilled' && r.value) {
+      admissionByClass[r.value.sn] = buildAdmissionMap(r.value.rows || []);
+    } else {
+      console.warn('Admission fetch failed:', r.reason);
+    }
+  });
+
+  const feeResults = await Promise.allSettled(
+    SHEET_NAMES.map(sn => fetchSheet(FEES_SPREADSHEET_ID, sn).then(rows => ({ sn, rows })))
+  );
+
+  const allRecords = [];
+  const classIndex = {};
+  SHEET_NAMES.forEach(sn => { classIndex[sn] = []; });
+  let successCount = 0;
+
+  feeResults.forEach(r => {
+    if (r.status === 'fulfilled' && r.value) {
+      successCount++;
+      const { sn, rows } = r.value;
+      const admMap = admissionByClass[sn] || new Map();
+      const recs = buildFeeRecords(rows || [], sn, admMap);
+      classIndex[sn] = recs;
+      allRecords.push(...recs);
+    } else {
+      console.warn('Fees fetch failed:', r.reason);
+    }
+  });
+
+  if (successCount === 0) {
+    throw new Error('Could not fetch any fee sheet. Check your connection or script URL.');
+  }
+  return { allRecords, classIndex };
+}
+
+function applyPayload(payload, { fromCache }) {
+  const sig = dataSignature(payload);
+  const changed = sig !== state.lastSignature;
+  state.allRecords = payload.allRecords || [];
+  state.classIndex = payload.classIndex || {};
+  state.lastSignature = sig;
+
+  if (changed || !document.getElementById('tableBody').children.length) {
+    renderTable();
+    console.log(fromCache ? '📦 Rendered from cache' : '🌐 Rendered fresh data');
+  } else {
+    console.log('♻️ Data unchanged — skipping re-render');
+  }
+}
+
+function setUpdateBadge(show) {
+  const el = document.getElementById('updateBadge');
+  if (el) el.classList.toggle('show', !!show);
+}
+
+async function loadAllData({ force = false } = {}) {
+  if (state.loading) return;
+  state.loading = true;
+
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) { refreshBtn.classList.add('spinning'); refreshBtn.disabled = true; }
+
+  const cached = force ? null : readCache();
+  let renderedSomething = false;
+
+  if (cached) {
+    applyPayload(cached.payload, { fromCache: true });
+    renderedSomething = true;
+    if (cached.fresh) {
+      console.log(`✅ Cache fresh (age ${Math.round(cached.ageMs/1000)}s) — no network call`);
+      state.loading = false;
+      if (refreshBtn) { refreshBtn.classList.remove('spinning'); refreshBtn.disabled = false; }
+      return;
+    }
+    console.log(`⏳ Cache stale (age ${Math.round(cached.ageMs/1000)}s) — refreshing in background…`);
+    setUpdateBadge(true);
+  }
+
+  if (!renderedSomething) setState('loading');
+
+  try {
+    const payload = await fetchAndBuildAll();
+    writeCache(payload);
+    applyPayload(payload, { fromCache: false });
+  } catch (err) {
+    console.error('Load failed:', err);
+    if (!renderedSomething) setState('error', err.message || 'Failed to load data.');
+  } finally {
+    state.loading = false;
+    setUpdateBadge(false);
+    if (refreshBtn) { refreshBtn.classList.remove('spinning'); refreshBtn.disabled = false; }
+  }
+}
+
+/* ================================================================
+   EVENTS
+   ================================================================ */
+function bindEvents() {
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    clearCache();
+    loadAllData({ force: true });
+  });
+
+  const searchWrap = document.getElementById('searchWrap');
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  searchInput.addEventListener('input', (e) => {
+    state.searchQuery = e.target.value;
+    searchWrap.classList.toggle('has-text', !!e.target.value);
+    renderTable();
+  });
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    state.searchQuery = '';
+    searchWrap.classList.remove('has-text');
+    searchInput.focus();
+    renderTable();
+  });
+
+  document.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      state.currentClass = btn.getAttribute('data-class');
+      renderTable();
+    });
+  });
+
+  let lastMode = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+  window.addEventListener('resize', () => {
+    const mode = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+    if (mode !== lastMode) { lastMode = mode; renderTable(); }
+  });
+}
+
+/* ================================================================
+   INIT  — admin auth → security code gate → load
+   ================================================================ */
+function init() {
+  // 1️⃣ Admin auth
+  const user = checkAdminAuth();
+  if (!user) return;
+
+  // 2️⃣ Security code gate
+  if (!isSecurityCodeCleared()) {
+    console.warn('🔒 Security code not verified in this tab — redirecting');
+    showSecurityGateAndRedirect();
+    return;
+  }
+
+  // 3️⃣ Proceed
+  initTheme();
+  document.getElementById('academicYearBadge').textContent = getAcademicYear();
+
+  document.getElementById('guardScreen').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
+
+  bindEvents();
+  loadAllData();
+
+  console.log(`✅ Balance Fees page loaded for ${user.fullName}`);
+  console.log(`📌 Security code verified ✓`);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
