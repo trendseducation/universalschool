@@ -2175,10 +2175,10 @@ function getCachedLogo() {
 // ================================================================
 // 💾 CACHE (localStorage + 5-min TTL + ETag)
 // ================================================================
-const CACHE_KEY = 'sr_kg_records_cache_v4';
-const CACHE_VERSION_KEY = 'sr_kg_records_version_v4';
-const CACHE_TS_KEY = 'sr_kg_records_ts_v4';
-const ETAG_KEY = 'sr_kg_records_etag_v4';
+const CACHE_KEY = 'STD_2_records_cache_v4';
+const CACHE_VERSION_KEY = 'STD_2_records_version_v4';
+const CACHE_TS_KEY = 'STD_2_records_ts_v4';
+const ETAG_KEY = 'STD_2_records_etag_v4';
 const CURRENT_CACHE_VERSION = '4.0';
 
 function getCache() {
@@ -2218,8 +2218,8 @@ function clearCache() {
 // ================================================================
 // 🎯 FETCH ADMISSION STUDENTS (with cache)
 // ================================================================
-const ADMISSION_CACHE_KEY = 'sr_kg_admission_cache_v1';
-const ADMISSION_CACHE_TS_KEY = 'sr_kg_admission_ts_v1';
+const ADMISSION_CACHE_KEY = 'STD_2_admission_cache_v1';
+const ADMISSION_CACHE_TS_KEY = 'STD_2_admission_ts_v1';
 
 async function fetchAdmissionStudents(forceRefresh = false) {
     if (!forceRefresh && admissionLoaded && allAdmissionStudents.length > 0) return allAdmissionStudents;
