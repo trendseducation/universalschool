@@ -2374,6 +2374,52 @@ async function fetchAdmissionStudents(forceRefresh = false) {
 }
 
 // ================================================================
+// 🎯 FETCH EXISTING STUDENT NAMES FROM RESULT SHEET
+// ================================================================
+const EXISTING_NAMES_CACHE_KEY = 'STD_7_existing_names_cache_v1';
+const EXISTING_NAMES_CACHE_TS_KEY = 'STD_7_existing_names_ts_v1';
+
+let existingResultNames = null;   // Set<string> — lowercase names already in STD_7 result sheet
+
+async function fetchExistingResultNames(forceRefresh = false) {
+    if (!forceRefresh && existingResultNames) return existingResultNames;
+
+    if (!forceRefresh) {
+        try {
+            const cached = localStorage.getItem(EXISTING_NAMES_CACHE_KEY);
+            const ts = localStorage.getItem(EXISTING_NAMES_CACHE_TS_KEY);
+            if (cached && ts && (Date.now() - Number(ts) < CONFIG.CACHE_TTL)) {
+                existingResultNames = new Set(JSON.parse(cached));
+                return existingResultNames;
+            }
+        } catch (e) {}
+    }
+
+    try {
+        const url = `${CONFIG.SCRIPT_URL}?spreadsheetId=${CONFIG.SPREADSHEET_ID}&sheetName=${CONFIG.SHEET_NAME}&_=${Date.now()}`;
+        const r = await fetch(url);
+        const result = await r.json();
+        const names = new Set();
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            result.data.forEach(row => {
+                const n = String(row['Student Name'] || '').trim().toLowerCase();
+                if (n) names.add(n);
+            });
+        }
+        existingResultNames = names;
+        try {
+            localStorage.setItem(EXISTING_NAMES_CACHE_KEY, JSON.stringify([...names]));
+            localStorage.setItem(EXISTING_NAMES_CACHE_TS_KEY, Date.now());
+        } catch (e) {}
+        return names;
+    } catch (err) {
+        console.error('Existing names fetch failed:', err);
+        existingResultNames = new Set();
+        return existingResultNames;
+    }
+}
+
+// ================================================================
 // 🎯 FETCH TARGET RECORDS
 // ================================================================
 async function loadRecords(forceRefresh = false) {
@@ -3396,27 +3442,38 @@ function openStudentSelector() {
             <p style="margin-top:10px;color:var(--text-muted);">Loading students...</p>
         </div>
     `;
-    fetchAdmissionStudents().then(() => renderStudentList(''))
-        .catch(err => {
-            $('studentListContainer').innerHTML = `
-                <div class="empty-container">
-                    <span class="empty-icon">⚠️</span>
-                    <p class="empty-title">Failed to load students</p>
-                    <p style="color:var(--text-light);">${escapeHtml(err.message)}</p>
-                </div>
-            `;
-        });
+
+    Promise.all([
+        fetchAdmissionStudents(),
+        fetchExistingResultNames()
+    ])
+    .then(() => renderStudentList(''))
+    .catch(err => {
+        $('studentListContainer').innerHTML = `
+            <div class="empty-container">
+                <span class="empty-icon">⚠️</span>
+                <p class="empty-title">Failed to load students</p>
+                <p style="color:var(--text-light);">${escapeHtml(err.message)}</p>
+            </div>
+        `;
+    });
 }
 
 function renderStudentList(search = '') {
     const container = $('studentListContainer');
     const searchLower = search.toLowerCase().trim();
-    let items = allAdmissionStudents.map(s => ({
-        name: s['Full Name'] || s['First Name'] || '',
-        gr: s['G.R. No'] || '',
-        std: s['Std'] || '',
-        data: s
-    })).filter(x => x.name);
+    const existing = existingResultNames || new Set();
+
+    let items = allAdmissionStudents.map(s => {
+        const name = s['Full Name'] || s['First Name'] || '';
+        return {
+            name: name,
+            gr: s['G.R. No'] || '',
+            std: s['Std'] || '',
+            data: s,
+            isDuplicate: name && existing.has(name.trim().toLowerCase())
+        };
+    }).filter(x => x.name);
 
     if (searchLower) {
         items = items.filter(x =>
@@ -3438,15 +3495,26 @@ function renderStudentList(search = '') {
     let html = '';
     items.forEach(item => {
         const idx = allAdmissionStudents.indexOf(item.data);
+        const dupClass = item.isDuplicate ? ' is-disabled' : '';
+        const badge = item.isDuplicate
+            ? `<span class="std-badge" style="background:rgba(239,68,68,0.15);color:#dc2626;border-color:rgba(239,68,68,0.4);">
+                   <i class="fas fa-lock" aria-hidden="true"></i> Already Added
+               </span>`
+            : `<span class="std-badge">${escapeHtml(item.std || '8th Std')}</span>`;
+
         html += `
-            <div class="student-item" data-index="${idx}" role="option">
+            <div class="student-item${dupClass}"
+                 data-index="${idx}"
+                 data-disabled="${item.isDuplicate ? '1' : '0'}"
+                 role="option"
+                 ${item.isDuplicate ? 'aria-disabled="true"' : ''}>
                 <div>
                     <strong>${escapeHtml(item.name)}</strong>
                     <div style="font-size:0.72rem; color:var(--text-light); margin-top:2px;">
                         ${escapeHtml(item.gr)} ${item.std ? '• ' + escapeHtml(item.std) : ''}
                     </div>
                 </div>
-                <span class="std-badge">${escapeHtml(item.std || '7th Std')}</span>
+                ${badge}
             </div>
         `;
     });
@@ -3454,6 +3522,10 @@ function renderStudentList(search = '') {
 
     container.querySelectorAll('.student-item').forEach(el => {
         el.addEventListener('click', function() {
+            if (this.getAttribute('data-disabled') === '1') {
+                showToast('⚠️ This student already has a result record', 'warning');
+                return;
+            }
             const idx = parseInt(this.getAttribute('data-index'), 10);
             if (!isNaN(idx) && idx >= 0 && idx < allAdmissionStudents.length) {
                 selectedStudent = allAdmissionStudents[idx];
