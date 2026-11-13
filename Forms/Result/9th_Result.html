@@ -2376,10 +2376,10 @@ async function fetchAdmissionStudents(forceRefresh = false) {
 // ================================================================
 // 🎯 FETCH EXISTING STUDENT NAMES FROM RESULT SHEET
 // ================================================================
-const EXISTING_NAMES_CACHE_KEY = 'STD_8_existing_names_cache_v1';
-const EXISTING_NAMES_CACHE_TS_KEY = 'STD_8_existing_names_ts_v1';
+const EXISTING_NAMES_CACHE_KEY = 'STD_9_existing_names_cache_v1';
+const EXISTING_NAMES_CACHE_TS_KEY = 'STD_9_existing_names_ts_v1';
 
-let existingResultNames = null;   // Set<string> — lowercase names already in STD_8 result sheet
+let existingResultNames = null;   // Set<string> — lowercase names already in STD_9 result sheet
 
 async function fetchExistingResultNames(forceRefresh = false) {
     if (!forceRefresh && existingResultNames) return existingResultNames;
